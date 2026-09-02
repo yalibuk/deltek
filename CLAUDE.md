@@ -135,7 +135,22 @@ CMS'te "İçerik düzeni" açılır listesinden değiştirilir; kod değişikli�
 | --- | --- | --- |
 | _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `hizmetlerimiz` |
 | `logo-izgara` | Art arda gelen görselleri yan yana dizer | `referanslar` |
-| `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` |
+| `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` + 13 teknoloji/hizmet sayfası |
+
+Hangi sayfa hangi düzende olduğunu görmek için:
+
+```bash
+grep -l "^duzen: urun" src/content/sayfalar/tr/*.md      # ürün şablonu (14)
+grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (13)
+```
+
+**Normal akışta kalanlar ve nedeni:** `hakkimizda`, `hizmetlerimiz`, `iletisim`,
+`medyalar` kurumsal sayfalar; `mikrotunel-nedir`, `auger-boring-nedir-…`,
+`yatay-delgi-nedir`, `yatay-sondaj`, `yonlendirilebilir-yatay-delgi`,
+`yonlendirilebilir-yatay-sondaj`, `yatay-sondaj-kazisiz-yatay-delgi`,
+`kazisiz-altyapi-ve-kazisiz-teknolojiler`, `boru-surme-boru-cakma-auger-boring`
+ise **hiç görseli olmayan**, başlık/liste yapılı uzun makaleler — ürün şablonuna
+sokulursa boş görsel kutuları çıkardı.
 
 ### `duzen: urun`
 
@@ -166,7 +181,26 @@ galeri:
 ```
 
 Markdown gövdesi bannerdan sonra, blokların önünde çıkar (giriş metni için).
-Alanların hepsi isteğe bağlı — yalnız `bloklar` verilirse sayfa yalnız onları gösterir.
+Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
+
+| Blokta olan | Sonuç |
+| --- | --- |
+| görsel + metin | iki sütun, sırayla sağa/sola dönüşümlü |
+| yalnız görsel | tam genişlik görsel |
+| yalnız metin | tam genişlik metin (boş görsel kutusu bırakmaz) |
+
+### Toplu dönüştürme
+
+`scripts/urun-duzenine-gecir.mjs` taşınmış bir sayfayı markdown akışından bu
+düzene çevirir. Canlı sitedeki sıra "metin, sonra onu resimleyen görsel"
+olduğu için biriken metin bir görselle karşılaşınca blok kapanır.
+
+```bash
+node scripts/urun-duzenine-gecir.mjs --kuru <slug>   # yazmadan göster
+node scripts/urun-duzenine-gecir.mjs <slug> [<slug> ...]
+```
+
+Başlık/liste/gömü içeren sayfaları reddeder; zaten `duzen` alanı olan sayfayı atlar.
 
 **Geri alınmayanlar:** ekipman kategori indeksi (`/ekipmanlar/`), sekmeli akış
 bileşeni (`kaya-akis`), makine vitrin kartları ve maskot blokları. Kategori
@@ -199,8 +233,7 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [ ] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — şu an hiç yok,
       bu yüzden `/en/blog/` boş ve yazılar EN hreflang basmıyor
 - [x] Boremak ürün sayfası şablonu geri alındı → `src/components/UrunDuzen.astro`
-- [ ] Diğer teknoloji/hizmet sayfalarını (`yonlendirme-basligi`, `genisletme-basligi`,
-      `yatay-sondaj-camuru` …) ürün şablonuna geçir — `duzen: urun` + `bloklar`
+- [x] Görsel akışlı 14 teknoloji/hizmet sayfası ürün şablonuna geçirildi
 - [x] Statik + teknoloji/hizmet sayfaları taşındı (28 sayfa)
 - [ ] `/iletisim/` sayfasına çalışan bir iletişim formu ekle (CF7 kaldırıldı)
 - [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde

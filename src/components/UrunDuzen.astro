@@ -34,6 +34,12 @@ interface Props {
   galeri?: any[];
 }
 const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Astro.props;
+
+/** Blok metnindeki markdown kalın ve bağlantı işaretlerini HTML'e çevirir. */
+const zengin = (s: string) => s
+  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
 ---
 {banner && (
   <div class="hsg-genis hsg-genis--bosluk">
@@ -45,15 +51,29 @@ const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Ast
   <slot />
 
   {bloklar.map((b: any, i: number) => (
-    <div class={`hsg-ikili${(b.ters ?? i % 2 === 1) ? ' hsg-ikili--ters' : ''}`}>
-      <div class="hsg-ikili__g">
-        {b.gorsel && <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />}
+    b.gorsel && b.metin ? (
+      /* görsel + metin: iki sütun, dönüşümlü hizalanır */
+      <div class={`hsg-ikili${(b.ters ?? i % 2 === 1) ? ' hsg-ikili--ters' : ''}`}>
+        <div class="hsg-ikili__g">
+          <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />
+        </div>
+        <div class="hsg-ikili__t">
+          {b.baslik && <h3>{b.baslik}</h3>}
+          {paragraflar(b.metin).map((par: string) => <p set:html={zengin(par)} />)}
+        </div>
       </div>
-      <div class="hsg-ikili__t">
+    ) : b.gorsel ? (
+      /* yalnız görsel: tam genişlik */
+      <div class="hsg-genis">
+        <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />
+      </div>
+    ) : b.metin ? (
+      /* yalnız metin: tam genişlik — boş görsel kutusu bırakmaz */
+      <div class="hsg-metin">
         {b.baslik && <h3>{b.baslik}</h3>}
-        {b.metin && b.metin.split('\n\n').map((par: string) => <p set:html={par.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
+        {paragraflar(b.metin).map((par: string) => <p set:html={zengin(par)} />)}
       </div>
-    </div>
+    ) : null
   ))}
 
   {tablolar.length > 0 && (
@@ -109,7 +129,13 @@ const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Ast
 .hsg-ikili__g img { width: 100%; height: auto; display: block; }
 .hsg-ikili__t h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-ikili__t p { margin-top: .9rem; color: var(--mute); font-size: .98rem; line-height: 1.7; }
-.hsg-ikili__t :global(strong) { color: var(--mavi-900); font-weight: 700; }
+.hsg-ikili__t :global(strong), .hsg-metin :global(strong) { color: var(--mavi-900); font-weight: 700; }
+.hsg-ikili__t :global(a), .hsg-metin :global(a) { color: var(--mavi); text-decoration: underline; }
+
+/* yalnız metin bloğu — tam genişlik, boş görsel kutusu bırakmaz */
+.hsg-metin { max-width: 70ch; }
+.hsg-metin h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.hsg-metin p { margin-top: .9rem; color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
 
 /* görsel boyut yardımcıları */
 .hsg-ceyrek { width: 25% !important; margin: 0 auto; }
