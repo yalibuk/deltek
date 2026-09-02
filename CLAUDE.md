@@ -237,45 +237,50 @@ bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu
 `import sharp` çözülmüyor. Astro sharp'ı bırakırsa betik de güncellenmeli.
 OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
 
-**Hero slider** canlı deltek.com.tr'deki Revolution Slider'ın kompozisyonunu ve
-katman animasyonlarını yeniden üretir: **9 slayt, 45 katman** (9 görsel, 35 metin,
-1 YouTube gömüsü). Arka planlar `public/images/hero/`, katman görselleri
-`public/images/hero/katman/`.
+**Hero slider** — `src/components/HeroSlider.astro`, veri `src/data/hero.ts`.
 
-- **Veri**: `src/data/hero.ts` (`HERO_TR` / `HERO_EN`) — her katmanın içeriği,
-  konumu (`x`,`y`,`w`), geçiş tipi (`gecis`), gecikmesi (`basla`) ve süresi (`sure`).
-- **Bileşen**: `src/components/HeroSlider.astro`.
+**Görsel katmanlar** canlı deltek.com.tr'deki Revolution Slider'dan birebir alındı:
+9 slayt, 9 görsel + 1 YouTube katmanı; konum, geçiş tipi, gecikme ve süre
+orijinaliyle aynı (4. slaytta sondaj biti soldan gelip toprak adasına giriyor).
+Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
+(`HERO_IZGARA`); bileşen container-query birimiyle (`--olcek`) orantılı ölçekler.
+**`.slider__ray` en-boy oranı `1920/500` olmak zorunda** — değişirse katmanlar kayar.
 
-**Koordinat sistemi:** tüm değerler canlı slider'ın **1920×500 tasarım
-ızgarasındaki** piksellerdir (`HERO_IZGARA`). Bileşen bunları container-query
-birimiyle ölçekler (`--olcek: calc(100cqw / 1920)`), böylece yazı boyutları ve
-konumlar her genişlikte orantılı kalır. **`.slider__ray` en-boy oranı `1920/500`
-olmak zorunda** — değişirse tüm kompozisyon kayar.
+**Yazılar yeniden tasarlandı.** Orijinalde her slaytta 4-7 ayrı metin katmanı vardı
+ve 2016 tema efektleriyle geliyordu (sert çift gölge, renkli kutucuklar, 17px'e
+düşen puntolar). İçerik korundu, tek bir tipografik blokta toplandı:
 
-**Geçişler** RevSlider sınıflarının karşılığıdır: `sfl/sfr/sft/sfb` kısa mesafeden,
-`lfl/lfr/lft/lfb` ekran dışından, `randomrotate` dönerek, `tp-fade` belirerek.
-Animasyon yalnızca aktif slaytta çalışır (`.slide[data-aktif="true"]`), böylece
-slayt her göründüğünde baştan oynar. Otomatik geçiş 8 sn — en geç katman
-5000 ms gecikmeli, daha kısa aralıkta animasyonlar tamamlanmıyor.
-
-**Metin katmanı stilleri** (`.s-mavis`, `.s-turuncu2`, `.s-medium_bg_red` …)
-canlı sitedeki caption sınıflarından birebir alındı (renk, punto, gölge, dolgu).
-
-**Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif görsel/video katmanları
-gizlenir ve slayttaki ilk metin katmanı ortalanır — 1920×500 kompozisyonu
-telefonda okunmuyor.
-
-**Yeniden çıkarma** (canlı slider değişirse):
-
-```bash
-curl -s https://www.deltek.com.tr/ -o anasayfa.html
-node scripts/hero-slider-cikar.mjs      # -> slider.json (ham yapı raporu)
-node scripts/hero-veri-uret.mjs src/data/hero.ts
+```yaml
+yazi:
+  ustlik: 'Teknoloji'            # küçük, aralıklı, altın/amber üst satır
+  baslik: '...'                  # 52/1920 punto, 800 ağırlık
+  satirlar: ['...']              # gövde satırları
+  eylem: 'Bize ulaşın'           # buton (isteğe bağlı)
+  konum: sol | sag               # görsel katmanların boş bıraktığı yan
+  dikey: ust | orta | alt        # katmanların kapladığı bandın dışı
+  tema:  koyu | acik             # arka plan koyu mu açık mı
 ```
+
+`tema` yazı ve perde rengini belirler: **1-3. slaytlar koyu fotoğraf** (beyaz yazı,
+koyu perde), **4-9. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
+fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
+
+`konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi;
+metin kutusuyla katmanların çakışması ölçülerek doğrulandı (6 slaytta sıfır,
+3 slaytta yalnızca saydam PNG'lerin sınır kutusuna değiyor).
+
+**Giriş animasyonu** kademeli: üstlik 0,18 sn → başlık 0,32 sn → gövde satırları
+0,48 sn'den itibaren 0,1 sn arayla → buton 0,66 sn. Her parça 0,72 sn'de aşağıdan
+yukarı yumuşakça belirir. Animasyon yalnızca aktif slaytta çalışır
+(`.slide[data-aktif="true"]`), böylece slayt her göründüğünde baştan oynar.
+Otomatik geçiş 8 sn — en geç görsel katman 4000 ms gecikmeli.
+
+**Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif katmanlar gizlenir, perde
+alttan yukarı koyulaşır ve yazı tam genişlikte ortalanıp beyaza döner.
 
 > Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor —
 > orijinali (309×451, saydam PNG) web arşivinin 2025-04-01 anlık görüntüsünden
-> alınıp depoya kondu, slaytta orijinal konum ve animasyonuyla duruyor.
+> alınıp depoya kondu.
 > `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.
 
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
