@@ -207,6 +207,33 @@ bileşeni (`kaya-akis`), makine vitrin kartları ve maskot blokları. Kategori
 açılır menüsü ile ikon şeridi iskelette duruyor ama `KATEGORILER` boş olduğu
 için gizli (`src/data/site.ts`).
 
+## Görsel dil
+
+Canlı deltek.com.tr'den alındı, `src/styles/global.css` `:root` içinde tanımlı.
+
+| Değişken | Değer | Nerede |
+| --- | --- | --- |
+| `--mavi` | `#185ad6` | bağlantılar, butonlar, başlıklar — sitenin ana rengi |
+| `--mavi-700` / `--mavi-900` | `#1449ac` / `#0e3578` | koyu yüzeyler, slider degradesi |
+| `--sari` | `#ffd658` | başlık altı çizgi, menü hover, CTA üst şeridi |
+| `--vurgu` | `#eb9e0f` | ikincil vurgu (buton hover) |
+| `--metin` / `--mute` | `#333` / `#777` | başlık / gövde metni |
+
+**Tipografi:** Open Sans (Google Fonts'tan `display=swap` ile yükleniyor —
+canlı sitenin kullandığı aile). Üç font değişkeni de (`--f-dis`, `--f-metin`,
+`--f-veri`) aynı aileye bakıyor; `.veri` sınıfı yalnızca `tabular-nums` ekler.
+
+**Header** canlı sitedeki gibi açık zeminli: üstte gri iletişim şeridi
+(e-posta + telefon + dil), ortada renkli logo, altında büyük harf gezinme.
+Logo `public/deltek-logo.png` — canlı siteden alınan gerçek marka dosyası
+(200×46, saydam PNG, açık zemin için tasarlanmış).
+
+**Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
+(`.hero__bilgi h1::after`, `.kanit__bas h2::after`, `.bolum-bas::after`).
+
+Canlı siteden bilinçli olarak sapılanlar: gövde metni 13px yerine ~15px
+(okunabilirlik), kart/gölge dili 2015 temasından daha modern bırakıldı.
+
 ## Deploy hedefi: Cloudflare Pages
 
 - Build: `npm run build` · Çıktı: `dist` · Node 22
@@ -238,12 +265,11 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [ ] `/iletisim/` sayfasına çalışan bir iletişim formu ekle (CF7 kaldırıldı)
 - [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde
       yalnızca Blog görünüyor
-- [ ] Görsel tasarımı canlı siteye yaklaştır (renk paleti `global.css` `:root` içinde,
-      şu an Boremak iskeletinden devralındı)
+- [x] Görsel tasarım canlı siteye yaklaştırıldı (palet, tipografi, header, logo)
 - [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
-- [ ] `public/logo.svg`, `logo-beyaz.svg`, `favicon.svg` — gerçek Deltek logosu
 - [ ] `public/og-image.jpg` — **yok**; `Layout.astro` bu yola referans veriyor, 1200×630 eklenmeli
-- [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri
+- [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri (canlı sitedeki
+      saha fotoğrafı slider'ı gibi); üzerine metin bindirme de eklenebilir
 - [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 

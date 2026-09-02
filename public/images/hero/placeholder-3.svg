@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2100 900" width="2100" height="900" role="img" aria-label="Deltek">
-  <rect width="2100" height="900" fill="#e9f1f9"/>
-  <g fill="none" stroke="#c3d4e6" stroke-width="2">
+  <rect width="2100" height="900" fill="#eef3fd"/>
+  <g fill="none" stroke="#dbe6fb" stroke-width="2">
     <path d="M0 300h2100M0 600h2100M700 0v900M1400 0v900"/>
   </g>
-  <text x="1050" y="430" text-anchor="middle" font-family="Archivo, system-ui, sans-serif" font-size="150" font-weight="800" fill="#00296b" letter-spacing="14">DELTEK</text>
-  <text x="1050" y="510" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="44" fill="#5f7480" letter-spacing="10">GORSEL 3 — PLACEHOLDER</text>
+  <text x="1050" y="430" text-anchor="middle" font-family="Open Sans, system-ui, sans-serif" font-size="150" font-weight="800" font-style="italic" fill="#185ad6" letter-spacing="10">DELTEK</text>
+  <text x="1050" y="510" text-anchor="middle" font-family="Open Sans, system-ui, sans-serif" font-size="40" fill="#777777" letter-spacing="8">GORSEL 3 — PLACEHOLDER</text>
 </svg>
