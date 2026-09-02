@@ -1,54 +1,41 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { SITE } from '../../../data/site';
-import { getCollection } from 'astro:content';
+import { yazilar } from '../../../data/blog';
 
-const girdiler = await getCollection('projeler');
-
-const projeler = girdiler
-  .map(p => ({ ...p.data, id: p.id }))
-  .sort((a, b) => {
-    const ta = a.tarih ? new Date(a.tarih).getTime() : 0;
-    const tb = b.tarih ? new Date(b.tarih).getTime() : 0;
-    return tb - ta;
-  });
-
-const slugOf = (p: any) => (p.slug && p.slug.trim() ? p.slug.trim() : p.id);
+// Canlı sitede /blog/ yalnızca liste sayfası; yazıların kendisi kök dizinde.
+const liste = await yazilar('en');
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
 ---
-<Layout title={`Field / Projects — ${SITE.isim}`}
-        description="Deltek projects, references and news.">
+<Layout title={`Blog — ${SITE.isim}`}
+        description="Articles and news on horizontal directional drilling, pipe ramming and trenchless technologies.">
 <section class="kap bolum">
-  <span class="kunye">From the field</span>
-  <h1>Projects and references.</h1>
+  <span class="kunye">Blog</span>
+  <h1>Articles and news.</h1>
   <p style="color:var(--mute);margin-top:.6rem;max-width:62ch">
-    Deltek projects, reference work and news.
+    Articles on horizontal directional drilling, pipe ramming and trenchless technologies.
   </p>
 
-  {projeler.length === 0 ? (
+  {liste.length === 0 ? (
     <div class="pboş">
-      <p>We'll share our first field projects here soon.</p>
+      <p>We'll publish our first articles here soon.</p>
       <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>Contact us</a>
     </div>
   ) : (
     <div class="pgrid">
-      {projeler.map(p => (
-        <a class="pkart" href={`/en/projeler/${slugOf(p)}`}>
+      {liste.map(({ entry, slug }) => (
+        <a class="pkart" href={`/en/${slug}/`}>
           <div class="pkart__g">
-            {p.kapak
-              ? <img src={p.kapak} alt={p.baslik} loading="lazy" />
+            {entry.data.kapak
+              ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
               : <div class="pkart__yok">DELTEK</div>}
-            {p.video && <span class="pkart__vid" aria-hidden="true">▶</span>}
+            {entry.data.video && <span class="pkart__vid" aria-hidden="true">▶</span>}
           </div>
           <div class="pkart__b">
-            {p.tarih && <span class="pkart__tarih">{tarihFmt(p.tarih)}</span>}
-            <h3>{p.baslik}</h3>
-            {p.ozet && <p>{p.ozet}</p>}
-            <div class="pkart__meta">
-              {p.makine && <span>{p.makine}</span>}
-              {p.konum && <span>{p.konum}</span>}
-            </div>
+            {entry.data.tarih && <span class="pkart__tarih">{tarihFmt(entry.data.tarih)}</span>}
+            <h3>{entry.data.baslik}</h3>
+            {entry.data.ozet && <p>{entry.data.ozet}</p>}
           </div>
         </a>
       ))}
@@ -71,8 +58,6 @@ const tarihFmt = (d: any) =>
 .pkart__tarih { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); }
 .pkart__b h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.15rem; color: var(--mavi-900); letter-spacing: -.01em; }
 .pkart__b p { color: var(--mute); font-size: .9rem; }
-.pkart__meta { margin-top: auto; padding-top: .7rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-.pkart__meta span { font-family: var(--f-veri); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); background: var(--mavi-050); border: 1px solid var(--cizgi); padding: .25rem .5rem; border-radius: 2px; }
 .pboş { margin-top: 2.5rem; padding: 3rem 1.5rem; text-align: center; background: var(--kagit); border: 1px dashed var(--cizgi-2); border-radius: 6px; }
 .pboş p { color: var(--mute); margin-bottom: 1.2rem; }
 </style>

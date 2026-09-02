@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
-import { getCollection } from 'astro:content';
+import { yazilar } from '../../data/blog';
 
 // Hero slider images — PLACEHOLDER. Replace with real Deltek imagery
 // (drop files under public/images/hero/ and update this list).
@@ -11,17 +11,8 @@ const heroFotolar = [
   { src: '/images/hero/placeholder-3.svg', alt: 'Deltek', ad: 'Deltek' },
 ];
 
-// Latest projects — newest 3 (if any)
-const projeGirdileri = await getCollection('projeler');
-const sonProjeler = projeGirdileri
-  .map(p => ({ ...p.data, id: p.id }))
-  .sort((a, b) => {
-    const ta = a.tarih ? new Date(a.tarih).getTime() : 0;
-    const tb = b.tarih ? new Date(b.tarih).getTime() : 0;
-    return tb - ta;
-  })
-  .slice(0, 3);
-const projeSlug = (p: any) => (p.slug && p.slug.trim() ? p.slug.trim() : p.id);
+// Latest blog posts — newest 3 (if any)
+const sonYazilar = (await yazilar('en')).slice(0, 3);
 const projeTarih = (d: any) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
 ---
@@ -71,32 +62,28 @@ const projeTarih = (d: any) =>
   </div>
 </div>
 
-{sonProjeler.length > 0 && (
-<section class="bolum kap" id="sahadan">
+{sonYazilar.length > 0 && (
+<section class="bolum kap" id="blog">
   <div class="sahadan__bas">
     <div>
-      <span class="kunye">From the field</span>
-      <h2>Our projects.</h2>
+      <span class="kunye">Blog</span>
+      <h2>Latest articles.</h2>
     </div>
-    <a class="sahadan__tum" href="/en/projeler">All projects →</a>
+    <a class="sahadan__tum" href="/en/blog/">All articles →</a>
   </div>
   <div class="sahadan__grid">
-    {sonProjeler.map(p => (
-      <a class="skart" href={`/en/projeler/${projeSlug(p)}`}>
+    {sonYazilar.map(({ entry, slug }) => (
+      <a class="skart" href={`/en/${slug}/`}>
         <div class="skart__g">
-          {p.kapak
-            ? <img src={p.kapak} alt={p.baslik} loading="lazy" />
+          {entry.data.kapak
+            ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
             : <div class="skart__yok">DELTEK</div>}
-          {p.video && <span class="skart__vid" aria-hidden="true">▶</span>}
+          {entry.data.video && <span class="skart__vid" aria-hidden="true">▶</span>}
         </div>
         <div class="skart__b">
-          {p.tarih && <span class="skart__tarih">{projeTarih(p.tarih)}</span>}
-          <h3>{p.baslik}</h3>
-          {p.ozet && <p>{p.ozet}</p>}
-          <div class="skart__meta">
-            {p.makine && <span>{p.makine}</span>}
-            {p.konum && <span>{p.konum}</span>}
-          </div>
+          {entry.data.tarih && <span class="skart__tarih">{projeTarih(entry.data.tarih)}</span>}
+          <h3>{entry.data.baslik}</h3>
+          {entry.data.ozet && <p>{entry.data.ozet}</p>}
         </div>
       </a>
     ))}

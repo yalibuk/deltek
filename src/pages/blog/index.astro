@@ -1,56 +1,41 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
-import { getCollection } from 'astro:content';
+import { yazilar } from '../../data/blog';
 
-// Sahadan / Projeler — panelden (Sveltia CMS) eklenen içerikler
-const girdiler = await getCollection('projeler');
-
-// Tarihe göre yeniden eskiye sırala
-const projeler = girdiler
-  .map(p => ({ ...p.data, id: p.id }))
-  .sort((a, b) => {
-    const ta = a.tarih ? new Date(a.tarih).getTime() : 0;
-    const tb = b.tarih ? new Date(b.tarih).getTime() : 0;
-    return tb - ta;
-  });
-
-const slugOf = (p: any) => (p.slug && p.slug.trim() ? p.slug.trim() : p.id);
+// Canlı sitede /blog/ yalnızca liste sayfası; yazıların kendisi kök dizinde.
+const liste = await yazilar('tr');
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
 ---
-<Layout title={`Sahadan / Projeler — ${SITE.isim}`}
-        description="Deltek projeleri, referanslar ve haberler.">
+<Layout title={`Blog — ${SITE.isim}`}
+        description="Yatay sondaj, boru sürme ve kazısız geçiş teknolojileri üzerine yazılar ve haberler.">
 <section class="kap bolum">
-  <span class="kunye">Sahadan</span>
-  <h1>Projeler ve referanslar.</h1>
+  <span class="kunye">Blog</span>
+  <h1>Yazılar ve haberler.</h1>
   <p style="color:var(--mute);margin-top:.6rem;max-width:62ch">
-    Deltek projeleri, referans işler ve haberler.
+    Yatay sondaj, boru sürme ve kazısız geçiş teknolojileri üzerine yazılar.
   </p>
 
-  {projeler.length === 0 ? (
+  {liste.length === 0 ? (
     <div class="pboş">
-      <p>Yakında ilk saha projelerimizi burada paylaşacağız.</p>
+      <p>Yakında ilk yazılarımızı burada paylaşacağız.</p>
       <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>Bize ulaşın</a>
     </div>
   ) : (
     <div class="pgrid">
-      {projeler.map(p => (
-        <a class="pkart" href={`/projeler/${slugOf(p)}`}>
+      {liste.map(({ entry, slug }) => (
+        <a class="pkart" href={`/${slug}/`}>
           <div class="pkart__g">
-            {p.kapak
-              ? <img src={p.kapak} alt={p.baslik} loading="lazy" />
+            {entry.data.kapak
+              ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
               : <div class="pkart__yok">DELTEK</div>}
-            {p.video && <span class="pkart__vid" aria-hidden="true">▶</span>}
+            {entry.data.video && <span class="pkart__vid" aria-hidden="true">▶</span>}
           </div>
           <div class="pkart__b">
-            {p.tarih && <span class="pkart__tarih">{tarihFmt(p.tarih)}</span>}
-            <h3>{p.baslik}</h3>
-            {p.ozet && <p>{p.ozet}</p>}
-            <div class="pkart__meta">
-              {p.makine && <span>{p.makine}</span>}
-              {p.konum && <span>{p.konum}</span>}
-            </div>
+            {entry.data.tarih && <span class="pkart__tarih">{tarihFmt(entry.data.tarih)}</span>}
+            <h3>{entry.data.baslik}</h3>
+            {entry.data.ozet && <p>{entry.data.ozet}</p>}
           </div>
         </a>
       ))}
@@ -73,8 +58,6 @@ const tarihFmt = (d: any) =>
 .pkart__tarih { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); }
 .pkart__b h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.15rem; color: var(--mavi-900); letter-spacing: -.01em; }
 .pkart__b p { color: var(--mute); font-size: .9rem; }
-.pkart__meta { margin-top: auto; padding-top: .7rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-.pkart__meta span { font-family: var(--f-veri); font-size: .64rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); background: var(--mavi-050); border: 1px solid var(--cizgi); padding: .25rem .5rem; border-radius: 2px; }
 .pboş { margin-top: 2.5rem; padding: 3rem 1.5rem; text-align: center; background: var(--kagit); border: 1px dashed var(--cizgi-2); border-radius: 6px; }
 .pboş p { color: var(--mute); margin-bottom: 1.2rem; }
 </style>

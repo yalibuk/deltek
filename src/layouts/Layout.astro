@@ -9,17 +9,30 @@ interface Props {
   image?: string;
   keywords?: string;
   sema?: any;
+  /**
+   * Bu sayfanın diğer dilde bir karşılığı var mı?
+   * false ise hreflang alternatifi basılmaz ve dil düğmesi o dilin
+   * ana sayfasına gider. Çevirisi olmayan blog yazıları için kullanılır.
+   */
+  cevirisiVar?: boolean;
 }
-const { title = SITE.isim, description = '', image, keywords, sema } = Astro.props;
+const { title = SITE.isim, description = '', image, keywords, sema, cevirisiVar = true } = Astro.props;
+// trailingSlash: 'always' — tüm iç yollar eğik çizgiyle biter.
 const pathname = Astro.url.pathname;
-const dil = (pathname === '/en' || pathname.startsWith('/en/')) ? 'en' : 'tr';
+const dil = pathname.startsWith('/en/') ? 'en' : 'tr';
 const t = CEVIRI[dil];
-const yol = (p: string) => dil === 'en' ? '/en' + (p === '/' ? '' : p) : p;
+const yol = (p: string) => dil === 'en' ? ('/en' + (p === '/' ? '/' : p)) : p;
 const kategoriAdi = (k: any) => dil === 'en' ? (KATEGORI_EN[k.slug] || k.ad) : k.ad;
 const kbarAd = (k: any) => dil === 'en' ? (KATEGORI_EN[k.anahtar] || k.ad) : k.ad;
 const trYol = dil === 'en' ? (pathname.replace(/^\/en/, '') || '/') : pathname;
-const enYol = dil === 'en' ? pathname : ('/en' + (pathname === '/' ? '' : pathname));
-const anasayfaMi = pathname === '/' || pathname === '/en' || pathname === '/en/';
+const enYol = dil === 'en' ? pathname : ('/en' + (pathname === '/' ? '/' : pathname));
+const anasayfaMi = pathname === '/' || pathname === '/en/';
+
+// Çevirisi olmayan sayfada karşı dilin hreflang'i basılmaz; düğme o dilin köküne gider.
+const trAlt = (dil === 'tr' || cevirisiVar) ? SITE.kanonikal + trYol : null;
+const enAlt = (dil === 'en' || cevirisiVar) ? SITE.kanonikal + enYol : null;
+const trDugme = (dil === 'tr' || cevirisiVar) ? trYol : '/';
+const enDugme = (dil === 'en' || cevirisiVar) ? enYol : '/en/';
 
 const kanonik = SITE.kanonikal + pathname;
 const ogGorsel = SITE.kanonikal + (image || '/og-image.jpg');
@@ -56,9 +69,9 @@ const jsonLd = {
   <meta name="theme-color" content="#00296b" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="canonical" href={kanonik} />
-  <link rel="alternate" hreflang="tr" href={SITE.kanonikal + trYol} />
-  <link rel="alternate" hreflang="en" href={SITE.kanonikal + enYol} />
-  <link rel="alternate" hreflang="x-default" href={SITE.kanonikal + trYol} />
+  {trAlt && <link rel="alternate" hreflang="tr" href={trAlt} />}
+  {enAlt && <link rel="alternate" hreflang="en" href={enAlt} />}
+  <link rel="alternate" hreflang="x-default" href={trAlt || enAlt} />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={SITE.isim} />
   <meta property="og:locale" content={t.ogLocale} />
@@ -79,8 +92,8 @@ const jsonLd = {
   <div class="kap ust__ic">
     <div class="dil-sec" data-aktif={dil}>
       <span class="dil-sec__knob" aria-hidden="true"></span>
-      <a class="dil-sec__b" data-dil="tr" href={trYol} hreflang="tr" aria-label="Türkçe">TR</a>
-      <a class="dil-sec__b" data-dil="en" href={enYol} hreflang="en" aria-label="English">EN</a>
+      <a class="dil-sec__b" data-dil="tr" href={trDugme} hreflang="tr" aria-label="Türkçe">TR</a>
+      <a class="dil-sec__b" data-dil="en" href={enDugme} hreflang="en" aria-label="English">EN</a>
     </div>
     <a class="logo" href={yol('/')} aria-label={t.aria.home}>
       <img src="/logo-beyaz.svg" alt={SITE.isim} />
@@ -103,7 +116,7 @@ const jsonLd = {
           </div>
         </span>
       )}
-      <a class="gez2" href={yol('/projeler')}><span>{t.nav.projeler[0]}</span><span>{t.nav.projeler[1]}</span></a>
+      <a class="gez2" href={yol('/blog/')}><span>{t.nav.blog[0]}</span><span>{t.nav.blog[1]}</span></a>
       <a class="gez2" href={yol('/#hakkimizda')}><span>{t.nav.hakkimizda[0]}</span><span>{t.nav.hakkimizda[1] || ' '}</span></a>
       <a class="gez2" href={yol('/#iletisim')}><span>{t.nav.iletisim}</span><span>&nbsp;</span></a>
       <a class="ust__tel" href={`tel:${SITE.telefonHam}`}>
@@ -141,7 +154,7 @@ const jsonLd = {
       <div>
         <h5>{t.footer.site}</h5>
         <a href={yol('/')}>{t.footer.anasayfa}</a>
-        <a href={yol('/projeler')}>{t.footer.projeler}</a>
+        <a href={yol('/blog/')}>{t.footer.blog}</a>
         <a href={yol('/#hakkimizda')}>{t.footer.hakkimizda}</a>
         <a href={yol('/#iletisim')}>{t.footer.iletisim}</a>
       </div>
@@ -154,7 +167,7 @@ const jsonLd = {
     </div>
     <div class="alt__telif">
       <span>© {new Date().getFullYear()} {SITE.isim}. {t.footer.telif}</span>
-      <span>deltek.com.tr</span>
+      <span>www.deltek.com.tr</span>
     </div>
   </div>
 </footer>

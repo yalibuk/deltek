@@ -4,7 +4,11 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://deltek.com.tr',
+  // Canlı sitenin kanonik host'u www'lu; apex -> www yönlendirmesi Cloudflare'de.
+  site: 'https://www.deltek.com.tr',
+  // Mevcut deltek.com.tr'deki tüm URL'ler sondaki eğik çizgiyle çalışıyor.
+  // Slug'ları birebir korumak için bu ayar 'always' olmalı (bkz. CLAUDE.md).
+  trailingSlash: 'always',
   integrations: [
     sitemap({
       // CMS paneli ve içeriksiz sayfaları sitemap dışında bırak

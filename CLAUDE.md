@@ -1,16 +1,76 @@
-# Deltek — deltek.com.tr
+# Deltek — www.deltek.com.tr
 
-Deltek kurumsal sitesi. Bu iskelet, Boremak sitesinden kopyalanıp markaya özgü tüm
-ürün/makine içeriği çıkarılarak hazırlandı; layout, i18n, CMS ve SEO altyapısı korundu.
+Deltek kurumsal sitesinin yeni sürümü. **Amaç: mevcut deltek.com.tr'nin içeriği ve
+görsel kimliği mümkün olduğunca korunacak; değişen yalnızca arkadaki mimari.**
+İskelet, Boremak sitesinden kopyalanıp markaya özgü tüm içerik çıkarılarak hazırlandı.
 
 ## Stack
 
-- **Astro 7** (statik çıktı, `output` varsayılan `static`) — framework/UI kütüphanesi yok, saf `.astro` + vanilla JS
-- **@astrojs/sitemap** — `sitemap-index.xml` + hreflang eşlemesi (`astro.config.mjs`)
-- **Sveltia CMS** (git tabanlı, veritabanı yok) — panel `/admin`, ayarlar `public/admin/config.yml`
-  - `decap-cms-app` / `decap-server` paketleri `package.json`'da duruyor; yerel panel için `npm run cms`
-- **CSS**: tek global stylesheet (`src/styles/global.css`) + bileşen içi `<style>` blokları. Tailwind yok.
+- **Astro 7** (statik çıktı) — framework/UI kütüphanesi yok, saf `.astro` + vanilla JS
+- **@astrojs/sitemap** — `sitemap-index.xml` + hreflang eşlemesi
+- **Sveltia CMS** (git tabanlı, veritabanı yok) — panel `/admin/`, ayarlar `public/admin/config.yml`
+- **CSS**: tek global stylesheet (`src/styles/global.css`) + bileşen içi `<style>`. Tailwind yok.
 - **Node** ≥ 22.12.0
+- Kaynak site: **WordPress 4.4.33** (taşınacak olan)
+
+## URL / slug kuralı (ZORUNLU)
+
+> **Mevcut deltek.com.tr'deki tüm URL slug'ları yeni sitede aynen korunacak;
+> değişen varsa 301 redirect listesine eklenecek.**
+
+Bunun mimariye yansıması:
+
+1. **Blog yazıları kök dizinde yayınlanır** — `/<slug>/`. Canlı sitede de böyle;
+   `/blog/` yalnızca liste sayfasıdır. Route: `src/pages/[slug].astro`.
+2. **Slug = dosya adı.** `src/content/blog/tr/<slug>.md`. Frontmatter'da `slug`
+   alanı bilerek yok — tek doğru kaynak dosya adıdır.
+3. **`trailingSlash: 'always'`** (`astro.config.mjs`). Canlı sitedeki tüm URL'ler
+   sondaki eğik çizgiyle çalışıyor. İç bağlantılar da `/blog/`, `/<slug>/` biçiminde
+   yazılmalı; eğik çizgisiz bağlantı dev sunucuda 404 verir.
+4. **Kanonik host `www.deltek.com.tr`** — canlı sitenin bugünkü canonical'ı bu.
+   Apex → www 301'i Cloudflare tarafında kurulur.
+5. Slug değişmek zorundaysa `public/_redirects` içine `301` olarak eklenir ve
+   aşağıdaki tabloya işlenir. Redirect'siz slug değişikliği yapılmaz.
+6. **Emniyet:** kök seviyeye statik sayfa eklerken (ör. `src/pages/hakkimizda.astro`)
+   aynı adda bir yazı varsa Astro çakışma hatası verir. Bu kasıtlı.
+
+### 301 redirect listesi
+
+`public/_redirects` dosyasıyla senkron tutulacak.
+
+| Eski URL | Yeni URL | Not |
+| --- | --- | --- |
+| `/2017/*`, `/2026/*` | `/blog/` | WordPress tarih arşivleri yeni sitede yok |
+| `/feed/` | `/blog/` | WordPress RSS |
+| `/wp-login.php` | `/` | WordPress artığı |
+
+## Taşınacak içerik envanteri (canlı siteden)
+
+**Blog — 10 yazı, hepsi kök dizinde** (`/blog/` sadece liste):
+`the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimini-gerceklestirdi`,
+`ssen-96-milyon-sterlinlik-m27-projesinde-hdd-yontemine-guveniyor`,
+`iskandinavya-ai-super-otoyolunu-guclendirmek-icin-yonlendirilebilir-yatay-delgi-yyd-hdd`,
+`national-grid-temze-nehrinin-altinda-271-tonluk-dev-makineyi-harekete-gecirdi`,
+`avrupada-devasa-bir-yuzen-gunes-enerji-santrali-hizmete-girdi`,
+`yatay-delgi-dizel-elektrik-karsilastirma`, `4058-metre-dunya-rekoru`,
+`yonlendirilebilir-yatay-delgi-hakkinda`, `miamide-kanalizasyon-yapimi`, `gunde-1-km`
+
+**Statik sayfalar** (henüz taşınmadı): `/hakkimizda/`, `/hizmetlerimiz/`,
+`/referanslar/`, `/medyalar/`, `/iletisim/`
+
+**Teknoloji / hizmet sayfaları** (henüz taşınmadı): `/yatay-sondaj-kazisiz-yatay-delgi/`,
+`/yonlendirilebilir-yatay-sondaj-nedir/`, `/yonlendirilebilir-yatay-sondaj-makinesi`,
+`/yonlendirilebilir-yatay-sondaj-yapim-metodu`, `/yatay-sondaj-teknoloji/`,
+`/yatay-sondaj-camuru/`, `/delgi-tijleri/`, `/genisletme-basligi/`, `/yonlendirme-basligi/`,
+`/manyetik-alan/`, `/yer-belirleme/`, `/uzerinden-takip/`, `/boru-surmecakma/`,
+`/boru-surme-boru-cakma-auger-boring/`, `/auger-boring-nedir-modern-yatay-delgi-teknolojisi/`,
+`/boru-yenileme/`, `/mikrotunel-nedir/`, `/akilli-altyapi/`,
+`/kazisiz-altyapi-ve-kazisiz-teknolojiler/`
+
+> Not: `/mikrotunel-nedir/` ve `/auger-boring-nedir-.../` gibi bazı slug'lar hem
+> içerik sayfası hem blog yazısı gibi durabiliyor. Taşırken hangisinin blog
+> koleksiyonuna, hangisinin statik sayfaya gideceği tek tek karara bağlanmalı —
+> **ikisi aynı slug'ı alamaz.**
 
 ## Dizin yapısı
 
@@ -18,75 +78,76 @@ Deltek kurumsal sitesi. Bu iskelet, Boremak sitesinden kopyalanıp markaya özg�
 src/
   layouts/Layout.astro      tek layout — header, dil değiştirici, footer, meta/OG/JSON-LD
   pages/
-    index.astro             TR ana sayfa (hero slider + hakkımızda + iletişim)
-    projeler/               TR: liste + [slug] detay
-    en/                     EN karşılıkları (index, projeler)
+    index.astro             TR ana sayfa
+    [slug].astro            TR blog yazısı → /<slug>/
+    blog/index.astro        TR blog listesi → /blog/
+    en/index.astro          EN ana sayfa → /en/
+    en/[slug].astro         EN blog yazısı → /en/<slug>/
+    en/blog/index.astro     EN blog listesi → /en/blog/
     admin/index.astro       Sveltia CMS paneli (noindex)
   data/
     site.ts                 SITE sabitleri, KATEGORILER, KBAR
-    i18n.ts                 CEVIRI (tr/en) arayüz metinleri, KATEGORI_EN
-  content/projeler/         CMS'in yazdığı markdown dosyaları
-  content.config.ts         koleksiyon şeması (şu an sadece `projeler`)
+    i18n.ts                 CEVIRI (tr/en) arayüz metinleri
+    blog.ts                 yazilar(dil), cevirisiVarMi(slug, dil)
+  content/blog/tr/<slug>.md   Türkçe yazılar (ana dil)
+  content/blog/en/<slug>.md   İngilizce çeviriler (zorunlu değil)
+  content.config.ts
   styles/global.css
 public/
-  admin/config.yml          CMS koleksiyon tanımları
+  admin/config.yml          CMS koleksiyon tanımları (i18n: multiple_folders)
+  _redirects                Cloudflare Pages 301'leri
   images/hero/              hero slider görselleri (şu an placeholder SVG)
   images/uploads/           CMS medya klasörü
-  logo.svg, logo-beyaz.svg, favicon.svg   (placeholder — gerçek logo ile değiştirin)
 ```
 
 ## Dil yapısı (i18n)
 
-- **TR kök dizinde**: `/`, `/projeler`, `/projeler/<slug>`
-- **EN `/en/` altında**: `/en`, `/en/projeler`
-- Dil, `Astro.url.pathname` `/en` ile başlıyor mu diye bakılarak belirlenir (`Layout.astro`).
-- Arayüz metinleri `src/data/i18n.ts` içindeki `CEVIRI` nesnesinde; **sayfa içine sabit metin gömmeyin**,
-  iki dilli bir metin gerekiyorsa `CEVIRI`'ye ekleyin.
-- `Layout.astro` her sayfaya `hreflang` tr / en / x-default ve canonical basar.
-  Yeni bir TR sayfası eklerken **karşılığını `/en/` altında da açın**, yoksa hreflang kırık kalır.
-- Sitemap `astro.config.mjs` içinde `i18n: { defaultLocale: 'tr', locales: { tr, en } }` ile eşlenir.
+- **TR kök dizinde**: `/`, `/blog/`, `/<slug>/`
+- **EN `/en/` altında**: `/en/`, `/en/blog/`, `/en/<slug>/`
+- Slug iki dilde **aynı** kalır; ayıran tek şey `/en/` öneki.
+- Dil, `pathname.startsWith('/en/')` ile belirlenir (`Layout.astro`).
+- Arayüz metinleri `src/data/i18n.ts` içindeki `CEVIRI`'de. **Sayfa içine iki dilli
+  sabit metin gömmeyin**, `CEVIRI`'ye ekleyin.
+- **İçerik iki dilli**: CMS'te her yazının TR ve EN sekmesi var
+  (`i18n: multiple_folders`), dosyalar `content/blog/tr/` ve `content/blog/en/`'e yazılır.
+- **Çevirisi olmayan yazı**: EN route hiç üretilmez; TR sayfası da EN `hreflang`'ini
+  basmaz ve dil düğmesi `/en/`'e düşer. Bunu `Layout`'un `cevirisiVar` prop'u yönetir —
+  yeni bir çift dilli sayfa yazarken bu prop'u geçirmeyi unutmayın.
 
 ## Deploy hedefi: Cloudflare Pages
 
-- Build komutu: `npm run build` · Çıktı dizini: `dist` · Node sürümü: 22
-- Statik çıktı; adapter/SSR **yok**. Sunucu tarafı çalışan bir şey eklenirse
-  `@astrojs/cloudflare` adapter'ı gerekir — o karar ayrıca alınmalı.
-- 301 yönlendirmeleri `public/_redirects` dosyasına yazılır (Cloudflare Pages formatı):
-  `/eski-yol  /yeni-yol  301`
-- Özel başlıklar gerekirse `public/_headers`.
+- Build: `npm run build` · Çıktı: `dist` · Node 22
+- Statik çıktı; adapter/SSR **yok**. SSR gerekirse `@astrojs/cloudflare` adapter'ı
+  ayrı bir karar.
+- 301'ler `public/_redirects`, özel başlıklar `public/_headers`.
+- Apex → www yönlendirmesi Cloudflare tarafında kurulmalı.
 
-## URL / slug kuralı (ZORUNLU)
+## Bilinen tuzak
 
-> **Mevcut deltek.com.tr'deki tüm URL slug'ları yeni sitede aynen korunacak;
-> değişen varsa 301 redirect listesine eklenecek.**
+`astro build`, içerik koleksiyonunu **`node_modules/.astro/data-store.json`**'dan
+okur. Bir markdown dosyasını silmek yeterli değil — dosya silindikten sonra da
+build çıktısında görünmeye devam eder. Yerelde silme sonrası:
 
-Uygulaması:
+```bash
+rm -rf node_modules/.astro .astro dist && npm run build
+```
 
-1. Bir sayfa taşınmadan önce mevcut canlı sitedeki yolu kontrol edin; dosya adını/route'u
-   o slug'a göre kurun. Türkçe karakter, tire, çoğul/tekil farkı dahil **birebir** aynı olmalı.
-2. Slug değişmek zorundaysa (ör. teknik kısıt), eski yolu `public/_redirects` içine
-   `301` olarak ekleyin ve aşağıdaki tabloya işleyin.
-3. Redirect'siz slug değişikliği yapılmaz.
+Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orada sorun olmaz.
 
-### 301 redirect listesi
+## Yapılacaklar
 
-| Eski URL | Yeni URL | Not |
-| --- | --- | --- |
-| _(henüz yok)_ | | |
-
-## Yapılacaklar (bu iskelette placeholder olan şeyler)
-
-- `src/data/site.ts` — telefon, e-posta, adres, WhatsApp numarası, slogan (`TODO` işaretli)
-- `src/data/i18n.ts` — `footer.slogan` (TR/EN)
-- `public/logo.svg`, `public/logo-beyaz.svg`, `public/favicon.svg` — gerçek Deltek logosu
-- `public/og-image.jpg` — **yok**; `Layout.astro` bu yola referans veriyor, 1200×630 bir görsel eklenmeli
-- `public/images/hero/placeholder-*.svg` — gerçek hero görselleri
-- `src/pages/index.astro` ve `src/pages/en/index.astro` — hero başlığı, hakkımızda kartları (placeholder metin)
-- Renk paleti (`global.css` `:root`) Boremak iskeletinden devralındı; Deltek kurumsal renkleriyle güncellenmeli
-- `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
-- Ürün/hizmet kategorileri eklenecekse `src/data/site.ts` içindeki `KATEGORILER` doldurulur;
-  dolduğunda header açılır menüsü ve ikon şeridi otomatik görünür hale gelir (`/kategori/<slug>`
-  route'u ayrıca yazılmalı).
+- [ ] 10 blog yazısını canlı siteden içerik + görselleriyle taşı
+- [ ] Boremak ürün sayfası şablonlarını (içerik boş) geri al — teknoloji/hizmet sayfaları için
+- [ ] Statik ve teknoloji/hizmet sayfalarını taşı (yukarıdaki envanter)
+- [ ] Görsel tasarımı canlı siteye yaklaştır (renk paleti `global.css` `:root` içinde,
+      şu an Boremak iskeletinden devralındı)
+- [ ] `src/data/site.ts` — telefon, e-posta, adres, WhatsApp, slogan (`TODO` işaretli)
+- [ ] `src/data/i18n.ts` — `footer.slogan` (TR/EN)
+- [ ] `public/logo.svg`, `logo-beyaz.svg`, `favicon.svg` — gerçek Deltek logosu
+- [ ] `public/og-image.jpg` — **yok**; `Layout.astro` bu yola referans veriyor, 1200×630 eklenmeli
+- [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri
+- [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
+- [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 
 ## Komutlar
 
@@ -96,4 +157,4 @@ Uygulaması:
 | `npm run dev` | Geliştirme sunucusu (http://localhost:4321) |
 | `npm run build` | `dist/` üretir |
 | `npm run preview` | Build çıktısını yerelde sunar |
-| `npm run cms` | Sveltia/Decap yerel backend (panel `/admin`) |
+| `npm run cms` | Sveltia/Decap yerel backend (panel `/admin/`) |

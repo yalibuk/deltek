@@ -10,7 +10,7 @@ export const SITE = {
   adres: "",                               // TODO
   adres1: "",                              // TODO
   adres2: "",                              // TODO
-  kanonikal: "https://deltek.com.tr",
+  kanonikal: "https://www.deltek.com.tr",
 };
 
 // Ürün/hizmet kategorileri. Boş bırakıldığında header'daki açılır menü ve

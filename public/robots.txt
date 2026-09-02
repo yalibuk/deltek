@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /admin
 
-Sitemap: https://deltek.com.tr/sitemap-index.xml
+Sitemap: https://www.deltek.com.tr/sitemap-index.xml

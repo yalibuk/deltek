@@ -1,0 +1,12 @@
+# Cloudflare Pages yönlendirmeleri
+# Kural: deltek.com.tr'deki mevcut slug'lar birebir korunur. Bir slug
+# değişmek zorunda kalırsa buraya 301 olarak eklenir ve CLAUDE.md'deki
+# tabloya işlenir.
+
+# WordPress tarih arşivleri yeni sitede yok -> blog listesine
+/2017/*   /blog/   301
+/2026/*   /blog/   301
+
+# WordPress artıkları
+/feed/          /blog/   301
+/wp-login.php   /        301
