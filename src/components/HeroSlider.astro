@@ -106,6 +106,8 @@ const katmanStil = (k: any) => [
 .slide[data-aktif="true"] .kat--lfr { animation-name: kat-lfr; }
 .slide[data-aktif="true"] .kat--lft { animation-name: kat-lft; }
 .slide[data-aktif="true"] .kat--lfb { animation-name: kat-lfb; }
+/* yerinde belirir — hareket yok */
+.slide[data-aktif="true"] .kat--fade { animation-name: kat-belir; }
 @keyframes kat-sfl { from { opacity: 0; transform: translateX(calc(-50 * var(--olcek))); } to { opacity: 1; transform: none; } }
 @keyframes kat-sfr { from { opacity: 0; transform: translateX(calc(50 * var(--olcek))); } to { opacity: 1; transform: none; } }
 @keyframes kat-sft { from { opacity: 0; transform: translateY(calc(-50 * var(--olcek))); } to { opacity: 1; transform: none; } }
@@ -114,6 +116,7 @@ const katmanStil = (k: any) => [
 @keyframes kat-lfr { from { opacity: 1; transform: translateX(100cqw); } to { opacity: 1; transform: none; } }
 @keyframes kat-lft { from { opacity: 1; transform: translateY(-100cqh); } to { opacity: 1; transform: none; } }
 @keyframes kat-lfb { from { opacity: 1; transform: translateY(100cqh); } to { opacity: 1; transform: none; } }
+@keyframes kat-belir { from { opacity: 0; } to { opacity: 1; } }
 
 /* ─── Yazı bloğu ──────────────────────────────────────── */
 .yazi { --olcek: calc(100cqw / 1920); position: absolute; z-index: 3;
