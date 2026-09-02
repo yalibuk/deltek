@@ -96,10 +96,12 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sol', dikey: 'ust', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/bit.png', w: 1530, h: 141, x: -2, y: 312, gecis: 'lfl', basla: 1000, sure: 1000 },
-      // Orijinalinde sağdan kayarak giriyordu (lfr); istek üzerine yerinde
-      // belirecek şekilde değiştirildi. Tij (bit.png) soldan gelişini koruyor.
-      { tur: 'gorsel', src: '/images/hero/katman/toprak.png', w: 325, h: 430, x: 1132, y: 102, gecis: 'fade', basla: 1000, sure: 1200 },
+      { tur: 'gorsel', src: '/images/hero/katman/bit.png', w: 1530, h: 141, x: -2, y: 312, gecis: 'lfl', basla: 2000, sure: 1000 },
+      // Ada: orijinalinde sağdan kayarak giriyordu (lfr); yerinde beliren
+      // yavaş bir fade'e çevrildi (1000 ms'de başlar, 2000 ms sürer).
+      // Tij: soldan gelişini (lfl) koruyor ama 1 sn geciktirildi (2000 ms) —
+      // böylece ada oturduktan sonra devreye giriyor.
+      { tur: 'gorsel', src: '/images/hero/katman/toprak.png', w: 325, h: 430, x: 1132, y: 102, gecis: 'fade', basla: 1000, sure: 2000 },
     ],
   },
   {
