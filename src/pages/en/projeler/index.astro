@@ -34,7 +34,7 @@ const tarihFmt = (d: any) =>
   ) : (
     <div class="pgrid">
       {projeler.map(p => (
-        <a class="pkart" href={`/projeler/${slugOf(p)}`}>
+        <a class="pkart" href={`/en/projeler/${slugOf(p)}`}>
           <div class="pkart__g">
             {p.kapak
               ? <img src={p.kapak} alt={p.baslik} loading="lazy" />
