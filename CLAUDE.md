@@ -136,7 +136,9 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 
 ## Yapılacaklar
 
-- [ ] 10 blog yazısını canlı siteden içerik + görselleriyle taşı
+- [x] 10 blog yazısı canlı siteden taşındı (içerik + 9 görsel, slug'lar birebir)
+- [ ] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — şu an hiç yok,
+      bu yüzden `/en/blog/` boş ve yazılar EN hreflang basmıyor
 - [ ] Boremak ürün sayfası şablonlarını (içerik boş) geri al — teknoloji/hizmet sayfaları için
 - [ ] Statik ve teknoloji/hizmet sayfalarını taşı (yukarıdaki envanter)
 - [ ] Görsel tasarımı canlı siteye yaklaştır (renk paleti `global.css` `:root` içinde,
@@ -148,6 +150,20 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri
 - [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
+
+## Taşıma betiği
+
+`scripts/wp-tasi.mjs` — canlı WordPress'ten içerik çeker. Kaynak olarak `/feed/`
+(tam gövde, tarih, özet) ve her yazının kendi sayfasını (öne çıkan görsel:
+`attachment-blog-large-image` sınıfı) kullanır; HTML'i markdown'a çevirir,
+görselleri `public/images/uploads/` altına WP yol yapısını koruyarak indirir.
+
+```bash
+curl -s https://www.deltek.com.tr/feed/ -o feed.xml   # betikle aynı klasöre
+node scripts/wp-tasi.mjs .
+```
+
+Statik sayfaları taşırken bu betiğin HTML→markdown dönüştürücüsü yeniden kullanılabilir.
 
 ## Komutlar
 
