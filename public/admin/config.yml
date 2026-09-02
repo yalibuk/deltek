@@ -1,0 +1,49 @@
+# Deltek içerik paneli — Sveltia CMS
+# Yerelde "npm run dev" ile çalışır (local_backend); yayında GitHub'a commit atar.
+
+backend:
+  name: github
+  repo: KULLANICI-ADI/deltek-site   # ← yayına alırken GitHub kullanıcı/depo adınız
+  branch: main
+
+# Bilgisayarda çalışırken panel doğrudan yerel dosyaları düzenler.
+local_backend: true
+
+site_url: https://deltek.com.tr
+display_url: https://deltek.com.tr
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: projeler
+    label: Sahadan / Projeler
+    label_singular: Proje / Haber
+    folder: src/content/projeler
+    create: true
+    identifier_field: baslik
+    slug: "{{year}}-{{month}}-{{slug}}"
+    summary: "{{baslik}}"
+    sortable_fields: [tarih, baslik]
+    fields:
+      - { name: baslik, label: Başlık, widget: string }
+      - { name: ozet,   label: Kısa özet (liste ve önizlemede görünür), widget: text, required: false }
+      - { name: tarih,  label: Tarih, widget: datetime, format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, required: false }
+      - { name: kapak,  label: Kapak fotoğrafı, widget: image, required: false }
+      - { name: makine, label: İlgili ürün / hizmet, widget: string, required: false }
+      - { name: konum,  label: Konum / Şehir, widget: string, required: false }
+      - { name: video,  label: "YouTube video linki (isteğe bağlı)", widget: string, required: false }
+      - name: galeri
+        label: Foto galerisi
+        widget: list
+        required: false
+        label_singular: Fotoğraf
+        fields:
+          - { name: foto, label: Fotoğraf, widget: image }
+      - { name: body, label: Yazı içeriği, widget: markdown, required: false }
+      - { name: slug, label: Adres (URL), widget: string, required: false }

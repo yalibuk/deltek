@@ -1,0 +1,22 @@
+---
+/**
+ * İçerik paneli (Sveltia CMS).
+ * Bu dosya bilerek public/ yerine src/pages/ altında duruyor.
+ * Panel ayarları public/admin/config.yml dosyasında.
+ */
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Deltek — İçerik paneli</title>
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Git tabanlı panel: veritabanı yok. Her kayıt depoya commit olarak yazılır. -->
+    <script is:inline type="module" src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
+  </body>
+</html>

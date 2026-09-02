@@ -1,0 +1,177 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SITE } from '../../data/site';
+import { getCollection } from 'astro:content';
+
+// Hero slider images — PLACEHOLDER. Replace with real Deltek imagery
+// (drop files under public/images/hero/ and update this list).
+const heroFotolar = [
+  { src: '/images/hero/placeholder-1.svg', alt: 'Deltek', ad: 'Deltek' },
+  { src: '/images/hero/placeholder-2.svg', alt: 'Deltek', ad: 'Deltek' },
+  { src: '/images/hero/placeholder-3.svg', alt: 'Deltek', ad: 'Deltek' },
+];
+
+// Latest projects — newest 3 (if any)
+const projeGirdileri = await getCollection('projeler');
+const sonProjeler = projeGirdileri
+  .map(p => ({ ...p.data, id: p.id }))
+  .sort((a, b) => {
+    const ta = a.tarih ? new Date(a.tarih).getTime() : 0;
+    const tb = b.tarih ? new Date(b.tarih).getTime() : 0;
+    return tb - ta;
+  })
+  .slice(0, 3);
+const projeSlug = (p: any) => (p.slug && p.slug.trim() ? p.slug.trim() : p.id);
+const projeTarih = (d: any) =>
+  d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+---
+<Layout
+  title="Deltek"
+  description="">
+
+<!-- ── HERO: SLIDER ─────────────────────────── -->
+<section class="hero">
+  <div class="hero__grid"></div>
+  <div class="hero__ic">
+    <div class="slider hero__tam" aria-roledescription="carousel" aria-label="Deltek">
+      <div class="slider__ray" id="ray">
+        {heroFotolar.map((f, i) => (
+          <div class="slide">
+            <img src={f.src} alt={f.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+            <span class="slide__ad">{f.ad}</span>
+          </div>
+        ))}
+      </div>
+      <button class="ok ok--sol" id="geri" aria-label="Previous image">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 3 5 9l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="ok ok--sag" id="ileri" aria-label="Next image">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="nokta" id="nokta" role="tablist"></div>
+    </div>
+  </div>
+</section>
+
+<div class="hero__ayrac"></div>
+
+<!-- ── HERO INFO STRIP ──────────────────── -->
+<div class="hero__bilgi">
+  <div class="kap">
+    <span class="rozet"><i></i>Deltek</span>
+    <h1>Headline goes<em>here.</em></h1>
+    <p class="hero__alt">This area is reserved for the Deltek introduction copy. Text and imagery to be filled in once the content is ready.</p>
+    <div class="hero__eylem">
+      <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M3.6 1.4 5.9 1a.7.7 0 0 1 .78.4l1.06 2.4a.7.7 0 0 1-.2.82l-1.2.98a8.6 8.6 0 0 0 4.06 4.06l.98-1.2a.7.7 0 0 1 .82-.2l2.4 1.06a.7.7 0 0 1 .4.78l-.4 2.3a.7.7 0 0 1-.69.58C6.8 13 3 9.2 3 2.1a.7.7 0 0 1 .6-.7Z"/></svg>
+        Call now <small>{SITE.telefon}</small>
+      </a>
+      <a class="btn btn--cizgi" href="#hakkimizda">Learn more</a>
+    </div>
+  </div>
+</div>
+
+{sonProjeler.length > 0 && (
+<section class="bolum kap" id="sahadan">
+  <div class="sahadan__bas">
+    <div>
+      <span class="kunye">From the field</span>
+      <h2>Our projects.</h2>
+    </div>
+    <a class="sahadan__tum" href="/en/projeler">All projects →</a>
+  </div>
+  <div class="sahadan__grid">
+    {sonProjeler.map(p => (
+      <a class="skart" href={`/projeler/${projeSlug(p)}`}>
+        <div class="skart__g">
+          {p.kapak
+            ? <img src={p.kapak} alt={p.baslik} loading="lazy" />
+            : <div class="skart__yok">DELTEK</div>}
+          {p.video && <span class="skart__vid" aria-hidden="true">▶</span>}
+        </div>
+        <div class="skart__b">
+          {p.tarih && <span class="skart__tarih">{projeTarih(p.tarih)}</span>}
+          <h3>{p.baslik}</h3>
+          {p.ozet && <p>{p.ozet}</p>}
+          <div class="skart__meta">
+            {p.makine && <span>{p.makine}</span>}
+            {p.konum && <span>{p.konum}</span>}
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+)}
+
+<!-- ── ABOUT ───────────────────────────────── -->
+<section class="kanit" id="hakkimizda">
+  <div class="kap">
+    <div class="kanit__bas">
+      <span class="kanit__etiket">About us</span>
+      <h2>Section heading <em>goes here</em>.</h2>
+      <p>The intro copy for this section will be filled in once the content is ready.</p>
+    </div>
+    <div class="kanit__ic">
+      <article class="kanit__h">
+        <span class="kanit__no">01</span>
+        <h4>Heading</h4>
+        <p>Body copy goes here.</p>
+      </article>
+      <article class="kanit__h">
+        <span class="kanit__no">02</span>
+        <h4>Heading</h4>
+        <p>Body copy goes here.</p>
+      </article>
+      <article class="kanit__h">
+        <span class="kanit__no">03</span>
+        <h4>Heading</h4>
+        <p>Body copy goes here.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── CALL ───────────────────────────────── -->
+<section class="kap" id="iletisim" style="padding-block:clamp(2rem,5vw,4rem)">
+  <div class="bit-cta">
+    <p>Get in touch with any questions.</p>
+    <a class="btn bit-cta__btn" href={`tel:${SITE.telefonHam}`}>
+      <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M3.6 1.4 5.9 1a.7.7 0 0 1 .78.4l1.06 2.4a.7.7 0 0 1-.2.82l-1.2.98a8.6 8.6 0 0 0 4.06 4.06l.98-1.2a.7.7 0 0 1 .82-.2l2.4 1.06a.7.7 0 0 1 .4.78l-.4 2.3a.7.7 0 0 1-.69.58C6.8 13 3 9.2 3 2.1a.7.7 0 0 1 .6-.7Z"/></svg>
+      {SITE.telefon}
+    </a>
+  </div>
+</section>
+
+</Layout>
+
+<script>
+(function(){
+  const ray = document.getElementById('ray') as HTMLElement;
+  const nokta = document.getElementById('nokta') as HTMLElement;
+  if (!ray || !nokta) return;
+  const n = ray.children.length;
+  let i = 0, oto: ReturnType<typeof setInterval> | null = null;
+  const azalt = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  for (let k = 0; k < n; k++) {
+    const b = document.createElement('button');
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-label', `image ${k+1}`);
+    b.onclick = () => { git(k); sifirla(); };
+    nokta.appendChild(b);
+  }
+  function ciz() {
+    (ray as HTMLElement).style.transform = `translateX(${-i*100}%)`;
+    Array.from(nokta.children).forEach((d,k) => d.setAttribute('aria-current', k===i?'true':'false'));
+  }
+  function git(x: number) { i = (x+n)%n; ciz(); }
+  function ileri() { git(i+1); } function geri() { git(i-1); }
+  function basla() { if(azalt) return; dur(); oto = setInterval(ileri, 5000); }
+  function dur() { if (oto) { clearInterval(oto); oto = null; } }
+  function sifirla() { dur(); basla(); }
+  const bI = document.getElementById('ileri'); const bG = document.getElementById('geri');
+  if (bI) bI.onclick = () => { ileri(); sifirla(); };
+  if (bG) bG.onclick = () => { geri(); sifirla(); };
+  ciz(); basla();
+})();
+</script>
