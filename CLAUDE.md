@@ -237,32 +237,44 @@ bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu
 `import sharp` çözülmüyor. Astro sharp'ı bırakırsa betik de güncellenmeli.
 OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
 
-**Hero slider** canlı sitedeki Revolution Slider'dan alındı: 9 slayt, arka plan
-fotoğrafları `public/images/hero/`, üzerlerine binen saydam katman görselleri
-`public/images/hero/katman/` (toplam ~2,4 MB; ilk slayt eager, kalanı lazy).
+**Hero slider** canlı deltek.com.tr'deki Revolution Slider'ın kompozisyonunu ve
+katman animasyonlarını yeniden üretir: **9 slayt, 44 katman** (8 görsel, 35 metin,
+1 YouTube gömüsü). Arka planlar `public/images/hero/`, katman görselleri
+`public/images/hero/katman/`.
 
-Slayt verisi `src/pages/index.astro` içindeki `heroFotolar` dizisinde:
+- **Veri**: `src/data/hero.ts` (`HERO_TR` / `HERO_EN`) — her katmanın içeriği,
+  konumu (`x`,`y`,`w`), geçiş tipi (`gecis`), gecikmesi (`basla`) ve süresi (`sure`).
+- **Bileşen**: `src/components/HeroSlider.astro`.
 
-| Alan | Ne |
-| --- | --- |
-| `src` | arka plan fotoğrafı |
-| `baslik` | fotoğraf üzerine binen büyük harf başlık |
-| `ustSatir` | isteğe bağlı altın renkli üst satır |
-| `katmanlar[]` | arka planın üzerindeki saydam PNG'ler: `src` + `x/y/w/h` |
+**Koordinat sistemi:** tüm değerler canlı slider'ın **1920×500 tasarım
+ızgarasındaki** piksellerdir (`HERO_IZGARA`). Bileşen bunları container-query
+birimiyle ölçekler (`--olcek: calc(100cqw / 1920)`), böylece yazı boyutları ve
+konumlar her genişlikte orantılı kalır. **`.slider__ray` en-boy oranı `1920/500`
+olmak zorunda** — değişirse tüm kompozisyon kayar.
 
-**Katman koordinatları canlı slider'ın 1920×500 tasarım ızgarasındadır**
-(`HERO_IZGARA`), render sırasında yüzdeye çevrilir. Bu yüzden `.slider__ray`
-en-boy oranı da `1920/500` — oran değişirse katmanlar kayar. Dar ekranda
-(≤820px) oran `16/9`'a düşer ve katmanlar gizlenir (`.slide__katman` display:none),
-çünkü o boyutta hem yanlış konumlanır hem metni bastırırlar.
+**Geçişler** RevSlider sınıflarının karşılığıdır: `sfl/sfr/sft/sfb` kısa mesafeden,
+`lfl/lfr/lft/lfb` ekran dışından, `randomrotate` dönerek, `tp-fade` belirerek.
+Animasyon yalnızca aktif slaytta çalışır (`.slide[data-aktif="true"]`), böylece
+slayt her göründüğünde baştan oynar. Otomatik geçiş 8 sn — en geç katman
+5000 ms gecikmeli, daha kısa aralıkta animasyonlar tamamlanmıyor.
 
-Katmanlar `z-2`, metin kutusu `z-3`. `.slide::after` perdesi katmanların
-**altında** kaldığı için `.slide__yazi` kendi degradesini taşır — yoksa başlık
-katmanların üzerinde okunmuyordu. Katmanlar aktif slaytta yumuşak biçimde
-giriyor (`.slide[data-aktif="true"]`).
+**Metin katmanı stilleri** (`.s-mavis`, `.s-turuncu2`, `.s-medium_bg_red` …)
+canlı sitedeki caption sınıflarından birebir alındı (renk, punto, gölge, dolgu).
 
-> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor,
-> bu yüzden alınmadı.
+**Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif görsel/video katmanları
+gizlenir ve slayttaki ilk metin katmanı ortalanır — 1920×500 kompozisyonu
+telefonda okunmuyor.
+
+**Yeniden çıkarma** (canlı slider değişirse):
+
+```bash
+curl -s https://www.deltek.com.tr/ -o anasayfa.html
+node scripts/hero-slider-cikar.mjs      # -> slider.json (ham yapı raporu)
+node scripts/hero-veri-uret.mjs src/data/hero.ts
+```
+
+> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor, alınmadı.
+> `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.
 
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
 (`.hero__bilgi h1::after`, `.kanit__bas h2::after`, `.bolum-bas::after`).

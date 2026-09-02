@@ -1,58 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE } from '../data/site';
+import HeroSlider from '../components/HeroSlider.astro';
+import { HERO_TR } from '../data/hero';
 import { yazilar } from '../data/icerik';
 
-// Hero slider — görseller, başlıklar ve üstteki katman görselleri canlı
-// deltek.com.tr'deki Revolution Slider'dan alındı.
-//   src        : arka plan fotoğrafı (public/images/hero/)
-//   katmanlar  : arka planın üzerine binen saydam PNG'ler; x/y/w/h değerleri
-//                canlı slider'ın 1920×500 tasarım ızgarasındaki konumlar,
-//                yüzdeye çevrilerek uygulanıyor (bkz. HERO_IZGARA).
-const HERO_IZGARA = { g: 1920, y: 500 };
-const heroFotolar = [
-  { src: '/images/hero/onshoreRig3-1.jpg', alt: 'Onshore HDD sahası',
-    baslik: 'Onshore / Offshore HDD projelerinde güvenilir iş ortağınız' },
-  { src: '/images/hero/pipesite.jpg', alt: 'Boru hattı sahası',
-    baslik: 'Yatay sondaja ihtiyaç duyduğunuz her alanda yanınızdayız',
-    ustSatir: 'Elektrik · Doğalgaz · Kanalizasyon · Telekomünikasyon · İçme suyu ve drenaj' },
-  { src: '/images/hero/yatay-sondaj-wordaholic-bg.jpg', alt: 'Kaya delgi',
-    baslik: 'Kaya delgi & muazzam güç',
-    katmanlar: [
-      { src: '/images/hero/katman/video-screen.png', x: 1060, y: 80, w: 574, h: 400 },
-    ] },
-  { src: '/images/hero/slide-6-bg.jpg', alt: 'Yatay delgi ve sondaj teknolojileri',
-    baslik: 'Yatay delgi ve sondaj teknolojileri',
-    ustSatir: 'Amacınıza en uygun yatay sondaj yöntemini seçerek işe başlayın',
-    katmanlar: [
-      { src: '/images/hero/katman/bit.png', x: -2, y: 312, w: 1530, h: 141 },
-      { src: '/images/hero/katman/toprak.png', x: 1132, y: 102, w: 325, h: 430 },
-    ] },
-  { src: '/images/hero/zzz.jpg', alt: 'Makine parkı',
-    baslik: 'Yatay sondaj uzmanı',
-    ustSatir: 'Yüksek teknolojik altyapı, geniş makine parkı',
-    katmanlar: [
-      { src: '/images/hero/katman/machinery1.png', x: 370, y: 76, w: 799, h: 232 },
-      { src: '/images/hero/katman/ok-worker.png', x: 1283, y: 9, w: 202, h: 500 },
-    ] },
-  { src: '/images/hero/slide-2-bg.jpg', alt: 'Saha çalışması',
-    baslik: 'Başarı, tesadüften fazlasını gerektirir',
-    katmanlar: [
-      { src: '/images/hero/katman/deltek-robot-engineer.png', x: 360, y: 20, w: 489, h: 506 },
-      { src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', x: 1094, y: 6, w: 437, h: 261 },
-    ] },
-  // Not: bu slaydın canlı sitedeki 1woman.png katmanı sunucuda 404 veriyor, alınmadı.
-  { src: '/images/hero/slide-1-bg.jpg', alt: 'Altyapı projesi',
-    baslik: 'Sizin için projelendirelim',
-    ustSatir: "2 mm'den 2000 mm'ye varan çaplarda altyapı projelerine çözüm" },
-  { src: '/images/hero/button-bg-1.jpg', alt: 'Altyapı çözümleri',
-    baslik: 'Altyapıda fark yaratan etkin çözümlerimizle rakiplerinizin önüne geçin',
-    katmanlar: [
-      { src: '/images/hero/katman/button-hand.png', x: 940, y: 225, w: 290, h: 277 },
-    ] },
-  { src: '/images/hero/deltek-yatay-sondaj-marka.jpg', alt: 'Deltek',
-    baslik: 'Yatay sondajda bir dünya markası' },
-];
 
 // Son blog yazıları — en yeni 3 tanesi (varsa)
 const sonYazilar = (await yazilar('tr')).slice(0, 3);
@@ -67,30 +19,8 @@ const projeTarih = (d: any) =>
 <section class="hero">
   <div class="hero__grid"></div>
   <div class="hero__ic">
-    <div class="slider hero__tam" aria-roledescription="carousel" aria-label="Deltek">
-      <div class="slider__ray" id="ray">
-        {heroFotolar.map((f, i) => (
-          <div class="slide">
-            <img src={f.src} alt={f.alt} loading={i === 0 ? 'eager' : 'lazy'} />
-            {f.katmanlar?.map(k => (
-              <img class="slide__katman" src={k.src} alt="" loading="lazy" aria-hidden="true"
-                   style={`left:${k.x / HERO_IZGARA.g * 100}%;top:${k.y / HERO_IZGARA.y * 100}%;width:${k.w / HERO_IZGARA.g * 100}%`} />
-            ))}
-            <div class="slide__yazi">
-              {f.ustSatir && <p class="slide__ust">{f.ustSatir}</p>}
-              <h2>{f.baslik}</h2>
-            </div>
-          </div>
-        ))}
-      </div>
-      <button class="ok ok--sol" id="geri" aria-label="Önceki görsel">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 3 5 9l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="ok ok--sag" id="ileri" aria-label="Sonraki görsel">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <div class="nokta" id="nokta" role="tablist"></div>
-    </div>
+    <HeroSlider slaytlar={HERO_TR} etiket="Deltek yatay sondaj projeleri"
+                oncekiEtiket="Önceki görsel" sonrakiEtiket="Sonraki görsel" />
   </div>
 </section>
 
@@ -206,7 +136,7 @@ const projeTarih = (d: any) =>
   }
   function git(x: number) { i = (x+n)%n; ciz(); }
   function ileri() { git(i+1); } function geri() { git(i-1); }
-  function basla() { if(azalt) return; dur(); oto = setInterval(ileri, 5000); }
+  function basla() { if(azalt) return; dur(); oto = setInterval(ileri, 8000); }
   function dur() { if (oto) { clearInterval(oto); oto = null; } }
   function sifirla() { dur(); basla(); }
   (document.getElementById('ileri') as HTMLElement).onclick = () => { ileri(); sifirla(); };

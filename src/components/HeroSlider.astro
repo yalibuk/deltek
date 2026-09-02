@@ -1,0 +1,159 @@
+---
+/**
+ * Ana sayfa hero slider'ı — canlı deltek.com.tr'deki Revolution Slider'ın
+ * kompozisyonunu ve katman animasyonlarını yeniden üretir.
+ *
+ * ÖLÇEKLEME: veri (src/data/hero.ts) canlı slider'ın 1920×500 tasarım
+ * ızgarasındaki piksel değerlerini taşır. Burada container-query birimleriyle
+ * (`cqw`) orantılı ölçeklenir: `--olcek: calc(100cqw / 1920)`. Yani slider
+ * hangi genişlikte olursa olsun katmanların birbirine göre konumu ve boyu
+ * canlı sitedeki gibi kalır.
+ *
+ * ANİMASYON: her katmanın `gecis` (sfl/sfr/sft/sfb/lfl/lfr/lft/lfb/
+ * randomrotate/tp-fade), `basla` (ms gecikme) ve `sure` (ms) değerleri
+ * canlı slider'dan geldi. Animasyon yalnızca aktif slaytta çalışır
+ * (`.slide[data-aktif="true"]`), böylece slayt her göründüğünde baştan oynar.
+ */
+import { HERO_IZGARA, type HeroSlayt } from '../data/hero';
+
+interface Props { slaytlar: HeroSlayt[]; etiket: string; oncekiEtiket: string; sonrakiEtiket: string; }
+const { slaytlar, etiket, oncekiEtiket, sonrakiEtiket } = Astro.props;
+const { g: IG, y: IY } = HERO_IZGARA;
+
+const yuzdeX = (v: number) => (v / IG) * 100;
+const yuzdeY = (v: number) => (v / IY) * 100;
+const katmanStil = (k: any) => [
+  `left:${yuzdeX(k.x)}%`,
+  `top:${yuzdeY(k.y)}%`,
+  k.w ? `width:${yuzdeX(k.w)}%` : null,
+  `--basla:${k.basla}ms`,
+  `--sure:${k.sure}ms`,
+].filter(Boolean).join(';');
+---
+<div class="slider" aria-roledescription="carousel" aria-label={etiket}>
+  <div class="slider__ray" id="ray">
+    {slaytlar.map((s, i) => (
+      <div class="slide" data-aktif={i === 0 ? 'true' : 'false'}>
+        <img class="slide__arka" src={s.arka} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+        {s.katmanlar.map(k => (
+          k.tur === 'gorsel' ? (
+            <img class={`kat kat--${k.gecis}`} src={k.src} alt="" aria-hidden="true"
+                 loading={i === 0 ? 'eager' : 'lazy'} style={katmanStil(k)} />
+          ) : k.tur === 'video' ? (
+            <div class={`kat kat--${k.gecis} kat__video`} style={katmanStil(k)}>
+              <iframe src={k.video} title={etiket} loading="lazy" allowfullscreen
+                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+            </div>
+          ) : (
+            <div class={`kat kat--${k.gecis} kat__metin${k.stil ? ' s-' + k.stil : ''}`} style={katmanStil(k)}>
+              {k.metin!.split('\n\n').map(satir => <span>{satir}</span>)}
+            </div>
+          )
+        ))}
+      </div>
+    ))}
+  </div>
+  <button class="ok ok--sol" id="geri" aria-label={oncekiEtiket}>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 3 5 9l6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="ok ok--sag" id="ileri" aria-label={sonrakiEtiket}>
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <div class="nokta" id="nokta" role="tablist"></div>
+</div>
+
+<style>
+/* ─── Slider iskeleti ─────────────────────────────────── */
+.slider { position: relative; overflow: hidden; background: var(--kagit-2);
+  /* katmanların ölçeklenebilmesi için ölçüm kabı */
+  container-type: inline-size; }
+/* canlı slider'ın tasarım ızgarası 1920×500 — katman konumları buna bağlı */
+.slider__ray { display: flex; transition: transform .6s cubic-bezier(.65,0,.35,1); aspect-ratio: 1920/500; }
+.slide { position: relative; min-width: 100%; height: 100%; overflow: hidden; }
+.slide__arka { width: 100%; height: 100%; object-fit: cover; }
+
+/* ─── Katmanlar ───────────────────────────────────────── */
+/* 1920 birimlik ızgaradan gerçek piksele çeviren ölçek */
+.kat { --olcek: calc(100cqw / 1920); position: absolute; z-index: 2; max-width: none; height: auto;
+  opacity: 0; will-change: transform, opacity; }
+.kat__metin { display: flex; flex-direction: column; white-space: nowrap;
+  font-family: var(--f-dis); line-height: 1.15; }
+.kat__video { aspect-ratio: 476/267; width: calc(476 * var(--olcek)); }
+.kat__video iframe { width: 100%; height: 100%; border: 0; }
+
+/* Canlı sitedeki metin katmanı stilleri (ölçüler 1920 ızgarasında px) */
+.s-mavis3   { font-size: calc(33 * var(--olcek)); font-weight: 800; color: #1453d2; text-shadow: 1px 1px 0 #eee, 2px 2px 0 #707070; }
+.s-mavis    { font-size: calc(50 * var(--olcek)); font-weight: 800; color: #1484d2; text-shadow: 1px 1px 0 #eee, 2px 2px 0 #707070; }
+.s-mavis2   { font-size: calc(36 * var(--olcek)); font-weight: 800; color: #1484d2; text-shadow: 1px 1px 0 #eee, 2px 2px 0 #707070; }
+.s-mavi2    { font-size: calc(32 * var(--olcek)); font-weight: 800; color: #78adf2; text-shadow: 1px 1px 0 #222; }
+.s-turuncu  { font-size: calc(17 * var(--olcek)); font-weight: 800; color: #eb9e0f; text-shadow: 1px 1px 0 #222; }
+.s-turuncu2 { font-size: calc(37 * var(--olcek)); font-weight: 800; color: #eb9e0f; text-shadow: 1px 1px 0 #222; }
+.s-turunc2  { font-size: calc(36 * var(--olcek)); font-weight: 800; color: #e29103; text-shadow: 1px 1px 0 #eee, 2px 2px 0 #707070; }
+.s-beyaz    { font-size: calc(16 * var(--olcek)); font-weight: 800; color: #fff; text-shadow: 1px 1px 0 #222; }
+.s-heyt     { font-size: calc(26 * var(--olcek)); font-weight: 800; color: #fff; }
+.s-medium_bg_red        { font-size: calc(20 * var(--olcek)); font-weight: 800; color: #fff; background: #e33a0c; padding: calc(10 * var(--olcek)); }
+.s-medium_bg_darkblue   { font-size: calc(20 * var(--olcek)); font-weight: 800; color: #fff; background: #34495e; padding: calc(10 * var(--olcek)); }
+.s-mediumbgdarkblue     { font-size: calc(30 * var(--olcek)); font-weight: 800; color: #fff; background: #327ac3; padding: calc(10 * var(--olcek)); }
+.s-mediumbgdarkblue3    { font-size: calc(16 * var(--olcek)); font-weight: 700; color: #fff; background: #327ac3; padding: calc(10 * var(--olcek)); }
+.s-mediumbgorange2      { font-size: calc(20 * var(--olcek)); font-weight: 600; color: #fff; background: #f39c12; padding: calc(10 * var(--olcek)); white-space: normal; width: calc(560 * var(--olcek)); }
+
+/* ─── Geçişler (RevSlider karşılıkları) ───────────────── */
+/* Animasyon yalnızca aktif slaytta; slayt her göründüğünde baştan oynar. */
+.slide[data-aktif="true"] .kat { animation-duration: var(--sure); animation-delay: var(--basla);
+  animation-fill-mode: both; animation-timing-function: cubic-bezier(.25,.46,.45,.94); }
+.slide[data-aktif="true"] .kat--sfl { animation-name: kat-sfl; }
+.slide[data-aktif="true"] .kat--sfr { animation-name: kat-sfr; }
+.slide[data-aktif="true"] .kat--sft { animation-name: kat-sft; }
+.slide[data-aktif="true"] .kat--sfb { animation-name: kat-sfb; }
+.slide[data-aktif="true"] .kat--lfl { animation-name: kat-lfl; }
+.slide[data-aktif="true"] .kat--lfr { animation-name: kat-lfr; }
+.slide[data-aktif="true"] .kat--lft { animation-name: kat-lft; }
+.slide[data-aktif="true"] .kat--lfb { animation-name: kat-lfb; }
+.slide[data-aktif="true"] .kat--randomrotate { animation-name: kat-donerek; }
+.slide[data-aktif="true"] .kat--tp-fade,
+.slide[data-aktif="true"] .kat--fade { animation-name: kat-belir; }
+
+/* kısa mesafe (short from …) — yaklaşık 50px, ızgaraya göre ölçekli */
+@keyframes kat-sfl { from { opacity: 0; transform: translateX(calc(-50 * var(--olcek))); } to { opacity: 1; transform: none; } }
+@keyframes kat-sfr { from { opacity: 0; transform: translateX(calc(50 * var(--olcek))); } to { opacity: 1; transform: none; } }
+@keyframes kat-sft { from { opacity: 0; transform: translateY(calc(-50 * var(--olcek))); } to { opacity: 1; transform: none; } }
+@keyframes kat-sfb { from { opacity: 0; transform: translateY(calc(50 * var(--olcek))); } to { opacity: 1; transform: none; } }
+/* uzun mesafe (long from …) — ekran dışından girer */
+@keyframes kat-lfl { from { opacity: 1; transform: translateX(-100cqw); } to { opacity: 1; transform: none; } }
+@keyframes kat-lfr { from { opacity: 1; transform: translateX(100cqw); } to { opacity: 1; transform: none; } }
+@keyframes kat-lft { from { opacity: 1; transform: translateY(-100cqh); } to { opacity: 1; transform: none; } }
+@keyframes kat-lfb { from { opacity: 1; transform: translateY(100cqh); } to { opacity: 1; transform: none; } }
+@keyframes kat-donerek { from { opacity: 0; transform: rotate(-14deg) scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes kat-belir { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide[data-aktif="true"] .kat { animation: kat-belir 1ms both; }
+  .slider__ray { transition: none; }
+}
+
+/* ─── Oklar ve noktalar ───────────────────────────────── */
+.ok { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 44px; height: 44px;
+  display: grid; place-items: center; background: rgba(255,255,255,.85); border: 1px solid var(--cizgi-2);
+  border-radius: 50%; cursor: pointer; color: var(--mavi-900); transition: .15s; }
+.ok:hover { background: var(--mavi); border-color: var(--mavi); color: #fff; }
+.ok--sol { left: .8rem; } .ok--sag { right: .8rem; }
+.nokta { position: absolute; left: 0; right: 0; bottom: .9rem; z-index: 6; display: flex; gap: .5rem; justify-content: center; }
+.nokta :global(button) { width: 9px; height: 9px; border-radius: 50%; border: none; background: rgba(255,255,255,.75);
+  cursor: pointer; padding: 0; transition: .2s; box-shadow: 0 0 0 1px rgba(0,41,107,.25); }
+.nokta :global(button[aria-current="true"]) { background: var(--mavi); width: 24px; border-radius: 5px; }
+
+/* ─── Dar ekran ───────────────────────────────────────── */
+/* 1920×500 kompozisyonu telefonda okunmaz hale geliyor: oran yükseltilir,
+   yalnızca en büyük metin katmanı bırakılır, dekoratif katmanlar gizlenir. */
+@media (max-width: 820px) {
+  .slider__ray { aspect-ratio: 4/3; }
+  .kat { --olcek: calc(100cqw / 900); }
+  .kat__metin { white-space: normal; }
+  .slide img.kat, .kat__video { display: none; }
+  .kat__metin { left: 6% !important; right: 6%; top: auto !important; bottom: 14%;
+    width: auto !important; text-align: center; align-items: center; }
+  /* aynı slayttaki birden çok metin katmanı üst üste binmesin: ilki kalsın */
+  .kat__metin ~ .kat__metin { display: none; }
+  .ok { width: 36px; height: 36px; }
+}
+</style>
