@@ -237,13 +237,32 @@ bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu
 `import sharp` çözülmüyor. Astro sharp'ı bırakırsa betik de güncellenmeli.
 OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
 
-**Hero slider** görselleri ve başlıkları canlı sitedeki Revolution Slider'dan
-alındı: 9 slayt, `public/images/hero/` (~1,2 MB toplam, ilki eager, kalanı lazy).
-Slayt verisi `src/pages/index.astro` içindeki `heroFotolar` dizisinde —
-`src`, `alt`, `baslik` ve isteğe bağlı `ustSatir` (altın renkli üst satır).
-Fotoğrafın üzerine degrade + beyaz büyük harf başlık biniyor (`.slide__yazi`).
-Görseller farklı en-boy oranlarında (3,7:1 ile 1,5:1 arası); slider `21/9`
-oranında `object-fit: cover` ile kırpıyor.
+**Hero slider** canlı sitedeki Revolution Slider'dan alındı: 9 slayt, arka plan
+fotoğrafları `public/images/hero/`, üzerlerine binen saydam katman görselleri
+`public/images/hero/katman/` (toplam ~2,4 MB; ilk slayt eager, kalanı lazy).
+
+Slayt verisi `src/pages/index.astro` içindeki `heroFotolar` dizisinde:
+
+| Alan | Ne |
+| --- | --- |
+| `src` | arka plan fotoğrafı |
+| `baslik` | fotoğraf üzerine binen büyük harf başlık |
+| `ustSatir` | isteğe bağlı altın renkli üst satır |
+| `katmanlar[]` | arka planın üzerindeki saydam PNG'ler: `src` + `x/y/w/h` |
+
+**Katman koordinatları canlı slider'ın 1920×500 tasarım ızgarasındadır**
+(`HERO_IZGARA`), render sırasında yüzdeye çevrilir. Bu yüzden `.slider__ray`
+en-boy oranı da `1920/500` — oran değişirse katmanlar kayar. Dar ekranda
+(≤820px) oran `16/9`'a düşer ve katmanlar gizlenir (`.slide__katman` display:none),
+çünkü o boyutta hem yanlış konumlanır hem metni bastırırlar.
+
+Katmanlar `z-2`, metin kutusu `z-3`. `.slide::after` perdesi katmanların
+**altında** kaldığı için `.slide__yazi` kendi degradesini taşır — yoksa başlık
+katmanların üzerinde okunmuyordu. Katmanlar aktif slaytta yumuşak biçimde
+giriyor (`.slide[data-aktif="true"]`).
+
+> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor,
+> bu yüzden alınmadı.
 
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
 (`.hero__bilgi h1::after`, `.kanit__bas h2::after`, `.bolum-bas::after`).

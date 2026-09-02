@@ -3,9 +3,12 @@ import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
 import { yazilar } from '../../data/icerik';
 
-// Hero slider — images taken from the live deltek.com.tr Revolution Slider.
+// Hero slider — backgrounds, headlines and overlay layers taken from the live
+// deltek.com.tr Revolution Slider. Layer x/y/w/h are positions on that
+// slider's 1920×500 design grid, converted to percentages (see HERO_IZGARA).
 // NOTE: the English headlines are translations of the Turkish originals and
 // have not been reviewed by Deltek — see CLAUDE.md.
+const HERO_IZGARA = { g: 1920, y: 500 };
 const heroFotolar = [
   { src: '/images/hero/onshoreRig3-1.jpg', alt: 'Onshore HDD site',
     baslik: 'Your reliable partner in onshore / offshore HDD projects' },
@@ -13,20 +16,39 @@ const heroFotolar = [
     baslik: 'Wherever you need horizontal drilling, we are with you',
     ustSatir: 'Power · Natural gas · Sewerage · Telecoms · Potable water and drainage' },
   { src: '/images/hero/yatay-sondaj-wordaholic-bg.jpg', alt: 'Rock drilling',
-    baslik: 'Rock drilling & immense power' },
+    baslik: 'Rock drilling & immense power',
+    katmanlar: [
+      { src: '/images/hero/katman/video-screen.png', x: 1060, y: 80, w: 574, h: 400 },
+    ] },
   { src: '/images/hero/slide-6-bg.jpg', alt: 'Horizontal drilling technologies',
     baslik: 'Horizontal drilling and boring technologies',
-    ustSatir: 'Start by choosing the method that best fits your purpose' },
+    ustSatir: 'Start by choosing the method that best fits your purpose',
+    katmanlar: [
+      { src: '/images/hero/katman/bit.png', x: -2, y: 312, w: 1530, h: 141 },
+      { src: '/images/hero/katman/toprak.png', x: 1132, y: 102, w: 325, h: 430 },
+    ] },
   { src: '/images/hero/zzz.jpg', alt: 'Machine fleet',
     baslik: 'Horizontal drilling specialists',
-    ustSatir: 'Advanced technical infrastructure, extensive machine fleet' },
+    ustSatir: 'Advanced technical infrastructure, extensive machine fleet',
+    katmanlar: [
+      { src: '/images/hero/katman/machinery1.png', x: 370, y: 76, w: 799, h: 232 },
+      { src: '/images/hero/katman/ok-worker.png', x: 1283, y: 9, w: 202, h: 500 },
+    ] },
   { src: '/images/hero/slide-2-bg.jpg', alt: 'Field work',
-    baslik: 'Success takes more than coincidence' },
+    baslik: 'Success takes more than coincidence',
+    katmanlar: [
+      { src: '/images/hero/katman/deltek-robot-engineer.png', x: 360, y: 20, w: 489, h: 506 },
+      { src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', x: 1094, y: 6, w: 437, h: 261 },
+    ] },
+  // Note: this slide's 1woman.png layer returns 404 on the live server, so it was skipped.
   { src: '/images/hero/slide-1-bg.jpg', alt: 'Infrastructure project',
     baslik: 'Let us engineer it for you',
     ustSatir: 'Solutions for infrastructure projects from 2 mm to 2000 mm in diameter' },
   { src: '/images/hero/button-bg-1.jpg', alt: 'Infrastructure solutions',
-    baslik: 'Get ahead of your competitors with solutions that make a difference' },
+    baslik: 'Get ahead of your competitors with solutions that make a difference',
+    katmanlar: [
+      { src: '/images/hero/katman/button-hand.png', x: 940, y: 225, w: 290, h: 277 },
+    ] },
   { src: '/images/hero/deltek-yatay-sondaj-marka.jpg', alt: 'Deltek',
     baslik: 'A global brand in horizontal drilling' },
 ];
@@ -49,6 +71,10 @@ const projeTarih = (d: any) =>
         {heroFotolar.map((f, i) => (
           <div class="slide">
             <img src={f.src} alt={f.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+            {f.katmanlar?.map(k => (
+              <img class="slide__katman" src={k.src} alt="" loading="lazy" aria-hidden="true"
+                   style={`left:${k.x / HERO_IZGARA.g * 100}%;top:${k.y / HERO_IZGARA.y * 100}%;width:${k.w / HERO_IZGARA.g * 100}%`} />
+            ))}
             <div class="slide__yazi">
               {f.ustSatir && <p class="slide__ust">{f.ustSatir}</p>}
               <h2>{f.baslik}</h2>
@@ -173,6 +199,8 @@ const projeTarih = (d: any) =>
   function ciz() {
     (ray as HTMLElement).style.transform = `translateX(${-i*100}%)`;
     Array.from(nokta.children).forEach((d,k) => d.setAttribute('aria-current', k===i?'true':'false'));
+    // aktif slayt işaretlenince katman görselleri yumuşak biçimde giriyor
+    Array.from(ray.children).forEach((s,k) => (s as HTMLElement).setAttribute('data-aktif', k===i?'true':'false'));
   }
   function git(x: number) { i = (x+n)%n; ciz(); }
   function ileri() { git(i+1); } function geri() { git(i-1); }
