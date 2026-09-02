@@ -1,0 +1,140 @@
+---
+/**
+ * Ürün / teknoloji sayfası düzeni.
+ *
+ * Boremak sitesindeki ekipman sayfası şablonundan uyarlandı; Boremak'a özgü
+ * içerik, maskot blokları ve kategoriye özel dallanmalar çıkarıldı. Geriye
+ * kalan yapı tamamen frontmatter'dan sürülür, yani CMS'ten düzenlenebilir:
+ *
+ *   duzen: urun
+ *   banner: /images/uploads/ust-gorsel.jpg
+ *   bloklar:                # görsel + metin, dönüşümlü hizalanır
+ *     - baslik: "..."       (isteğe bağlı)
+ *       metin: "..."
+ *       gorsel: /images/uploads/x.jpg
+ *       ters: true          (görsel sağda)
+ *       boyut: ceyrek|otuz|kirk|elli|yari|kucuk   (görseli küçültür)
+ *   tablolar:               # teknik veri tabloları
+ *     - baslik: "Vermeer Uyumlu Tijler"
+ *       aciklama: "..."
+ *       basliklar: [Model, "Dış Çap (mm)", ...]
+ *       satirlar:
+ *         - [D7×11, "42", ...]
+ *   galeri:
+ *     - foto: /images/uploads/y.jpg
+ *       alt: "..."
+ *
+ * Markdown gövdesi varsa bannerdan hemen sonra, blokların önünde çıkar.
+ */
+interface Props {
+  banner?: string;
+  bannerAlt?: string;
+  bloklar?: any[];
+  tablolar?: any[];
+  galeri?: any[];
+}
+const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Astro.props;
+---
+{banner && (
+  <div class="hsg-genis hsg-genis--bosluk">
+    <img src={banner} alt={bannerAlt} />
+  </div>
+)}
+
+<div class="hsg">
+  <slot />
+
+  {bloklar.map((b: any, i: number) => (
+    <div class={`hsg-ikili${(b.ters ?? i % 2 === 1) ? ' hsg-ikili--ters' : ''}`}>
+      <div class="hsg-ikili__g">
+        {b.gorsel && <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />}
+      </div>
+      <div class="hsg-ikili__t">
+        {b.baslik && <h3>{b.baslik}</h3>}
+        {b.metin && b.metin.split('\n\n').map((par: string) => <p set:html={par.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')} />)}
+      </div>
+    </div>
+  ))}
+
+  {tablolar.length > 0 && (
+    <div class="urun-tablolar">
+      {tablolar.map((t: any) => (
+        <div class="urun-blok">
+          {t.baslik && <h3>{t.baslik}</h3>}
+          {t.aciklama && <p class="urun-alt">{t.aciklama}</p>}
+          <div class="urun-kaydir">
+            <table class="urun-tablo">
+              {t.basliklar && t.basliklar.length > 0 && (
+                <thead><tr>{t.basliklar.map((h: string) => <th>{h}</th>)}</tr></thead>
+              )}
+              <tbody>
+                {(t.satirlar || []).map((r: any) => (
+                  <tr>{(Array.isArray(r) ? r : r.hucreler || []).map((c: string, j: number) => (
+                    <td class={j === 0 ? 'ilk' : ''}>{c}</td>
+                  ))}</tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {galeri.length > 0 && (
+    <div class="hsg-galeri">
+      {galeri.map((g: any) => g.foto && (
+        <div class="hsg-galeri__k"><img src={g.foto} alt={g.alt || ''} loading="lazy" /></div>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+/* ─── Ürün düzeni (Boremak ekipman şablonundan uyarlandı) ─────── */
+.hsg { margin-top: clamp(1.5rem,3vw,2.5rem); display: flex; flex-direction: column; gap: clamp(2rem,4vw,3.5rem); }
+
+/* tam genişlik banner */
+.hsg-genis { border-radius: 10px; overflow: hidden; border: 1px solid var(--cizgi); box-shadow: 0 24px 50px -32px rgba(0,41,107,.5); }
+.hsg-genis img { width: 100%; height: auto; display: block; }
+.hsg-genis--bosluk { margin-block: clamp(1.2rem,3vw,2.2rem); }
+
+/* görsel + metin ikilisi */
+.hsg-ikili { display: grid; gap: clamp(1.5rem,4vw,2.8rem); align-items: center; }
+@media (min-width: 820px) {
+  .hsg-ikili { grid-template-columns: 1fr 1fr; }
+  .hsg-ikili--ters .hsg-ikili__g { order: 2; }
+}
+.hsg-ikili__g { border-radius: 10px; overflow: hidden; border: 1px solid var(--cizgi); background: var(--kagit-2); box-shadow: 0 20px 44px -30px rgba(0,41,107,.5); display: flex; align-items: center; justify-content: center; padding-block: clamp(1rem,6%,2.5rem); }
+.hsg-ikili__g img { width: 100%; height: auto; display: block; }
+.hsg-ikili__t h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.hsg-ikili__t p { margin-top: .9rem; color: var(--mute); font-size: .98rem; line-height: 1.7; }
+.hsg-ikili__t :global(strong) { color: var(--mavi-900); font-weight: 700; }
+
+/* görsel boyut yardımcıları */
+.hsg-ceyrek { width: 25% !important; margin: 0 auto; }
+.hsg-otuz   { width: 30% !important; margin: 0 auto; }
+.hsg-kirk   { width: 40% !important; margin: 0 auto; }
+.hsg-elli   { width: 50% !important; margin: 0 auto; }
+.hsg-yari   { width: 80% !important; margin: 0 auto; }
+.hsg-kucuk  { width: 75% !important; margin: 0 auto; }
+
+/* teknik veri tabloları */
+.urun-blok + .urun-blok { margin-top: 2.4rem; }
+.urun-blok h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.25rem; color: var(--mavi-900); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.urun-alt { margin-top: .4rem; margin-bottom: 1rem; color: var(--mute); font-size: .88rem; }
+.urun-kaydir { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--cizgi); border-radius: 6px; }
+.urun-tablo { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 640px; }
+.urun-tablo th { background: var(--mavi-900); color: #fff; font-family: var(--f-dis); font-weight: 600; font-size: .72rem; text-align: center; padding: .7rem .6rem; line-height: 1.25; }
+.urun-tablo td { padding: .6rem; text-align: center; font-family: var(--f-veri); color: var(--metin); border-top: 1px solid var(--cizgi); }
+.urun-tablo td.ilk { font-weight: 700; color: var(--mavi-900); text-align: left; white-space: nowrap; }
+.urun-tablo tbody tr:nth-child(even) { background: var(--mavi-050); }
+.urun-tablo tbody tr:hover { background: var(--mavi-100); }
+
+/* galeri */
+.hsg-galeri { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; }
+@media (min-width: 760px) { .hsg-galeri { grid-template-columns: repeat(3,1fr); } }
+.hsg-galeri__k { border-radius: 8px; overflow: hidden; border: 1px solid var(--cizgi); background: var(--kagit-2); aspect-ratio: 4/3; }
+.hsg-galeri__k img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.hsg-galeri__k:hover img { transform: scale(1.05); }
+</style>

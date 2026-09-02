@@ -126,6 +126,53 @@ public/
   basmaz ve dil düğmesi `/en/`'e düşer. Bunu `Layout`'un `cevirisiVar` prop'u yönetir —
   yeni bir çift dilli sayfa yazarken bu prop'u geçirmeyi unutmayın.
 
+## Sayfa düzenleri
+
+`sayfalar` koleksiyonundaki her sayfa `duzen` alanıyla üç düzenden birini seçer.
+CMS'te "İçerik düzeni" açılır listesinden değiştirilir; kod değişikliği gerekmez.
+
+| `duzen` | Ne yapar | Örnek |
+| --- | --- | --- |
+| _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `hizmetlerimiz` |
+| `logo-izgara` | Art arda gelen görselleri yan yana dizer | `referanslar` |
+| `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` |
+
+### `duzen: urun`
+
+Boremak sitesindeki ekipman sayfası şablonundan uyarlandı; Boremak'a özgü içerik,
+maskot blokları ve kategoriye özel dallanmalar çıkarıldı. Bileşen:
+`src/components/UrunDuzen.astro`. Tümü frontmatter'dan sürülür:
+
+```yaml
+duzen: urun
+banner: /images/uploads/ust-gorsel.jpg
+bloklar:                  # görsel + metin, dönüşümlü hizalanır
+  - baslik: "Malzeme ve üretim"
+    metin: |-
+      İlk paragraf. **Kalın** metin desteklenir.
+
+      İkinci paragraf.
+    gorsel: /images/uploads/x.jpg
+    ters: true            # görsel sağda
+    boyut: elli           # ceyrek|otuz|kirk|elli|yari|kucuk — görseli küçültür
+tablolar:                 # teknik veri tabloları (yatay kaydırmalı)
+  - baslik: "Vermeer Uyumlu Tijler"
+    aciklama: "..."
+    basliklar: [Model, "Dış Çap (mm)", "Ağırlık (kg)"]
+    satirlar:
+      - [D7×11, "42", "12"]
+galeri:
+  - { foto: /images/uploads/y.jpg, alt: "..." }
+```
+
+Markdown gövdesi bannerdan sonra, blokların önünde çıkar (giriş metni için).
+Alanların hepsi isteğe bağlı — yalnız `bloklar` verilirse sayfa yalnız onları gösterir.
+
+**Geri alınmayanlar:** ekipman kategori indeksi (`/ekipmanlar/`), sekmeli akış
+bileşeni (`kaya-akis`), makine vitrin kartları ve maskot blokları. Kategori
+açılır menüsü ile ikon şeridi iskelette duruyor ama `KATEGORILER` boş olduğu
+için gizli (`src/data/site.ts`).
+
 ## Deploy hedefi: Cloudflare Pages
 
 - Build: `npm run build` · Çıktı: `dist` · Node 22
@@ -151,7 +198,9 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [x] 10 blog yazısı canlı siteden taşındı (içerik + 9 görsel, slug'lar birebir)
 - [ ] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — şu an hiç yok,
       bu yüzden `/en/blog/` boş ve yazılar EN hreflang basmıyor
-- [ ] Boremak ürün sayfası şablonlarını (içerik boş) geri al — teknoloji/hizmet sayfaları için
+- [x] Boremak ürün sayfası şablonu geri alındı → `src/components/UrunDuzen.astro`
+- [ ] Diğer teknoloji/hizmet sayfalarını (`yonlendirme-basligi`, `genisletme-basligi`,
+      `yatay-sondaj-camuru` …) ürün şablonuna geçir — `duzen: urun` + `bloklar`
 - [x] Statik + teknoloji/hizmet sayfaları taşındı (28 sayfa)
 - [ ] `/iletisim/` sayfasına çalışan bir iletişim formu ekle (CF7 kaldırıldı)
 - [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde

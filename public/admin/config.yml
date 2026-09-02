@@ -84,4 +84,53 @@ collections:
         options:
           - { label: "Normal (makale akışı)", value: "" }
           - { label: "Logo ızgarası (referans logoları yan yana)", value: "logo-izgara" }
+          - { label: "Ürün / teknoloji şablonu", value: "urun" }
       - { name: body, label: Sayfa içeriği, widget: markdown, required: false, i18n: true }
+
+      # ── Aşağıdakiler yalnızca "Ürün / teknoloji şablonu" seçiliyken kullanılır ──
+      - { name: banner, label: "Üst banner görseli", widget: image, required: false, i18n: duplicate }
+      - name: bloklar
+        label: "Görsel + metin blokları"
+        label_singular: Blok
+        widget: list
+        required: false
+        i18n: true
+        collapsed: false
+        summary: "{{fields.baslik}}"
+        fields:
+          - { name: baslik, label: Başlık, widget: string, required: false }
+          - { name: metin, label: Metin, widget: text, required: false }
+          - { name: gorsel, label: Görsel, widget: image, required: false }
+          - { name: ters, label: "Görsel sağda dursun", widget: boolean, required: false, default: false }
+          - name: boyut
+            label: "Görsel boyutu (boşsa tam genişlik)"
+            widget: select
+            required: false
+            options: ["", ceyrek, otuz, kirk, elli, yari, kucuk]
+      - name: tablolar
+        label: "Teknik veri tabloları"
+        label_singular: Tablo
+        widget: list
+        required: false
+        i18n: true
+        summary: "{{fields.baslik}}"
+        fields:
+          - { name: baslik, label: Tablo başlığı, widget: string, required: false }
+          - { name: aciklama, label: Açıklama, widget: text, required: false }
+          - { name: basliklar, label: "Sütun başlıkları", widget: list, required: false, field: { name: ad, label: Başlık, widget: string } }
+          - name: satirlar
+            label: Satırlar
+            label_singular: Satır
+            widget: list
+            required: false
+            fields:
+              - { name: hucreler, label: Hücreler, widget: list, field: { name: deger, label: Değer, widget: string } }
+      - name: galeri
+        label: "Foto galerisi"
+        label_singular: Fotoğraf
+        widget: list
+        required: false
+        i18n: duplicate
+        fields:
+          - { name: foto, label: Fotoğraf, widget: image }
+          - { name: alt, label: "Alternatif metin", widget: string, required: false }

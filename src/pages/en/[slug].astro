@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
 import { kokIcerik, cevirisiVarMi } from '../../data/icerik';
 import { render } from 'astro:content';
+import UrunDuzen from '../../components/UrunDuzen.astro';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -75,9 +76,16 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  <div class={`yazi__icerik${p.duzen ? " yazi__icerik--" + p.duzen : ""}`}>
-    <Content />
-  </div>
+  {p.duzen === 'urun' ? (
+    <UrunDuzen banner={p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
+               tablolar={p.tablolar} galeri={p.galeri}>
+      <div class="yazi__icerik"><Content /></div>
+    </UrunDuzen>
+  ) : (
+    <div class={`yazi__icerik${p.duzen ? " yazi__icerik--" + p.duzen : ""}`}>
+      <Content />
+    </div>
+  )}
 
   {p.galeri && p.galeri.length > 0 && (
     <div class="yazi__galeri">

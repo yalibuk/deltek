@@ -31,9 +31,35 @@ const sayfalar = defineCollection({
     // Header menüsünde görünsün mü ve hangi sırada (boşsa menüde çıkmaz)
     menuSira: z.number().optional(),
     menuAd: z.string().optional(),
-    // İçerik düzeni: 'logo-izgara' art arda gelen görselleri yan yana dizer
-    // (referans logoları gibi). Boşsa normal makale akışı.
-    duzen: z.enum(['logo-izgara']).optional(),
+    // İçerik düzeni:
+    //   'logo-izgara' → art arda gelen görselleri yan yana dizer (referans logoları)
+    //   'urun'        → ürün/teknoloji şablonu (banner + görsel-metin blokları
+    //                   + teknik tablolar + galeri; bkz. components/UrunDuzen.astro)
+    // Boşsa normal makale akışı.
+    duzen: z.enum(['logo-izgara', 'urun']).optional(),
+
+    // ── duzen: 'urun' alanları ────────────────────────────────
+    banner: z.string().optional(),
+    bloklar: z.array(z.object({
+      baslik: z.string().optional(),
+      metin: z.string().optional(),
+      gorsel: z.string().optional(),
+      ters: z.boolean().optional(),
+      boyut: z.enum(['ceyrek', 'otuz', 'kirk', 'elli', 'yari', 'kucuk']).optional(),
+    })).optional(),
+    tablolar: z.array(z.object({
+      baslik: z.string().optional(),
+      aciklama: z.string().optional(),
+      basliklar: z.array(z.string()).optional(),
+      satirlar: z.array(z.union([
+        z.array(z.string()),
+        z.object({ hucreler: z.array(z.string()) }),
+      ])).optional(),
+    })).optional(),
+    galeri: z.array(z.object({
+      foto: z.string().optional(),
+      alt: z.string().optional(),
+    })).optional(),
   }),
 });
 
