@@ -228,6 +228,15 @@ canlı sitenin kullandığı aile). Üç font değişkeni de (`--f-dis`, `--f-me
 Logo `public/deltek-logo.png` — canlı siteden alınan gerçek marka dosyası
 (200×46, saydam PNG, açık zemin için tasarlanmış).
 
+**Sosyal paylaşım görseli** `public/og-image.jpg` (1200×630) — `npm run og` ile
+`scripts/og-gorsel-uret.mjs` üretir: açık mavi zemin, gerçek logo, marka çizgisi,
+slogan ve alan adı. Marka bilgisi değişince yeniden çalıştırın; ikili dosyayı
+elle düzenlemeyin. Betik `sharp`'ı **doğrudan yoldan** çağırır
+(`node_modules/sharp/dist/index.cjs`) — sharp Astro'nun görsel servisinin
+bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu yüzden düz
+`import sharp` çözülmüyor. Astro sharp'ı bırakırsa betik de güncellenmeli.
+OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
+
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
 (`.hero__bilgi h1::after`, `.kanit__bas h2::after`, `.bolum-bas::after`).
 
@@ -267,7 +276,6 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
       yalnızca Blog görünüyor
 - [x] Görsel tasarım canlı siteye yaklaştırıldı (palet, tipografi, header, logo)
 - [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
-- [ ] `public/og-image.jpg` — **yok**; `Layout.astro` bu yola referans veriyor, 1200×630 eklenmeli
 - [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri (canlı sitedeki
       saha fotoğrafı slider'ı gibi); üzerine metin bindirme de eklenebilir
 - [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
@@ -301,3 +309,4 @@ node scripts/wp-sayfa-tasi.mjs . --liste
 | `npm run build` | `dist/` üretir |
 | `npm run preview` | Build çıktısını yerelde sunar |
 | `npm run cms` | Sveltia/Decap yerel backend (panel `/admin/`) |
+| `npm run og` | `public/og-image.jpg`'yi yeniden üretir (bkz. aşağı) |

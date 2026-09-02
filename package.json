@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "cms": "decap-server"
+    "cms": "decap-server",
+    "og": "node scripts/og-gorsel-uret.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
