@@ -246,6 +246,12 @@ Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
 (`HERO_IZGARA`); bileşen container-query birimiyle (`--olcek`) orantılı ölçekler.
 **`.slider__ray` en-boy oranı `1920/500` olmak zorunda** — değişirse katmanlar kayar.
 
+3. slayttaki YouTube gömüsü tablet çerçevesinin (`video-screen.png`) koyu ekran
+dikdörtgenine birebir oturur: **474×351 @ (1110,104)**, PNG'nin `#222` ekran
+alanı ölçülerek bulundu. Canlı slider `486×356 @ (1109,99)` diyor ama o değer
+ekranı birkaç piksel taşırıyor. Video katmanı, görsellerden farklı olarak
+yüksekliğini de veriden alır (`k.h`), oranı sabit değildir.
+
 **Yazılar yeniden tasarlandı.** Orijinalde her slaytta 4-7 ayrı metin katmanı vardı
 ve 2016 tema efektleriyle geliyordu (sert çift gölge, renkli kutucuklar, 17px'e
 düşen puntolar). İçerik korundu, tek bir tipografik blokta toplandı:

@@ -79,7 +79,9 @@ export const HERO_TR: HeroSlayt[] = [
     },
     katmanlar: [
       { tur: 'gorsel', src: '/images/hero/katman/video-screen.png', w: 574, h: 400, x: 1060, y: 80, gecis: 'sfb', basla: 500, sure: 1500 },
-      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 476, h: 267, x: 1109, y: 99, gecis: 'sfb', basla: 500, sure: 300 },
+      // Ölçüler tablet PNG'sinin koyu ekran dikdörtgeninden ölçüldü (474×351 @ 1110,104).
+      // Canlı slider 486×356 @ 1109,99 diyor ama o değer ekranı birkaç piksel taşırıyor.
+      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 474, h: 351, x: 1110, y: 104, gecis: 'sfb', basla: 500, sure: 300 },
     ],
   },
   {

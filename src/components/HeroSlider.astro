@@ -27,9 +27,11 @@ const katmanStil = (k: any) => [
   `left:${(k.x / IG) * 100}%`,
   `top:${(k.y / IY) * 100}%`,
   `width:${(k.w / IG) * 100}%`,
+  // görseller doğal oranıyla akar; video kutusu tabletin ekranına birebir oturmalı
+  k.tur === 'video' ? `height:${(k.h / IY) * 100}%` : null,
   `--basla:${k.basla}ms`,
   `--sure:${k.sure}ms`,
-].join(';');
+].filter(Boolean).join(';');
 ---
 <div class="slider" aria-roledescription="carousel" aria-label={etiket}>
   <div class="slider__ray" id="ray">
@@ -91,7 +93,7 @@ const katmanStil = (k: any) => [
 /* ─── Görsel katmanlar (canlı slider'daki hâliyle) ────── */
 .kat { --olcek: calc(100cqw / 1920); position: absolute; z-index: 2; max-width: none; height: auto;
   opacity: 0; will-change: transform, opacity; }
-.kat__video { aspect-ratio: 476/267; }
+.kat__video { background: #222; }   /* tabletin ekran rengi — video 16:9 olduğu için altta/üstte bant kalır */
 .kat__video iframe { width: 100%; height: 100%; border: 0; }
 
 .slide[data-aktif="true"] .kat { animation-duration: var(--sure); animation-delay: var(--basla);
