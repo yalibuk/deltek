@@ -13,7 +13,8 @@
 //   randomrotate     dönerek ve büyüyerek gelir
 //   tp-fade          yalnızca belirir
 //
-// Not: 7. slaydın 1woman.png katmanı canlı sunucuda 404 verdiği için yok.
+// Not: 7. slaydın 1woman.png katmanı canlı sunucuda 404 veriyor; orijinali
+// web arşivinden (2025-04-01 anlık görüntüsü) alınıp depoya kondu.
 
 export type HeroKatman = {
   tur: 'gorsel' | 'metin' | 'video';
@@ -99,6 +100,7 @@ export const HERO_TR: HeroSlayt[] = [
     arka: '/images/hero/slide-1-bg.jpg',
     alt: "Deltek",
     katmanlar: [
+      { tur: 'gorsel', src: '/images/hero/katman/1woman.png', w: 309, h: 451, x: 1295, y: 38, gecis: 'sfb', basla: 500, sure: 2500 },
       { tur: 'metin', metin: "HEMEN ARAYIN", stil: 'mavis', x: 390, y: 14, gecis: 'sfr', basla: 1500, sure: 1000 },
       { tur: 'metin', metin: "SİZİN İÇİN PROJELENDİRELİM", stil: 'turuncu2', x: 390, y: 70, gecis: 'sfr', basla: 2000, sure: 1000 },
       { tur: 'metin', metin: "Hepsi alanında uzman mühendis ve teknik elemanlardan oluşan ekibimiz", stil: 'turuncu', x: 390, y: 149, gecis: 'lfb', basla: 3500, sure: 1000 },
@@ -202,6 +204,7 @@ export const HERO_EN: HeroSlayt[] = [
     arka: '/images/hero/slide-1-bg.jpg',
     alt: "Deltek",
     katmanlar: [
+      { tur: 'gorsel', src: '/images/hero/katman/1woman.png', w: 309, h: 451, x: 1295, y: 38, gecis: 'sfb', basla: 500, sure: 2500 },
       { tur: 'metin', metin: "CALL US NOW", stil: 'mavis', x: 390, y: 14, gecis: 'sfr', basla: 1500, sure: 1000 },
       { tur: 'metin', metin: "LET US ENGINEER IT FOR YOU", stil: 'turuncu2', x: 390, y: 70, gecis: 'sfr', basla: 2000, sure: 1000 },
       { tur: 'metin', metin: "Our team of specialist engineers and technicians", stil: 'turuncu', x: 390, y: 149, gecis: 'lfb', basla: 3500, sure: 1000 },

@@ -50,8 +50,10 @@ const enCevir = (t) => {
 
 const YEREL = (u) => '/images/hero/katman/' + u.split('/').pop();
 const ARKA = (u) => '/images/hero/' + u.split('/').pop();
-// canlı sunucuda 404 veren katman
-const ATLA = ['1woman.png'];
+// Canlı sunucuda 404 veren katmanlar burada atlanır. 1woman.png de 404
+// veriyordu ama orijinali web arşivinden alınıp public/images/hero/katman/
+// altına konduğu için artık atlanmıyor.
+const ATLA = [];
 
 const alan = (k, dil) => {
   const p = [`tur: '${k.tur}'`];
@@ -96,7 +98,9 @@ const govde = `// Ana sayfa hero slider verisi — canlı deltek.com.tr'deki Rev
 //   randomrotate     dönerek ve büyüyerek gelir
 //   tp-fade          yalnızca belirir
 //
-// Not: 7. slaydın 1woman.png katmanı canlı sunucuda 404 verdiği için yok.
+// Not: 7. slaydın 1woman.png katmanı canlı sunucuda 404 veriyor; orijinali
+// web arşivinden alınıp public/images/hero/katman/ altına konduğu için
+// bu betik yeniden çalıştırıldığında da slaytta yer alır.
 
 export type HeroKatman = {
   tur: 'gorsel' | 'metin' | 'video';

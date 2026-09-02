@@ -238,7 +238,7 @@ bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu
 OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
 
 **Hero slider** canlı deltek.com.tr'deki Revolution Slider'ın kompozisyonunu ve
-katman animasyonlarını yeniden üretir: **9 slayt, 44 katman** (8 görsel, 35 metin,
+katman animasyonlarını yeniden üretir: **9 slayt, 45 katman** (9 görsel, 35 metin,
 1 YouTube gömüsü). Arka planlar `public/images/hero/`, katman görselleri
 `public/images/hero/katman/`.
 
@@ -273,7 +273,9 @@ node scripts/hero-slider-cikar.mjs      # -> slider.json (ham yapı raporu)
 node scripts/hero-veri-uret.mjs src/data/hero.ts
 ```
 
-> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor, alınmadı.
+> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor —
+> orijinali (309×451, saydam PNG) web arşivinin 2025-04-01 anlık görüntüsünden
+> alınıp depoya kondu, slaytta orijinal konum ve animasyonuyla duruyor.
 > `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.
 
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
