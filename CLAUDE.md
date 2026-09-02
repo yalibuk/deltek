@@ -44,33 +44,43 @@ Bunun mimariye yansıması:
 | `/feed/` | `/blog/` | WordPress RSS |
 | `/wp-login.php` | `/` | WordPress artığı |
 
-## Taşınacak içerik envanteri (canlı siteden)
+## Taşınan içerik
 
-**Blog — 10 yazı, hepsi kök dizinde** (`/blog/` sadece liste):
-`the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimini-gerceklestirdi`,
-`ssen-96-milyon-sterlinlik-m27-projesinde-hdd-yontemine-guveniyor`,
-`iskandinavya-ai-super-otoyolunu-guclendirmek-icin-yonlendirilebilir-yatay-delgi-yyd-hdd`,
-`national-grid-temze-nehrinin-altinda-271-tonluk-dev-makineyi-harekete-gecirdi`,
-`avrupada-devasa-bir-yuzen-gunes-enerji-santrali-hizmete-girdi`,
-`yatay-delgi-dizel-elektrik-karsilastirma`, `4058-metre-dunya-rekoru`,
-`yonlendirilebilir-yatay-delgi-hakkinda`, `miamide-kanalizasyon-yapimi`, `gunde-1-km`
+Canlı siteden taşınan **39 URL** (10 blog yazısı + 28 sayfa + `/blog/`).
+Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı.
 
-**Statik sayfalar** (henüz taşınmadı): `/hakkimizda/`, `/hizmetlerimiz/`,
-`/referanslar/`, `/medyalar/`, `/iletisim/`
+**Blog yazıları** → `src/content/blog/tr/<slug>.md`, `/<slug>/` adresinde.
 
-**Teknoloji / hizmet sayfaları** (henüz taşınmadı): `/yatay-sondaj-kazisiz-yatay-delgi/`,
-`/yonlendirilebilir-yatay-sondaj-nedir/`, `/yonlendirilebilir-yatay-sondaj-makinesi`,
-`/yonlendirilebilir-yatay-sondaj-yapim-metodu`, `/yatay-sondaj-teknoloji/`,
-`/yatay-sondaj-camuru/`, `/delgi-tijleri/`, `/genisletme-basligi/`, `/yonlendirme-basligi/`,
-`/manyetik-alan/`, `/yer-belirleme/`, `/uzerinden-takip/`, `/boru-surmecakma/`,
-`/boru-surme-boru-cakma-auger-boring/`, `/auger-boring-nedir-modern-yatay-delgi-teknolojisi/`,
-`/boru-yenileme/`, `/mikrotunel-nedir/`, `/akilli-altyapi/`,
-`/kazisiz-altyapi-ve-kazisiz-teknolojiler/`
+**Sayfalar** → `src/content/sayfalar/tr/<slug>.md`, yine `/<slug>/` adresinde:
 
-> Not: `/mikrotunel-nedir/` ve `/auger-boring-nedir-.../` gibi bazı slug'lar hem
-> içerik sayfası hem blog yazısı gibi durabiliyor. Taşırken hangisinin blog
-> koleksiyonuna, hangisinin statik sayfaya gideceği tek tek karara bağlanmalı —
-> **ikisi aynı slug'ı alamaz.**
+- Menüde: `hakkimizda` (Kurumsal), `yatay-sondaj-teknoloji` (Teknoloji),
+  `hizmetlerimiz`, `referanslar`, `medyalar`, `iletisim`
+- Teknoloji/hizmet: `yonlendirilebilir-yatay-sondaj-nedir`,
+  `yonlendirilebilir-yatay-sondaj-yapim-metodu`, `yonlendirilebilir-yatay-sondaj-makinesi`,
+  `yatay-delgi-nedir`, `yatay-sondaj`, `yonlendirilebilir-yatay-delgi`,
+  `yonlendirilebilir-yatay-sondaj`, `delgi-tijleri`, `yonlendirme-basligi`,
+  `genisletme-basligi`, `yer-belirleme`, `uzerinden-takip`, `manyetik-alan`,
+  `yatay-sondaj-camuru`, `boru-surmecakma`, `boru-yenileme`, `akilli-altyapi`,
+  `auger-boring-nedir-modern-yatay-delgi-teknolojisi`, `mikrotunel-nedir`,
+  `boru-surme-boru-cakma-auger-boring`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`,
+  `yatay-sondaj-kazisiz-yatay-delgi`
+
+> `sitemap.xml` canlı sitede eksikti (`hizmetlerimiz` yok, yeni yazıların çoğu yok).
+> Envanter, sitemap + `/feed/` + menü taraması birleştirilerek çıkarıldı.
+
+### Taşımada bilinçli olarak değişenler
+
+- **WPBakery sekmeleri ve akordiyonları düz başlığa açıldı.** İçerik korundu ama
+  sekme/akordiyon etkileşimi yok; bölümler art arda `###` başlıkla akıyor.
+- **Yan menü (sidebar) atıldı** — yeni sitede header menüsü karşılıyor.
+- **İletişim formu (Contact Form 7) kaldırıldı.** Statik sitede çalışmıyor;
+  form alanları düz metin olarak sızdığı için tamamen çıkarıldı. `/iletisim/`
+  sayfasındaki "Bize Yazın" başlığı formsuz duruyor — form yeniden kurulmalı.
+- **Cloudflare e-posta gizlemesi çözüldü**, adresler gerçek `mailto:` bağlantısı oldu.
+- **Google harita ve Vimeo gömüleri korundu** (`<div class="gomu">` sarmalayıcısıyla,
+  responsive 16:9).
+- **Referans logoları** `duzen: logo-izgara` alanıyla yan yana diziliyor
+  (markdown her görseli ayrı paragrafa koyduğu için).
 
 ## Dizin yapısı
 
@@ -79,18 +89,20 @@ src/
   layouts/Layout.astro      tek layout — header, dil değiştirici, footer, meta/OG/JSON-LD
   pages/
     index.astro             TR ana sayfa
-    [slug].astro            TR blog yazısı → /<slug>/
+    [slug].astro            TR yazı VE sayfa → /<slug>/ (iki koleksiyon tek route)
     blog/index.astro        TR blog listesi → /blog/
     en/index.astro          EN ana sayfa → /en/
-    en/[slug].astro         EN blog yazısı → /en/<slug>/
+    en/[slug].astro         EN yazı VE sayfa → /en/<slug>/
     en/blog/index.astro     EN blog listesi → /en/blog/
     admin/index.astro       Sveltia CMS paneli (noindex)
   data/
     site.ts                 SITE sabitleri, KATEGORILER, KBAR
     i18n.ts                 CEVIRI (tr/en) arayüz metinleri
-    blog.ts                 yazilar(dil), cevirisiVarMi(slug, dil)
-  content/blog/tr/<slug>.md   Türkçe yazılar (ana dil)
-  content/blog/en/<slug>.md   İngilizce çeviriler (zorunlu değil)
+  data/icerik.ts            yazilar() sayfalar() kokIcerik() cevirisiVarMi() menuSayfalari()
+  content/blog/tr/<slug>.md      Türkçe blog yazıları
+  content/blog/en/<slug>.md      İngilizce çevirileri (zorunlu değil)
+  content/sayfalar/tr/<slug>.md  Türkçe sayfalar
+  content/sayfalar/en/<slug>.md  İngilizce çevirileri (zorunlu değil)
   content.config.ts
   styles/global.css
 public/
@@ -140,11 +152,13 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [ ] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — şu an hiç yok,
       bu yüzden `/en/blog/` boş ve yazılar EN hreflang basmıyor
 - [ ] Boremak ürün sayfası şablonlarını (içerik boş) geri al — teknoloji/hizmet sayfaları için
-- [ ] Statik ve teknoloji/hizmet sayfalarını taşı (yukarıdaki envanter)
+- [x] Statik + teknoloji/hizmet sayfaları taşındı (28 sayfa)
+- [ ] `/iletisim/` sayfasına çalışan bir iletişim formu ekle (CF7 kaldırıldı)
+- [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde
+      yalnızca Blog görünüyor
 - [ ] Görsel tasarımı canlı siteye yaklaştır (renk paleti `global.css` `:root` içinde,
       şu an Boremak iskeletinden devralındı)
-- [ ] `src/data/site.ts` — telefon, e-posta, adres, WhatsApp, slogan (`TODO` işaretli)
-- [ ] `src/data/i18n.ts` — `footer.slogan` (TR/EN)
+- [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
 - [ ] `public/logo.svg`, `logo-beyaz.svg`, `favicon.svg` — gerçek Deltek logosu
 - [ ] `public/og-image.jpg` — **yok**; `Layout.astro` bu yola referans veriyor, 1200×630 eklenmeli
 - [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri
@@ -153,7 +167,7 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 
 ## Taşıma betiği
 
-`scripts/wp-tasi.mjs` — canlı WordPress'ten içerik çeker. Kaynak olarak `/feed/`
+`scripts/wp-tasi.mjs` (blog) ve `scripts/wp-sayfa-tasi.mjs` (sayfalar) — canlı WordPress'ten içerik çeker. Kaynak olarak `/feed/`
 (tam gövde, tarih, özet) ve her yazının kendi sayfasını (öne çıkan görsel:
 `attachment-blog-large-image` sınıfı) kullanır; HTML'i markdown'a çevirir,
 görselleri `public/images/uploads/` altına WP yol yapısını koruyarak indirir.
@@ -163,7 +177,12 @@ curl -s https://www.deltek.com.tr/feed/ -o feed.xml   # betikle aynı klasöre
 node scripts/wp-tasi.mjs .
 ```
 
-Statik sayfaları taşırken bu betiğin HTML→markdown dönüştürücüsü yeniden kullanılabilir.
+`wp-sayfa-tasi.mjs` sayfanın `#contentWrapper` içeriğini alır, `.page-title` ve
+`aside` bloklarını atar; `--liste` ile hiçbir dosya yazmadan envanter raporu verir:
+
+```bash
+node scripts/wp-sayfa-tasi.mjs . --liste
+```
 
 ## Komutlar
 

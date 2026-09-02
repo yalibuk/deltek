@@ -15,7 +15,7 @@ export const CEVIRI = {
       iletisim: 'İletişim',
     },
     footer: {
-      slogan: '',                       // TODO: kısa footer tanıtım cümlesi
+      slogan: 'Yatay sondaj, boru sürme ve kazısız geçiş teknolojileri.',
       site: 'Site',
       anasayfa: 'Ana sayfa',
       blog: 'Blog',
@@ -40,7 +40,7 @@ export const CEVIRI = {
       iletisim: 'Contact',
     },
     footer: {
-      slogan: '',                       // TODO: short footer blurb
+      slogan: 'Horizontal directional drilling, pipe ramming and trenchless technologies.',
       site: 'Site',
       anasayfa: 'Home',
       blog: 'Blog',

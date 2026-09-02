@@ -55,3 +55,33 @@ collections:
         fields:
           - { name: foto, label: Fotoğraf, widget: image }
       - { name: body, label: Yazı içeriği, widget: markdown, required: false, i18n: true }
+
+  - name: sayfalar
+    label: Sayfalar
+    label_singular: Sayfa
+    folder: src/content/sayfalar
+    create: true
+    i18n: true
+    identifier_field: baslik
+    # DİKKAT: Bu slug canlı sitedeki URL'dir. Mevcut bir sayfayı taşırken
+    # deltek.com.tr'deki slug'ın AYNISI girilmeli (bkz. CLAUDE.md).
+    # Sayfalar ve blog yazıları aynı kök adres alanını paylaşır — çakışma
+    # olursa site derlenmez.
+    slug: "{{slug}}"
+    summary: "{{baslik}}"
+    sortable_fields: [menuSira, baslik]
+    fields:
+      - { name: baslik, label: Başlık, widget: string, i18n: true }
+      - { name: ozet, label: Kısa açıklama (arama sonuçlarında görünür), widget: text, required: false, i18n: true }
+      - { name: menuSira, label: "Menü sırası (boş bırakılırsa menüde görünmez)", widget: number, required: false, value_type: int, i18n: duplicate }
+      - { name: menuAd, label: "Menüde görünecek ad (boşsa başlık kullanılır)", widget: string, required: false, i18n: true }
+      - { name: kapak, label: Kapak görseli, widget: image, required: false, i18n: duplicate }
+      - name: duzen
+        label: "İçerik düzeni"
+        widget: select
+        required: false
+        i18n: duplicate
+        options:
+          - { label: "Normal (makale akışı)", value: "" }
+          - { label: "Logo ızgarası (referans logoları yan yana)", value: "logo-izgara" }
+      - { name: body, label: Sayfa içeriği, widget: markdown, required: false, i18n: true }

@@ -1,21 +1,27 @@
-// Site geneli sabitler. İletişim bilgileri PLACEHOLDER — gerçek Deltek
-// bilgileriyle değiştirilmeli (bkz. CLAUDE.md "Yapılacaklar").
+// Site geneli sabitler. İletişim bilgileri canlı deltek.com.tr/iletisim/
+// sayfasından alındı (e-posta Cloudflare gizlemesinden çözüldü).
 export const SITE = {
   isim: "Deltek",
-  slogan: "",                              // TODO: Deltek sloganı
-  telefon: "+90 000 000 0000",             // TODO
-  telefonHam: "+900000000000",             // TODO
-  whatsapp: "",                            // boş bırakılırsa WhatsApp butonu render edilmez
+  unvan: "DELTEK KAZISIZ GEÇİŞ TEKNOLOJİLERİ İNŞ. SAN. ve TİC. LTD. ŞTİ.",
+  slogan: "Yatay Sondaj, Boru Sürme ve Kazısız Geçiş Teknolojileri",
+  telefon: "0850 888 3585",
+  telefonHam: "+908508883585",
+  whatsapp: "",                            // numara girilirse WhatsApp butonu görünür
   eposta: "info@deltek.com.tr",
-  adres: "",                               // TODO
-  adres1: "",                              // TODO
-  adres2: "",                              // TODO
+  // Merkez ofis — footer ve JSON-LD bu ikisini kullanır
+  adres1: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
+  adres2: "34357 Beşiktaş - İstanbul",
   kanonikal: "https://www.deltek.com.tr",
 };
 
+// Tüm ofisler — /iletisim/ sayfasında listelenir
+export const OFISLER = [
+  { sehir: "İstanbul", adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1, 34357 Beşiktaş - İstanbul" },
+  { sehir: "İzmir",    adres: "Maltepe Mah. 66. Sok. No: 35, 35310 Güzelbahçe - İzmir" },
+];
+
 // Ürün/hizmet kategorileri. Boş bırakıldığında header'daki açılır menü ve
 // ikon şeridi otomatik gizlenir; doldurulduğunda geri gelir.
-// Örn: { slug: 'ornek-kategori', ad: 'Örnek Kategori', ikon: '/icons/ornek.svg' }
 export const KATEGORILER: { slug: string; ad: string; ikon: string }[] = [];
 
 // Header'ın altındaki ikon şeridi (kbar). Varsayılan olarak kategorilerden türer.

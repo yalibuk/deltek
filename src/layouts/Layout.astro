@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE, KATEGORILER, KBAR } from '../data/site';
 import { CEVIRI, KATEGORI_EN } from '../data/i18n';
+import { menuSayfalari } from '../data/icerik';
 
 interface Props {
   title?: string;
@@ -33,6 +34,10 @@ const trAlt = (dil === 'tr' || cevirisiVar) ? SITE.kanonikal + trYol : null;
 const enAlt = (dil === 'en' || cevirisiVar) ? SITE.kanonikal + enYol : null;
 const trDugme = (dil === 'tr' || cevirisiVar) ? trYol : '/';
 const enDugme = (dil === 'en' || cevirisiVar) ? enYol : '/en/';
+
+// Header menüsü içerikten sürülür: menuSira alanı dolu olan sayfalar.
+// EN tarafında çevirisi girilmemiş sayfa menüde çıkmaz.
+const menu = await menuSayfalari(dil);
 
 const kanonik = SITE.kanonikal + pathname;
 const ogGorsel = SITE.kanonikal + (image || '/og-image.jpg');
@@ -116,9 +121,12 @@ const jsonLd = {
           </div>
         </span>
       )}
-      <a class="gez2" href={yol('/blog/')}><span>{t.nav.blog[0]}</span><span>{t.nav.blog[1]}</span></a>
-      <a class="gez2" href={yol('/#hakkimizda')}><span>{t.nav.hakkimizda[0]}</span><span>{t.nav.hakkimizda[1] || ' '}</span></a>
-      <a class="gez2" href={yol('/#iletisim')}><span>{t.nav.iletisim}</span><span>&nbsp;</span></a>
+      {menu.map(({ entry, slug }) => (
+        <a class="gez2" href={yol(`/${slug}/`)}>
+          <span>{(entry.data as any).menuAd || (entry.data as any).baslik}</span><span>&nbsp;</span>
+        </a>
+      ))}
+      <a class="gez2" href={yol('/blog/')}><span>{t.nav.blog[0]}</span><span>&nbsp;</span></a>
       <a class="ust__tel" href={`tel:${SITE.telefonHam}`}>
         <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M3.6 1.4 5.9 1a.7.7 0 0 1 .78.4l1.06 2.4a.7.7 0 0 1-.2.82l-1.2.98a8.6 8.6 0 0 0 4.06 4.06l.98-1.2a.7.7 0 0 1 .82-.2l2.4 1.06a.7.7 0 0 1 .4.78l-.4 2.3a.7.7 0 0 1-.69.58C6.8 13 3 9.2 3 2.1a.7.7 0 0 1 .6-.7Z"/></svg>
         {SITE.telefon}
@@ -154,9 +162,10 @@ const jsonLd = {
       <div>
         <h5>{t.footer.site}</h5>
         <a href={yol('/')}>{t.footer.anasayfa}</a>
+        {menu.map(({ entry, slug }) => (
+          <a href={yol(`/${slug}/`)}>{(entry.data as any).menuAd || (entry.data as any).baslik}</a>
+        ))}
         <a href={yol('/blog/')}>{t.footer.blog}</a>
-        <a href={yol('/#hakkimizda')}>{t.footer.hakkimizda}</a>
-        <a href={yol('/#iletisim')}>{t.footer.iletisim}</a>
       </div>
       <div>
         <h5>{t.footer.iletisim}</h5>
