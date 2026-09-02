@@ -81,7 +81,12 @@ export const HERO_TR: HeroSlayt[] = [
       { tur: 'gorsel', src: '/images/hero/katman/video-screen.png', w: 574, h: 400, x: 1060, y: 80, gecis: 'sfb', basla: 500, sure: 1500 },
       // Ölçüler tablet PNG'sinin koyu ekran dikdörtgeninden ölçüldü (474×351 @ 1110,104).
       // Canlı slider 486×356 @ 1109,99 diyor ama o değer ekranı birkaç piksel taşırıyor.
-      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 474, h: 351, x: 1110, y: 104, gecis: 'sfb', basla: 500, sure: 300 },
+      //
+      // Orijinalde video da tabletle aynı anda (500 ms) başlıyor ama 300 ms'de
+      // yerine oturuyordu; tablet 1500 ms kaydığı için ekran 1,2 sn boyunca
+      // çerçeveden ayrık kalıyordu. Artık tablet oturduktan sonra ekran
+      // yanıyor — hem kusur gidiyor hem iframe uçarken render edilmiyor.
+      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 474, h: 351, x: 1110, y: 104, gecis: 'fade', basla: 2000, sure: 700 },
     ],
   },
   {
@@ -96,12 +101,10 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sol', dikey: 'ust', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/bit.png', w: 1530, h: 141, x: -2, y: 312, gecis: 'lfl', basla: 2000, sure: 1000 },
-      // Ada: orijinalinde sağdan kayarak giriyordu (lfr); yerinde beliren
-      // yavaş bir fade'e çevrildi (1000 ms'de başlar, 2000 ms sürer).
-      // Tij: soldan gelişini (lfl) koruyor ama 1 sn geciktirildi (2000 ms) —
-      // böylece ada oturduktan sonra devreye giriyor.
-      { tur: 'gorsel', src: '/images/hero/katman/toprak.png', w: 325, h: 430, x: 1132, y: 102, gecis: 'fade', basla: 1000, sure: 2000 },
+      { tur: 'gorsel', src: '/images/hero/katman/bit.png', w: 1530, h: 141, x: -2, y: 312, gecis: 'lfl', basla: 500, sure: 1000 },
+      // Ada sağdan (lfr), tij soldan (lfl) gelip ortada buluşuyor; ikisi de
+      // ~1,5 sn'de yerine oturuyor.
+      { tur: 'gorsel', src: '/images/hero/katman/toprak.png', w: 325, h: 430, x: 1132, y: 102, gecis: 'lfr', basla: 200, sure: 1200 },
     ],
   },
   {
@@ -115,8 +118,11 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sol', dikey: 'alt', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 799, h: 232, x: 370, y: 76, gecis: 'sfl', basla: 500, sure: 2500 },
-      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 202, h: 500, x: 1283, y: 9, gecis: 'sfr', basla: 3350, sure: 1000 },
+      // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
+      // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
+      // tutturmak için öne çekildi.
+      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 799, h: 232, x: 370, y: 76, gecis: 'sfl', basla: 400, sure: 1800 },
+      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 202, h: 500, x: 1283, y: 9, gecis: 'sfr', basla: 1900, sure: 900 },
     ],
   },
   {
@@ -130,8 +136,11 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sag', dikey: 'alt', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/deltek-robot-engineer.png', w: 489, h: 506, x: 360, y: 20, gecis: 'lfb', basla: 500, sure: 3000 },
-      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 437, h: 261, x: 1094, y: 6, gecis: 'lfr', basla: 500, sure: 3000 },
+      // Orijinalde ikisi de 500 ms'de başlayıp 3000 ms sürüyordu; aynı anda
+      // aynı hızda hareket iki nesneyi tek blok gibi gösteriyordu. Hafif
+      // kademelendirildi ve hızlandırıldı.
+      { tur: 'gorsel', src: '/images/hero/katman/deltek-robot-engineer.png', w: 489, h: 506, x: 360, y: 20, gecis: 'lfb', basla: 400, sure: 2000 },
+      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 437, h: 261, x: 1094, y: 6, gecis: 'lfr', basla: 700, sure: 1800 },
     ],
   },
   {
@@ -146,7 +155,7 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sol', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/1woman.png', w: 309, h: 451, x: 1295, y: 38, gecis: 'sfb', basla: 500, sure: 2500 },
+      { tur: 'gorsel', src: '/images/hero/katman/1woman.png', w: 309, h: 451, x: 1295, y: 38, gecis: 'sfb', basla: 400, sure: 1800 },
     ],
   },
   {
@@ -159,7 +168,9 @@ export const HERO_TR: HeroSlayt[] = [
       konum: 'sol', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/button-hand.png', w: 290, h: 277, x: 940, y: 225, gecis: 'lfb', basla: 4000, sure: 1000 },
+      // Orijinalde 4000 ms'de başlıyordu: yazı 1,4 sn'de bitip slayt 2,6 sn
+      // boş kalıyordu. Yazının hemen ardına alındı.
+      { tur: 'gorsel', src: '/images/hero/katman/button-hand.png', w: 290, h: 277, x: 940, y: 225, gecis: 'lfb', basla: 1400, sure: 900 },
     ],
   },
   {
