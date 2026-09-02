@@ -237,6 +237,14 @@ bağımlılığı olarak zaten kurulu ama bizim bağımlılığımız değil, bu
 `import sharp` çözülmüyor. Astro sharp'ı bırakırsa betik de güncellenmeli.
 OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render etmez.
 
+**Hero slider** görselleri ve başlıkları canlı sitedeki Revolution Slider'dan
+alındı: 9 slayt, `public/images/hero/` (~1,2 MB toplam, ilki eager, kalanı lazy).
+Slayt verisi `src/pages/index.astro` içindeki `heroFotolar` dizisinde —
+`src`, `alt`, `baslik` ve isteğe bağlı `ustSatir` (altın renkli üst satır).
+Fotoğrafın üzerine degrade + beyaz büyük harf başlık biniyor (`.slide__yazi`).
+Görseller farklı en-boy oranlarında (3,7:1 ile 1,5:1 arası); slider `21/9`
+oranında `object-fit: cover` ile kırpıyor.
+
 **Bölüm başlıkları** mavi ve altlarında mavi+sarı kısa çizgi var
 (`.hero__bilgi h1::after`, `.kanit__bas h2::after`, `.bolum-bas::after`).
 
@@ -276,8 +284,8 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
       yalnızca Blog görünüyor
 - [x] Görsel tasarım canlı siteye yaklaştırıldı (palet, tipografi, header, logo)
 - [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
-- [ ] `public/images/hero/placeholder-*.svg` — gerçek hero görselleri (canlı sitedeki
-      saha fotoğrafı slider'ı gibi); üzerine metin bindirme de eklenebilir
+- [ ] Hero slaytlarının **İngilizce başlıkları çeviri**, Deltek onayından geçmedi
+      (`src/pages/en/index.astro`)
 - [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 

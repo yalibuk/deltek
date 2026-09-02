@@ -3,12 +3,31 @@ import Layout from '../layouts/Layout.astro';
 import { SITE } from '../data/site';
 import { yazilar } from '../data/icerik';
 
-// Hero slider görselleri — PLACEHOLDER. Gerçek Deltek görselleriyle değiştirin
-// (public/images/hero/ altına koyup bu listeyi güncelleyin).
+// Hero slider — görseller ve başlıklar canlı deltek.com.tr'deki
+// Revolution Slider'dan alındı (public/images/hero/).
 const heroFotolar = [
-  { src: '/images/hero/placeholder-1.svg', alt: 'Deltek', ad: 'Deltek' },
-  { src: '/images/hero/placeholder-2.svg', alt: 'Deltek', ad: 'Deltek' },
-  { src: '/images/hero/placeholder-3.svg', alt: 'Deltek', ad: 'Deltek' },
+  { src: '/images/hero/onshoreRig3-1.jpg', alt: 'Onshore HDD sahası',
+    baslik: 'Onshore / Offshore HDD projelerinde güvenilir iş ortağınız' },
+  { src: '/images/hero/pipesite.jpg', alt: 'Boru hattı sahası',
+    baslik: 'Yatay sondaja ihtiyaç duyduğunuz her alanda yanınızdayız',
+    ustSatir: 'Elektrik · Doğalgaz · Kanalizasyon · Telekomünikasyon · İçme suyu ve drenaj' },
+  { src: '/images/hero/yatay-sondaj-wordaholic-bg.jpg', alt: 'Kaya delgi',
+    baslik: 'Kaya delgi & muazzam güç' },
+  { src: '/images/hero/slide-6-bg.jpg', alt: 'Yatay delgi ve sondaj teknolojileri',
+    baslik: 'Yatay delgi ve sondaj teknolojileri',
+    ustSatir: 'Amacınıza en uygun yatay sondaj yöntemini seçerek işe başlayın' },
+  { src: '/images/hero/zzz.jpg', alt: 'Makine parkı',
+    baslik: 'Yatay sondaj uzmanı',
+    ustSatir: 'Yüksek teknolojik altyapı, geniş makine parkı' },
+  { src: '/images/hero/slide-2-bg.jpg', alt: 'Saha çalışması',
+    baslik: 'Başarı, tesadüften fazlasını gerektirir' },
+  { src: '/images/hero/slide-1-bg.jpg', alt: 'Altyapı projesi',
+    baslik: 'Sizin için projelendirelim',
+    ustSatir: "2 mm'den 2000 mm'ye varan çaplarda altyapı projelerine çözüm" },
+  { src: '/images/hero/button-bg-1.jpg', alt: 'Altyapı çözümleri',
+    baslik: 'Altyapıda fark yaratan etkin çözümlerimizle rakiplerinizin önüne geçin' },
+  { src: '/images/hero/deltek-yatay-sondaj-marka.jpg', alt: 'Deltek',
+    baslik: 'Yatay sondajda bir dünya markası' },
 ];
 
 // Son blog yazıları — en yeni 3 tanesi (varsa)
@@ -29,7 +48,10 @@ const projeTarih = (d: any) =>
         {heroFotolar.map((f, i) => (
           <div class="slide">
             <img src={f.src} alt={f.alt} loading={i === 0 ? 'eager' : 'lazy'} />
-            <span class="slide__ad">{f.ad}</span>
+            <div class="slide__yazi">
+              {f.ustSatir && <p class="slide__ust">{f.ustSatir}</p>}
+              <h2>{f.baslik}</h2>
+            </div>
           </div>
         ))}
       </div>
