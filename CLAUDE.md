@@ -275,6 +275,14 @@ fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 metin kutusuyla katmanların çakışması ölçülerek doğrulandı (6 slaytta sıfır,
 3 slaytta yalnızca saydam PNG'lerin sınır kutusuna değiyor).
 
+**Yatay hizalama sayfa kabıyla ortaktır.** Yazı bloğu slider'ın kenarına değil,
+header'daki `.kap` sütununa (max-width **1280px**, `padding-inline`
+`clamp(1.15rem, 4vw, 2.75rem)`) yaslanır; genişliği de o sütunun %54'ünü geçmez.
+Böylece geniş ekranda yazı ana menünün ve altındaki `.hero__bilgi` metninin tam
+hizasında durur. Değerler `.yazi` içindeki `--kap-en` / `--kap-pad` değişkenleri;
+`global.css`'teki `.kap` değişirse **bunlar da elle güncellenmeli** (container
+query içinden dış kabın ölçüsü okunamıyor).
+
 **Giriş animasyonu** kademeli: üstlik 0,18 sn → başlık 0,32 sn → gövde satırları
 0,48 sn'den itibaren 0,1 sn arayla → buton 0,66 sn. Her parça 0,72 sn'de aşağıdan
 yukarı yumuşakça belirir. Animasyon yalnızca aktif slaytta çalışır

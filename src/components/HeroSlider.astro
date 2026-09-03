@@ -119,10 +119,18 @@ const katmanStil = (k: any) => [
 @keyframes kat-belir { from { opacity: 0; } to { opacity: 1; } }
 
 /* ─── Yazı bloğu ──────────────────────────────────────── */
-.yazi { --olcek: calc(100cqw / 1920); position: absolute; z-index: 3;
-  width: calc(720 * var(--olcek)); max-width: 44%; }
-.yazi--sol { left: calc(150 * var(--olcek)); }
-.yazi--sag { right: calc(150 * var(--olcek)); text-align: right; }
+/* Yazı, header'daki `.kap` sütunuyla aynı hizada durur: geniş ekranda
+   slider'ın kenarına yapışmaz, ana menünün sol/sağ sınırını geçmez.
+   --kap-en / --kap-pad global.css'teki `.kap` ile birebir aynı olmalı. */
+.yazi { --olcek: calc(100cqw / 1920);
+  --kap-en: 1280px;                         /* .kap max-width */
+  --kap-pad: clamp(1.15rem, 4vw, 2.75rem);  /* .kap padding-inline */
+  --kenar: max(var(--kap-pad), calc((100cqw - var(--kap-en)) / 2 + var(--kap-pad)));
+  --sutun: calc(100cqw - 2 * var(--kenar)); /* menünün içerik genişliği */
+  position: absolute; z-index: 3;
+  width: min(calc(700 * var(--olcek)), calc(var(--sutun) * .54)); }
+.yazi--sol { left: var(--kenar); }
+.yazi--sag { right: var(--kenar); text-align: right; }
 .yazi--orta { top: 50%; transform: translateY(-50%); }
 .yazi--ust  { top: calc(44 * var(--olcek)); }
 .yazi--alt  { bottom: calc(52 * var(--olcek)); }
