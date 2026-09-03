@@ -341,8 +341,6 @@ Giderilenler:
   veriden değil, `w` ve doğal en-boy oranından gelir** (yalnızca video katmanı
   `h`'yi kullanır), o yüzden ikisini orantılı tutun.
 
-4. slayt henüz düzeltilmedi: `bit.png` 1530 px genişliğinde bir delgi tiji,
-"Bize ulaşın" düğmesinin arkasından geçiyor.
 
 **Metin kuşağı.** Slayt yazıları slider'ın kenarına değil, ortalanmış sabit bir
 şeride yaslanır: ana menü satırı (`.ust__gez`, TR menüsünde **797px**) iki yanına
