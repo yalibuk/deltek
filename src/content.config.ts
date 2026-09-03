@@ -35,8 +35,14 @@ const sayfalar = defineCollection({
     //   'logo-izgara' → art arda gelen görselleri yan yana dizer (referans logoları)
     //   'urun'        → ürün/teknoloji şablonu (banner + görsel-metin blokları
     //                   + teknik tablolar + galeri; bkz. components/UrunDuzen.astro)
+    //   'iletisim'    → iletişim şablonu (hızlı iletişim + ofis kartları + harita;
+    //                   ofisler src/data/site.ts OFISLER'den gelir, form YOK)
     // Boşsa normal makale akışı.
-    duzen: z.enum(['logo-izgara', 'urun']).optional(),
+    duzen: z.enum(['logo-izgara', 'urun', 'iletisim']).optional(),
+
+    // ── duzen: 'iletisim' alanları ────────────────────────────
+    // Google Haritalar gömme (embed) adresi; boşsa harita bölümü çıkmaz.
+    harita: z.string().optional(),
 
     // ── duzen: 'urun' alanları ────────────────────────────────
     banner: z.string().optional(),

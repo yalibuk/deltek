@@ -1,0 +1,226 @@
+---
+/**
+ * İletişim sayfası şablonu (`duzen: iletisim`).
+ *
+ * FORM YOK — bilinçli. Statik sitede çalışan bir form arka uç servisi
+ * gerektirir; sayfa bunun yerine telefon, e-posta ve ofisleri öne çıkarır.
+ * Ziyaretçi tek dokunuşla arayabilsin diye telefon ve e-posta en üstte,
+ * büyük dokunma hedefleri olarak duruyor.
+ *
+ * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir; harita gömme adresi
+ * sayfanın frontmatter'ındaki `harita` alanından. Etiketler CEVIRI'de
+ * (iki dilli sabit metin sayfaya gömülmez — bkz. CLAUDE.md).
+ */
+import { SITE, OFISLER, yolTarifi } from '../data/site';
+import { CEVIRI, type Dil } from '../data/i18n';
+
+interface Props { dil: Dil; baslik: string; ozet?: string; harita?: string; }
+const { dil, baslik, ozet, harita } = Astro.props;
+const t = CEVIRI[dil].iletisim;
+// Markdown gövdesi boşsa hiç kutu basma (slot her zaman geçildiği için
+// Astro.slots.has yetmiyor; render edip içeriğe bakıyoruz).
+const govde = Astro.slots.has('default') ? (await Astro.slots.render('default')).trim() : '';
+---
+<div class="ilet">
+
+  {/* ── Başlık ─────────────────────────────────────────── */}
+  <header class="kap ilet__bas">
+    <span class="ilet__kunye">{CEVIRI[dil].footer.iletisim}</span>
+    <h1>{baslik}</h1>
+    {ozet && <p class="ilet__ozet">{ozet}</p>}
+    <p class="ilet__unvan">{SITE.unvan}</p>
+  </header>
+
+  {/* ── Hızlı iletişim: telefon + e-posta ──────────────── */}
+  <div class="kap">
+    <div class="ilet__hizli">
+      <a class="hkart" href={`tel:${SITE.telefonHam}`}>
+        <span class="hkart__ikon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M5.4 2.1 8.9 1.5a1 1 0 0 1 1.13.58l1.6 3.6a1 1 0 0 1-.29 1.19l-1.8 1.47a12.9 12.9 0 0 0 6.1 6.1l1.47-1.8a1 1 0 0 1 1.19-.29l3.6 1.6a1 1 0 0 1 .58 1.13l-.6 3.5a1 1 0 0 1-1 .83C10.2 19.4 4.6 13.8 4.57 3.1a1 1 0 0 1 .83-1Z"/></svg>
+        </span>
+        <span class="hkart__ic">
+          <span class="hkart__etiket">{t.telefon}</span>
+          <strong class="hkart__deger">{SITE.telefon}</strong>
+          <span class="hkart__eylem">{t.araEylem} <i aria-hidden="true">→</i></span>
+        </span>
+      </a>
+
+      <a class="hkart" href={`mailto:${SITE.eposta}`}>
+        <span class="hkart__ikon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="hkart__ic">
+          <span class="hkart__etiket">{t.eposta}</span>
+          <strong class="hkart__deger">{SITE.eposta}</strong>
+          <span class="hkart__eylem">{t.yazEylem} <i aria-hidden="true">→</i></span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  {/* ── Sayfanın markdown gövdesi (varsa) ──────────────── */}
+  {govde && <div class="kap ilet__govde" set:html={govde} />}
+
+  {/* ── Ofisler ────────────────────────────────────────── */}
+  <section class="kap ilet__bolum">
+    <h2 class="ilet__h2">{t.ofisler}</h2>
+    <div class="ilet__ofisler">
+      {OFISLER.map(o => (
+        <article class="ofis">
+          <div class="ofis__bas">
+            <h3>{o.sehir}</h3>
+            <span class={`ofis__rozet${o.merkez ? ' ofis__rozet--merkez' : ''}`}>
+              {o.merkez ? t.merkez : t.bolge}
+            </span>
+          </div>
+          <dl class="ofis__veri">
+            <dt>{t.adres}</dt>
+            <dd>{o.adres}<br />{o.adres2}</dd>
+            <dt>{t.telefon}</dt>
+            <dd><a href={`tel:${SITE.telefonHam}`}>{SITE.telefon}</a></dd>
+            <dt>{t.eposta}</dt>
+            <dd><a href={`mailto:${SITE.eposta}`}>{SITE.eposta}</a></dd>
+          </dl>
+          <a class="ofis__yol" href={yolTarifi(o)} target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6"/></svg>
+            {t.yolTarifi}
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {/* ── Harita ─────────────────────────────────────────── */}
+  {harita && (
+    <section class="kap ilet__bolum">
+      <h2 class="ilet__h2">{t.haritaBaslik}</h2>
+      <div class="ilet__harita">
+        <iframe src={harita} title={t.haritaAlt} loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </section>
+  )}
+
+  {/* ── Kapanış çağrısı ────────────────────────────────── */}
+  <section class="kap ilet__bolum">
+    <div class="ilet__cta">
+      <div>
+        <h2>{t.ctaBaslik}</h2>
+        <p>{t.ctaMetin}</p>
+      </div>
+      <a class="btn ilet__ctaBtn" href={`tel:${SITE.telefonHam}`}>
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M3.6 1.4 5.9 1a.7.7 0 0 1 .78.4l1.06 2.4a.7.7 0 0 1-.2.82l-1.2.98a8.6 8.6 0 0 0 4.06 4.06l.98-1.2a.7.7 0 0 1 .82-.2l2.4 1.06a.7.7 0 0 1 .4.78l-.4 2.3a.7.7 0 0 1-.69.58C6.8 13 3 9.2 3 2.1a.7.7 0 0 1 .6-.7Z"/></svg>
+        {SITE.telefon}
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<style>
+.ilet { padding-block: clamp(1.6rem,4vw,2.6rem) clamp(3rem,6vw,5rem); }
+.ilet__bolum { margin-top: clamp(2.4rem,5vw,3.6rem); }
+
+/* ─── Başlık ──────────────────────────────────────────── */
+.ilet__bas { text-align: center; max-width: 62ch; }
+.ilet__kunye { display: inline-block; font-family: var(--f-dis); font-weight: 700; font-size: .78rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); background: var(--mavi-050);
+  border: 1px solid var(--cizgi); padding: .38rem .95rem; border-radius: 999px; }
+.ilet__bas h1 { margin-top: 1.1rem; font-family: var(--f-dis); font-weight: 800;
+  font-size: clamp(1.9rem,4.2vw,2.8rem); letter-spacing: -.025em; line-height: 1.1;
+  color: var(--mavi-900); text-wrap: balance; }
+.ilet__bas h1::after { content: ""; display: block; width: 68px; height: 3px; margin: 1rem auto 0;
+  background: linear-gradient(90deg, var(--mavi) 0 60%, var(--sari) 60% 100%); border-radius: 2px; }
+.ilet__ozet { margin-top: 1.1rem; color: var(--mute); font-size: 1.05rem; line-height: 1.7; text-wrap: pretty; }
+.ilet__unvan { margin-top: 1rem; font-size: .78rem; letter-spacing: .04em; color: var(--mute); opacity: .8; }
+
+/* ─── Hızlı iletişim ──────────────────────────────────── */
+.ilet__hizli { margin-top: clamp(2rem,4vw,3rem); display: grid; gap: 1.2rem; }
+@media (min-width: 760px) { .ilet__hizli { grid-template-columns: 1fr 1fr; } }
+
+.hkart { display: flex; align-items: center; gap: 1.1rem; padding: 1.5rem 1.6rem;
+  background: #fff; border: 1px solid var(--cizgi); border-radius: 16px;
+  box-shadow: 0 22px 44px -32px rgba(0,41,107,.45);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.hkart:hover { transform: translateY(-3px); border-color: var(--mavi);
+  box-shadow: 0 30px 54px -28px rgba(0,41,107,.55); }
+.hkart__ikon { flex: none; width: 52px; height: 52px; display: grid; place-items: center;
+  border-radius: 50%; background: var(--mavi-050); color: var(--mavi);
+  border: 1px solid var(--cizgi); transition: background .2s, color .2s; }
+.hkart:hover .hkart__ikon { background: var(--mavi); color: #fff; border-color: var(--mavi); }
+.hkart__ic { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
+.hkart__etiket { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  font-weight: 700; color: var(--mute); }
+.hkart__deger { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.05rem,2.2vw,1.35rem);
+  color: var(--mavi-900); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.hkart__eylem { margin-top: .2rem; font-size: .85rem; font-weight: 700; color: var(--mavi); }
+.hkart__eylem i { font-style: normal; display: inline-block; transition: transform .2s; }
+.hkart:hover .hkart__eylem i { transform: translateX(4px); }
+
+/* ─── Markdown gövdesi ────────────────────────────────── */
+.ilet__govde { margin-top: clamp(2.2rem,4vw,3rem); max-width: 760px; color: var(--metin);
+  font-size: 1.02rem; line-height: 1.75; }
+.ilet__govde :global(p) { margin-bottom: 1rem; }
+.ilet__govde :global(a) { color: var(--mavi); text-decoration: underline; }
+.ilet__govde :global(h2), .ilet__govde :global(h3), .ilet__govde :global(h4) {
+  font-family: var(--f-dis); font-weight: 800; color: var(--mavi-900); margin: 1.6rem 0 .6rem; }
+
+/* ─── Bölüm başlığı ───────────────────────────────────── */
+.ilet__h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.25rem,2.6vw,1.6rem);
+  letter-spacing: -.015em; color: var(--mavi-900); margin-bottom: 1.3rem;
+  display: flex; align-items: center; gap: .8rem; }
+.ilet__h2::after { content: ""; flex: 1; height: 1px; background: var(--cizgi); }
+
+/* ─── Ofis kartları ───────────────────────────────────── */
+.ilet__ofisler { display: grid; gap: 1.4rem; }
+@media (min-width: 820px) { .ilet__ofisler { grid-template-columns: 1fr 1fr; } }
+
+.ofis { position: relative; background: #fff; border: 1px solid var(--cizgi);
+  border-top: 3px solid var(--mavi); border-radius: 14px; padding: 1.7rem 1.7rem 1.5rem;
+  box-shadow: 0 22px 44px -32px rgba(0,41,107,.45);
+  transition: transform .2s ease, box-shadow .2s ease; }
+.ofis:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgba(0,41,107,.55); }
+.ofis__bas { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+.ofis__bas h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.35rem;
+  letter-spacing: -.015em; color: var(--mavi-900); }
+.ofis__rozet { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--mute); background: var(--kagit); border: 1px solid var(--cizgi);
+  border-radius: 999px; padding: .28rem .7rem; }
+.ofis__rozet--merkez { color: var(--mavi); background: var(--mavi-050); }
+
+.ofis__veri { margin-top: 1.2rem; display: grid; grid-template-columns: auto 1fr; gap: .55rem 1.1rem; }
+.ofis__veri dt { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--mute); padding-top: .18rem; }
+.ofis__veri dd { margin: 0; color: var(--metin); font-size: .96rem; line-height: 1.55; overflow-wrap: anywhere; }
+.ofis__veri dd a { color: var(--mavi); }
+.ofis__veri dd a:hover { text-decoration: underline; }
+
+.ofis__yol { margin-top: 1.3rem; display: inline-flex; align-items: center; gap: .45rem;
+  font-family: var(--f-dis); font-weight: 700; font-size: .88rem; color: var(--mavi);
+  border: 1px solid var(--mavi); border-radius: 999px; padding: .55rem 1.05rem;
+  transition: background .15s, color .15s; }
+.ofis__yol:hover { background: var(--mavi); color: #fff; }
+
+/* ─── Harita ──────────────────────────────────────────── */
+.ilet__harita { position: relative; aspect-ratio: 21/9; border-radius: 16px; overflow: hidden;
+  border: 1px solid var(--cizgi); background: var(--kagit-2);
+  box-shadow: 0 26px 50px -34px rgba(0,41,107,.5); }
+.ilet__harita iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (max-width: 700px) { .ilet__harita { aspect-ratio: 4/3; } }
+
+/* ─── Kapanış çağrısı ─────────────────────────────────── */
+.ilet__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 1.5rem; padding: clamp(1.6rem,3.5vw,2.4rem);
+  background: linear-gradient(120deg, var(--mavi-900), var(--mavi)); border-radius: 18px; color: #fff; }
+.ilet__cta h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.15rem,2.4vw,1.5rem);
+  letter-spacing: -.015em; text-wrap: balance; }
+.ilet__cta p { margin-top: .5rem; color: rgba(255,255,255,.85); font-size: .98rem;
+  line-height: 1.6; max-width: 52ch; }
+/* global.css'te `a.btn[href^="tel:"]` tüm telefon butonlarını maviye boyuyor;
+   lacivert şeridin üzerinde mavi buton kaybolduğu için burada seçici
+   özgüllüğünü artırıp sarıya çeviriyoruz (:active'te !important zorunlu). */
+.ilet__cta a.btn.ilet__ctaBtn { flex: none; background: var(--sari); color: var(--mavi-900);
+  box-shadow: 0 12px 26px -12px rgba(0,0,0,.5); }
+.ilet__cta a.btn.ilet__ctaBtn:hover { background: #fff; color: var(--mavi-900); transform: translateY(-1px); }
+.ilet__cta a.btn.ilet__ctaBtn:active { background: #fff !important; color: var(--mavi-900) !important; }
+</style>

@@ -75,7 +75,9 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 - **Yan menü (sidebar) atıldı** — yeni sitede header menüsü karşılıyor.
 - **İletişim formu (Contact Form 7) kaldırıldı.** Statik sitede çalışmıyor;
   form alanları düz metin olarak sızdığı için tamamen çıkarıldı. `/iletisim/`
-  sayfasındaki "Bize Yazın" başlığı formsuz duruyor — form yeniden kurulmalı.
+  sayfası **form olmadan** yeniden tasarlandı (`duzen: iletisim`): telefon ve
+  e-posta büyük dokunma hedefleri olarak en üstte, altında ofis kartları ve
+  harita. Form gerekirse ayrı bir karar — bir arka uç servisi gerektirir.
 - **Cloudflare e-posta gizlemesi çözüldü**, adresler gerçek `mailto:` bağlantısı oldu.
 - **Google harita ve Vimeo gömüleri korundu** (`<div class="gomu">` sarmalayıcısıyla,
   responsive 16:9).
@@ -136,15 +138,17 @@ CMS'te "İçerik düzeni" açılır listesinden değiştirilir; kod değişikli�
 | _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `hizmetlerimiz` |
 | `logo-izgara` | Art arda gelen görselleri yan yana dizer | `referanslar` |
 | `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` + 13 teknoloji/hizmet sayfası |
+| `iletisim` | İletişim şablonu (form yok) | `iletisim` |
 
 Hangi sayfa hangi düzende olduğunu görmek için:
 
 ```bash
 grep -l "^duzen: urun" src/content/sayfalar/tr/*.md      # ürün şablonu (14)
-grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (13)
+grep -l "^duzen: iletisim" src/content/sayfalar/tr/*.md  # iletişim şablonu (1)
+grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (12)
 ```
 
-**Normal akışta kalanlar ve nedeni:** `hakkimizda`, `hizmetlerimiz`, `iletisim`,
+**Normal akışta kalanlar ve nedeni:** `hakkimizda`, `hizmetlerimiz`,
 `medyalar` kurumsal sayfalar; `mikrotunel-nedir`, `auger-boring-nedir-…`,
 `yatay-delgi-nedir`, `yatay-sondaj`, `yonlendirilebilir-yatay-delgi`,
 `yonlendirilebilir-yatay-sondaj`, `yatay-sondaj-kazisiz-yatay-delgi`,
@@ -188,6 +192,33 @@ Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
 | görsel + metin | iki sütun, sırayla sağa/sola dönüşümlü |
 | yalnız görsel | tam genişlik görsel |
 | yalnız metin | tam genişlik metin (boş görsel kutusu bırakmaz) |
+
+### `duzen: iletisim`
+
+`/iletisim/` sayfasının şablonu. Bileşen: `src/components/IletisimDuzen.astro`.
+**Form yoktur ve bilinçli olarak eklenmedi** — statik çıktıda çalışan bir form
+üçüncü taraf bir servise bağlanmayı gerektirir. Sayfa bunun yerine telefon ve
+e-postayı sayfanın en üstünde büyük dokunma hedefleri olarak verir.
+
+Bölümler: başlık + `ozet` → telefon/e-posta kartları → (varsa markdown gövdesi)
+→ ofis kartları → harita → kapanış çağrısı.
+
+| Veri | Nereden |
+| --- | --- |
+| Telefon, e-posta, ticari unvan | `SITE` (`src/data/site.ts`) |
+| Ofis kartları | `OFISLER` — `merkez: true` olan "Merkez ofis" rozetini alır |
+| Yol tarifi bağlantısı | `yolTarifi(ofis)` adresten üretir, ayrıca saklanmaz |
+| Harita | sayfanın frontmatter'ındaki `harita` (embed src); boşsa bölüm çıkmaz |
+| Etiketler | `CEVIRI[dil].iletisim` — iki dilli metin bileşene gömülmez |
+
+Ofis eklemek/çıkarmak **kod değişikliğidir** (`OFISLER`); CMS'ten yalnızca
+harita ve `ozet` değiştirilebilir. İletişim bilgileri zaten `site.ts`'te tek
+kaynakta durduğu için bilerek böyle.
+
+> **Tuzak:** `global.css` içindeki `a.btn[href^="tel:"]` tüm telefon butonlarını
+> maviye boyar ve özgüllüğü (0,2,1) sıradan bir sınıf seçicisini yener. Lacivert
+> CTA şeridindeki sarı buton bu yüzden `.ilet__cta a.btn.ilet__ctaBtn` ile
+> yazılıyor. Koyu zemine telefon butonu koyan başka bir yer olursa aynı tuzak.
 
 ### Toplu dönüştürme
 
@@ -338,7 +369,10 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [x] Boremak ürün sayfası şablonu geri alındı → `src/components/UrunDuzen.astro`
 - [x] Görsel akışlı 14 teknoloji/hizmet sayfası ürün şablonuna geçirildi
 - [x] Statik + teknoloji/hizmet sayfaları taşındı (28 sayfa)
-- [ ] `/iletisim/` sayfasına çalışan bir iletişim formu ekle (CF7 kaldırıldı)
+- [x] `/iletisim/` sayfası form olmadan yeniden tasarlandı (`duzen: iletisim`) —
+      telefon/e-posta kartları, ofis kartları, harita, kapanış çağrısı
+- [ ] İletişim formu istenirse: statik sitede arka uç servisi gerekir
+      (Cloudflare Pages Functions, Formspree vb.) — ayrı karar
 - [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde
       yalnızca Blog görünüyor
 - [x] Görsel tasarım canlı siteye yaklaştırıldı (palet, tipografi, header, logo)

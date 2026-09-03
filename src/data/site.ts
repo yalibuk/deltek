@@ -14,11 +14,27 @@ export const SITE = {
   kanonikal: "https://www.deltek.com.tr",
 };
 
-// Tüm ofisler — /iletisim/ sayfasında listelenir
+// Tüm ofisler — /iletisim/ sayfasında (duzen: iletisim) kart olarak listelenir.
+// `merkez` yalnızca bir ofiste true olmalı; harita bölümü onu gösterir.
 export const OFISLER = [
-  { sehir: "İstanbul", adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1, 34357 Beşiktaş - İstanbul" },
-  { sehir: "İzmir",    adres: "Maltepe Mah. 66. Sok. No: 35, 35310 Güzelbahçe - İzmir" },
+  {
+    sehir: "İstanbul",
+    merkez: true,
+    adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
+    adres2: "34357 Beşiktaş - İstanbul",
+  },
+  {
+    sehir: "İzmir",
+    merkez: false,
+    adres: "Maltepe Mah. 66. Sok. No: 35",
+    adres2: "35310 Güzelbahçe - İzmir",
+  },
 ];
+
+/** Google Haritalar yol tarifi bağlantısı — ofis adresinden üretilir, ayrıca saklanmaz. */
+export const yolTarifi = (o: { adres: string; adres2: string }) =>
+  'https://www.google.com/maps/search/?api=1&query=' +
+  encodeURIComponent(`${o.adres} ${o.adres2}`);
 
 // Ürün/hizmet kategorileri. Boş bırakıldığında header'daki açılır menü ve
 // ikon şeridi otomatik gizlenir; doldurulduğunda geri gelir.
