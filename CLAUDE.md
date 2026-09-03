@@ -345,7 +345,11 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
 - [ ] Hero slaytlarının **İngilizce başlıkları çeviri**, Deltek onayından geçmedi
       (`src/pages/en/index.astro`)
-- [ ] Ana sayfa hero başlığı ve hakkımızda kartları (placeholder metin)
+- [x] Ana sayfa hero başlığı, tanıtım metni ve hakkımızda kartları dolduruldu —
+      metinler `hakkimizda.md` + `hizmetlerimiz.md` içeriğinden türetildi (4E kuralı,
+      Smart Undergrounding, 250/800 ton kapasite, 2–2000 mm çap, İstanbul/İzmir).
+      **EN karşılıkları çeviridir, Deltek onayından geçmedi.**
+- [ ] Ana sayfa `<Layout description="">` boş — meta açıklama yazılmalı
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 
 ## Taşıma betiği
