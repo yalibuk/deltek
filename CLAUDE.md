@@ -313,11 +313,19 @@ Bu yöntemle bugünkü durum:
 | Slayt | Katman | Çakışan genişlik | Metnin altındaki opak piksel |
 | --- | --- | --- | --- |
 | 4 | `bit.png` | 100 px | %29 |
-| 6 | `yatay-sondaj-pipe-analysis.png` | 407 px | %49 |
 
-Diğer 7 slaytta sıfır. 8. slayt (`button-hand.png`) `dikey: orta` iken başlığın
-ilk satırı elin tuttuğu düğmeye biniyordu; `dikey: ust` yapılarak ayrıldı.
-4 ve 6 henüz düzeltilmedi.
+Diğer 8 slaytta sıfır. Giderilenler:
+
+- **8. slayt** (`button-hand.png`): `dikey: orta` iken başlığın ilk satırı elin
+  tuttuğu düğmeye biniyordu → `dikey: ust`.
+- **6. slayt** (`yatay-sondaj-pipe-analysis.png`): görselin alt kenarı başlığa
+  biniyordu → %30 küçültülüp (437→306) 150 px sola alındı (x 1094→944).
+  Görselin `h` alanı yalnızca belgeleme amaçlı; **görsel katmanların yüksekliği
+  veriden değil, `w` ve doğal en-boy oranından gelir** (yalnızca video katmanı
+  `h`'yi kullanır), o yüzden ikisini orantılı tutun.
+
+4. slayt henüz düzeltilmedi: `bit.png` 1530 px genişliğinde bir delgi tiji,
+"Bize ulaşın" düğmesinin arkasından geçiyor.
 
 **Metin kuşağı.** Slayt yazıları slider'ın kenarına değil, ortalanmış sabit bir
 şeride yaslanır: ana menü satırı (`.ust__gez`, TR menüsünde **797px**) iki yanına

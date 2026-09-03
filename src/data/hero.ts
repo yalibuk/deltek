@@ -140,7 +140,9 @@ export const HERO_TR: HeroSlayt[] = [
       // aynı hızda hareket iki nesneyi tek blok gibi gösteriyordu. Hafif
       // kademelendirildi ve hızlandırıldı.
       { tur: 'gorsel', src: '/images/hero/katman/deltek-robot-engineer.png', w: 489, h: 506, x: 360, y: 20, gecis: 'lfb', basla: 400, sure: 2000 },
-      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 437, h: 261, x: 1094, y: 6, gecis: 'lfr', basla: 700, sure: 1800 },
+      // %30 küçültüldü (437→306) ve 150 px sola alındı (1094→944): önceki
+      // boyutta görselin alt kenarı başlığın ilk satırına biniyordu.
+      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 306, h: 183, x: 944, y: 6, gecis: 'lfr', basla: 700, sure: 1800 },
     ],
   },
   {
