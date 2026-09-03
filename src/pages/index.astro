@@ -12,7 +12,7 @@ const projeTarih = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
 ---
 <Layout
-  title="Deltek"
+  title={`${SITE.isim} — Yatay Sondaj ve Kazısız Geçiş Teknolojileri`}
   description={"Yönlendirilebilir yatay sondaj (HDD), boru sürme-çakma ve kazısız boru yenileme. 2-2000 mm çaplarda kazısız altyapı çözümleri; İstanbul ve İzmir ofisleri."}>
 
 <!-- ── HERO: SLIDER ─────────────────────────── -->

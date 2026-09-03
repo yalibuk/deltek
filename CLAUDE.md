@@ -352,7 +352,9 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
 - [x] Ana sayfa meta açıklaması yazıldı (TR 154 / EN 147 karakter). Tek alan üç yere
       gidiyor: `<meta name="description">`, `og:`/`twitter:description` ve JSON-LD
       `Organization.description` — bu yüzden sayfayı değil şirketi anlatmalı.
-- [ ] Ana sayfa `<title>` yalnızca "Deltek" — arama sonucu başlığı için zayıf
+- [x] Ana sayfa `<title>` marka + slogan oldu (TR 52 / EN 54 karakter). Diğer
+      sayfalar `${baslik} — ${SITE.isim}` kalıbını kullanıyor; `<title>` aynı
+      zamanda `og:title` ve `twitter:title` olarak da basılıyor.
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 
 ## Taşıma betiği
