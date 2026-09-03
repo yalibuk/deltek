@@ -293,6 +293,7 @@ yazi:
   baslik: '...'                  # 52/1920 punto, 800 ağırlık
   satirlar: ['...']              # gövde satırları
   eylem: 'Bize ulaşın'           # buton (isteğe bağlı)
+  eylemKonum: akis | dip         # 'dip': buton slaytın en altına sabitlenir
   konum: sol | sag               # görsel katmanların boş bıraktığı yan
   dikey: ust | orta | alt        # katmanların kapladığı bandın dışı
   tema:  koyu | acik             # arka plan koyu mu açık mı
@@ -310,14 +311,30 @@ canvas'a çizilip metin satırlarının altına düşen piksellerin alfası say�
 (satır kutuları satır-aralığını da içerdiği için dikeyde ~%16 daraltılarak).
 Bu yöntemle bugünkü durum:
 
-| Slayt | Katman | Çakışan genişlik | Metnin altındaki opak piksel |
-| --- | --- | --- | --- |
-| 4 | `bit.png` | 100 px | %29 |
+| Sayfa | Slayt | Katman | Çakışan genişlik | Altındaki opak piksel |
+| --- | --- | --- | --- | --- |
+| `/` ve `/en/` | 4 | `bit.png` (gri gölge şeridi) | 100 px | %95 |
+| `/en/` | 5 | `machinery1.png` | 330 px | %86 |
 
-Diğer 8 slaytta sıfır. Giderilenler:
+**4. slayt kabul edilen durum.** `bit.png` iki ayrı opak banttan oluşuyor:
+**mavi delgi borusu y334-376** ve altında **açık gri gölge şeridi y405-449**
+(`rgb(225,225,225)`). Buton akışta kalınca boruya biniyordu; `eylemKonum: 'dip'`
+ile slaytın dibine alındı (y411-474) ve **boru 35 px boşlukla tamamen kurtuldu**.
+Gölge şeridine değmesi kaçınılmaz: şeridin altında 50 px kalıyor, buton 63 px.
+Sıfırlamak isteyen butonu küçültmeli ya da `bit.png`'yi yukarı almalı — ikisi de
+görsel bir bedel.
+
+**5. slayt yalnızca `/en/`'de bozuk.** `Horizontal drilling specialists` başlığı
+İngilizcede iki satıra sarıyor (TR'de tek satır), blok y244'ten başlayıp makine
+görselinin bandına (y76-308) giriyor. Başlık tek satıra inmeden çözülmüyor.
+
+Giderilenler:
 
 - **8. slayt** (`button-hand.png`): `dikey: orta` iken başlığın ilk satırı elin
   tuttuğu düğmeye biniyordu → `dikey: ust`.
+  > **`HERO_TR` ve `EN_YAZI` ayrı dizilerdir.** Bir slaydın `yazi` alanını
+  > değiştirirken ikisini birden güncelleyin; bu düzeltme önce yalnızca TR'ye
+  > uygulanmış, `/en/` bozuk kalmıştı.
 - **6. slayt** (`yatay-sondaj-pipe-analysis.png`): görselin alt kenarı başlığa
   biniyordu → %30 küçültülüp (437→306) 150 px sola alındı (x 1094→944).
   Görselin `h` alanı yalnızca belgeleme amaçlı; **görsel katmanların yüksekliği

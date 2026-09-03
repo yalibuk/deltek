@@ -60,8 +60,16 @@ const katmanStil = (k: any) => [
           {s.yazi.satirlar?.map((satir, j) => (
             <p class="yazi__satir" style={`--sira:${j}`}>{satir}</p>
           ))}
-          {s.yazi.eylem && <span class="yazi__eylem">{s.yazi.eylem}</span>}
+          {s.yazi.eylem && s.yazi.eylemKonum !== 'dip' && <span class="yazi__eylem">{s.yazi.eylem}</span>}
         </div>
+
+        {/* eylemKonum: 'dip' — buton metin bloğundan koparılıp slaytın
+            en altına sabitlenir; yatay hizası yazıyla aynı kalır. */}
+        {s.yazi.eylem && s.yazi.eylemKonum === 'dip' && (
+          <div class={`yazi yazi--${s.yazi.konum} yazi--dip yazi--${s.yazi.tema}`}>
+            <span class="yazi__eylem">{s.yazi.eylem}</span>
+          </div>
+        )}
       </div>
     ))}
   </div>
@@ -134,6 +142,8 @@ const katmanStil = (k: any) => [
 .yazi--sol { left: var(--kenar); }
 .yazi--sag { right: var(--kenar); text-align: right; }
 .yazi--orta { top: 50%; transform: translateY(-50%); }
+/* butonu taşıyan ikinci blok: slaytın dibine yapışır, genişliği içeriğe göre */
+.yazi--dip { top: auto; bottom: calc(26 * var(--olcek)); width: auto; }
 .yazi--ust  { top: calc(44 * var(--olcek)); }
 .yazi--alt  { bottom: calc(52 * var(--olcek)); }
 

@@ -36,6 +36,12 @@ export type HeroYazi = {
   dikey: 'ust' | 'orta' | 'alt';
   /** Arka plan koyu mu açık mı: yazı ve perde rengini belirler. */
   tema: 'koyu' | 'acik';
+  /**
+   * Butonun yeri. Varsayılan 'akis': metin bloğunun sonunda, akış içinde.
+   * 'dip': metin bloğundan koparılıp slaytın en altına sabitlenir — metnin
+   * altındaki bandı bir katman kapladığında kullanılır (bkz. 4. slayt).
+   */
+  eylemKonum?: 'akis' | 'dip';
 };
 
 export type HeroSlayt = { arka: string; alt: string; yazi: HeroYazi; katmanlar: HeroKatman[] };
@@ -98,6 +104,10 @@ export const HERO_TR: HeroSlayt[] = [
       baslik: 'Yatay delgi ve sondaj teknolojileri',
       satirlar: ['Amacınıza en uygun yatay sondaj yöntemini seçerek işe başlayın.'],
       eylem: 'Bize ulaşın',
+      // Delgi tijinin mavi borusu y334-376'yı kaplıyor; buton akışta kalınca
+      // tam üstüne düşüyordu. Slaytın dibine sabitlendi (y ~411-474): boruyu
+      // tamamen boşaltıyor, altındaki açık gri gölge şeridinin üzerinde duruyor.
+      eylemKonum: 'dip',
       konum: 'sol', dikey: 'ust', tema: 'acik',
     },
     katmanlar: [
@@ -202,7 +212,10 @@ const EN_YAZI: HeroYazi[] = [
     konum: 'sol', dikey: 'orta', tema: 'koyu' },
   { ustlik: 'Technology', baslik: 'Horizontal drilling and boring technologies',
     satirlar: ['Start by choosing the drilling method that fits your purpose.'],
-    eylem: 'Contact us', konum: 'sol', dikey: 'ust', tema: 'acik' },
+    eylem: 'Contact us', eylemKonum: 'dip', konum: 'sol', dikey: 'ust', tema: 'acik' },
+  // AÇIK: başlık İngilizcede iki satıra sarıyor (TR'de tek satır), blok
+  // 244'ten başlayıp makine görselinin (y76-308) üstüne çıkıyor. Başlık tek
+  // satıra inmeden çözülmüyor — bkz. CLAUDE.md çakışma tablosu.
   { ustlik: 'You are in the right place', baslik: 'Horizontal drilling specialists',
     satirlar: ['Advanced technical infrastructure, extensive machine fleet'],
     konum: 'sol', dikey: 'alt', tema: 'acik' },
@@ -213,7 +226,7 @@ const EN_YAZI: HeroYazi[] = [
     satirlar: ['Solutions for infrastructure projects from 2 mm to 2000 mm in diameter.'],
     eylem: 'Request a quote', konum: 'sol', dikey: 'orta', tema: 'acik' },
   { ustlik: 'A difference in infrastructure', baslik: 'Get ahead of your competitors with effective solutions',
-    konum: 'sol', dikey: 'orta', tema: 'acik' },
+    konum: 'sol', dikey: 'ust', tema: 'acik' },
   { ustlik: 'Deltek', baslik: 'A global brand in horizontal drilling',
     konum: 'sol', dikey: 'orta', tema: 'acik' },
 ];
