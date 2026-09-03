@@ -349,7 +349,10 @@ Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orad
       metinler `hakkimizda.md` + `hizmetlerimiz.md` içeriğinden türetildi (4E kuralı,
       Smart Undergrounding, 250/800 ton kapasite, 2–2000 mm çap, İstanbul/İzmir).
       **EN karşılıkları çeviridir, Deltek onayından geçmedi.**
-- [ ] Ana sayfa `<Layout description="">` boş — meta açıklama yazılmalı
+- [x] Ana sayfa meta açıklaması yazıldı (TR 154 / EN 147 karakter). Tek alan üç yere
+      gidiyor: `<meta name="description">`, `og:`/`twitter:description` ve JSON-LD
+      `Organization.description` — bu yüzden sayfayı değil şirketi anlatmalı.
+- [ ] Ana sayfa `<title>` yalnızca "Deltek" — arama sonucu başlığı için zayıf
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 
 ## Taşıma betiği
