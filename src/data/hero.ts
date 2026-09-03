@@ -159,13 +159,15 @@ export const HERO_TR: HeroSlayt[] = [
     ],
   },
   {
-    // El görseli sağ altta (x940 y225) → yazı sola.
+    // El görseli sağ altta (x940-1230, y225-502) → yazı sola.
+    // Ortada dururken başlığın ilk satırı ("Etkin çözümlerimizle") elin
+    // tuttuğu mavi düğmeye değiyordu; yazı üste alınarak ayrıldı.
     arka: '/images/hero/button-bg-1.jpg',
     alt: 'Altyapı çözümleri',
     yazi: {
       ustlik: 'Altyapıda fark',
       baslik: 'Etkin çözümlerimizle rakiplerinizin önüne geçin',
-      konum: 'sol', dikey: 'orta', tema: 'acik',
+      konum: 'sol', dikey: 'ust', tema: 'acik',
     },
     katmanlar: [
       // Orijinalde 4000 ms'de başlıyordu: yazı 1,4 sn'de bitip slayt 2,6 sn

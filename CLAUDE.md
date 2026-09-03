@@ -302,9 +302,22 @@ yazi:
 koyu perde), **4-9. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 
-`konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi;
-metin kutusuyla katmanların çakışması ölçülerek doğrulandı (6 slaytta sıfır,
-3 slaytta yalnızca saydam PNG'lerin sınır kutusuna değiyor).
+`konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi.
+
+**Çakışma ölçümü sınır kutusuyla yapılmaz.** PNG'lerin büyük bölümü saydam
+olduğu için sınır kutusu kesişmesi tek başına bir şey söylemiyor; katman
+canvas'a çizilip metin satırlarının altına düşen piksellerin alfası sayılmalı
+(satır kutuları satır-aralığını da içerdiği için dikeyde ~%16 daraltılarak).
+Bu yöntemle bugünkü durum:
+
+| Slayt | Katman | Çakışan genişlik | Metnin altındaki opak piksel |
+| --- | --- | --- | --- |
+| 4 | `bit.png` | 100 px | %29 |
+| 6 | `yatay-sondaj-pipe-analysis.png` | 407 px | %49 |
+
+Diğer 7 slaytta sıfır. 8. slayt (`button-hand.png`) `dikey: orta` iken başlığın
+ilk satırı elin tuttuğu düğmeye biniyordu; `dikey: ust` yapılarak ayrıldı.
+4 ve 6 henüz düzeltilmedi.
 
 **Metin kuşağı.** Slayt yazıları slider'ın kenarına değil, ortalanmış sabit bir
 şeride yaslanır: ana menü satırı (`.ust__gez`, TR menüsünde **797px**) iki yanına
