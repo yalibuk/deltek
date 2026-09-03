@@ -119,16 +119,18 @@ const katmanStil = (k: any) => [
 @keyframes kat-belir { from { opacity: 0; } to { opacity: 1; } }
 
 /* ─── Yazı bloğu ──────────────────────────────────────── */
-/* Yazı, header'daki `.kap` sütunuyla aynı hizada durur: geniş ekranda
-   slider'ın kenarına yapışmaz, ana menünün sol/sağ sınırını geçmez.
-   --kap-en / --kap-pad global.css'teki `.kap` ile birebir aynı olmalı. */
+/* METİN KUŞAĞI — tüm slayt yazıları bu ortalanmış şeridin içinde kalır.
+   Şerit, header'daki ana menü satırının (`.ust__gez`, TR menüsünde 797px)
+   iki yanına 140'ar piksel eklenerek bulundu: 797 + 2×140 = 1077px.
+   Menü sabit genişlikte olduğu için kuşak da sabittir; yalnızca ekran
+   daraldığında `.kap` iç payına kadar kısalır. Menü öğeleri değişirse
+   `--kusak` yeniden ölçülüp güncellenmeli. */
 .yazi { --olcek: calc(100cqw / 1920);
-  --kap-en: 1280px;                         /* .kap max-width */
-  --kap-pad: clamp(1.15rem, 4vw, 2.75rem);  /* .kap padding-inline */
-  --kenar: max(var(--kap-pad), calc((100cqw - var(--kap-en)) / 2 + var(--kap-pad)));
-  --sutun: calc(100cqw - 2 * var(--kenar)); /* menünün içerik genişliği */
+  --kap-pad: clamp(1.15rem, 4vw, 2.75rem);  /* global.css'teki .kap payı */
+  --kusak: min(1077px, calc(100cqw - 2 * var(--kap-pad)));
+  --kenar: calc((100cqw - var(--kusak)) / 2);
   position: absolute; z-index: 3;
-  width: min(calc(700 * var(--olcek)), calc(var(--sutun) * .54)); }
+  width: min(calc(700 * var(--olcek)), calc(var(--kusak) * .55)); }
 .yazi--sol { left: var(--kenar); }
 .yazi--sag { right: var(--kenar); text-align: right; }
 .yazi--orta { top: 50%; transform: translateY(-50%); }

@@ -275,13 +275,20 @@ fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 metin kutusuyla katmanların çakışması ölçülerek doğrulandı (6 slaytta sıfır,
 3 slaytta yalnızca saydam PNG'lerin sınır kutusuna değiyor).
 
-**Yatay hizalama sayfa kabıyla ortaktır.** Yazı bloğu slider'ın kenarına değil,
-header'daki `.kap` sütununa (max-width **1280px**, `padding-inline`
-`clamp(1.15rem, 4vw, 2.75rem)`) yaslanır; genişliği de o sütunun %54'ünü geçmez.
-Böylece geniş ekranda yazı ana menünün ve altındaki `.hero__bilgi` metninin tam
-hizasında durur. Değerler `.yazi` içindeki `--kap-en` / `--kap-pad` değişkenleri;
-`global.css`'teki `.kap` değişirse **bunlar da elle güncellenmeli** (container
-query içinden dış kabın ölçüsü okunamıyor).
+**Metin kuşağı.** Slayt yazıları slider'ın kenarına değil, ortalanmış sabit bir
+şeride yaslanır: ana menü satırı (`.ust__gez`, TR menüsünde **797px**) iki yanına
+**140'ar piksel** eklenerek **1077px**'lik kuşak elde edildi. Sol hizalı slaytlar
+kuşağın sol sınırından, sağ hizalı slaytlar sağ sınırından başlar; hiçbir metin
+dışarı taşmaz (9 slaytta ölçüldü). Ekran daraldığında kuşak `.kap` iç payına
+kadar kısalır, taşma yine olmaz.
+
+`--kusak` değeri `.yazi` içinde **elle yazılı sabittir** — container query içinden
+header'ın ölçüsü okunamıyor. **Menü öğeleri değişirse** (`menuSira`/`menuAd` ile
+sayfa eklenip çıkarılırsa) `.ust__gez` yeniden ölçülüp `--kusak` güncellenmeli:
+
+```js
+document.querySelector('.ust__gez').getBoundingClientRect().width + 280
+```
 
 **Giriş animasyonu** kademeli: üstlik 0,18 sn → başlık 0,32 sn → gövde satırları
 0,48 sn'den itibaren 0,1 sn arayla → buton 0,66 sn. Her parça 0,72 sn'de aşağıdan
