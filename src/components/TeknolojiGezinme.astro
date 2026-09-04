@@ -1,0 +1,110 @@
+---
+/**
+ * Teknoloji sayfalarının altındaki bölüm gezinmesi.
+ *
+ * Bir alt sayfadan diğerine geçmek için başlıktaki açılır menüyü açmak
+ * gerekiyordu; bu blok aynı işi sayfanın sonunda, okuma akışının bittiği
+ * yerde yapar. Üç parça:
+ *   1. Önceki / sonraki — ağacın derinlik öncelikli sırasında (menü sırası)
+ *   2. Kardeş sayfalar — aynı üst başlık altındaki diğerleri
+ *   3. Bölüm köküne dönüş
+ *
+ * Veri `teknolojiKomsulari()`; slug ağaçta yoksa bileşen hiç çağrılmaz.
+ */
+import type { TekKomsu } from '../data/icerik';
+import { TEKNOLOJI_KOK } from '../data/teknoloji';
+interface Props { komsu: TekKomsu; }
+const { komsu } = Astro.props;
+const { onceki, sonraki, kardesler, ust, kendi } = komsu;
+
+// Grup sayfasındaysak (alt sayfası olan düğüm) kardeşler yerine kendi alt
+// sayfalarını listelemek daha yararlı: okuyucu zaten o başlığın içinde.
+const grupMu = kendi.alt.length > 0;
+const liste = grupMu ? kendi.alt : kardesler;
+const listeBasligi = grupMu
+  ? `${kendi.ad} — alt sayfalar`
+  : (ust ? `${ust.ad} — diğer sayfalar` : 'Diğer kazısız yöntemler');
+---
+<nav class="tgez" aria-label="Teknoloji bölümü gezinmesi">
+
+  {(onceki || sonraki) && (
+    <div class="tgez__ardisik">
+      {onceki ? (
+        <a class="tgez__ok tgez__ok--geri" href={`/${onceki.slug}/`} rel="prev">
+          <span class="tgez__et">← Önceki</span>
+          <span class="tgez__ad">{onceki.ad}</span>
+        </a>
+      ) : <span></span>}
+      {sonraki && (
+        <a class="tgez__ok tgez__ok--ileri" href={`/${sonraki.slug}/`} rel="next">
+          <span class="tgez__et">Sonraki →</span>
+          <span class="tgez__ad">{sonraki.ad}</span>
+        </a>
+      )}
+    </div>
+  )}
+
+  {liste.length > 0 && (
+    <div class="tgez__kardes">
+      <h2 class="tgez__bas">{listeBasligi}</h2>
+      <ul class="tgez__liste">
+        {liste.map(k => (
+          <li><a href={`/${k.slug}/`}>{k.ad}</a></li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <a class="tgez__kok" href={`/${TEKNOLOJI_KOK}/`}>
+    <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M2 4.5h12M2 8h12M2 11.5h8" stroke-linecap="round"/>
+    </svg>
+    Teknoloji bölümünün tamamı
+  </a>
+</nav>
+
+<style>
+.tgez { margin-top: clamp(2.4rem,5vw,3.4rem); padding-top: clamp(1.8rem,4vw,2.6rem);
+  border-top: 1px solid var(--cizgi); }
+
+/* ─── Önceki / sonraki ────────────────────────────────── */
+.tgez__ardisik { display: grid; gap: .9rem; grid-template-columns: 1fr; }
+@media (min-width: 640px) {
+  .tgez__ardisik { grid-template-columns: 1fr 1fr; }
+  /* "Önceki" yokken yerine boş bir <span> basılıyor; "sonraki" sağ sütunda
+     kalsın diye ikinci sütuna sabitleniyor. Bu kural YALNIZCA iki sütunlu
+     düzende geçerli: tek sütunda `grid-column: 2` örtük bir ikinci sütun
+     açıp kartı yarım genişlikte bırakıyordu. */
+  .tgez__ardisik > span + .tgez__ok--ileri { grid-column: 2; }
+}
+
+.tgez__ok { display: flex; flex-direction: column; gap: .3rem; padding: 1rem 1.15rem;
+  background: var(--beyaz); border: 1px solid var(--cizgi); border-radius: 12px;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.tgez__ok:hover { transform: translateY(-2px); border-color: var(--mavi);
+  box-shadow: 0 18px 34px -26px rgb(var(--blue-800-rgb) / .5); }
+.tgez__ok--ileri { text-align: right; }
+.tgez__et { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .12em;
+  text-transform: uppercase; font-weight: 700; color: var(--mavi); }
+.tgez__ad { font-family: var(--f-dis); font-weight: 700; font-size: .98rem;
+  line-height: 1.35; color: var(--mavi-900); }
+.tgez__ok:hover .tgez__ad { color: var(--mavi); }
+
+/* ─── Kardeş sayfalar ─────────────────────────────────── */
+.tgez__kardes { margin-top: 1.6rem; }
+.tgez__bas { font-family: var(--f-veri); font-size: .7rem; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: var(--mute); margin-bottom: .8rem; }
+.tgez__liste { list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .5rem; }
+.tgez__liste a { display: inline-block; font-family: var(--f-dis); font-weight: 600;
+  font-size: .86rem; color: var(--mavi); background: var(--mavi-050);
+  border: 1px solid var(--cizgi); border-radius: 999px; padding: .45rem .95rem;
+  transition: background .15s, color .15s, border-color .15s; }
+.tgez__liste a:hover { background: var(--mavi); color: var(--beyaz); border-color: var(--mavi); }
+
+/* ─── Bölüm köküne dönüş ──────────────────────────────── */
+.tgez__kok { margin-top: 1.6rem; display: inline-flex; align-items: center; gap: .5rem;
+  font-family: var(--f-dis); font-weight: 700; font-size: .9rem; color: var(--mavi-900);
+  border-bottom: 2px solid var(--sari); padding-bottom: .2rem; }
+.tgez__kok:hover { color: var(--mavi); }
+</style>

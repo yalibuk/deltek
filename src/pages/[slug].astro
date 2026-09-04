@@ -6,7 +6,8 @@ import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
 import IletisimDuzen from '../components/IletisimDuzen.astro';
 import TeknolojiHaritasi from '../components/TeknolojiHaritasi.astro';
-import { teknolojiAgaci } from '../data/icerik';
+import { teknolojiAgaci, teknolojiKomsulari } from '../data/icerik';
+import TeknolojiGezinme from '../components/TeknolojiGezinme.astro';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -27,6 +28,10 @@ const { Content } = await render(entry as any);
 const cevirisiVar = await cevirisiVarMi(slug, 'en');
 // Bölüm haritası yalnızca istendiğinde hesaplanır (ağaç build'de doğrulanır).
 const tekAgac = p.bolumHaritasi ? await teknolojiAgaci('tr') : null;
+// Teknoloji ağacındaki sayfalar sayfa altı bölüm gezinmesi alır; kök sayfa
+// almaz, orada zaten haritanın tamamı var.
+const tekKomsu = (tur === 'sayfa' && !p.bolumHaritasi)
+  ? await teknolojiKomsulari('tr', slug) : null;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
@@ -106,6 +111,7 @@ const sema = tur === 'yazi'
   )}
 
   {tekAgac && <TeknolojiHaritasi agac={tekAgac} />}
+  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} />}
 
   <div class="yazi__cta">
     <p>{tur === 'yazi' ? 'Projeniz için bize ulaşın.' : 'Bu konuda bize danışın.'}</p>

@@ -215,12 +215,20 @@ korundu ("Auger Boring" ↔ "Auger Boring Nedir? Modern Yatay Delgi Teknolojisi"
 bırakmaktansa hatayı derlemede görmek daha iyi; sayfa yeniden adlandırılırsa
 burada yakalanır.
 
-İki yerden görünür:
+Üç yerden görünür:
 
 1. **Header açılır menüsü** (`Layout.astro`) — her sayfada, iki sütun.
    `menu.map` içinde slug `TEKNOLOJI_KOK` ise düz bağlantı yerine `.dd` basılır.
 2. **Bölüm haritası** (`components/TeknolojiHaritasi.astro`) — kök sayfanın
    altında kart ızgarası. `bolumHaritasi: true` frontmatter alanıyla açılır.
+3. **Sayfa altı gezinme** (`components/TeknolojiGezinme.astro`) — 19 sayfanın
+   her birinin altında: önceki/sonraki + komşu sayfa listesi + köke dönüş.
+   Veri `teknolojiKomsulari()`; slug ağaçta değilse `null` döner ve bileşen
+   hiç basılmaz, yani blog yazılarında ve diğer sayfalarda çıkmaz.
+
+Gezinmedeki liste **düğümün alt sayfası varsa onları**, yoksa kardeşlerini
+gösterir: bir grup sayfasında (ör. `/yer-belirleme/`) okuyucu zaten o başlığın
+içindedir, alt sayfalar daha yakındır.
 
 > **Kart deseni:** kart bir `<a>` DEĞİL `<article>`. "Yer Belirleme" kartının
 > içinde iki alt sayfa bağlantısı var; kartı `<a>` yapsaydık iç içe `<a>`

@@ -105,3 +105,48 @@ export async function teknolojiAgaci(dil: Dil): Promise<TekKart[]> {
     });
   return donustur(TEKNOLOJI);
 }
+
+/** Teknoloji ağacındaki bir sayfanın komşuları — sayfa altı gezinme için. */
+export type TekKomsu = {
+  /** Ağaçta bir önceki/sonraki sayfa (derinlik öncelikli sıra = menü sırası). */
+  onceki: TekKart | null;
+  sonraki: TekKart | null;
+  /** Aynı üst düğümü paylaşan diğer sayfalar (kendisi hariç). */
+  kardesler: TekKart[];
+  /** Kardeşlerin bağlı olduğu üst düğüm; en üst seviyedeyse null. */
+  ust: TekKart | null;
+  /** Sayfanın kendi düğümü — alt sayfası varsa liste ondan kurulur. */
+  kendi: TekKart;
+};
+
+/**
+ * Verilen slug teknoloji ağacında yoksa null döner — çağıran taraf böylece
+ * "bu sayfa bölümün parçası mı" sorusunu ayrıca sormak zorunda kalmaz.
+ */
+export async function teknolojiKomsulari(dil: Dil, slug: string): Promise<TekKomsu | null> {
+  const agac = await teknolojiAgaci(dil);
+
+  // Derinlik öncelikli düz liste + her düğümün üstü ve kardeş kümesi
+  const duz: TekKart[] = [];
+  const ustu = new Map<string, TekKart | null>();
+  const kardesKume = new Map<string, TekKart[]>();
+  const gez = (dugumler: TekKart[], ust: TekKart | null) => {
+    for (const d of dugumler) {
+      duz.push(d);
+      ustu.set(d.slug, ust);
+      kardesKume.set(d.slug, dugumler);
+      if (d.alt.length) gez(d.alt, d);
+    }
+  };
+  gez(agac, null);
+
+  const i = duz.findIndex(d => d.slug === slug);
+  if (i < 0) return null;
+  return {
+    onceki: duz[i - 1] ?? null,
+    sonraki: duz[i + 1] ?? null,
+    kardesler: (kardesKume.get(slug) ?? []).filter(d => d.slug !== slug),
+    ust: ustu.get(slug) ?? null,
+    kendi: duz[i],
+  };
+}
