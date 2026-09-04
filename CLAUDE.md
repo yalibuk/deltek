@@ -303,10 +303,8 @@ yazi:
 koyu perde), **4-9. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 
-**Satır kırmak için `
-` kullanılır**, `<br />` değil. Metinler kaçışlanarak
-basıldığı için ham HTML düz metin olarak görünür; `
-` bileşende gerçek `<br>`'ye
+**Satır kırmak için `\n` kullanılır**, `<br />` değil. Metinler kaçışlanarak
+basıldığı için ham HTML düz metin olarak görünür; `\n` bileşende gerçek `<br>`'ye
 çevrilir (`satirlaraBol`). Hem `baslik` hem `satirlar` için geçerli.
 
 `konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi.
