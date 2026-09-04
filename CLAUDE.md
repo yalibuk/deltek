@@ -303,7 +303,31 @@ yazi:
 koyu perde), **4-9. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 
+**Satır kırmak için `
+` kullanılır**, `<br />` değil. Metinler kaçışlanarak
+basıldığı için ham HTML düz metin olarak görünür; `
+` bileşende gerçek `<br>`'ye
+çevrilir (`satirlaraBol`). Hem `baslik` hem `satirlar` için geçerli.
+
 `konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi.
+
+### Kritik: yazı kuşağı sabit, katmanlar orantılı
+
+Yazı kuşağı **sabit 1077 px**, katman koordinatları ise 1920×500 ızgarasına
+göre **orantılı** ölçekleniyor. Sonuç: ekran daraldıkça yazı, tasarım
+ızgarasında giderek daha sağa/sola uzanır.
+
+| Ekran | Sağa hizalı yazının sağ kenarı (tasarım x) |
+| --- | --- |
+| 1920 px | 1499 |
+| 1440 px | 1686 |
+| 900 px | 1843 |
+
+Bu yüzden **tek bir genişlikte ölçüm yetmez**; çakışma kontrolü 1920'den
+900'e kadar birkaç genişlikte tekrarlanmalı. Sağa hizalı yazının yanındaki sağ
+kenar katmanları dar ekranda kaçınılmaz olarak yazının altında kalır — bunun
+için katmanlara `darGizle: true` eklenir, katman 1450 px altında gizlenir
+(`@container (max-width: 1450px)`, HeroSlider).
 
 **Çakışma ölçümü sınır kutusuyla yapılmaz.** PNG'lerin büyük bölümü saydam
 olduğu için sınır kutusu kesişmesi tek başına bir şey söylemiyor; katman

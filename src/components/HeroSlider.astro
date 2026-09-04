@@ -32,6 +32,10 @@ const katmanStil = (k: any) => [
   `--basla:${k.basla}ms`,
   `--sure:${k.sure}ms`,
 ].filter(Boolean).join(';');
+
+// Veride satır sonu (\n) varsa gerçek <br> olarak basılır. Ham HTML kabul
+// edilmiyor — `<br />` yazmak düz metin olarak görünür, `\n` kullanın.
+const satirlaraBol = (m: string) => m.split('\n');
 ---
 <div class="slider" aria-roledescription="carousel" aria-label={etiket}>
   <div class="slider__ray" id="ray">
@@ -44,7 +48,7 @@ const katmanStil = (k: any) => [
 
         {s.katmanlar.map(k => (
           k.tur === 'gorsel' ? (
-            <img class={`kat kat--${k.gecis}`} src={k.src} alt="" aria-hidden="true"
+            <img class={`kat kat--${k.gecis}${k.darGizle ? ' kat--darGizle' : ''}`} src={k.src} alt="" aria-hidden="true"
                  loading={i === 0 ? 'eager' : 'lazy'} style={katmanStil(k)} />
           ) : (
             <div class={`kat kat--${k.gecis} kat__video`} style={katmanStil(k)}>
@@ -56,9 +60,17 @@ const katmanStil = (k: any) => [
 
         <div class={`yazi yazi--${s.yazi.konum} yazi--${s.yazi.dikey} yazi--${s.yazi.tema}`}>
           {s.yazi.ustlik && <p class="yazi__ustlik">{s.yazi.ustlik}</p>}
-          <h2 class="yazi__baslik">{s.yazi.baslik}</h2>
+          <h2 class="yazi__baslik">
+            {satirlaraBol(s.yazi.baslik).map((p, k) => (
+              <Fragment>{k > 0 && <br />}{p}</Fragment>
+            ))}
+          </h2>
           {s.yazi.satirlar?.map((satir, j) => (
-            <p class="yazi__satir" style={`--sira:${j}`}>{satir}</p>
+            <p class="yazi__satir" style={`--sira:${j}`}>
+              {satirlaraBol(satir).map((p, k) => (
+                <Fragment>{k > 0 && <br />}{p}</Fragment>
+              ))}
+            </p>
           ))}
           {s.yazi.eylem && s.yazi.eylemKonum !== 'dip' && <span class="yazi__eylem">{s.yazi.eylem}</span>}
         </div>
@@ -102,6 +114,12 @@ const katmanStil = (k: any) => [
 .kat { --olcek: calc(100cqw / 1920); position: absolute; z-index: 2; max-width: none; height: auto;
   opacity: 0; will-change: transform, opacity; }
 .kat__video { background: #222; }   /* tabletin ekran rengi — video 16:9 olduğu için altta/üstte bant kalır */
+/* `darGizle: true` katmanları dar ekranda kaybolur. Yazı kuşağı sabit
+   genişlikte (1077px), katmanlar orantılı ölçekli; ekran daraldıkça yazı
+   tasarım ızgarasında sağa doğru büyüyor ve sağ kenardaki katmanların
+   üstüne çıkıyor. Eşik, sağa hizalı yazının en sağa uzandığı noktaya göre
+   seçildi (bkz. hero.ts HeroKatman.darGizle). */
+@container (max-width: 1450px) { .kat--darGizle { display: none; } }
 .kat__video iframe { width: 100%; height: 100%; border: 0; }
 
 .slide[data-aktif="true"] .kat { animation-duration: var(--sure); animation-delay: var(--basla);

@@ -23,6 +23,16 @@ export type HeroKatman = {
   x: number; y: number;
   gecis: string;
   basla: number; sure: number;
+  /**
+   * Slider 1450 px'in altına inince bu katman gizlenir.
+   *
+   * Gerekçe: yazı kuşağı SABİT 1077 px, katmanlar ise ekranla ORANTILI
+   * ölçekleniyor. Ekran daraldıkça yazı, tasarım ızgarasında giderek daha
+   * sağa uzanır (1920 px'te sağ kenarı x1499, 885 px'te x1843). Bu yüzden
+   * sağa hizalı bir yazının yanında duran sağ kenar katmanları dar
+   * ekranlarda kaçınılmaz olarak yazının altında kalır.
+   */
+  darGizle?: boolean;
 };
 
 export type HeroYazi = {
@@ -68,7 +78,8 @@ export const HERO_TR: HeroSlayt[] = [
     yazi: {
       ustlik: 'Kullanım alanları',
       baslik: 'Yatay sondaja ihtiyaç duyduğunuz her alanda yanınızdayız',
-      satirlar: ['Elektrik · Doğalgaz · Kanalizasyon · Telekomünikasyon · İçme suyu ve drenaj'],
+      // Satır kırmak için \n kullanılır; <br /> düz metin olarak basılır.
+      satirlar: ['Elektrik · Doğalgaz · Kanalizasyon\nTelekomünikasyon · İçme suyu ve drenaj'],
       eylem: 'İletişime geçin',
       konum: 'sol', dikey: 'orta', tema: 'koyu',
     },
@@ -123,16 +134,20 @@ export const HERO_TR: HeroSlayt[] = [
     alt: 'Makine parkı',
     yazi: {
       ustlik: 'Doğru yerdesiniz',
-      baslik: 'Yatay sondaj uzmanı',
-      satirlar: ['Yüksek teknolojik altyapı, geniş makine parkı'],
-      konum: 'sol', dikey: 'alt', tema: 'acik',
+      // Makine görseli genişleyince yazı sağa alındı; başlık dar sütunda
+      // tek kelimelik üç satır olarak kırılıyor.
+      baslik: 'Yatay\nsondaj\nuzmanı',
+      // Makine görseli x1169'a kadar geliyor; tek satırlık gövde metni
+      // sağdan 1074'e uzanıp üstüne biniyordu, iki satıra bölündü.
+      satirlar: ['Yüksek teknolojik altyapı,\ngeniş makine parkı'],
+      konum: 'sag', dikey: 'alt', tema: 'acik',
     },
     katmanlar: [
       // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
       // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
       // tutturmak için öne çekildi.
       { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 799, h: 232, x: 370, y: 76, gecis: 'sfl', basla: 400, sure: 1800 },
-      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 202, h: 500, x: 1283, y: 9, gecis: 'sfr', basla: 1900, sure: 900 },
+      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 150, h: 350, x: 1700, y: 69, gecis: 'sfr', basla: 1900, sure: 900, darGizle: true },
     ],
   },
   {
@@ -213,12 +228,11 @@ const EN_YAZI: HeroYazi[] = [
   { ustlik: 'Technology', baslik: 'Horizontal drilling and boring technologies',
     satirlar: ['Start by choosing the drilling method that fits your purpose.'],
     eylem: 'Contact us', eylemKonum: 'dip', konum: 'sol', dikey: 'ust', tema: 'acik' },
-  // AÇIK: başlık İngilizcede iki satıra sarıyor (TR'de tek satır), blok
-  // 244'ten başlayıp makine görselinin (y76-308) üstüne çıkıyor. Başlık tek
-  // satıra inmeden çözülmüyor — bkz. CLAUDE.md çakışma tablosu.
-  { ustlik: 'You are in the right place', baslik: 'Horizontal drilling specialists',
-    satirlar: ['Advanced technical infrastructure, extensive machine fleet'],
-    konum: 'sol', dikey: 'alt', tema: 'acik' },
+  // TR ile aynı düzen: yeni makine görseli solu kapladığı için yazı sağda,
+  // başlık tek kelimelik üç satır.
+  { ustlik: 'You are in the right place', baslik: 'Horizontal\ndrilling\nspecialists',
+    satirlar: ['Advanced technical infrastructure,\nextensive machine fleet'],
+    konum: 'sag', dikey: 'alt', tema: 'acik' },
   { ustlik: 'Engineering', baslik: 'Success takes more than coincidence',
     satirlar: ['We model the project in software and share the results before work begins.'],
     konum: 'sag', dikey: 'alt', tema: 'acik' },
