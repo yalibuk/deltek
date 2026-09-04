@@ -294,7 +294,7 @@ yazi:
   satirlar: ['...']              # gövde satırları
   eylem: 'Bize ulaşın'           # buton (isteğe bağlı)
   eylemKonum: akis | dip         # 'dip': buton slaytın en altına sabitlenir
-  konum: sol | sag               # görsel katmanların boş bıraktığı yan
+  konum: sol | merkez | sag      # yatay yer ('orta' DEĞİL — o `dikey`in değeri)
   dikey: ust | orta | alt        # katmanların kapladığı bandın dışı
   tema:  koyu | acik             # arka plan koyu mu açık mı
 ```

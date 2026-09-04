@@ -40,8 +40,14 @@ export type HeroYazi = {
   baslik: string;
   satirlar?: string[];
   eylem?: string;           // buton metni
-  /** Metin bloğunun yatay yeri — görsel katmanların boş bıraktığı taraf. */
-  konum: 'sol' | 'sag';
+  /**
+   * Metin bloğunun yatay yeri — görsel katmanların boş bıraktığı taraf.
+   * 'merkez' bloğu sayfanın tam ortasına alır ve metni ortalar; katmanı
+   * olmayan ya da katmanları iki yana dağılmış slaytlar için.
+   * (Değer 'orta' DEĞİL: 'orta' `dikey`de kullanılıyor, aynı CSS sınıfını
+   * üretip çakışırdı.)
+   */
+  konum: 'sol' | 'merkez' | 'sag';
   /** Dikey hizası — katmanların kapladığı bandın dışına konumlanır. */
   dikey: 'ust' | 'orta' | 'alt';
   /** Arka plan koyu mu açık mı: yazı ve perde rengini belirler. */
@@ -134,20 +140,18 @@ export const HERO_TR: HeroSlayt[] = [
     alt: 'Makine parkı',
     yazi: {
       ustlik: 'Doğru yerdesiniz',
-      // Makine görseli genişleyince yazı sağa alındı; başlık dar sütunda
-      // tek kelimelik üç satır olarak kırılıyor.
-      baslik: 'Yatay\nsondaj\nuzmanı',
-      // Makine görseli x1169'a kadar geliyor; tek satırlık gövde metni
-      // sağdan 1074'e uzanıp üstüne biniyordu, iki satıra bölündü.
+      // Makine görseli genişleyince yazı sağa alındı; başlık ve gövde
+      // metni dar sütuna sığsın diye \n ile elle kırılıyor.
+      baslik: 'Yatay Sondaj\nUzmanı',
       satirlar: ['Yüksek teknolojik altyapı,\ngeniş makine parkı'],
-      konum: 'sag', dikey: 'alt', tema: 'acik',
+      konum: 'sag', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [
       // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
       // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
       // tutturmak için öne çekildi.
-      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 799, h: 232, x: 370, y: 76, gecis: 'sfl', basla: 400, sure: 1800 },
-      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 150, h: 350, x: 1700, y: 69, gecis: 'sfr', basla: 1900, sure: 900, darGizle: true },
+      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 700, h: 232, x: 520, y: 76, gecis: 'sfl', basla: 400, sure: 1800 },
+      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 150, h: 350, x: 450, y: 90, gecis: 'sfl', basla: 1300, sure: 900, darGizle: true },
     ],
   },
   {
@@ -167,7 +171,7 @@ export const HERO_TR: HeroSlayt[] = [
       { tur: 'gorsel', src: '/images/hero/katman/deltek-robot-engineer.png', w: 489, h: 506, x: 360, y: 20, gecis: 'lfb', basla: 400, sure: 2000 },
       // %30 küçültüldü (437→306) ve 150 px sola alındı (1094→944): önceki
       // boyutta görselin alt kenarı başlığın ilk satırına biniyordu.
-      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 306, h: 183, x: 944, y: 6, gecis: 'lfr', basla: 700, sure: 1800 },
+      { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.png', w: 306, h: 183, x: 930, y: 36, gecis: 'lfr', basla: 700, sure: 1800 },
     ],
   },
   {
@@ -203,13 +207,13 @@ export const HERO_TR: HeroSlayt[] = [
     ],
   },
   {
-    // Makine sağ-ortada, sol taraf boş → yazı sola.
+    // Katmanı olmayan marka slaydı → yazı sayfanın tam ortasında.
     arka: '/images/hero/deltek-yatay-sondaj-marka.jpg',
     alt: 'Deltek yatay sondaj makinesi',
     yazi: {
       ustlik: 'Deltek',
-      baslik: 'Yatay sondajda bir dünya markası',
-      konum: 'sol', dikey: 'orta', tema: 'acik',
+      baslik: 'Yatay Sondajda Bir Dünya Markası',
+      konum: 'merkez', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [],
   },
@@ -242,7 +246,7 @@ const EN_YAZI: HeroYazi[] = [
   { ustlik: 'A difference in infrastructure', baslik: 'Get ahead of your competitors with effective solutions',
     konum: 'sol', dikey: 'ust', tema: 'acik' },
   { ustlik: 'Deltek', baslik: 'A global brand in horizontal drilling',
-    konum: 'sol', dikey: 'orta', tema: 'acik' },
+    konum: 'merkez', dikey: 'orta', tema: 'acik' },
 ];
 
 export const HERO_EN: HeroSlayt[] = HERO_TR.map((s, i) => ({ ...s, yazi: EN_YAZI[i] }));

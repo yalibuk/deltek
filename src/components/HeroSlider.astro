@@ -108,6 +108,9 @@ const satirlaraBol = (m: string) => m.split('\n');
 .perde--koyu.perde--sol { background: linear-gradient(90deg, rgba(8,26,58,.82) 0%, rgba(8,26,58,.55) 38%, transparent 68%); }
 .perde--koyu.perde--sag { background: linear-gradient(270deg, rgba(8,26,58,.82) 0%, rgba(8,26,58,.55) 38%, transparent 68%); }
 .perde--acik.perde--sol { background: linear-gradient(90deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,.62) 40%, transparent 70%); }
+/* Ortalanmış yazı için perde de ortadan dışa doğru açılır. */
+.perde--koyu.perde--merkez { background: radial-gradient(58% 78% at 50% 50%, rgba(8,26,58,.82) 0%, rgba(8,26,58,.5) 55%, transparent 85%); }
+.perde--acik.perde--merkez { background: radial-gradient(58% 78% at 50% 50%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.58) 55%, transparent 85%); }
 .perde--acik.perde--sag { background: linear-gradient(270deg, rgba(255,255,255,.9) 0%, rgba(255,255,255,.62) 40%, transparent 70%); }
 
 /* ─── Görsel katmanlar (canlı slider'daki hâliyle) ────── */
@@ -159,6 +162,13 @@ const satirlaraBol = (m: string) => m.split('\n');
   width: min(calc(700 * var(--olcek)), calc(var(--kusak) * .55)); }
 .yazi--sol { left: var(--kenar); }
 .yazi--sag { right: var(--kenar); text-align: right; }
+/* Yatayda ortalanmış blok. `transform` KULLANILMIYOR: dikey ortalama
+   (.yazi--orta) zaten translateY uyguluyor, ikisi çakışırdı. Onun yerine
+   left/right 0 + margin auto ile ortalanıyor. Değer adı bilerek 'merkez':
+   'orta' zaten `dikey` değeri, aynı sınıf adını üretip çakışırdı. */
+.yazi--merkez { left: 0; right: 0; margin-inline: auto; text-align: center;
+  width: min(calc(1000 * var(--olcek)), var(--kusak)); }
+.yazi--merkez .yazi__satir { margin-inline: auto; }
 .yazi--orta { top: 50%; transform: translateY(-50%); }
 /* butonu taşıyan ikinci blok: slaytın dibine yapışır, genişliği içeriğe göre */
 .yazi--dip { top: auto; bottom: calc(26 * var(--olcek)); width: auto; }
