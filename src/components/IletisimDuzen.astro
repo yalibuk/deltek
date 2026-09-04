@@ -139,15 +139,15 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 @media (min-width: 760px) { .ilet__hizli { grid-template-columns: 1fr 1fr; } }
 
 .hkart { display: flex; align-items: center; gap: 1.1rem; padding: 1.5rem 1.6rem;
-  background: #fff; border: 1px solid var(--cizgi); border-radius: 16px;
-  box-shadow: 0 22px 44px -32px rgba(0,41,107,.45);
+  background: var(--beyaz); border: 1px solid var(--cizgi); border-radius: 16px;
+  box-shadow: 0 22px 44px -32px rgb(var(--blue-800-rgb) / .45);
   transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
 .hkart:hover { transform: translateY(-3px); border-color: var(--mavi);
-  box-shadow: 0 30px 54px -28px rgba(0,41,107,.55); }
+  box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
 .hkart__ikon { flex: none; width: 52px; height: 52px; display: grid; place-items: center;
   border-radius: 50%; background: var(--mavi-050); color: var(--mavi);
   border: 1px solid var(--cizgi); transition: background .2s, color .2s; }
-.hkart:hover .hkart__ikon { background: var(--mavi); color: #fff; border-color: var(--mavi); }
+.hkart:hover .hkart__ikon { background: var(--mavi); color: var(--beyaz); border-color: var(--mavi); }
 .hkart__ic { display: flex; flex-direction: column; gap: .18rem; min-width: 0; }
 .hkart__etiket { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
   font-weight: 700; color: var(--mute); }
@@ -175,11 +175,11 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 .ilet__ofisler { display: grid; gap: 1.4rem; }
 @media (min-width: 820px) { .ilet__ofisler { grid-template-columns: 1fr 1fr; } }
 
-.ofis { position: relative; background: #fff; border: 1px solid var(--cizgi);
+.ofis { position: relative; background: var(--beyaz); border: 1px solid var(--cizgi);
   border-top: 3px solid var(--mavi); border-radius: 14px; padding: 1.7rem 1.7rem 1.5rem;
-  box-shadow: 0 22px 44px -32px rgba(0,41,107,.45);
+  box-shadow: 0 22px 44px -32px rgb(var(--blue-800-rgb) / .45);
   transition: transform .2s ease, box-shadow .2s ease; }
-.ofis:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgba(0,41,107,.55); }
+.ofis:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
 .ofis__bas { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
 .ofis__bas h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.35rem;
   letter-spacing: -.015em; color: var(--mavi-900); }
@@ -199,28 +199,28 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
   font-family: var(--f-dis); font-weight: 700; font-size: .88rem; color: var(--mavi);
   border: 1px solid var(--mavi); border-radius: 999px; padding: .55rem 1.05rem;
   transition: background .15s, color .15s; }
-.ofis__yol:hover { background: var(--mavi); color: #fff; }
+.ofis__yol:hover { background: var(--mavi); color: var(--beyaz); }
 
 /* ─── Harita ──────────────────────────────────────────── */
 .ilet__harita { position: relative; aspect-ratio: 21/9; border-radius: 16px; overflow: hidden;
   border: 1px solid var(--cizgi); background: var(--kagit-2);
-  box-shadow: 0 26px 50px -34px rgba(0,41,107,.5); }
+  box-shadow: 0 26px 50px -34px rgb(var(--blue-800-rgb) / .5); }
 .ilet__harita iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 @media (max-width: 700px) { .ilet__harita { aspect-ratio: 4/3; } }
 
 /* ─── Kapanış çağrısı ─────────────────────────────────── */
 .ilet__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
   gap: 1.5rem; padding: clamp(1.6rem,3.5vw,2.4rem);
-  background: linear-gradient(120deg, var(--mavi-900), var(--mavi)); border-radius: 18px; color: #fff; }
+  background: linear-gradient(120deg, var(--mavi-900), var(--mavi)); border-radius: 18px; color: var(--beyaz); }
 .ilet__cta h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.15rem,2.4vw,1.5rem);
   letter-spacing: -.015em; text-wrap: balance; }
-.ilet__cta p { margin-top: .5rem; color: rgba(255,255,255,.85); font-size: .98rem;
+.ilet__cta p { margin-top: .5rem; color: rgb(var(--beyaz-rgb) / .85); font-size: .98rem;
   line-height: 1.6; max-width: 52ch; }
 /* global.css'te `a.btn[href^="tel:"]` tüm telefon butonlarını maviye boyuyor;
    lacivert şeridin üzerinde mavi buton kaybolduğu için burada seçici
    özgüllüğünü artırıp sarıya çeviriyoruz (:active'te !important zorunlu). */
 .ilet__cta a.btn.ilet__ctaBtn { flex: none; background: var(--sari); color: var(--mavi-900);
-  box-shadow: 0 12px 26px -12px rgba(0,0,0,.5); }
-.ilet__cta a.btn.ilet__ctaBtn:hover { background: #fff; color: var(--mavi-900); transform: translateY(-1px); }
-.ilet__cta a.btn.ilet__ctaBtn:active { background: #fff !important; color: var(--mavi-900) !important; }
+  box-shadow: 0 12px 26px -12px rgb(var(--blue-950-rgb) / .5); }
+.ilet__cta a.btn.ilet__ctaBtn:hover { background: var(--beyaz); color: var(--mavi-900); transform: translateY(-1px); }
+.ilet__cta a.btn.ilet__ctaBtn:active { background: var(--beyaz) !important; color: var(--mavi-900) !important; }
 </style>

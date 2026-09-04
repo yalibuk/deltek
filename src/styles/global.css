@@ -1,28 +1,66 @@
 /* ═══════════════════════════════════════
    DELTEK — Global CSS
-   Palet canlı deltek.com.tr'den alındı:
-     Mavi   #185AD6  (bağlantılar, butonlar — sitenin ana rengi)
-     Altın  #FFD658  (çizgi/vurgu), #EB9E0F (vurgu metni)
-     Metin  #333 başlık / #777 gövde / #9E9E9E soluk
+
+   RENK PALETİ — sitedeki her renk buradan gelir. Bileşenlerde ham hex/rgba
+   YAZILMAZ; yeni bir tona ihtiyaç olursa önce buraya eklenir.
+   Ayrıntı ve kullanım tablosu: CLAUDE.md → "Renk paleti".
+
    Tipografi: Open Sans (canlı sitenin kullandığı aile)
    ═══════════════════════════════════════ */
 
 :root {
-  --mavi:     #185ad6;
-  --mavi-700: #1449ac;
-  --mavi-900: #0e3578;
-  --mavi-050: #eef3fd;
-  --mavi-100: #dbe6fb;
-  --beyaz:    #ffffff;
-  --kagit:    #f7f8fa;
-  --kagit-2:  #eef0f3;
-  --metin:    #333333;
-  --mute:     #777777;
-  --cizgi:    #e6e8ec;
-  --cizgi-2:  #d5d8de;
-  --sari:     #ffd658;
-  --gold:     #ffc93c;
-  --vurgu:    #eb9e0f;
+  /* ── Palet: mavi ölçeği ─────────────────────────────── */
+  --blue-50:  #E5F0FF;
+  --blue-100: #CCE0FF;
+  --blue-200: #99C2FF;
+  --blue-300: #66A3FF;
+  --blue-400: #3385FF;
+  --blue-500: #0066FF;
+  --blue-600: #0052CC;
+  --blue-700: #003D99;
+  --blue-800: #002966;
+  --blue-900: #001433;
+  --blue-950: #000E24;
+
+  /* ── Palet: marka ve vurgu ──────────────────────────── */
+  --marka-mavi:    #185AD6;   /* Deltek logo mavisi — DEĞİŞMEZ */
+  --gold:          #FFD60A;
+  --sari-okul:     #FFC300;   /* school bus yellow */
+  --koyu-kirmizi:  #A4161A;
+  --beyaz:         #FFFFFF;   /* palette yok ama kaçınılmaz: sayfa zemini, mavi üstü yazı */
+
+  /* ── Saydamlık için RGB üçlüleri ────────────────────── */
+  /* rgba() yerine `rgb(var(--x-rgb) / .45)` yazılır; böylece gölge ve
+     perde renkleri de palete bağlı kalır. */
+  --marka-mavi-rgb: 24 90 214;
+  --blue-500-rgb:   0 102 255;
+  --blue-800-rgb:   0 41 102;
+  --blue-900-rgb:   0 20 51;
+  --blue-950-rgb:   0 14 36;
+  --gold-rgb:       255 214 10;
+  --koyu-kirmizi-rgb: 164 22 26;
+  --beyaz-rgb:      255 255 255;
+
+  /* ── Anlamsal takma adlar — hepsi yukarıdaki paletten türer ── */
+  --mavi:     var(--marka-mavi);   /* bağlantı, buton, başlık vurgusu */
+  --mavi-700: var(--blue-600);     /* buton hover */
+  --mavi-900: var(--blue-700);     /* koyu başlık, koyu yüzey */
+  --mavi-050: var(--blue-50);      /* çok açık mavi zemin */
+  --mavi-100: var(--blue-100);     /* açık mavi zemin */
+  --kagit:    color-mix(in srgb, var(--blue-50) 45%, var(--beyaz));
+  --kagit-2:  var(--blue-50);
+  --metin:    var(--blue-950);     /* başlık/gövde metni */
+  /* %60: beyaz üzerinde 5.14, --kagit üzerinde 4.82 kontrast (WCAG AA ≥4.5).
+     %55'te 4.05'e düşüyordu — gövde metni için yetersizdi. */
+  --mute:     color-mix(in srgb, var(--blue-950) 60%, var(--beyaz));
+  --cizgi:    var(--blue-100);
+  --cizgi-2:  var(--blue-200);
+  --sari:     var(--gold);         /* başlık altı çizgi, menü hover */
+  --vurgu:    var(--sari-okul);    /* ikincil vurgu — YALNIZCA zemin olarak */
+  /* Amber zemin üzerinde beyaz yazı 1.6 kontrast veriyor; amber METİN de açık
+     zeminde okunmuyor. Açık zeminde vurgulu metin bu tonu kullanır (6.82). */
+  --vurgu-metin: var(--blue-600);
+
   --f-dis:    'Open Sans', system-ui, -apple-system, sans-serif;
   --f-metin:  'Open Sans', system-ui, -apple-system, sans-serif;
   --f-veri:   'Open Sans', system-ui, -apple-system, sans-serif;
@@ -52,9 +90,10 @@ a { color: inherit; text-decoration: none; }
   background: radial-gradient(120% 90% at 85% 0%, var(--mavi-050), transparent 55%),
               linear-gradient(180deg, var(--beyaz), var(--kagit)); }
 .hero__grid { position: absolute; inset: 0; z-index: 0; opacity: .6;
-  background-image: linear-gradient(rgba(21,104,189,.08) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(21,104,189,.08) 1px, transparent 1px);
+  background-image: linear-gradient(rgb(var(--marka-mavi-rgb) / .08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgb(var(--marka-mavi-rgb) / .08) 1px, transparent 1px);
   background-size: 64px 64px;
+  /* Maske: buradaki #000 görünen bir renk değil, opaklık kanalı. Palete bağlanmaz. */
   mask-image: radial-gradient(120% 100% at 72% 40%, #000 25%, transparent 78%); }
 .hero__ic { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; gap: 0; padding-block: 0; padding-top: var(--baslik-y, 198px); }
 @media (max-width: 820px) { .hero__ic { padding-top: var(--baslik-y, 96px); } }
@@ -64,12 +103,12 @@ a { color: inherit; text-decoration: none; }
    Buradaki eski kurallar bileşenle çakıştığı için kaldırıldı. */
 
 /* hero bilgi şeridi */
-.hero__ayrac { height: 46px; background: #fff; width: 100%; }
+.hero__ayrac { height: 46px; background: var(--beyaz); width: 100%; }
 .hero__bilgi { background: var(--beyaz); padding: clamp(2.4rem,5vw,4rem) 0; width: 100%; text-align: center; }
 .hero__bilgi .kap { max-width: 1280px; margin-inline: auto; padding-inline: clamp(1.15rem,4vw,2.75rem); }
 .rozet { display: inline-flex; align-items: center; gap: .6rem; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--mavi); border: 1px solid var(--cizgi); background: var(--mavi-050); border-radius: 999px; padding: .4rem .9rem; margin-bottom: 1.4rem; font-weight: 700; }
 .rozet i { width: 7px; height: 7px; background: var(--sari); border-radius: 50%; animation: nabiz 2.4s infinite; }
-@keyframes nabiz { 0% { box-shadow: 0 0 0 0 rgba(253,197,0,.6); } 70% { box-shadow: 0 0 0 8px rgba(253,197,0,0); } 100% { box-shadow: 0 0 0 0 rgba(253,197,0,0); } }
+@keyframes nabiz { 0% { box-shadow: 0 0 0 0 rgb(var(--gold-rgb) / .6); } 70% { box-shadow: 0 0 0 8px rgb(var(--gold-rgb) / 0); } 100% { box-shadow: 0 0 0 0 rgb(var(--gold-rgb) / 0); } }
 .hero__bilgi h1 { font-family: var(--f-dis); font-weight: 800; line-height: 1.18; letter-spacing: -.01em; font-size: clamp(1.5rem,3.4vw,2.2rem); color: var(--mavi); text-wrap: balance; }
 .hero__bilgi h1 em { font-style: normal; color: var(--metin); }
 .hero__bilgi h1::after { content: ""; display: block; width: 68px; height: 3px; margin: 1rem auto 0;
@@ -78,13 +117,13 @@ a { color: inherit; text-decoration: none; }
 .hero__eylem { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; justify-content: center; }
 
 /* butonlar */
-.btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; font-family: var(--f-dis); font-weight: 700; font-size: .98rem; padding: 1rem 1.6rem; border-radius: 999px; border: 1.5px solid transparent; transition: .15s; box-shadow: 0 10px 22px -8px rgba(0,41,107,.35); }
-.btn:hover { box-shadow: 0 14px 28px -8px rgba(0,41,107,.45); }
-.btn--dolu { background: var(--mavi); color: #fff; }
+.btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: .6rem; font-family: var(--f-dis); font-weight: 700; font-size: .98rem; padding: 1rem 1.6rem; border-radius: 999px; border: 1.5px solid transparent; transition: .15s; box-shadow: 0 10px 22px -8px rgb(var(--blue-800-rgb) / .35); }
+.btn:hover { box-shadow: 0 14px 28px -8px rgb(var(--blue-800-rgb) / .45); }
+.btn--dolu { background: var(--mavi); color: var(--beyaz); }
 .btn--dolu:hover { background: var(--mavi-700); transform: translateY(-1px); }
 /* açık zeminde çerçeveli buton — hero artık beyaz */
 .btn--cizgi { background: var(--beyaz); border-color: var(--mavi); color: var(--mavi); box-shadow: none; }
-.btn--cizgi:hover { background: var(--mavi); border-color: var(--mavi); color: #fff; }
+.btn--cizgi:hover { background: var(--mavi); border-color: var(--mavi); color: var(--beyaz); }
 
 
 /* ─── BÖLÜM ORTAK ─────────────────────────────── */
@@ -93,7 +132,7 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ─── ÖZELLİK KARTLARI (hakkımızda) ───────────── */
-.kanit { background: linear-gradient(180deg, var(--kagit), #fff); border-block: 1px solid var(--cizgi); padding-block: clamp(3rem,6vw,5rem); }
+.kanit { background: linear-gradient(180deg, var(--kagit), var(--beyaz)); border-block: 1px solid var(--cizgi); padding-block: clamp(3rem,6vw,5rem); }
 .kanit__bas { max-width: 62ch; margin: 0 auto clamp(2rem,4vw,3rem); text-align: center; }
 .kanit__etiket { display: inline-block; font-family: var(--f-dis); font-weight: 700; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); background: var(--mavi-050); border: 1px solid var(--cizgi); padding: .38rem .95rem; border-radius: 999px; }
 .kanit__bas h2 { margin-top: 1.1rem; font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.5rem,3.2vw,2.1rem); letter-spacing: -.01em; color: var(--mavi); line-height: 1.25; text-wrap: balance; }
@@ -103,8 +142,8 @@ a { color: inherit; text-decoration: none; }
 .kanit__bas > p { margin-top: 1rem; color: var(--mute); font-size: 1.05rem; line-height: 1.7; text-wrap: pretty; }
 .kanit__ic { display: grid; gap: 1.5rem; }
 @media (min-width: 820px) { .kanit__ic { grid-template-columns: repeat(3,1fr); } }
-.kanit__h { position: relative; overflow: hidden; background: #fff; border: 1px solid var(--cizgi); border-top: 3px solid var(--mavi); border-radius: 14px; padding: 1.9rem 1.7rem 1.7rem; box-shadow: 0 22px 44px -32px rgba(0,41,107,.45); transition: transform .2s ease, box-shadow .2s ease; }
-.kanit__h:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgba(0,41,107,.55); }
+.kanit__h { position: relative; overflow: hidden; background: var(--beyaz); border: 1px solid var(--cizgi); border-top: 3px solid var(--mavi); border-radius: 14px; padding: 1.9rem 1.7rem 1.7rem; box-shadow: 0 22px 44px -32px rgb(var(--blue-800-rgb) / .45); transition: transform .2s ease, box-shadow .2s ease; }
+.kanit__h:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
 .kanit__no { position: absolute; top: .55rem; right: 1.1rem; font-family: var(--f-dis); font-weight: 800; font-size: 2.6rem; line-height: 1; color: var(--mavi); opacity: .09; pointer-events: none; }
 .kanit__h h4 { position: relative; font-family: var(--f-dis); font-weight: 800; font-size: 1.22rem; letter-spacing: -.01em; color: var(--mavi-900); }
 .kanit__h p { margin-top: .75rem; color: var(--mute); font-size: .96rem; line-height: 1.65; }
@@ -113,13 +152,13 @@ a { color: inherit; text-decoration: none; }
 /* ── Alt çağrı kutusu — tüm sayfalarda ── */
 .bit-cta { margin-top: 1.6rem; display: grid; gap: 1.3rem; align-items: center; background: var(--mavi); border-top: 3px solid var(--sari); border-radius: 8px; padding: clamp(1.6rem,4vw,2.6rem); }
 @media (min-width: 760px) { .bit-cta { grid-template-columns: 1fr auto; } }
-.bit-cta p { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.15rem,2.6vw,1.6rem); letter-spacing: -.01em; color: #fff; line-height: 1.3; text-wrap: balance; }
-.bit-cta__btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; background: var(--beyaz); color: var(--mavi); padding: 1.05rem 1.9rem; border-radius: 999px; font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem; white-space: nowrap; box-shadow: 0 12px 26px -12px rgba(216,17,89,.55); }
+.bit-cta p { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.15rem,2.6vw,1.6rem); letter-spacing: -.01em; color: var(--beyaz); line-height: 1.3; text-wrap: balance; }
+.bit-cta__btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; background: var(--beyaz); color: var(--mavi); padding: 1.05rem 1.9rem; border-radius: 999px; font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem; white-space: nowrap; box-shadow: 0 12px 26px -12px rgb(var(--koyu-kirmizi-rgb) / .55); }
 .bit-cta__btn:hover { background: var(--sari); color: var(--metin); }
 /* Tüm .btn telefon butonları paletteki kırmızı (mobil sabit çubuk hariç — o .btn değil) */
-a.btn[href^="tel:"] { background: var(--mavi); color: #fff; border-color: transparent; box-shadow: 0 8px 18px -8px rgba(24,90,214,.6); }
-a.btn[href^="tel:"]:hover { background: var(--vurgu); color: #fff; transform: translateY(-1px); }
-a.btn[href^="tel:"]:active { background: var(--vurgu) !important; color: #fff !important; }
+a.btn[href^="tel:"] { background: var(--mavi); color: var(--beyaz); border-color: transparent; box-shadow: 0 8px 18px -8px rgb(var(--marka-mavi-rgb) / .6); }
+a.btn[href^="tel:"]:hover { background: var(--vurgu); color: var(--blue-950); transform: translateY(-1px); }
+a.btn[href^="tel:"]:active { background: var(--vurgu) !important; color: var(--blue-950) !important; }
 
 section[id] { scroll-margin-top: 150px; }
 
@@ -127,17 +166,19 @@ section[id] { scroll-margin-top: 150px; }
 .sahadan__bas { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
 .sahadan__bas h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.7rem,4vw,2.7rem); letter-spacing: -.025em; color: var(--mavi-900); margin-top: .9rem; }
 .sahadan__tum { font-family: var(--f-dis); font-weight: 700; font-size: .92rem; color: var(--mavi); white-space: nowrap; padding-bottom: .3rem; }
-.sahadan__tum:hover { color: var(--vurgu); }
+.sahadan__tum:hover { color: var(--vurgu-metin); }
 .sahadan__grid { display: grid; gap: 1.4rem; margin-top: 2.2rem; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .sahadan__grid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 980px) { .sahadan__grid { grid-template-columns: repeat(3, 1fr); } }
-.skart { display: flex; flex-direction: column; border: 1px solid var(--cizgi); border-radius: 4px; overflow: hidden; background: #fff; box-shadow: 0 14px 34px -26px rgba(0,41,107,.4); transition: .2s; }
-.skart:hover { border-color: var(--mavi); box-shadow: 0 20px 40px -22px rgba(0,41,107,.5); transform: translateY(-2px); }
+.skart { display: flex; flex-direction: column; border: 1px solid var(--cizgi); border-radius: 4px; overflow: hidden; background: var(--beyaz); box-shadow: 0 14px 34px -26px rgb(var(--blue-800-rgb) / .4); transition: .2s; }
+.skart:hover { border-color: var(--mavi); box-shadow: 0 20px 40px -22px rgb(var(--blue-800-rgb) / .5); transform: translateY(-2px); }
 .skart__g { position: relative; aspect-ratio: 16/10; overflow: hidden; background: var(--kagit-2); }
 .skart__g img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
 .skart:hover .skart__g img { transform: scale(1.05); }
-.skart__yok { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--f-dis); font-weight: 800; color: var(--cizgi-2); letter-spacing: .1em; }
-.skart__vid { position: absolute; inset: 0; margin: auto; width: 52px; height: 52px; display: grid; place-items: center; background: rgba(0,41,107,.72); color: #fff; border-radius: 50%; font-size: 1.05rem; padding-left: 4px; }
+/* Kapağı olmayan yazının yer tutucusu. --cizgi-2 idi; --kagit-2 üzerinde 1.58
+   kontrast veriyordu (okunmuyordu). --blue-600 ile 5.92. */
+.skart__yok { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--f-dis); font-weight: 800; color: var(--blue-600); letter-spacing: .1em; }
+.skart__vid { position: absolute; inset: 0; margin: auto; width: 52px; height: 52px; display: grid; place-items: center; background: rgb(var(--blue-800-rgb) / .72); color: var(--beyaz); border-radius: 50%; font-size: 1.05rem; padding-left: 4px; }
 .skart__b { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
 .skart__tarih { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); }
 .skart__b h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.12rem; color: var(--mavi-900); letter-spacing: -.01em; }

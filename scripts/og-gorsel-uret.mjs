@@ -19,26 +19,35 @@ const require = createRequire(import.meta.url);
 const sharp = require(path.resolve('node_modules/sharp/dist/index.cjs'));
 
 const G = 1200, Y = 630;
-const MAVI = '#185ad6', SARI = '#ffd658', METIN = '#333333', MUTE = '#777777';
+// Renkler global.css'teki paletle aynı olmalı (bkz. CLAUDE.md → Renk paleti).
+// SVG burada CSS değişkeni okuyamadığı için değerler elle kopyalanıyor;
+// palet değişirse bu satır da güncellenmeli.
+const MAVI = '#185AD6',      // --marka-mavi
+      MAVI_KOYU = '#003D99', // --blue-700
+      SARI = '#FFD60A',      // --gold
+      ZEMIN = '#E5F0FF',     // --blue-50
+      IZGARA = '#CCE0FF',    // --blue-100
+      METIN = '#000E24',     // --blue-950
+      MUTE = '#002966';      // --blue-800
 const SLOGAN = 'Yatay Sondaj, Boru Sürme ve Kazısız Geçiş Teknolojileri';
 const ALAN = 'www.deltek.com.tr';
 
-// Zemin saf beyaz değil, çok açık mavi (#eef3fd): kaynak logo PNG'sinde
+// Zemin saf beyaz değil, paletin en açık mavisi (--blue-50): kaynak logo PNG'sinde
 // pişmiş açık mavimsi hale (ölçülen ~#e9eff7) beyaz üzerinde kutu gibi
 // görünüyordu; bu tonda pratikte kayboluyor.
 const zemin = `<svg xmlns="http://www.w3.org/2000/svg" width="${G}" height="${Y}">
   <defs>
     <linearGradient id="ust" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="${MAVI}"/>
-      <stop offset="1" stop-color="#0e3578"/>
+      <stop offset="1" stop-color="${MAVI_KOYU}"/>
     </linearGradient>
   </defs>
-  <rect width="${G}" height="${Y}" fill="#eef3fd"/>
+  <rect width="${G}" height="${Y}" fill="${ZEMIN}"/>
   <rect width="${G}" height="14" fill="url(#ust)"/>
   <rect y="${Y - 14}" width="${G}" height="14" fill="url(#ust)"/>
 
   <!-- hafif ızgara dokusu -->
-  <g stroke="#dfe9fb" stroke-width="2">
+  <g stroke="${IZGARA}" stroke-width="2">
     <path d="M0 210h${G}M0 420h${G}M400 14v${Y - 28}M800 14v${Y - 28}"/>
   </g>
 

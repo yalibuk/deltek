@@ -47,13 +47,13 @@ const tarihFmt = (d: any) =>
 .pgrid { display: grid; gap: 1.4rem; margin-top: 2.4rem; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 980px) { .pgrid { grid-template-columns: repeat(3, 1fr); } }
-.pkart { display: flex; flex-direction: column; border: 1px solid var(--cizgi); border-radius: 4px; overflow: hidden; background: #fff; box-shadow: 0 14px 34px -26px rgba(0,41,107,.4); transition: .2s; }
-.pkart:hover { border-color: var(--mavi); box-shadow: 0 20px 40px -22px rgba(0,41,107,.5); transform: translateY(-2px); }
+.pkart { display: flex; flex-direction: column; border: 1px solid var(--cizgi); border-radius: 4px; overflow: hidden; background: var(--beyaz); box-shadow: 0 14px 34px -26px rgb(var(--blue-800-rgb) / .4); transition: .2s; }
+.pkart:hover { border-color: var(--mavi); box-shadow: 0 20px 40px -22px rgb(var(--blue-800-rgb) / .5); transform: translateY(-2px); }
 .pkart__g { position: relative; aspect-ratio: 16/10; overflow: hidden; background: var(--kagit-2); }
 .pkart__g img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
 .pkart:hover .pkart__g img { transform: scale(1.05); }
-.pkart__yok { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--f-dis); font-weight: 800; color: var(--cizgi-2); letter-spacing: .1em; }
-.pkart__vid { position: absolute; inset: 0; margin: auto; width: 54px; height: 54px; display: grid; place-items: center; background: rgba(0,41,107,.72); color: #fff; border-radius: 50%; font-size: 1.1rem; padding-left: 4px; }
+.pkart__yok { width: 100%; height: 100%; display: grid; place-items: center; font-family: var(--f-dis); font-weight: 800; color: var(--blue-600); letter-spacing: .1em; }
+.pkart__vid { position: absolute; inset: 0; margin: auto; width: 54px; height: 54px; display: grid; place-items: center; background: rgb(var(--blue-800-rgb) / .72); color: var(--beyaz); border-radius: 50%; font-size: 1.1rem; padding-left: 4px; }
 .pkart__b { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
 .pkart__tarih { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); }
 .pkart__b h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.15rem; color: var(--mavi-900); letter-spacing: -.01em; }

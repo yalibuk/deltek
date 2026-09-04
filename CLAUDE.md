@@ -238,17 +238,92 @@ bileşeni (`kaya-akis`), makine vitrin kartları ve maskot blokları. Kategori
 açılır menüsü ile ikon şeridi iskelette duruyor ama `KATEGORILER` boş olduğu
 için gizli (`src/data/site.ts`).
 
-## Görsel dil
+## Renk paleti
 
-Canlı deltek.com.tr'den alındı, `src/styles/global.css` `:root` içinde tanımlı.
+**Sitedeki her renk bu paletten gelir.** Tanım tek yerde: `src/styles/global.css`
+`:root`. Bileşenlerde ham `#hex` ya da `rgba()` **yazılmaz**; yeni bir tona
+ihtiyaç olursa önce buraya eklenir.
 
-| Değişken | Değer | Nerede |
+### Palet
+
+| Değişken | Değer | | Değişken | Değer |
+| --- | --- | --- | --- | --- |
+| `--blue-50` | `#E5F0FF` | | `--blue-600` | `#0052CC` |
+| `--blue-100` | `#CCE0FF` | | `--blue-700` | `#003D99` |
+| `--blue-200` | `#99C2FF` | | `--blue-800` | `#002966` |
+| `--blue-300` | `#66A3FF` | | `--blue-900` | `#001433` |
+| `--blue-400` | `#3385FF` | | `--blue-950` | `#000E24` |
+| `--blue-500` | `#0066FF` | | `--marka-mavi` | `#185AD6` |
+| `--gold` | `#FFD60A` | | `--sari-okul` | `#FFC300` |
+| `--koyu-kirmizi` | `#A4161A` | | `--beyaz` | `#FFFFFF` |
+
+`--marka-mavi` **Deltek logo mavisi ve değişmez** — bağlantılar, butonlar,
+başlıklar bu rengi kullanmaya devam eder. `--beyaz` paletin parçası değil ama
+kaçınılmaz (sayfa zemini, mavi üstündeki yazı).
+
+### Anlamsal takma adlar
+
+Bileşenler doğrudan `--blue-*` yerine bunları kullanır; böylece paletteki bir
+tonu değiştirmek tüm siteye tek yerden yansır.
+
+| Takma ad | Kaynak | Nerede |
 | --- | --- | --- |
-| `--mavi` | `#185ad6` | bağlantılar, butonlar, başlıklar — sitenin ana rengi |
-| `--mavi-700` / `--mavi-900` | `#1449ac` / `#0e3578` | koyu yüzeyler, slider degradesi |
-| `--sari` | `#ffd658` | başlık altı çizgi, menü hover, CTA üst şeridi |
-| `--vurgu` | `#eb9e0f` | ikincil vurgu (buton hover) |
-| `--metin` / `--mute` | `#333` / `#777` | başlık / gövde metni |
+| `--mavi` | `--marka-mavi` | bağlantı, buton, başlık vurgusu |
+| `--mavi-700` | `--blue-600` | buton hover |
+| `--mavi-900` | `--blue-700` | koyu başlık, koyu yüzey |
+| `--mavi-050` / `--mavi-100` | `--blue-50` / `--blue-100` | açık mavi zeminler |
+| `--kagit` | `--blue-50` %45 + beyaz | sayfa/footer zemini |
+| `--kagit-2` | `--blue-50` | görsel yer tutucu zemini |
+| `--metin` | `--blue-950` | başlık metni |
+| `--mute` | `--blue-950` %60 + beyaz | gövde metni |
+| `--cizgi` / `--cizgi-2` | `--blue-100` / `--blue-200` | kenarlıklar |
+| `--sari` | `--gold` | başlık altı çizgi, menü hover, CTA şeridi |
+| `--vurgu` | `--sari-okul` | ikincil vurgu — **yalnızca zemin olarak** |
+| `--vurgu-metin` | `--blue-600` | açık zeminde vurgulu metin |
+
+### Saydamlık
+
+`rgba(...)` yazmak yerine RGB üçlüsü değişkenleri kullanılır, böylece gölgeler
+ve perdeler de palete bağlı kalır:
+
+```css
+box-shadow: 0 10px 22px -8px rgb(var(--blue-800-rgb) / .35);
+```
+
+Tanımlı üçlüler: `--marka-mavi-rgb`, `--blue-500-rgb`, `--blue-800-rgb`,
+`--blue-900-rgb`, `--blue-950-rgb`, `--gold-rgb`, `--koyu-kirmizi-rgb`,
+`--beyaz-rgb`.
+
+### Kontrast kuralları (WCAG AA)
+
+Paleti uygularken ölçülen ve düzeltilen tuzaklar — yeni renk seçerken bunlara
+dikkat edin:
+
+- **Amber (`--sari-okul` / `--gold`) metin rengi olarak kullanılamaz.** Açık
+  zeminde 1.6 kontrast veriyor. Zemin olarak kullanılır ve üstüne
+  `--blue-950` yazılır (12.0). Açık zeminde vurgulu metin için `--vurgu-metin`.
+- **`--mute` en az `--blue-950` %60 karışımı olmalı.** %55'te beyaz üzerinde
+  4.05'e düşüyor, AA sınırının (4.5) altında. %60 → 5.14.
+- **Fotoğraf üzerindeki gövde metni `--mute` kullanmaz.** Perde fotoğrafı tam
+  beyazlatmadığı için 3.8'e düşüyor; açık slaytlarda `--blue-800` kullanılır.
+- **Açık mavi tonlar (`--blue-200`/`--blue-300`) metin için değildir.**
+  `--blue-50` üzerinde 1.6–2.2 veriyor; kenarlık ve ayraç içindir.
+
+Denetim yöntemi: sayfadaki her metin ögesinin hesaplanan rengi ile ardındaki
+gerçek zemin bulunup WCAG oranı hesaplanır. Slayt yazıları için zemin, arka
+plan fotoğrafı canvas'a çizilip metin kutusunun altındaki ortalama renk
+alınarak ve perde bindirilerek bulunur (`color-mix` çıktısı `color(srgb 0..1)`
+biçiminde gelir — ayrıştırırken 0-255'e çevirmeyi unutmayın).
+
+> **Tuzak:** değiştirme betikleri `#FFFFFF → var(--beyaz)` gibi bir kuralı
+> paletin kendi tanımına da uygulayıp `--beyaz: var(--beyaz)` döngüsü
+> yaratabilir. Döngüsel özel değişken geçersizdir; ona bağlı `color-mix`
+> değerleri de çöker ve metin siyaha düşer. Değişiklikten sonra
+> `--mute` / `--kagit` gerçekten hesaplanıyor mu diye bakın.
+
+**OG görseli** paleti SVG içinde elle kopyalar (`scripts/og-gorsel-uret.mjs`,
+`MAVI`/`SARI`/`ZEMIN`… sabitleri) — CSS değişkeni okuyamıyor. Palet değişirse
+o dosya da güncellenip `npm run og` yeniden çalıştırılmalı.
 
 **Tipografi:** Open Sans (Google Fonts'tan `display=swap` ile yükleniyor —
 canlı sitenin kullandığı aile). Üç font değişkeni de (`--f-dis`, `--f-metin`,
