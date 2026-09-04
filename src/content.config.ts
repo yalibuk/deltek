@@ -40,6 +40,11 @@ const sayfalar = defineCollection({
     // Boşsa normal makale akışı.
     duzen: z.enum(['logo-izgara', 'urun', 'iletisim']).optional(),
 
+    // Sayfanın altına Teknoloji bölümünün kart haritasını basar
+    // (bkz. components/TeknolojiHaritasi.astro). Yalnızca bölüm kök
+    // sayfasında açılır.
+    bolumHaritasi: z.boolean().optional(),
+
     // ── duzen: 'iletisim' alanları ────────────────────────────
     // Google Haritalar gömme (embed) adresi; boşsa harita bölümü çıkmaz.
     harita: z.string().optional(),

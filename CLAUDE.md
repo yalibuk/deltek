@@ -193,6 +193,41 @@ Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
 | yalnız görsel | tam genişlik görsel |
 | yalnız metin | tam genişlik metin (boş görsel kutusu bırakmaz) |
 
+### Teknoloji bölümü
+
+19 teknoloji/yöntem sayfası taşınmıştı ama **14'ü yetimdi**: adresi çalışıyordu,
+hiçbir yerden bağlantı verilmiyordu. Bilgi mimarisi canlı sitedeki "Teknoloji"
+açılır menüsünden alınıp `src/data/teknoloji.ts` içine ağaç olarak yazıldı.
+
+```
+Teknoloji (/yatay-sondaj-teknoloji/)
+├── Yönlendirilebilir Yatay Sondaj      9 alt sayfa
+│   └── Yer Belirleme                   → Üzerinden Takip, Manyetik Alan
+└── Diğer kazısız yöntemler             7 sayfa
+```
+
+Ağaçta **yalnızca slug ve kısa menü adı** durur; başlık, özet ve görsel
+sayfanın kendi frontmatter'ından okunur (`teknolojiAgaci()` — `src/data/icerik.ts`).
+Menü etiketleri sayfa başlıklarıyla aynı değil, canlı sitedeki kısa adlar
+korundu ("Auger Boring" ↔ "Auger Boring Nedir? Modern Yatay Delgi Teknolojisi").
+
+**Ağaçtaki bir slug'ın sayfası yoksa build durur.** Menüde 404'e giden bağlantı
+bırakmaktansa hatayı derlemede görmek daha iyi; sayfa yeniden adlandırılırsa
+burada yakalanır.
+
+İki yerden görünür:
+
+1. **Header açılır menüsü** (`Layout.astro`) — her sayfada, iki sütun.
+   `menu.map` içinde slug `TEKNOLOJI_KOK` ise düz bağlantı yerine `.dd` basılır.
+2. **Bölüm haritası** (`components/TeknolojiHaritasi.astro`) — kök sayfanın
+   altında kart ızgarası. `bolumHaritasi: true` frontmatter alanıyla açılır.
+
+> **Kart deseni:** kart bir `<a>` DEĞİL `<article>`. "Yer Belirleme" kartının
+> içinde iki alt sayfa bağlantısı var; kartı `<a>` yapsaydık iç içe `<a>`
+> olurdu. Bunun yerine kart adı "gerilmiş bağlantı" (`.tkart__ad::after`
+> kartı kaplar), alt sayfa rozetleri `z-index: 1` ile üstte kalıp kendi
+> bağlantılarını korur. Kart görselsizse baş harf rozeti çıkar (5 sayfada).
+
 ### `duzen: iletisim`
 
 `/iletisim/` sayfasının şablonu. Bileşen: `src/components/IletisimDuzen.astro`.

@@ -2,7 +2,8 @@
 import '../styles/global.css';
 import { SITE, KATEGORILER, KBAR } from '../data/site';
 import { CEVIRI, KATEGORI_EN } from '../data/i18n';
-import { menuSayfalari } from '../data/icerik';
+import { menuSayfalari, teknolojiAgaci } from '../data/icerik';
+import { TEKNOLOJI_KOK } from '../data/teknoloji';
 
 interface Props {
   title?: string;
@@ -38,6 +39,12 @@ const enDugme = (dil === 'en' || cevirisiVar) ? enYol : '/en/';
 // Header menüsü içerikten sürülür: menuSira alanı dolu olan sayfalar.
 // EN tarafında çevirisi girilmemiş sayfa menüde çıkmaz.
 const menu = await menuSayfalari(dil);
+
+// Teknoloji bölümü açılır menüsü. Yalnızca TR'de: EN sayfaları henüz yok,
+// teknolojiAgaci('en') sayfa bulamayıp build'i durdururdu.
+const tekAgac = dil === 'tr' ? await teknolojiAgaci('tr') : null;
+const tekYys = tekAgac?.find(d => d.alt.length > 0) ?? null;   // Yönlendirilebilir Yatay Sondaj
+const tekDiger = tekAgac?.filter(d => d.alt.length === 0) ?? [];
 
 const kanonik = SITE.kanonikal + pathname;
 const ogGorsel = SITE.kanonikal + (image || '/og-image.jpg');
@@ -142,9 +149,39 @@ const jsonLd = {
         </span>
       )}
       {menu.map(({ entry, slug }) => (
-        <a class="gez2" href={yol(`/${slug}/`)}>
-          <span>{(entry.data as any).menuAd || (entry.data as any).baslik}</span><span>&nbsp;</span>
-        </a>
+        slug === TEKNOLOJI_KOK && tekAgac ? (
+          <span class="dd">
+            <a href={yol(`/${slug}/`)} class="dd__t gez2">
+              <span>{(entry.data as any).menuAd || (entry.data as any).baslik}</span>
+              <span class="dd__ok">
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+              </span>
+            </a>
+            <div class="dd__p dd__p--tek">
+              {tekYys && (
+                <div class="tekdd__s">
+                  <a class="tekdd__b" href={yol(`/${tekYys.slug}/`)}>{tekYys.ad}</a>
+                  {tekYys.alt.map(k => (
+                    <>
+                      <a href={yol(`/${k.slug}/`)}>{k.ad}</a>
+                      {k.alt.map(a => (
+                        <a class="tekdd__d2" href={yol(`/${a.slug}/`)}>{a.ad}</a>
+                      ))}
+                    </>
+                  ))}
+                </div>
+              )}
+              <div class="tekdd__s">
+                <span class="tekdd__b">Diğer kazısız yöntemler</span>
+                {tekDiger.map(k => <a href={yol(`/${k.slug}/`)}>{k.ad}</a>)}
+              </div>
+            </div>
+          </span>
+        ) : (
+          <a class="gez2" href={yol(`/${slug}/`)}>
+            <span>{(entry.data as any).menuAd || (entry.data as any).baslik}</span><span>&nbsp;</span>
+          </a>
+        )
       ))}
       <a class="gez2" href={yol('/blog/')}><span>{t.nav.blog[0]}</span><span>&nbsp;</span></a>
       <a class="ust__tel" href={`tel:${SITE.telefonHam}`}>
@@ -320,6 +357,28 @@ body.anasayfa .icerik { padding-top: 0; }
   padding: .5rem .7rem; border-bottom: 1px solid var(--kagit-2); white-space: nowrap; }
 .dd__p a:last-child { border-bottom: none; }
 .dd__p a:hover { background: var(--mavi-050); color: var(--mavi); }
+
+/* Teknoloji açılır menüsü: 19 sayfa tek sütuna sığmıyor, iki sütun.
+   Panel ortalanmış (.dd__p left:50% + translateX) olduğu için genişleyince
+   kendiliğinden ortada kalır; dar ekranda mobil kuralları tek sütuna indirir. */
+.dd__p--tek { min-width: 0; width: max-content; max-width: min(92vw, 660px);
+  display: none; grid-template-columns: 1fr 1fr; gap: 0 .6rem; padding: .6rem; }
+.dd:hover .dd__p--tek, .dd:focus-within .dd__p--tek, .dd.acik .dd__p--tek { display: grid; }
+.tekdd__s { min-width: 0; }
+.tekdd__b { display: block; font-family: var(--f-dis); font-weight: 800; font-size: .74rem;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--mavi);
+  padding: .5rem .7rem .45rem; border-bottom: 1px solid var(--cizgi); margin-bottom: .2rem; }
+a.tekdd__b:hover { background: var(--mavi-050); }
+.dd__p--tek a { white-space: normal; }
+.tekdd__d2 { padding-left: 1.5rem !important; font-size: .8rem !important; color: var(--mute) !important; }
+.tekdd__d2::before { content: "└ "; opacity: .5; }
+.tekdd__d2:hover { color: var(--mavi) !important; }
+@media (max-width: 979px) {
+  .dd__p--tek { max-width: none; grid-template-columns: 1fr; gap: 0; }
+  .dd.acik .dd__p--tek { display: grid !important; }
+  .tekdd__b { padding: .8rem 1.1rem .6rem; }
+  .tekdd__d2 { padding-left: 2.4rem !important; }
+}
 .dd__p a b { color: var(--mavi); }
 
 /* ─── FOOTER ─────────────────────────────────────── */

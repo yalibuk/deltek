@@ -4,6 +4,7 @@ menuSira: 2
 menuAd: "Teknoloji"
 ozet: "Yönlendirilebilir Yatay Sondaj (YYS), klasik anlamdaki açık kazı yöntemiyle karşılaştırıldığında sayısız avantajı beraberinde getiren bir kazısız geçiş alternatifidir. Bu yöntem, yüzey aktiviteleri…"
 duzen: urun
+bolumHaritasi: true
 banner: "/images/uploads/2015/08/kazisiz-yatay-sondaj-teknolojileri.jpg"
 bloklar:
   - metin: |-

@@ -5,6 +5,8 @@ import { kokIcerik, cevirisiVarMi } from '../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
 import IletisimDuzen from '../components/IletisimDuzen.astro';
+import TeknolojiHaritasi from '../components/TeknolojiHaritasi.astro';
+import { teknolojiAgaci } from '../data/icerik';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -23,6 +25,8 @@ const { tur, entry, slug } = Astro.props;
 const p = entry.data as any;
 const { Content } = await render(entry as any);
 const cevirisiVar = await cevirisiVarMi(slug, 'en');
+// Bölüm haritası yalnızca istendiğinde hesaplanır (ağaç build'de doğrulanır).
+const tekAgac = p.bolumHaritasi ? await teknolojiAgaci('tr') : null;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
@@ -100,6 +104,8 @@ const sema = tur === 'yazi'
       ))}
     </div>
   )}
+
+  {tekAgac && <TeknolojiHaritasi agac={tekAgac} />}
 
   <div class="yazi__cta">
     <p>{tur === 'yazi' ? 'Projeniz için bize ulaşın.' : 'Bu konuda bize danışın.'}</p>

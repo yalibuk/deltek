@@ -60,3 +60,48 @@ export async function menuSayfalari(dil: Dil): Promise<Kayit[]> {
     .filter(k => typeof (k.entry.data as any).menuSira === 'number')
     .sort((a, b) => (a.entry.data as any).menuSira - (b.entry.data as any).menuSira);
 }
+
+/* ─── Teknoloji bölümü ──────────────────────────────────────── */
+
+import { TEKNOLOJI, type TekDugum } from './teknoloji';
+
+/** Ağaç düğümü + sayfanın kendi verisi (başlık, özet, banner). */
+export type TekKart = {
+  slug: string;
+  ad: string;
+  baslik: string;
+  ozet?: string;
+  gorsel?: string;
+  alt: TekKart[];
+};
+
+/**
+ * TEKNOLOJI ağacını içerik koleksiyonuyla birleştirir.
+ *
+ * Ağaçtaki bir slug'ın sayfası yoksa build'i DURDURUR: menüde 404'e giden
+ * bağlantı bırakmaktansa hatayı derlemede görmek daha iyi. Aynı şekilde bir
+ * sayfa yeniden adlandırılırsa burada yakalanır.
+ */
+export async function teknolojiAgaci(dil: Dil): Promise<TekKart[]> {
+  const hepsi = new Map((await sayfalar(dil)).map(k => [k.slug, k]));
+  const donustur = (dugumler: TekDugum[]): TekKart[] =>
+    dugumler.map(d => {
+      const k = hepsi.get(d.slug);
+      if (!k) {
+        throw new Error(
+          `Teknoloji ağacındaki "${d.slug}" için sayfa yok ` +
+          `(src/content/sayfalar/${dil}/${d.slug}.md). Sayfa yeniden ` +
+          `adlandırıldıysa src/data/teknoloji.ts da güncellenmeli.`);
+      }
+      const v = k.entry.data as any;
+      return {
+        slug: d.slug,
+        ad: d.ad || v.baslik,
+        baslik: v.baslik,
+        ozet: v.ozet,
+        gorsel: v.banner || v.kapak,
+        alt: d.alt ? donustur(d.alt) : [],
+      };
+    });
+  return donustur(TEKNOLOJI);
+}
