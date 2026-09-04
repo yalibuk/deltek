@@ -72,14 +72,16 @@ const satirlaraBol = (m: string) => m.split('\n');
               ))}
             </p>
           ))}
-          {s.yazi.eylem && s.yazi.eylemKonum !== 'dip' && <span class="yazi__eylem">{s.yazi.eylem}</span>}
+          {s.yazi.eylem && s.yazi.eylemKonum !== 'dip' && (
+            <a class="yazi__eylem" href={s.yazi.eylemHref ?? '/iletisim/'}>{s.yazi.eylem}</a>
+          )}
         </div>
 
         {/* eylemKonum: 'dip' — buton metin bloğundan koparılıp slaytın
             en altına sabitlenir; yatay hizası yazıyla aynı kalır. */}
         {s.yazi.eylem && s.yazi.eylemKonum === 'dip' && (
           <div class={`yazi yazi--${s.yazi.konum} yazi--dip yazi--${s.yazi.tema}`}>
-            <span class="yazi__eylem">{s.yazi.eylem}</span>
+            <a class="yazi__eylem" href={s.yazi.eylemHref ?? '/iletisim/'}>{s.yazi.eylem}</a>
           </div>
         )}
       </div>
@@ -182,9 +184,17 @@ const satirlaraBol = (m: string) => m.split('\n');
 .yazi__satir { font-size: calc(21 * var(--olcek)); line-height: 1.55;
   margin-top: calc(13 * var(--olcek)); max-width: 52ch; }
 .yazi--sag .yazi__satir { margin-left: auto; }
+/* Sitedeki `.btn--dolu` ile aynı davranış (bkz. global.css): hover'da
+   koyulaşır, 1 px yükselir, gölgesi derinleşir. Ölçüler burada `--olcek`e
+   bağlı, çünkü slider tasarım ızgarasıyla birlikte ölçekleniyor. */
 .yazi__eylem { display: inline-block; margin-top: calc(20 * var(--olcek));
   font-family: var(--f-dis); font-weight: 700; font-size: calc(19 * var(--olcek));
-  padding: calc(15 * var(--olcek)) calc(34 * var(--olcek)); border-radius: 999px; }
+  padding: calc(15 * var(--olcek)) calc(34 * var(--olcek)); border-radius: 999px;
+  transition: background .15s, box-shadow .15s, transform .15s;
+  box-shadow: 0 10px 22px -8px rgba(0,41,107,.45); }
+.yazi__eylem:hover { transform: translateY(-1px);
+  box-shadow: 0 14px 28px -8px rgba(0,41,107,.55); }
+.yazi__eylem:focus-visible { outline: 3px solid var(--sari); outline-offset: 3px; }
 
 /* koyu fotoğraf üzerinde */
 .yazi--koyu .yazi__ustlik { color: var(--sari); }
@@ -196,6 +206,11 @@ const satirlaraBol = (m: string) => m.split('\n');
 .yazi--acik .yazi__baslik { color: var(--mavi-900); }
 .yazi--acik .yazi__satir  { color: #4a5666; }
 .yazi--acik .yazi__eylem  { background: var(--mavi); color: #fff; }
+/* Hover arka planı BURADA yazılmak zorunda: yukarıdaki tema kuralları
+   (`.yazi--koyu .yazi__eylem`) iki sınıflı, dolayısıyla tek sınıflı bir
+   `.yazi__eylem:hover` kuralını özgüllükte yener ve renk değişmez. */
+.yazi--koyu .yazi__eylem:hover,
+.yazi--acik .yazi__eylem:hover { background: var(--mavi-700); }
 
 /* ─── Yazının giriş animasyonu (kademeli) ─────────────── */
 /* Her parça bir öncekinden biraz sonra, yukarı doğru yumuşakça belirir. */
@@ -206,7 +221,11 @@ const satirlaraBol = (m: string) => m.split('\n');
 .slide[data-aktif="true"] .yazi__baslik { animation-delay: .32s; }
 .slide[data-aktif="true"] .yazi__satir  { animation-delay: calc(.48s + var(--sira, 0) * .1s); }
 .slide[data-aktif="true"] .yazi__eylem  { animation-delay: .66s; }
-@keyframes yazi-gir { from { opacity: 0; transform: translateY(calc(26 * var(--olcek))); } to { opacity: 1; transform: none; } }
+/* `transform` DEĞİL `translate` kullanılıyor: animasyon `fill-mode: both` ile
+   bittikten sonra da son kareyi tutar, `transform: none` yazsaydı butonun
+   hover'daki `translateY(-1px)`ini ezerdi. `translate` ayrı bir özellik,
+   `transform` ile çakışmadan üst üste biner. */
+@keyframes yazi-gir { from { opacity: 0; translate: 0 calc(26 * var(--olcek)); } to { opacity: 1; translate: 0 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   .slide[data-aktif="true"] .kat,

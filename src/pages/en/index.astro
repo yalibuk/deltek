@@ -130,8 +130,12 @@ const projeTarih = (d: any) =>
   function ciz() {
     (ray as HTMLElement).style.transform = `translateX(${-i*100}%)`;
     Array.from(nokta.children).forEach((d,k) => d.setAttribute('aria-current', k===i?'true':'false'));
-    // aktif slayt işaretlenince katman görselleri yumuşak biçimde giriyor
-    Array.from(ray.children).forEach((s,k) => (s as HTMLElement).setAttribute('data-aktif', k===i?'true':'false'));
+    // aktif slayt işaretlenince katman görselleri yumuşak biçimde giriyor.
+    // inert: ekran dışındaki slaytların butonları klavyeyle odaklanmasın.
+    Array.from(ray.children).forEach((s,k) => {
+      (s as HTMLElement).setAttribute('data-aktif', k===i?'true':'false');
+      (s as HTMLElement).inert = k !== i;
+    });
   }
   function git(x: number) { i = (x+n)%n; ciz(); }
   function ileri() { git(i+1); } function geri() { git(i-1); }

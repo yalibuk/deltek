@@ -41,6 +41,13 @@ export type HeroYazi = {
   satirlar?: string[];
   eylem?: string;           // buton metni
   /**
+   * Butonun bağlantısı. Verilmezse `/iletisim/`.
+   * EN slaytlar da oraya gidiyor: `/en/iletisim/` sayfası henüz yok
+   * (bkz. CLAUDE.md yapılacaklar). Çeviri eklenince EN_YAZI'da
+   * `eylemHref: '/en/iletisim/'` yazılmalı.
+   */
+  eylemHref?: string;
+  /**
    * Metin bloğunun yatay yeri — görsel katmanların boş bıraktığı taraf.
    * 'merkez' bloğu sayfanın tam ortasına alır ve metni ortalar; katmanı
    * olmayan ya da katmanları iki yana dağılmış slaytlar için.
@@ -150,8 +157,8 @@ export const HERO_TR: HeroSlayt[] = [
       // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
       // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
       // tutturmak için öne çekildi.
-      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 700, h: 232, x: 520, y: 76, gecis: 'sfl', basla: 400, sure: 1800 },
-      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 150, h: 350, x: 450, y: 90, gecis: 'sfl', basla: 1300, sure: 900, darGizle: true },
+      { tur: 'gorsel', src: '/images/hero/katman/machinery1.png', w: 500, h: 232, x: 630, y: 86, gecis: 'sfl', basla: 400, sure: 1800 },
+      { tur: 'gorsel', src: '/images/hero/katman/ok-worker.png', w: 150, h: 350, x: 480, y: 90, gecis: 'sfl', basla: 1300, sure: 900, darGizle: true },
     ],
   },
   {
@@ -206,17 +213,6 @@ export const HERO_TR: HeroSlayt[] = [
       { tur: 'gorsel', src: '/images/hero/katman/button-hand.png', w: 290, h: 277, x: 940, y: 225, gecis: 'lfb', basla: 1400, sure: 900 },
     ],
   },
-  {
-    // Katmanı olmayan marka slaydı → yazı sayfanın tam ortasında.
-    arka: '/images/hero/deltek-yatay-sondaj-marka.jpg',
-    alt: 'Deltek yatay sondaj makinesi',
-    yazi: {
-      ustlik: 'Deltek',
-      baslik: 'Yatay Sondajda Bir Dünya Markası',
-      konum: 'merkez', dikey: 'orta', tema: 'acik',
-    },
-    katmanlar: [],
-  },
 ];
 
 // İngilizce metinler Türkçe orijinallerin çevirisidir, Deltek onayından
@@ -245,8 +241,6 @@ const EN_YAZI: HeroYazi[] = [
     eylem: 'Request a quote', konum: 'sol', dikey: 'orta', tema: 'acik' },
   { ustlik: 'A difference in infrastructure', baslik: 'Get ahead of your competitors with effective solutions',
     konum: 'sol', dikey: 'ust', tema: 'acik' },
-  { ustlik: 'Deltek', baslik: 'A global brand in horizontal drilling',
-    konum: 'merkez', dikey: 'orta', tema: 'acik' },
 ];
 
 export const HERO_EN: HeroSlayt[] = HERO_TR.map((s, i) => ({ ...s, yazi: EN_YAZI[i] }));

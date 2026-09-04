@@ -271,7 +271,7 @@ OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render et
 **Hero slider** — `src/components/HeroSlider.astro`, veri `src/data/hero.ts`.
 
 **Görsel katmanlar** canlı deltek.com.tr'deki Revolution Slider'dan birebir alındı:
-9 slayt, 9 görsel + 1 YouTube katmanı; konum, geçiş tipi, gecikme ve süre
+8 slayt (9.'su kaldırıldı), 8 görsel + 1 YouTube katmanı; konum, geçiş tipi, gecikme ve süre
 orijinaliyle aynı (4. slaytta sondaj biti soldan gelip toprak adasına giriyor).
 Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
 (`HERO_IZGARA`); bileşen container-query birimiyle (`--olcek`) orantılı ölçekler.
@@ -294,13 +294,14 @@ yazi:
   satirlar: ['...']              # gövde satırları
   eylem: 'Bize ulaşın'           # buton (isteğe bağlı)
   eylemKonum: akis | dip         # 'dip': buton slaytın en altına sabitlenir
+  eylemHref: '/iletisim/'        # buton bağlantısı (varsayılan /iletisim/)
   konum: sol | merkez | sag      # yatay yer ('orta' DEĞİL — o `dikey`in değeri)
   dikey: ust | orta | alt        # katmanların kapladığı bandın dışı
   tema:  koyu | acik             # arka plan koyu mu açık mı
 ```
 
 `tema` yazı ve perde rengini belirler: **1-3. slaytlar koyu fotoğraf** (beyaz yazı,
-koyu perde), **4-9. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
+koyu perde), **4-8. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 
 **Satır kırmak için `\n` kullanılır**, `<br />` değil. Metinler kaçışlanarak
@@ -368,7 +369,7 @@ Giderilenler:
 şeride yaslanır: ana menü satırı (`.ust__gez`, TR menüsünde **797px**) iki yanına
 **140'ar piksel** eklenerek **1077px**'lik kuşak elde edildi. Sol hizalı slaytlar
 kuşağın sol sınırından, sağ hizalı slaytlar sağ sınırından başlar; hiçbir metin
-dışarı taşmaz (9 slaytta ölçüldü). Ekran daraldığında kuşak `.kap` iç payına
+dışarı taşmaz (tüm slaytlarda ölçüldü). Ekran daraldığında kuşak `.kap` iç payına
 kadar kısalır, taşma yine olmaz.
 
 `--kusak` değeri `.yazi` içinde **elle yazılı sabittir** — container query içinden
@@ -378,6 +379,30 @@ sayfa eklenip çıkarılırsa) `.ust__gez` yeniden ölçülüp `--kusak` güncel
 ```js
 document.querySelector('.ust__gez').getBoundingClientRect().width + 280
 ```
+
+### Slayt butonları
+
+`eylem` yazılan slaytta gerçek bir `<a>` basılır; hedef `eylemHref`, verilmezse
+`/iletisim/`. **EN slaytlar da `/iletisim/`'e gider** — `/en/iletisim/` sayfası
+henüz yok; çeviri eklenince `EN_YAZI`'da `eylemHref` yazılmalı.
+
+Görünüm `global.css`'teki `.btn--dolu` ile aynı: hover'da koyulaşır, 1 px
+yükselir, gölge derinleşir; `:focus-visible`'da sarı çerçeve.
+
+Bu buton üç ayrı tuzağın kesiştiği yer — üçü de yaşandı:
+
+1. **Giriş animasyonu `transform` DEĞİL `translate` kullanmalı.** `yazi-gir`
+   `animation-fill-mode: both` ile bitiyor; `to { transform: none }` yazsaydı
+   animasyon bittikten sonra da `transform`u tutar ve hover'daki
+   `translateY(-1px)`i ezerdi. `translate` ayrı bir özellik, çakışmıyor.
+2. **Hover arka planı tema seçicisiyle aynı derinlikte yazılmalı.**
+   `.yazi--koyu .yazi__eylem` iki sınıflı (0,4,0); tek sınıflı bir
+   `.yazi__eylem:hover` (0,3,0) onu yenemez ve renk değişmez. Bu yüzden hover
+   arka planı `.yazi--koyu/.yazi--acik` önekiyle yazılıyor.
+3. **Ekran dışındaki slaytların butonları klavyeyle odaklanabiliyordu.**
+   Slaytlar yan yana durup `translateX` ile kaydırıldığı için pasif slaytlar
+   DOM'da ve odaklanabilir kalıyor. `ciz()` artık aktif olmayan slaytlara
+   `inert` veriyor (`src/pages/index.astro` ve `en/index.astro`).
 
 **Giriş animasyonu** kademeli: üstlik 0,18 sn → başlık 0,32 sn → gövde satırları
 0,48 sn'den itibaren 0,1 sn arayla → buton 0,66 sn. Her parça 0,72 sn'de aşağıdan
