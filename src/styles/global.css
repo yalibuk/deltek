@@ -114,8 +114,10 @@ a { color: inherit; text-decoration: none; }
    Buradaki eski kurallar bileşenle çakıştığı için kaldırıldı. */
 
 /* hero bilgi şeridi */
-.hero__ayrac { height: 46px; background: var(--beyaz); width: 100%; }
-.hero__bilgi { background: var(--beyaz); padding: clamp(2.4rem,5vw,4rem) 0; width: 100%; text-align: center; }
+/* Slider ile "DELTEK" şeridi arasındaki boşluk 110px'ti (46 + 64); blok
+   60px yukarı alındı: ayraç 46 -> 16, şeridin üst dolgusu 64 -> ~34. */
+.hero__ayrac { height: 16px; background: var(--beyaz); width: 100%; }
+.hero__bilgi { background: var(--beyaz); padding: clamp(1.2rem,2.4vw,2.1rem) 0 clamp(2.4rem,5vw,4rem); width: 100%; text-align: center; }
 .hero__bilgi .kap { max-width: 1280px; margin-inline: auto; padding-inline: clamp(1.15rem,4vw,2.75rem); }
 .rozet { display: inline-flex; align-items: center; gap: .6rem; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--mavi); border: 1px solid var(--cizgi); background: var(--mavi-050); border-radius: 999px; padding: .4rem .9rem; margin-bottom: 1.4rem; font-weight: 700; }
 .rozet i { width: 7px; height: 7px; background: var(--sari); border-radius: 50%; animation: nabiz 2.4s infinite; }
@@ -164,8 +166,12 @@ a { color: inherit; text-decoration: none; }
 .bit-cta { margin-top: 1.6rem; display: grid; gap: 1.3rem; align-items: center; background: var(--mavi); border-top: 3px solid var(--sari); border-radius: 8px; padding: clamp(1.6rem,4vw,2.6rem); }
 @media (min-width: 760px) { .bit-cta { grid-template-columns: 1fr auto; } }
 .bit-cta p { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.15rem,2.6vw,1.6rem); letter-spacing: -.01em; color: var(--beyaz); line-height: 1.3; text-wrap: balance; }
-.bit-cta__btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; background: var(--beyaz); color: var(--mavi); padding: 1.05rem 1.9rem; border-radius: 999px; font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem; white-space: nowrap; box-shadow: 0 12px 26px -12px rgb(var(--koyu-kirmizi-rgb) / .55); }
-.bit-cta__btn:hover { background: var(--sari); color: var(--metin); }
+/* ÖZGÜLLÜK: Buton bir tel: bağlantısı olduğu için aşağıdaki
+   `a.btn[href^="tel:"]` kuralı (0,2,1) sade `.bit-cta__btn`i (0,1,0)
+   eziyordu; buton bandın kendisiyle AYNI maviye boyanıp görünmez oluyordu.
+   Bu yüzden seçici `.bit-cta a.btn.bit-cta__btn` (0,4,1) olarak yazıldı. */
+.bit-cta a.btn.bit-cta__btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: .6rem; background: var(--beyaz); color: var(--mavi); border-color: transparent; padding: 1.05rem 1.9rem; border-radius: 999px; font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem; white-space: nowrap; box-shadow: 0 12px 26px -12px rgb(var(--blue-950-rgb) / .55); }
+.bit-cta a.btn.bit-cta__btn:hover { background: var(--sari); color: var(--blue-950); transform: translateY(-1px); }
 /* Tüm .btn telefon butonları paletteki kırmızı (mobil sabit çubuk hariç — o .btn değil) */
 a.btn[href^="tel:"] { background: var(--mavi); color: var(--beyaz); border-color: transparent; box-shadow: 0 8px 18px -8px rgb(var(--marka-mavi-rgb) / .6); }
 a.btn[href^="tel:"]:hover { background: var(--vurgu); color: var(--blue-950); transform: translateY(-1px); }
@@ -174,6 +180,43 @@ a.btn[href^="tel:"]:active { background: var(--vurgu) !important; color: var(--b
 section[id] { scroll-margin-top: 150px; }
 
 /* ─── ANA SAYFA: SAHADAN SON PROJELER ─────────── */
+/* ─── Ana sayfa: hizmet kartları ─────────────────────── */
+.hkart__izgara { display: grid; gap: 1.1rem; grid-template-columns: 1fr; margin-top: 1.8rem; }
+@media (min-width: 600px)  { .hkart__izgara { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1060px) { .hkart__izgara { grid-template-columns: repeat(4, 1fr); } }
+.hkart { position: relative; display: flex; flex-direction: column; gap: .5rem;
+  background: var(--beyaz); border: 1px solid var(--cizgi); border-radius: 14px;
+  padding: 1.5rem 1.4rem 3.1rem;
+  box-shadow: 0 18px 38px -30px rgb(var(--blue-800-rgb) / .45);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.hkart:hover { transform: translateY(-3px); border-color: var(--mavi);
+  box-shadow: 0 26px 48px -26px rgb(var(--blue-800-rgb) / .55); }
+.hkart__i { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+  color: var(--mavi); background: var(--mavi-050); border: 1px solid var(--cizgi); margin-bottom: .4rem; }
+.hkart:hover .hkart__i { background: var(--mavi); color: var(--beyaz); border-color: var(--mavi); }
+.hkart__ad { font-family: var(--f-dis); font-weight: 800; font-size: 1.05rem; line-height: 1.3;
+  letter-spacing: -.01em; color: var(--mavi-900); }
+.hkart:hover .hkart__ad { color: var(--mavi); }
+.hkart__kisa { font-family: var(--f-veri); font-weight: 700; font-size: .64rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--vurgu-metin); }
+.hkart__m { color: var(--mute); font-size: .9rem; line-height: 1.65; }
+.hkart__ok { position: absolute; left: 1.4rem; bottom: 1.3rem; font-family: var(--f-dis);
+  font-weight: 800; color: var(--mavi); transition: transform .2s ease; }
+.hkart:hover .hkart__ok { transform: translateX(4px); }
+
+/* ─── Ana sayfa: rakamlar şeridi ─────────────────────── */
+.rakam { background: var(--mavi-900); border-block: 3px solid var(--sari);
+  padding-block: clamp(2.2rem, 4.5vw, 3.4rem); }
+.rakam__izgara { display: grid; gap: 1.6rem 1.2rem; grid-template-columns: repeat(2, 1fr); text-align: center; }
+@media (min-width: 900px) { .rakam__izgara { grid-template-columns: repeat(4, 1fr); } }
+.rakam__k { display: flex; flex-direction: column; gap: .25rem; }
+.rakam__s { font-family: var(--f-dis); font-weight: 800; font-stretch: 75%;
+  font-size: clamp(1.9rem, 4.6vw, 2.9rem); line-height: 1; letter-spacing: -.01em; color: var(--beyaz); }
+.rakam__s em { font-style: normal; font-size: .42em; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--gold); margin-left: .35em; }
+.rakam__a { font-family: var(--f-veri); font-size: .74rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgb(var(--beyaz-rgb) / .8); }
+
 .sahadan__bas { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
 .sahadan__bas h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.7rem,4vw,2.7rem); letter-spacing: -.025em; color: var(--mavi-900); margin-top: .9rem; }
 .sahadan__tum { font-family: var(--f-dis); font-weight: 700; font-size: .92rem; color: var(--mavi); white-space: nowrap; padding-bottom: .3rem; }

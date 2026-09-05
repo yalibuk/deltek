@@ -4,7 +4,32 @@ import { SITE } from '../data/site';
 import HeroSlider from '../components/HeroSlider.astro';
 import { HERO_TR } from '../data/hero';
 import { yazilar } from '../data/icerik';
+import { ikonCiz } from '../data/ikon';
 
+
+// Ana sayfa hizmet kartları ve rakamlar — canlı deltek.com.tr ana
+// sayfasından taşındı (metinler kısaltıldı, rakamlar birebir).
+const HIZMETLER = [
+  { ikon: 'sondaj', ad: 'Yönlendirilebilir Yatay Sondaj', kisa: 'HDD',
+    href: '/yonlendirilebilir-yatay-sondaj/',
+    metin: 'Doğalgaz, içme suyu, kanalizasyon, elektrik ve fiber optik hatları yer altına alıyoruz. GPS güdümleme ve elektronik hedefleme sistemleri sayesinde güzergâh milimetrik hassasiyetle takip edilir.' },
+  { ikon: 'boru', ad: 'Boru Sürme / Çakma', kisa: 'Auger Boring',
+    href: '/boru-surmecakma/',
+    metin: 'Büyük çaplı çelik boruların yer altına alınmasında kullanılan yöntem. Boru itme, auger boring ve mikrotünel uygulamalarıyla maliyet ve zaman tasarrufu sağlar.' },
+  { ikon: 'yenileme', ad: 'Kazısız Boru Yenileme', kisa: 'Pipe Bursting',
+    href: '/boru-yenileme/',
+    metin: 'Eski hatların yerine kazı yapılmadan yeni borular döşüyoruz — üstelik isterseniz daha büyük çaplarda.' },
+  { ikon: 'akilli', ad: 'Akıllı Altyapı Danışmanlığı', kisa: 'Smart Undergrounding',
+    href: '/akilli-altyapi/',
+    metin: 'Altyapı planlamasında 20 yılı aşkın deneyim. İnovatif altyapı çözümleriyle hayal dahi edilemeyen projelere hayat geçiriyoruz.' },
+];
+
+const RAKAMLAR = [
+  { deger: '196.210', birim: 'metre', ad: 'Toplam delgi' },
+  { deger: '28.136',  birim: 'saat',  ad: 'Harcanan mesai' },
+  { deger: '324',     birim: '',      ad: 'Memnun iş ortağı' },
+  { deger: '1.275',   birim: 'ton',   ad: 'Makine parkı kapasitesi' },
+];
 
 // Son blog yazıları — en yeni 3 tanesi (varsa)
 const sonYazilar = (await yazilar('tr')).slice(0, 3);
@@ -42,6 +67,44 @@ const projeTarih = (d: any) =>
     </div>
   </div>
 </div>
+
+<!-- ── HİZMETLER ──────────────────────────── -->
+<section class="bolum kap" id="hizmetler">
+  <div class="sahadan__bas">
+    <div>
+      <span class="kunye">Hizmetler</span>
+      <h2>Dört yöntem, tek çatı altında.</h2>
+    </div>
+    <a class="sahadan__tum" href="/hizmetlerimiz/">Tüm hizmetler →</a>
+  </div>
+  <div class="hkart__izgara">
+    {HIZMETLER.map(h => (
+      <a class="hkart" href={h.href}>
+        <span class="hkart__i">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true" set:html={ikonCiz(h.ikon)} />
+        </span>
+        <h3 class="hkart__ad">{h.ad}</h3>
+        <span class="hkart__kisa">{h.kisa}</span>
+        <p class="hkart__m">{h.metin}</p>
+        <span class="hkart__ok" aria-hidden="true">→</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<!-- ── RAKAMLAR ───────────────────────────── -->
+<section class="rakam" aria-label="Deltek rakamlarla">
+  <div class="kap rakam__izgara">
+    {RAKAMLAR.map(r => (
+      <div class="rakam__k">
+        <span class="rakam__s">{r.deger}{r.birim && <em>{r.birim}</em>}</span>
+        <span class="rakam__a">{r.ad}</span>
+      </div>
+    ))}
+  </div>
+</section>
 
 {sonYazilar.length > 0 && (
 <section class="bolum kap" id="blog">

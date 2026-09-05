@@ -8,9 +8,10 @@ export const SITE = {
   telefonHam: "+908508883585",
   whatsapp: "",                            // numara girilirse WhatsApp butonu görünür
   eposta: "info@deltek.com.tr",
-  // Merkez ofis — footer ve JSON-LD bu ikisini kullanır
-  adres1: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
-  adres2: "34357 Beşiktaş - İstanbul",
+  // MERKEZ ofis (İzmir) — JSON-LD'deki kurumsal adres bu ikisini kullanır.
+  // İstanbul şubedir; ikisi birden footer'da OFISLER'den basılır.
+  adres1: "Maltepe Mah. 66. Sok. No: 35",
+  adres2: "35310 Güzelbahçe - İzmir",
   kanonikal: "https://www.deltek.com.tr",
 };
 
@@ -18,16 +19,16 @@ export const SITE = {
 // `merkez` yalnızca bir ofiste true olmalı; harita bölümü onu gösterir.
 export const OFISLER = [
   {
-    sehir: "İstanbul",
-    merkez: true,
-    adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
-    adres2: "34357 Beşiktaş - İstanbul",
-  },
-  {
     sehir: "İzmir",
-    merkez: false,
+    merkez: true,
     adres: "Maltepe Mah. 66. Sok. No: 35",
     adres2: "35310 Güzelbahçe - İzmir",
+  },
+  {
+    sehir: "İstanbul",
+    merkez: false,
+    adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
+    adres2: "34357 Beşiktaş - İstanbul",
   },
 ];
 

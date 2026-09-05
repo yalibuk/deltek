@@ -110,6 +110,39 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 - **Referans logoları** `duzen: logo-izgara` alanıyla yan yana diziliyor
   (markdown her görseli ayrı paragrafa koyduğu için).
 
+## Ofis yapısı
+
+**Merkez İZMİR, İstanbul ŞUBE.** Tek kaynak `src/data/site.ts`:
+
+* `OFISLER` dizisi — merkez olan başta, `merkez: true` yalnız birinde.
+  `/iletisim/` kartları ve footer bu diziden basılır; etiketler `i18n.ts`
+  (`merkez: 'Merkez ofis'`, `bolge: 'Şube'`).
+* `SITE.adres1/adres2` — **merkezin** adresi; JSON-LD `streetAddress` bunu
+  kullanır. `OFISLER`'deki merkezle aynı tutulmalı.
+
+> `/iletisim/` sayfasındaki gömülü Google haritası hâlâ **İstanbul**
+> koordinatlarını gösteriyor (`iletisim.md` → `harita`). Merkez İzmir olduğu
+> için haritanın da İzmir'e çevrilmesi gerekir; gömme adresi elle alınmalı
+> (Google Haritalar > Paylaş > Harita yerleştir). Şimdilik harita başlığı
+> tarafsızlaştırıldı ("Deltek ofis konumu").
+
+## Ana sayfa bölümleri
+
+Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar** →
+blog → hakkımızda → çağrı bandı.
+
+Hizmet kartları ve rakamlar `src/pages/index.astro` frontmatter'ında
+(`HIZMETLER`, `RAKAMLAR`) duruyor; ikisi de canlı deltek.com.tr ana
+sayfasından taşındı (rakamlar birebir, kart metinleri kısaltıldı). Kart
+ikonları `src/data/ikon.ts`'ten geliyor — aynı set `HizmetDuzen.astro`'da
+da kullanılıyor, bu yüzden bileşenden veri katmanına alındı.
+
+Slider ile "DELTEK" şeridi arasındaki boşluk bilerek dar: 110px'ti
+(`hero__ayrac` 46 + `hero__bilgi` üst dolgu 64), blok 60px yukarı alınacak
+şekilde 16 + ~34'e indirildi. Sliderin ÜSTÜNDE boşluk yok — `hero__ic`
+dolgusu sabit başlığın yüksekliği kadar (`--baslik-y`), azaltılırsa slider
+başlığın altına girer.
+
 ## Dizin yapısı
 
 ```
@@ -129,6 +162,7 @@ src/
     i18n.ts                 CEVIRI (tr/en) arayüz metinleri
   data/icerik.ts            yazilar() sayfalar() kokIcerik() cevirisiVarMi() menuSayfalari()
   data/gorselOlcu.ts        public/ altındaki görselin en/boy oranı (derleme sırasında)
+  data/ikon.ts              çizgi ikon seti (ana sayfa kartları + HizmetDuzen)
   content/blog/tr/<slug>.md      Türkçe blog yazıları
   content/blog/en/<slug>.md      İngilizce çevirileri (zorunlu değil)
   content/sayfalar/tr/<slug>.md  Türkçe sayfalar
@@ -478,7 +512,11 @@ kaynakta durduğu için bilerek böyle.
 > **Tuzak:** `global.css` içindeki `a.btn[href^="tel:"]` tüm telefon butonlarını
 > maviye boyar ve özgüllüğü (0,2,1) sıradan bir sınıf seçicisini yener. Lacivert
 > CTA şeridindeki sarı buton bu yüzden `.ilet__cta a.btn.ilet__ctaBtn` ile
-> yazılıyor. Koyu zemine telefon butonu koyan başka bir yer olursa aynı tuzak.
+> yazılıyor. **Ana sayfadaki `.bit-cta` şeridi aynı tuzağa düşmüştü:** buton
+> bandın kendisiyle birebir aynı maviye boyanıp görünmez olmuştu; seçici
+> `.bit-cta a.btn.bit-cta__btn` (0,4,1) yapıldı, buton beyaz zemin + mavi yazı
+> (6.05 kontrast). Koyu zemine telefon butonu koyan başka bir yer olursa aynı
+> tuzak — sınıf seçicisi TEK BAŞINA yetmez.
 
 ### Toplu dönüştürme
 
