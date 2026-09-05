@@ -1,5 +1,6 @@
 ---
-baslik: "Yönlendirilebilir Yatay Sondaj Makinesi"
+baslik: "HDD Makinesi"
+seoBaslik: "Yönlendirilebilir Yatay Sondaj Makinesi"
 ozet: "Yönlendirilebilir yatay sondaj makineleri çok değişik büyüklüklerde ve güçlerde olmasına karşın hepsinin üç temel fonksiyonu vardır: – İtme (Thrust) – Çekme (Pull) – Döndürme (Rotation) Her ne kada…"
 duzen: urun
 bannerSembol: "yonlendirilebilir-yatay-sondaj-makinesi"

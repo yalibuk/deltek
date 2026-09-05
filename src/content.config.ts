@@ -40,6 +40,11 @@ const sayfalar = defineCollection({
     // Boşsa normal makale akışı.
     duzen: z.enum(['logo-izgara', 'urun', 'iletisim', 'hizmet']).optional(),
 
+    // <title> ve OG başlığı. Sayfanın görünen başlığı (<h1>) kısaltıldığında
+    // arama motorlarına giden uzun, anahtar kelimeli başlık burada saklanır.
+    // Boşsa `baslik` kullanılır — yani normal sayfalarda hiç yazılmaz.
+    seoBaslik: z.string().optional(),
+
     // Başlık banner'ı: src/assets/banner/<deger>.jpg sembolünü sayfanın
     // <h1>'iyle yan yana basar (bkz. components/SayfaBanner.astro). Verilirse
     // `banner` alanı yok sayılır ve ayrı bir <h1> basılmaz — başlık banner'ın

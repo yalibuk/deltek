@@ -10,6 +10,12 @@
 # Boru Sürme, Boru Çakma sayfası kaldırıldı (Boru Sürme/Çakma ile aynı konu)
 /boru-surme-boru-cakma-auger-boring/   /boru-surmecakma/   301
 
+# Kaldırılan sayfalar -> aynı konuyu anlatan sayfa
+# "Yatay Sondaj Kazısız Yatay Delgi" HDD Nedir? ile aynı konuyu anlatıyordu.
+/yatay-sondaj-kazisiz-yatay-delgi/        /yonlendirilebilir-yatay-sondaj-nedir/   301
+# "Kazısız Altyapı ve Kazısız Teknolojiler" bölümün genel bakış sayfasıydı.
+/kazisiz-altyapi-ve-kazisiz-teknolojiler/ /yatay-sondaj-teknoloji/                 301
+
 # WordPress artıkları
 /feed/          /blog/   301
 /wp-login.php   /        301

@@ -38,7 +38,6 @@ export const TEKNOLOJI: TekDugum[] = [
         tamAd: 'HDD Yapım Metodu' },
       { slug: 'yonlendirilebilir-yatay-sondaj-makinesi', ad: 'Sondaj Makinesi',
         tamAd: 'HDD Makinesi' },
-      { slug: 'yatay-sondaj-kazisiz-yatay-delgi', ad: 'Yatay Sondaj Kazısız Yatay Delgi' },
       { slug: 'delgi-tijleri', ad: 'Delgi Tijleri' },
       { slug: 'yonlendirme-basligi', ad: 'Yönlendirme Başlığı' },
       { slug: 'genisletme-basligi', ad: 'Genişletme Başlığı' },
@@ -58,7 +57,6 @@ export const TEKNOLOJI: TekDugum[] = [
   { slug: 'akilli-altyapi', ad: 'Akıllı Altyapı' },
   { slug: 'auger-boring-nedir-modern-yatay-delgi-teknolojisi', ad: 'Auger Boring' },
   { slug: 'mikrotunel-nedir', ad: 'Mikrotünel Nedir' },
-  { slug: 'kazisiz-altyapi-ve-kazisiz-teknolojiler', ad: 'Kazısız Altyapı ve Kazısız Teknolojiler' },
 ];
 
 /** Teknoloji bölümünün kök sayfası — menüdeki "Teknoloji" bağlantısı. */

@@ -44,6 +44,8 @@ Bunun mimariye yansıması:
 | `/feed/` | `/blog/` | WordPress RSS |
 | `/wp-login.php` | `/` | WordPress artığı |
 | `/boru-surme-boru-cakma-auger-boring/` | `/boru-surmecakma/` | Aynı konuda iki sayfa vardı; menüde mükerrer görünüyordu |
+| `/yatay-sondaj-kazisiz-yatay-delgi/` | `/yonlendirilebilir-yatay-sondaj-nedir/` | Sayfa kaldırıldı; HDD Nedir? ile aynı konuyu anlatıyordu |
+| `/kazisiz-altyapi-ve-kazisiz-teknolojiler/` | `/yatay-sondaj-teknoloji/` | Sayfa kaldırıldı; bölümün genel bakış sayfasıydı |
 
 ## Taşınan içerik
 
@@ -65,6 +67,7 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
   `auger-boring-nedir-modern-yatay-delgi-teknolojisi`, `mikrotunel-nedir`,
   `boru-surme-boru-cakma-auger-boring`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`,
   `yatay-sondaj-kazisiz-yatay-delgi`
+  (son üçü sonradan **kaldırıldı**, 301'leri yukarıdaki tabloda)
 
 > `sitemap.xml` canlı sitede eksikti (`hizmetlerimiz` yok, yeni yazıların çoğu yok).
 > Envanter, sitemap + `/feed/` + menü taraması birleştirilerek çıkarıldı.
@@ -174,10 +177,10 @@ grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (12)
 **Normal akışta kalanlar ve nedeni:** `hakkimizda`, `hizmetlerimiz`,
 `medyalar` kurumsal sayfalar; `mikrotunel-nedir`, `auger-boring-nedir-…`,
 `yatay-delgi-nedir`, `yatay-sondaj`, `yonlendirilebilir-yatay-delgi`,
-`yonlendirilebilir-yatay-sondaj`, `yatay-sondaj-kazisiz-yatay-delgi`,
-`kazisiz-altyapi-ve-kazisiz-teknolojiler`, `boru-surme-boru-cakma-auger-boring`
-ise **hiç görseli olmayan**, başlık/liste yapılı uzun makaleler — ürün şablonuna
-sokulursa boş görsel kutuları çıkardı.
+`yonlendirilebilir-yatay-sondaj` ise **hiç görseli olmayan**, başlık/liste
+yapılı uzun makaleler — ürün şablonuna sokulursa boş görsel kutuları çıkardı.
+(`yatay-sondaj-kazisiz-yatay-delgi`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`
+ve `boru-surme-boru-cakma-auger-boring` bu gruptaydı, sonradan kaldırıldılar.)
 
 ### `duzen: urun`
 
@@ -217,6 +220,24 @@ Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
 | yalnız görsel | tam genişlik görsel |
 | yalnız metin | tam genişlik metin (boş görsel kutusu bırakmaz) |
 
+### `seoBaslik` — kısa `<h1>`, uzun `<title>`
+
+Üç HDD sayfasının görünen başlığı kısaltıldı (`HDD Nedir?`, `HDD Yapım Metodu`,
+`HDD Makinesi`) — banner'da üstteki küçük etiket zaten "YÖNLENDİRİLEBİLİR YATAY
+SONDAJ" yazdığı için uzun hâli tekrar oluyordu.
+
+Ama bu sayfaların `<title>`'ı asıl anahtar kelime; kısaltmak arama tarafında
+kayıp olurdu. Bu yüzden `baslik` (= `<h1>`) ile `<title>` ayrıldı:
+
+```yaml
+baslik: "HDD Nedir?"                                    # <h1>
+seoBaslik: "Yönlendirilebilir Yatay Sondaj Nedir?"      # <title>, og:title, JSON-LD
+```
+
+`seoBaslik` boşsa `baslik` kullanılır, yani diğer sayfalarda hiç yazılmaz.
+`src/data/teknoloji.ts`'teki `ad` (kart/dropdown) ve `tamAd` (yan menü)
+etiketleri bundan bağımsız, elle yazılıyor.
+
 ### Banner sembolleri
 
 Canlı sitede her teknoloji sayfasının tepesinde 1170×350'lik bir JPEG duruyordu:
@@ -241,10 +262,13 @@ bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.j
   adla başlıyorsa basılmaz** (ör. üst dal "Yönlendirilebilir Yatay Sondaj",
   başlık "Yönlendirilebilir Yatay Sondaj Yapım Metodu" → etiket yok). Aksi
   hâlde giderdiğimiz tekrarın aynısı olurdu.
-* Sembolün genişliği `banner yüksekliği × doğal en/boy` olarak hesaplanır
-  (`--sembol-oran`), üst sınır kutunun %47'si. Dört sembol bu sınıra takılıyor
-  ve `object-fit: cover` ile **soldan** kırpılıyor (en çok boru-yenileme,
-  145px — orası zaten boş zemin). 720px altında sembol başlığın altına iner.
+* Kutu yüksekliği `--sbn-y`: `clamp(147px, 15.8vw, 197px)`. Sembolün genişliği
+  `--sbn-y × doğal en/boy` (`--sembol-oran`), üst sınır kutunun %50'si. Yani
+  **sembol hiçbir zaman kırpılmaz**: yükseklik değişince o da aynı oranda
+  ölçeklenir, üst sınıra dayanan tek sembol (boru-yenileme, 1440px'te %49)
+  `object-fit: contain` ile küçülür. Arta kalan yerde banner'ın kendi gradyanı
+  göründüğü için letterbox fark edilmez. 720px altında sembol başlığın altına
+  iner. `cover` + %47 denenmişti; dört sembolü soldan kırpıyordu.
 * Kaynak görsellerin zemini x'ten bağımsız düşey bir gri gradyan: `#F5F5F5` →
   `#ECECEC`. Banner kutusu **birebir bu iki tonu** kullanmak zorunda
   (`--banner-ust` / `--banner-alt`), yoksa kesim yerinde dikiş görünür. Ölçüm:
@@ -703,9 +727,12 @@ Canlı siteden bilinçli olarak sapılanlar: gövde metni 13px yerine ~15px
 
 ## Bilinen tuzak
 
-`astro build`, içerik koleksiyonunu **`node_modules/.astro/data-store.json`**'dan
-okur. Bir markdown dosyasını silmek yeterli değil — dosya silindikten sonra da
-build çıktısında görünmeye devam eder. Yerelde silme sonrası:
+İçerik koleksiyonu **`<proje>/.astro/data-store.json`**'da önbelleklenir
+(`node_modules/.astro` DEĞİL — orayı silmek yetmez, bu tuzağa bir kez daha
+düşüldü). Bir markdown dosyasını silmek ya da frontmatter'a yeni bir alan
+eklemek tek başına yeterli değil: silinen sayfa çıktıda görünmeye, şemaya yeni
+eklenen alan ise `undefined` gelmeye devam eder. Dev sunucusu ile `astro build`
+farklı sonuç veriyorsa **ilk şüpheli budur**. Yerelde:
 
 ```bash
 rm -rf node_modules/.astro .astro dist && npm run build

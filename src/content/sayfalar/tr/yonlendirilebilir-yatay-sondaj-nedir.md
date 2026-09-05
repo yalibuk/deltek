@@ -1,5 +1,6 @@
 ---
-baslik: "Yönlendirilebilir Yatay Sondaj Nedir?"
+baslik: "HDD Nedir?"
+seoBaslik: "Yönlendirilebilir Yatay Sondaj Nedir?"
 ozet: "Tarihteki ilk yönlendirilebilir yatay sondaj uygulaması 1972 yılında Amerika Birleşik Devletleri’nin California eyaletinin Wotsonville yakınlarındaki Pajero nehrinin altından yapılmıştır. Yüksek ba…"
 duzen: urun
 bannerSembol: "yonlendirilebilir-yatay-sondaj-nedir"

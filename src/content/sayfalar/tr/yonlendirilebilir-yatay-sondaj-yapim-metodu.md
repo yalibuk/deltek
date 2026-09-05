@@ -1,5 +1,6 @@
 ---
-baslik: "Yönlendirilebilir Yatay Sondaj Yapım Metodu"
+baslik: "HDD Yapım Metodu"
+seoBaslik: "Yönlendirilebilir Yatay Sondaj Yapım Metodu"
 ozet: "YYS Makinası boru çekilecek güzergahın sonunda ya da başında konumlandırılır. Delici uç zeminin yapısına ve öngörülen yeraltı profiline göre yer yer iterek ve döndererek karşı tarafta yüzeye çıkarı…"
 duzen: urun
 bannerSembol: "yonlendirilebilir-yatay-sondaj-metodu"

@@ -63,6 +63,10 @@ function ytEmbed(url: string | undefined) {
 }
 const embed = ytEmbed(p.video);
 
+// <title>/OG başlığı: <h1> kısaltılan sayfalarda (ör. "HDD Nedir?") uzun,
+// anahtar kelimeli başlık `seoBaslik`te durur; diğerlerinde ikisi aynı.
+const belgeBaslik = p.seoBaslik || p.baslik;
+
 const sema = tur === 'yazi'
   ? {
       '@context': 'https://schema.org',
@@ -78,13 +82,13 @@ const sema = tur === 'yazi'
   : {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: p.baslik,
+      name: belgeBaslik,
       ...(p.ozet ? { description: p.ozet } : {}),
       url: `${SITE.kanonikal}/${slug}/`,
       inLanguage: 'tr',
     };
 ---
-<Layout title={`${p.baslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
+<Layout title={`${belgeBaslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
         image={p.kapak} sema={sema} cevirisiVar={cevirisiVar}>
 {p.duzen === 'iletisim' ? (
   <IletisimDuzen dil="tr" baslik={p.baslik} ozet={p.ozet} harita={p.harita}>

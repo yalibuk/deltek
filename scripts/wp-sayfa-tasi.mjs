@@ -19,6 +19,9 @@ const YOLLAR = [
   '/genisletme-basligi/', '/yer-belirleme/', '/uzerinden-takip/', '/manyetik-alan/',
   '/yatay-sondaj-camuru/', '/boru-surmecakma/', '/boru-yenileme/', '/akilli-altyapi/',
   '/auger-boring-nedir-modern-yatay-delgi-teknolojisi/', '/mikrotunel-nedir/',
+  // Bu üçü taşındı ama sonradan KALDIRILDI (mükerrer/genel bakış içerik;
+  // 301'leri public/_redirects'te). Liste taşımanın kaydı olarak duruyor;
+  // betik yeniden çalıştırılırsa üçü de geri gelir, tekrar silinmeli.
   '/boru-surme-boru-cakma-auger-boring/', '/kazisiz-altyapi-ve-kazisiz-teknolojiler/',
   '/yatay-sondaj-kazisiz-yatay-delgi/',
 ];
