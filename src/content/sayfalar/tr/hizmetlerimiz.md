@@ -20,7 +20,10 @@ hizmetler:
     kisaltma: "Pipe Bursting"
     ikon: yenileme
     href: "/boru-yenileme/"
-    metin: "Üzerinden gün içerisinde yüzbinlerce insanın ve aracın geçtiği bir kanalizasyon ya da içme suyu hattını yer üstündeki aktiviteleri durdurmadan ve hatta bunu çevreye hissettirmeden yenileyebiliyor; daha büyük çaplara büyütebiliyoruz."
+    # Hizmetlerimiz sayfasındaki metin "Ayrıca bütün bu işlemleri sadece" diye
+    # yarım kalıyordu ve arşivde de hiç tamamlanmamıştı; yerine canlı ana
+    # sayfadaki aynı hizmet kartının eksiksiz metni kullanıldı.
+    metin: "Her gün artan altyapı ihtiyaçları, şehir merkezlerinde çözülmesi en zor sorunlardan biri olarak karşımıza çıkıyor. Yoğun günlük şehir aktiviteleri yolları ve alanları uzun süre kapatmaya izin vermeyebiliyor. Teknolojik boru yenileme/patlatma sistemlerimizle kazı yapmadan, eski hattın yerine — üstelik isterseniz daha büyük çaplarda — yeni boruları döşüyoruz!"
   - baslik: "Akıllı Altyapı Danışmanlığı"
     kisaltma: "Smart Undergrounding"
     ikon: akilli

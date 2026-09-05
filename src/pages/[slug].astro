@@ -78,7 +78,7 @@ const sema = tur === 'yazi'
     <Content />
   </IletisimDuzen>
 ) : (
-<article class:list={['kap', 'yazi', yanAgac && 'yazi--yan']}>
+<article class:list={['kap', 'yazi', yanAgac && 'yazi--yan', p.duzen === 'hizmet' && 'yazi--genis']}>
   {yanAgac && (
     <aside class="yazi__yan">
       <TeknolojiYanMenu agac={yanAgac} aktif={slug} />
@@ -143,7 +143,9 @@ const sema = tur === 'yazi'
 /* Yan menülü düzen: sol sütunda ağaç, sağda sayfanın kendisi. `.yazi__ana`
    sarmalayıcı her sayfada var (yan menüsüz sayfalarda düz bir blok, görsel
    etkisi yok) — koşullu açılıp kapanan bir etiket yazmamak için. */
-.yazi--yan { max-width: 1180px; }
+/* Kart ızgaralı düzenler makale genişliğine (820px) sığmıyor: dört sütun
+   170px'e iniyor ve kartlar 1000px'i aşıyordu. */
+.yazi--yan, .yazi--genis { max-width: 1180px; }
 @media (min-width: 900px) {
   .yazi--yan { display: grid; grid-template-columns: 268px minmax(0, 1fr);
     gap: clamp(1.6rem, 3vw, 2.8rem); align-items: start; }

@@ -154,7 +154,10 @@ const ikonCiz = (a?: string) => (a && IKON[a]) || null;
 /* ─── Kart ızgarası ───────────────────────────────────── */
 .hzm__izgara { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
 @media (min-width: 600px) { .hzm__izgara--4 { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1040px) { .hzm__izgara--4 { grid-template-columns: repeat(4, 1fr); } }
+/* Dört sütuna ancak makale kendi azami genişliğine (1180px) ulaştığında
+   geçiliyor; daha dar ekranda sütunlar 226px'e iniyor ve kartlar iki katına
+   uzuyordu. */
+@media (min-width: 1180px) { .hzm__izgara--4 { grid-template-columns: repeat(4, 1fr); } }
 
 /* position: relative — .hkrt__bag::after kartın tamamını kaplayan bağlantı */
 .hkrt { position: relative; display: flex; flex-direction: column; gap: .55rem;

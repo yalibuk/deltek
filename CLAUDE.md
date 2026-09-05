@@ -82,11 +82,10 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
   - **"…Daha az kazı, daha çok teknoloji. Giriş/Çıkış"** yarım kalmıştı; tam
     hâli canlı **ana sayfanın** aynı hizmet kartında bulundu ve tamamlandı:
     *"Giriş/Çıkış noktasını verin, gerisini düşünmeyin!"*
-  - **"…Ayrıca bütün bu işlemleri sadece"** yarım; **kurtarılamadı**. Web
-    arşivinin 2016-04'ten bugüne tüm anlık görüntülerinde de aynı yerde
-    kesiliyor, sitenin başka hiçbir sayfasında devamı yok. Uydurmak yerine
-    cümle parçası atıldı — metin "…daha büyük çaplara büyütebiliyoruz."
-    diye bitiyor.
+  - **"…Ayrıca bütün bu işlemleri sadece"** yarım kalmıştı ve kurtarılamadı
+    (web arşivinin 2016-04'ten bugüne tüm anlık görüntülerinde aynı yerde
+    kesiliyor). Kartın metni, canlı **ana sayfadaki** aynı hizmetin eksiksiz
+    anlatımıyla değiştirildi — farklı bir metin ama şirketin kendi sözleri.
   - Yazım hataları: "he myurt içi" → "hem yurt içinde", "telekömünikasyon" →
     "telekomünikasyon", "yenilebiliyor" → "yenileyebiliyor".
 - **Hizmetlerimiz'deki teknik makale Teknoloji sayfasına taşındı.** Canlı
@@ -314,6 +313,11 @@ sessizce ikonsuz kalır**, build patlamaz.
 
 Kartlar `<article>`; başlık "gerilmiş bağlantı" (`::after` kartı kaplar), böylece
 kartın her yeri tıklanabilir ama iç içe `<a>` üretilmez.
+
+> **Genişlik:** kart ızgaralı sayfalar `.yazi`nin 820px'lik makale sütununa
+> sığmaz — dört sütun 170px'e iner ve kartlar 1000px'i aşar. `duzen: hizmet`
+> sayfaya `.yazi--genis` (1180px) verir; dört sütuna da ancak makale bu azami
+> genişliğe ulaştığında (≥1180px) geçilir.
 
 ### `duzen: iletisim`
 
