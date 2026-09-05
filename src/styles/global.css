@@ -62,13 +62,15 @@
   --vurgu-metin: var(--blue-600);
 
   /* ── Banner zemini ──────────────────────────────────────
-     Teknoloji banner'larındaki sembol görselleri (src/assets/banner/*.jpg)
-     kendi nötr gri gradyanlarını taşıyor: tepede #F5F5F5, dipte #ECECEC,
-     x ekseninde sabit. Kesim dikişi görünmesin diye banner kutusunun zemini
-     BU İKİ DEĞERİ birebir kullanmak zorunda; palet mavilerinden biri
-     seçilemez. Görseller değişirse bu iki ton da güncellenmeli. */
-  --banner-ust: #F5F5F5;
-  --banner-alt: #ECECEC;
+     Teknoloji banner'larındaki sembol görsellerinin (src/assets/banner/*.jpg)
+     zemini tam bu nötr gri. Kesim dikişi görünmesin diye banner kutusu da
+     BİREBİR bu değeri kullanmak zorunda; palet mavilerinden biri seçilemez.
+     Kaynak JPEG'lerde 245->236 düşey bir gradyan vardı ve kutuya da aynı
+     gradyan veriliyordu; yalnız görsel kutu kadar YÜKSEKKEN örtüşüyordu.
+     Mobilde sembol 150px'e inince kutu ~490px oluyor ve sembolün dikdörtgeni
+     açık bir leke olarak görünüyordu. Artık görsellerin zemini düzleştirilmiş
+     (scripts/banner-sembol-kes.mjs), zemin tek ton, dikiş her ölçekte sıfır. */
+  --banner-zemin: #F0F0F0;
 
   --f-dis:    'Open Sans', system-ui, -apple-system, sans-serif;
   --f-metin:  'Open Sans', system-ui, -apple-system, sans-serif;

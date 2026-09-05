@@ -44,12 +44,34 @@ const KESIM = {
   'yonlendirilebilir-yatay-sondaj-yonlendirme-basligi-1.jpg': 719,
 };
 
-// Kaynakların zemini x'ten bağımsız düşey gri gradyan. Banner kutusu da aynı
-// iki tonu kullanır (--banner-ust / --banner-alt), dikiş bu yüzden görünmüyor.
+// Kaynakların zemini x'ten bağımsız düşey gri gradyan: tepede 245, dipte 236.
+//
+// Bu gradyan SORUN çıkarıyordu: banner kutusuna aynı gradyan verildiğinde
+// yalnız görselin yüksekliği kutununkine eşitken örtüşüyor. Mobilde (sembol
+// başlığın altına inip 150px'e düşünce) kutu ~490px oluyor ve görselin kendi
+// gradyanı kutununkinden 3-4 ton sapıyordu — sembolün dikdörtgeni açık bir
+// leke olarak görünüyordu.
+//
+// Çözüm: gradyanı DÜZLEŞTİR. Her satıra (DUZ_ZEMIN - beklenen) farkı eklenir;
+// zemin her yerde tam DUZ_ZEMIN olur, görselin kendi pikselleri en çok ±5 ton
+// kayar (gözle ayırt edilemez). Banner kutusu da düz `--banner-zemin`
+// kullanır, böylece dikiş HER ölçekte sıfır.
 const ZEMIN_UST = 245, ZEMIN_ALT = 236;
+const DUZ_ZEMIN = 240;   // = --banner-zemin (#F0F0F0), 245..236 aralığının ortası
 // Beyaz kutu temizliği: TAM ve üzeri tamamen zemine boyanır, YUMUSAK–TAM arası
 // kademeli (nesnenin kenarındaki JPEG bulanıklığında halo kalmasın diye).
 const YUMUSAK = 246, TAM = 250;
+
+/** Düşey gradyanı siler: zemin her satırda tam DUZ_ZEMIN olur. */
+function gradyaniDuzle(data, W, H, C) {
+  for (let y = 0; y < H; y++) {
+    const fark = DUZ_ZEMIN - (ZEMIN_UST - (ZEMIN_UST - ZEMIN_ALT) * (y / (H - 1)));
+    for (let x = 0; x < W; x++) {
+      const i = (y * W + x) * C;
+      for (let c = 0; c < 3; c++) data[i + c] = Math.max(0, Math.min(255, Math.round(data[i + c] + fark)));
+    }
+  }
+}
 
 /**
  * Bazı clipart'ların kırpılmamış BEYAZ kutusu var; gradyan zeminin üstünde
@@ -58,7 +80,6 @@ const YUMUSAK = 246, TAM = 250;
  * kenara bağlı olmadığı için korunur.
  */
 function beyazKutuyuTemizle(data, W, H, C) {
-  const bekle = (y) => ZEMIN_UST - (ZEMIN_UST - ZEMIN_ALT) * (y / (H - 1));
   const parlak = (x, y) => {
     const i = (y * W + x) * C, r = data[i], g = data[i + 1], b = data[i + 2];
     return Math.min(r, g, b) >= YUMUSAK && Math.max(r, g, b) - Math.min(r, g, b) < 6;
@@ -85,8 +106,7 @@ function beyazKutuyuTemizle(data, W, H, C) {
     const i = k * C;
     const agirlik = Math.min(1, Math.max(0, (data[i] - YUMUSAK) / (TAM - YUMUSAK)));
     if (agirlik <= 0) continue;
-    const hedef = bekle(y);
-    for (let c = 0; c < 3; c++) data[i + c] = Math.round(data[i + c] * (1 - agirlik) + hedef * agirlik);
+    for (let c = 0; c < 3; c++) data[i + c] = Math.round(data[i + c] * (1 - agirlik) + DUZ_ZEMIN * agirlik);
     n++;
   }
   return n;
@@ -101,6 +121,7 @@ for (const [ad, sol] of Object.entries(KESIM)) {
     .extract({ left: sol, top: 0, width: 1170 - sol, height: 350 })
     .raw().toBuffer({ resolveWithObject: true });
 
+  gradyaniDuzle(data, info.width, info.height, info.channels);
   const boyanan = beyazKutuyuTemizle(data, info.width, info.height, info.channels);
   const { size } = await sharp(data, { raw: info })
     .jpeg({ quality: 88, mozjpeg: true }).toFile(cikti);

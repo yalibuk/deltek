@@ -269,10 +269,18 @@ bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.j
   `object-fit: contain` ile küçülür. Arta kalan yerde banner'ın kendi gradyanı
   göründüğü için letterbox fark edilmez. 720px altında sembol başlığın altına
   iner. `cover` + %47 denenmişti; dört sembolü soldan kırpıyordu.
-* Kaynak görsellerin zemini x'ten bağımsız düşey bir gri gradyan: `#F5F5F5` →
-  `#ECECEC`. Banner kutusu **birebir bu iki tonu** kullanmak zorunda
-  (`--banner-ust` / `--banner-alt`), yoksa kesim yerinde dikiş görünür. Ölçüm:
-  13 sayfanın hepsinde dikişteki en büyük fark 1/255.
+* Zemin **düz** tek ton (`#F0F0F0` = `--banner-zemin`); banner kutusu birebir
+  aynı değeri kullanır, yoksa kesim yerinde dikiş görünür. Ölçüm: mobil ve
+  masaüstünde dikişteki fark 0/255.
+* Kaynak JPEG'lerde zemin düz DEĞİLDİ: 350px boyunca `#F5F5F5` → `#ECECEC`
+  düşey gradyan. Kutuya da aynı gradyan verilmişti ve **yalnız görselin
+  yüksekliği kutununkine eşitken** örtüşüyordu. Mobilde sembol başlığın altına
+  inip 150px'e düşünce kutu ~236px oluyor, iki gradyan 3-4 ton ayrışıyor ve
+  sembolün dikdörtgeni açık bir leke olarak görünüyordu. Çözüm: kesme betiği
+  gradyanı düzleştiriyor — her satıra `(240 - beklenen)` farkı ekleniyor, zemin
+  her yerde tam 240 oluyor, görselin kendi pikselleri en çok ±5 ton kayıyor
+  (gözle ayırt edilemez). Maskeleme/taşma-doldurma gerekmiyor, her görselde
+  aynı şekilde çalışıyor.
 * İki clipart'ın (`kazisiz-akilli-altyapi`, `..-nedir`) kırpılmamış **beyaz
   kutusu** vardı; kenara bitişik beyaz bölge taşma-doldurma ile gradyana
   boyandı. Nesnenin içindeki parlamalar kenara bağlı olmadığı için korundu.
@@ -468,16 +476,15 @@ ihtiyaç olursa önce buraya eklenir.
 | `--blue-500` | `#0066FF` | | `--marka-mavi` | `#185AD6` |
 | `--gold` | `#FFD60A` | | `--sari-okul` | `#FFC300` |
 | `--koyu-kirmizi` | `#A4161A` | | `--beyaz` | `#FFFFFF` |
-| `--banner-ust` | `#F5F5F5` | | `--banner-alt` | `#ECECEC` |
+| `--banner-zemin` | `#F0F0F0` | | | |
 
 `--marka-mavi` **Deltek logo mavisi ve değişmez** — bağlantılar, butonlar,
 başlıklar bu rengi kullanmaya devam eder. `--beyaz` paletin parçası değil ama
 kaçınılmaz (sayfa zemini, mavi üstündeki yazı).
 
-`--banner-ust` / `--banner-alt` de paletten değil: `src/assets/banner/*.jpg`
-sembollerinin kendi zemini bu iki nötr gri, banner kutusu onlarla dikişsiz
-birleşmek zorunda. **Yalnız `SayfaBanner.astro` kullanır**; başka yerde bu
-griler yazılmaz.
+`--banner-zemin` de paletten değil: `src/assets/banner/*.jpg` sembollerinin
+zemini tam bu nötr gri, banner kutusu onlarla dikişsiz birleşmek zorunda.
+**Yalnız `SayfaBanner.astro` kullanır**; başka yerde bu gri yazılmaz.
 
 ### Anlamsal takma adlar
 

@@ -12,8 +12,10 @@
  * sembolü taşır, bkz. CLAUDE.md → "Banner sembolleri") ve yerine sayfanın
  * TEK <h1>'i konuldu. Böylece tekrar kalktı, başlık metin tabanlı kaldı.
  *
- * Kutunun zemini görselin kendi gradyanının aynısı (--banner-ust/--banner-alt);
- * kesim yerinde dikiş görünmemesi buna bağlı.
+ * Kutunun zemini sembol görselinin zemininin aynısı (--banner-zemin);
+ * kesim yerinde dikiş görünmemesi buna bağlı. Görsellerin zemini bilerek
+ * DÜZ: gradyanlı olduğunda yalnız görsel kutu kadar yüksekken örtüşüyordu,
+ * mobilde sembolün dikdörtgeni leke olarak çıkıyordu.
  *
  * Sembolün genişliği banner yüksekliği × kendi en/boy oranı olarak hesaplanır
  * (--sembol-oran). Böylece görsel hep doğal oranında durur ve yüklenmeden önce
@@ -61,7 +63,7 @@ const oran = (g.width / g.height).toFixed(4);
   display: flex;
   align-items: center;
   min-height: var(--sbn-y);
-  background: linear-gradient(180deg, var(--banner-ust), var(--banner-alt));
+  background: var(--banner-zemin);
   border: 1px solid var(--cizgi);
   border-radius: 10px;
   overflow: hidden;
