@@ -73,6 +73,13 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 - **WPBakery sekmeleri ve akordiyonları düz başlığa açıldı.** İçerik korundu ama
   sekme/akordiyon etkileşimi yok; bölümler art arda `###` başlıkla akıyor.
 - **Yan menü (sidebar) atıldı** — yeni sitede header menüsü karşılıyor.
+  *(Teknoloji bölümünde geri geldi: bkz. "Teknoloji bölümü".)*
+- **Hizmetlerimiz'deki teknik makale Teknoloji sayfasına taşındı.** Canlı
+  sitede "Yatay Sondaj Nedir? Kazısız Delgi Yöntemlerine Teknik Bir Bakış"
+  başlığından itibaren 6 bölüm `/hizmetlerimiz/` altındaydı; içeriği teknik
+  olduğu için `/yatay-sondaj-teknoloji/` sayfasına `bloklar` olarak alındı.
+  Metin birebir korundu (kelime kelime doğrulandı). `/hizmetlerimiz/` yalnızca
+  hizmet tanıtımı, referans ve uygulama alanlarıyla kaldı.
 - **İletişim formu (Contact Form 7) kaldırıldı.** Statik sitede çalışmıyor;
   form alanları düz metin olarak sızdığı için tamamen çıkarıldı. `/iletisim/`
   sayfası **form olmadan** yeniden tasarlandı (`duzen: iletisim`): telefon ve
@@ -215,7 +222,7 @@ korundu ("Auger Boring" ↔ "Auger Boring Nedir? Modern Yatay Delgi Teknolojisi"
 bırakmaktansa hatayı derlemede görmek daha iyi; sayfa yeniden adlandırılırsa
 burada yakalanır.
 
-Üç yerden görünür:
+Dört yerden görünür:
 
 1. **Header açılır menüsü** (`Layout.astro`) — her sayfada, iki sütun.
    `menu.map` içinde slug `TEKNOLOJI_KOK` ise düz bağlantı yerine `.dd` basılır.
@@ -225,6 +232,17 @@ burada yakalanır.
    her birinin altında: önceki/sonraki + komşu sayfa listesi + köke dönüş.
    Veri `teknolojiKomsulari()`; slug ağaçta değilse `null` döner ve bileşen
    hiç basılmaz, yani blog yazılarında ve diğer sayfalarda çıkmaz.
+4. **Yan menü** (`components/TeknolojiYanMenu.astro`) — kök sayfanın sol
+   sütununda akordiyon ağaç, canlı sitedeki sidebar widget'ın karşılığı.
+   `yanMenu: true` frontmatter alanıyla açılır; sayfa iki sütuna geçer
+   (`.yazi--yan`, ≥900px: 268px + kalan). Aktif sayfanın dalı **sunucuda**
+   açık gelir, JS beklenmez.
+
+   > **İki tuzak:** (a) `<details>` kullanılmadı — kapanırken içerik anında
+   > kaybolduğu için geçiş oynamıyor; onun yerine `grid-template-rows: 0fr→1fr`.
+   > (b) Kapalı dalın `visibility: hidden` kuralı `>` ile yazılmalı: torun
+   > seçici olursa açık bir dalın içindeki kapalı alt dal görünür sayılır ve
+   > oradaki bağlantılar Tab sırasında kalır.
 
 Gezinmedeki liste **düğümün alt sayfası varsa onları**, yoksa kardeşlerini
 gösterir: bir grup sayfasında (ör. `/yer-belirleme/`) okuyucu zaten o başlığın

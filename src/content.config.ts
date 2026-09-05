@@ -44,6 +44,8 @@ const sayfalar = defineCollection({
     // (bkz. components/TeknolojiHaritasi.astro). Yalnızca bölüm kök
     // sayfasında açılır.
     bolumHaritasi: z.boolean().optional(),
+    // Sol sütunda Teknoloji bölümünün ağaç menüsünü gösterir.
+    yanMenu: z.boolean().optional(),
 
     // ── duzen: 'iletisim' alanları ────────────────────────────
     // Google Haritalar gömme (embed) adresi; boşsa harita bölümü çıkmaz.

@@ -1,0 +1,186 @@
+---
+/**
+ * Teknoloji bölümünün yan menüsü — sayfanın sol üst köşesinde, canlı
+ * deltek.com.tr'deki akordiyon widget'ın karşılığı.
+ *
+ * Yapı `src/data/teknoloji.ts`. Alt sayfası olan düğümler açılıp kapanır;
+ * hem bir sayfa hem bir başlık oldukları için satır iki parçalı: metin
+ * bağlantı, sağdaki ok ayrı bir düğme. Böylece "başlığa tıklayınca sayfaya mı
+ * gitsin yoksa açılsın mı" ikilemi kalmıyor.
+ *
+ * Açılma/kapanma `grid-template-rows: 0fr → 1fr` ile animasyonlu. `<details>`
+ * kullanılmadı: kapanırken içerik anında kaybolduğu için geçiş oynamıyor.
+ * Kapalı daldaki bağlantılar `visibility: hidden` ile odak sırasından da
+ * çıkar — görünmeyen bağlantıya Tab ile gidilmesin.
+ *
+ * Aktif sayfanın dalı sunucuda açık gelir (JS beklemeden doğru durum).
+ */
+import type { TekKart } from '../data/icerik';
+import { TEKNOLOJI_KOK } from '../data/teknoloji';
+
+interface Props {
+  agac: TekKart[];
+  /** Şu an açık olan sayfanın slug'ı — vurgulanır, dalı açılır. */
+  aktif: string;
+  baslik?: string;
+}
+const { agac, aktif, baslik = 'Deltek Teknoloji' } = Astro.props;
+
+/** Bir dalın altında (herhangi bir derinlikte) aktif sayfa var mı? */
+const dalAktif = (d: TekKart): boolean =>
+  d.slug === aktif || d.alt.some(dalAktif);
+
+// Bölüm kök sayfasındayken hiçbir dal aktif olmaz ve ağaç tamamen kapalı
+// görünürdü. Orada üst seviye dallar açık gelir; iç içe olanlar (Yer
+// Belirleme) kapalı kalır ki liste bir ekrana sığsın.
+const koktenBakiliyor = aktif === TEKNOLOJI_KOK;
+const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliyor && ustSeviye);
+---
+<nav class="yanm" aria-label="Teknoloji bölümü">
+  <p class="yanm__bas">{baslik}</p>
+
+  <ul class="yanm__l">
+    <li>
+      <a class:list={['yanm__s', aktif === TEKNOLOJI_KOK && 'yanm__s--aktif']}
+         href={`/${TEKNOLOJI_KOK}/`}
+         aria-current={aktif === TEKNOLOJI_KOK ? 'page' : undefined}>
+        Teknolojiye genel bakış
+      </a>
+    </li>
+
+    {agac.map(d => (
+      <li class="yanm__dal">
+        {d.alt.length > 0 ? (
+          <>
+            <div class="yanm__satir">
+              <a class:list={['yanm__s', dalAktif(d) && 'yanm__s--dalAktif', d.slug === aktif && 'yanm__s--aktif']}
+                 href={`/${d.slug}/`}
+                 aria-current={d.slug === aktif ? 'page' : undefined}>{d.ad}</a>
+              <button class="yanm__ok" type="button"
+                      aria-expanded={acikMi(d, true) ? 'true' : 'false'}
+                      aria-label={`${d.ad} alt sayfaları`}>
+                <svg viewBox="0 0 10 10" width="11" height="11" aria-hidden="true">
+                  <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+            <div class="yanm__kutu" data-acik={acikMi(d, true) ? 'true' : 'false'}>
+              <div class="yanm__ic">
+                <ul class="yanm__l yanm__l--alt">
+                  {d.alt.map(k => (
+                    <li class="yanm__dal">
+                      {k.alt.length > 0 ? (
+                        <>
+                          <div class="yanm__satir">
+                            <a class:list={['yanm__s', dalAktif(k) && 'yanm__s--dalAktif', k.slug === aktif && 'yanm__s--aktif']}
+                               href={`/${k.slug}/`}
+                               aria-current={k.slug === aktif ? 'page' : undefined}>{k.ad}</a>
+                            <button class="yanm__ok" type="button"
+                                    aria-expanded={acikMi(k, false) ? 'true' : 'false'}
+                                    aria-label={`${k.ad} alt sayfaları`}>
+                              <svg viewBox="0 0 10 10" width="11" height="11" aria-hidden="true">
+                                <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                            </button>
+                          </div>
+                          <div class="yanm__kutu" data-acik={acikMi(k, false) ? 'true' : 'false'}>
+                            <div class="yanm__ic">
+                              <ul class="yanm__l yanm__l--alt">
+                                {k.alt.map(a => (
+                                  <li>
+                                    <a class:list={['yanm__s', a.slug === aktif && 'yanm__s--aktif']}
+                                       href={`/${a.slug}/`}
+                                       aria-current={a.slug === aktif ? 'page' : undefined}>{a.ad}</a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <a class:list={['yanm__s', k.slug === aktif && 'yanm__s--aktif']}
+                           href={`/${k.slug}/`}
+                           aria-current={k.slug === aktif ? 'page' : undefined}>{k.ad}</a>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </>
+        ) : (
+          <a class:list={['yanm__s', d.slug === aktif && 'yanm__s--aktif']}
+             href={`/${d.slug}/`}
+             aria-current={d.slug === aktif ? 'page' : undefined}>{d.ad}</a>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+.yanm { background: var(--beyaz); border: 1px solid var(--cizgi); border-radius: 14px;
+  border-top: 3px solid var(--mavi); overflow: hidden;
+  box-shadow: 0 20px 40px -34px rgb(var(--blue-800-rgb) / .5); }
+
+.yanm__bas { font-family: var(--f-dis); font-weight: 800; font-size: .74rem;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--mavi);
+  padding: .95rem 1.05rem .8rem; border-bottom: 1px solid var(--cizgi);
+  background: var(--mavi-050); }
+
+.yanm__l { list-style: none; margin: 0; padding: .35rem; }
+.yanm__l--alt { padding: 0 0 .2rem .7rem; margin-left: .35rem;
+  border-left: 1px solid var(--cizgi); }
+
+/* ─── Satır ───────────────────────────────────────────── */
+/* Bağlantı ve ok ayrı: satıra tıklamak sayfaya gider, ok dalı açar. */
+.yanm__satir { display: flex; align-items: stretch; gap: .15rem; }
+.yanm__satir .yanm__s { flex: 1; min-width: 0; }
+
+.yanm__s { display: block; padding: .5rem .7rem; border-radius: 8px;
+  font-family: var(--f-metin); font-size: .855rem; line-height: 1.35;
+  color: var(--metin); transition: background .15s, color .15s; }
+.yanm__s:hover { background: var(--mavi-050); color: var(--mavi); }
+.yanm__s--dalAktif { color: var(--mavi); font-weight: 600; }
+.yanm__s--aktif { background: var(--mavi); color: var(--beyaz); font-weight: 700; }
+.yanm__s--aktif:hover { background: var(--mavi); color: var(--beyaz); }
+
+.yanm__ok { flex: none; width: 30px; display: grid; place-items: center;
+  border: none; background: transparent; border-radius: 8px; cursor: pointer;
+  color: var(--mute); transition: background .15s, color .15s; }
+.yanm__ok:hover { background: var(--mavi-050); color: var(--mavi); }
+.yanm__ok svg { transition: transform .28s cubic-bezier(.22,.72,.24,1); }
+.yanm__ok[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+/* ─── Açılır kutu ─────────────────────────────────────── */
+/* 0fr → 1fr geçişi: yüksekliği bilmeden yumuşak açılma/kapanma. */
+.yanm__kutu { display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .28s cubic-bezier(.22,.72,.24,1); }
+.yanm__kutu[data-acik="true"] { grid-template-rows: 1fr; }
+/* `>` şart: torun seçici olsaydı, açık bir dalın içindeki KAPALI alt dal da
+   görünür sayılır ve oradaki bağlantılar Tab sırasında kalırdı. */
+.yanm__kutu > .yanm__ic { overflow: hidden; visibility: hidden;
+  transition: visibility 0s linear .28s; }
+.yanm__kutu[data-acik="true"] > .yanm__ic { visibility: visible; transition-delay: 0s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .yanm__kutu, .yanm__ic, .yanm__ok svg { transition: none; }
+}
+</style>
+
+<script>
+  // Ok düğmeleri dalları açıp kapatır. Sunucudan gelen durum zaten doğru
+  // (aktif sayfanın dalı açık), bu yalnızca etkileşimi ekler.
+  document.querySelectorAll<HTMLButtonElement>('.yanm__ok').forEach(dugme => {
+    dugme.addEventListener('click', () => {
+      const satir = dugme.closest('.yanm__satir');
+      const kutu = satir?.nextElementSibling as HTMLElement | null;
+      if (!kutu || !kutu.classList.contains('yanm__kutu')) return;
+      const acik = kutu.dataset.acik === 'true';
+      kutu.dataset.acik = acik ? 'false' : 'true';
+      dugme.setAttribute('aria-expanded', acik ? 'false' : 'true');
+    });
+  });
+</script>
