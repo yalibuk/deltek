@@ -66,7 +66,10 @@ const oran = (g.width / g.height).toFixed(4);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 24px 50px -32px rgb(var(--blue-800-rgb) / .5);
-  margin-block: clamp(1.2rem, 3vw, 2.2rem);
+  /* Üstte boşluk YOK: banner, yan menü kutusuyla aynı hizada başlamalı.
+     Önce iki tarafa da clamp(1.2rem,3vw,2.2rem) veriliyordu ve banner yan
+     menüden 35px aşağıda duruyordu. */
+  margin-block: 0 clamp(1.2rem, 3vw, 2.2rem);
 }
 .sbn__yazi {
   flex: 1 1 auto;

@@ -177,6 +177,11 @@ const sema = tur === 'yazi'
 .yazi__geri:hover { color: var(--mavi-900); }
 .yazi__bas { margin-bottom: 1.6rem; }
 .yazi__tarih { font-family: var(--f-veri); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mavi); }
+/* Tarih satırı yoksa h1'in üst boşluğu `.yazi__bas`tan taşıp (margin
+   collapse) başlığı yan menüden 8px aşağı kaydırıyordu. Banner'lı sayfalarla
+   aynı hizada başlasın diye ilk çocukken sıfırlanır; blog yazılarında h1 ilk
+   çocuk değil (üstünde tarih var), orada boşluk korunur. */
+.yazi__bas h1:first-child { margin-top: 0; }
 .yazi__bas h1 { font-family: var(--f-dis); font-weight: 900; font-size: clamp(1.7rem,4vw,2.6rem); letter-spacing: -.025em; line-height: 1.05; color: var(--mavi-900); margin-top: .5rem; text-wrap: balance; }
 .yazi__kapak { margin: 0 0 1.8rem; border-radius: 6px; overflow: hidden; border: 1px solid var(--cizgi); }
 .yazi__kapak img { width: 100%; height: auto; display: block; }

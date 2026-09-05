@@ -24,7 +24,7 @@ interface Props {
   aktif: string;
   baslik?: string;
 }
-const { agac, aktif, baslik = 'Deltek Teknoloji' } = Astro.props;
+const { agac, aktif, baslik = 'Deltek Kazısız Teknolojileri' } = Astro.props;
 
 /** Bir dalın altında (herhangi bir derinlikte) aktif sayfa var mı? */
 const dalAktif = (d: TekKart): boolean =>
@@ -125,8 +125,12 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
   border-top: 3px solid var(--mavi); overflow: hidden;
   box-shadow: 0 20px 40px -34px rgb(var(--blue-800-rgb) / .5); }
 
+/* Başlık ("DELTEK KAZISIZ TEKNOLOJİLERİ") 268px'lik sütunda tek satırda
+   kalmalı. Kullanılabilir genişlik 232px; .14em aralıkla metin 234px sürüyor
+   ve alt satıra taşıyordu. Punto korundu, yalnız harf aralığı .14em -> .08em
+   (214px, 18px pay). Başlık uzarsa önce burayı, sonra font-size'ı düşür. */
 .yanm__bas { font-family: var(--f-dis); font-weight: 800; font-size: .74rem;
-  letter-spacing: .14em; text-transform: uppercase; color: var(--mavi);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--mavi);
   padding: .95rem 1.05rem .8rem; border-bottom: 1px solid var(--cizgi);
   background: var(--mavi-050); }
 
