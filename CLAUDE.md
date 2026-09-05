@@ -77,11 +77,18 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
   *(Teknoloji bölümünde geri geldi: bkz. "Teknoloji bölümü".)*
 - **Hizmetlerimiz sayfası yeniden tasarlandı** (`duzen: hizmet`). İçerik canlı
   sayfayla aynı; düz makale akışı yerine kart ızgaralarına alındı. Metinde dört
-  bilinçli düzeltme var: canlı sayfada yarım kalan iki cümle parçası
-  ("… Daha az kazı, daha çok teknoloji. **Giriş/Çıkış**" ve "… Ayrıca bütün bu
-  işlemleri **sadece**") atıldı — uydurma bir son yazmak yerine; iki de yazım
-  hatası düzeltildi ("he myurt içi" → "hem yurt içinde", "telekömünikasyon" →
-  "telekomünikasyon", "yenilebiliyor" → "yenileyebiliyor").
+  bilinçli düzeltme var:
+
+  - **"…Daha az kazı, daha çok teknoloji. Giriş/Çıkış"** yarım kalmıştı; tam
+    hâli canlı **ana sayfanın** aynı hizmet kartında bulundu ve tamamlandı:
+    *"Giriş/Çıkış noktasını verin, gerisini düşünmeyin!"*
+  - **"…Ayrıca bütün bu işlemleri sadece"** yarım; **kurtarılamadı**. Web
+    arşivinin 2016-04'ten bugüne tüm anlık görüntülerinde de aynı yerde
+    kesiliyor, sitenin başka hiçbir sayfasında devamı yok. Uydurmak yerine
+    cümle parçası atıldı — metin "…daha büyük çaplara büyütebiliyoruz."
+    diye bitiyor.
+  - Yazım hataları: "he myurt içi" → "hem yurt içinde", "telekömünikasyon" →
+    "telekomünikasyon", "yenilebiliyor" → "yenileyebiliyor".
 - **Hizmetlerimiz'deki teknik makale Teknoloji sayfasına taşındı.** Canlı
   sitede "Yatay Sondaj Nedir? Kazısız Delgi Yöntemlerine Teknik Bir Bakış"
   başlığından itibaren 6 bölüm `/hizmetlerimiz/` altındaydı; içeriği teknik
