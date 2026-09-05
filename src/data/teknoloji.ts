@@ -32,11 +32,12 @@ export const TEKNOLOJI: TekDugum[] = [
     slug: 'yonlendirilebilir-yatay-sondaj',
     ad: 'Yönlendirilebilir Yatay Sondaj',
     alt: [
-      { slug: 'yonlendirilebilir-yatay-sondaj-nedir', ad: 'Yönlendirilebilir Yatay Sondaj Nedir?' },
+      { slug: 'yonlendirilebilir-yatay-sondaj-nedir', ad: 'Yönlendirilebilir Yatay Sondaj Nedir?',
+        tamAd: 'HDD Nedir?' },
       { slug: 'yonlendirilebilir-yatay-sondaj-yapim-metodu', ad: 'Yapım Metodu',
-        tamAd: 'Yönlendirilebilir Yatay Sondaj Yapım Metodu' },
+        tamAd: 'HDD Yapım Metodu' },
       { slug: 'yonlendirilebilir-yatay-sondaj-makinesi', ad: 'Sondaj Makinesi',
-        tamAd: 'Yönlendirilebilir Yatay Sondaj Makinesi' },
+        tamAd: 'HDD Makinesi' },
       { slug: 'yatay-sondaj-kazisiz-yatay-delgi', ad: 'Yatay Sondaj Kazısız Yatay Delgi' },
       { slug: 'delgi-tijleri', ad: 'Delgi Tijleri' },
       { slug: 'yonlendirme-basligi', ad: 'Yönlendirme Başlığı' },
@@ -56,7 +57,6 @@ export const TEKNOLOJI: TekDugum[] = [
   { slug: 'boru-yenileme', ad: 'Boru Yenileme' },
   { slug: 'akilli-altyapi', ad: 'Akıllı Altyapı' },
   { slug: 'auger-boring-nedir-modern-yatay-delgi-teknolojisi', ad: 'Auger Boring' },
-  { slug: 'boru-surme-boru-cakma-auger-boring', ad: 'Boru Sürme, Boru Çakma' },
   { slug: 'mikrotunel-nedir', ad: 'Mikrotünel Nedir' },
   { slug: 'kazisiz-altyapi-ve-kazisiz-teknolojiler', ad: 'Kazısız Altyapı ve Kazısız Teknolojiler' },
 ];

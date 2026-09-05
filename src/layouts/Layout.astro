@@ -459,6 +459,10 @@ a.tekdd__b:hover { background: var(--mavi-050); }
     const t = d.querySelector('.dd__t');
     if (!t) return;
     t.addEventListener('click', e => {
+      // Masaüstünde panel zaten hover ile açılıyor; tıklama başlığın kendi
+      // sayfasına gitmeli (Teknoloji → /yatay-sondaj-teknoloji/).
+      // Yalnızca hover'ın olmadığı dar ekranda tıklama paneli açar.
+      if (!window.matchMedia('(max-width: 979px)').matches) return;
       e.preventDefault();
       const open = d.classList.contains('acik');
       dds.forEach(x => x.classList.remove('acik'));

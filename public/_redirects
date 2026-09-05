@@ -7,6 +7,9 @@
 /2017/*   /blog/   301
 /2026/*   /blog/   301
 
+# Boru Sürme, Boru Çakma sayfası kaldırıldı (Boru Sürme/Çakma ile aynı konu)
+/boru-surme-boru-cakma-auger-boring/   /boru-surmecakma/   301
+
 # WordPress artıkları
 /feed/          /blog/   301
 /wp-login.php   /        301

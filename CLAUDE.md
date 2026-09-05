@@ -43,6 +43,7 @@ Bunun mimariye yansıması:
 | `/2017/*`, `/2026/*` | `/blog/` | WordPress tarih arşivleri yeni sitede yok |
 | `/feed/` | `/blog/` | WordPress RSS |
 | `/wp-login.php` | `/` | WordPress artığı |
+| `/boru-surme-boru-cakma-auger-boring/` | `/boru-surmecakma/` | Aynı konuda iki sayfa vardı; menüde mükerrer görünüyordu |
 
 ## Taşınan içerik
 
@@ -202,7 +203,8 @@ Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
 
 ### Teknoloji bölümü
 
-19 teknoloji/yöntem sayfası taşınmıştı ama **14'ü yetimdi**: adresi çalışıyordu,
+19 teknoloji/yöntem sayfası taşınmıştı ama **14'ü yetimdi** (biri sonradan
+mükerrer olduğu için kaldırıldı, bkz. 301 tablosu — bölüm bugün 18 sayfa): adresi çalışıyordu,
 hiçbir yerden bağlantı verilmiyordu. Bilgi mimarisi canlı sitedeki "Teknoloji"
 açılır menüsünden alınıp `src/data/teknoloji.ts` içine ağaç olarak yazıldı.
 
@@ -210,7 +212,7 @@ açılır menüsünden alınıp `src/data/teknoloji.ts` içine ağaç olarak yaz
 Teknoloji (/yatay-sondaj-teknoloji/)
 ├── Yönlendirilebilir Yatay Sondaj      9 alt sayfa
 │   └── Yer Belirleme                   → Üzerinden Takip, Manyetik Alan
-└── Diğer kazısız yöntemler             7 sayfa
+└── Diğer kazısız yöntemler             6 sayfa
 ```
 
 Ağaçta **yalnızca slug ve kısa menü adı** durur; başlık, özet ve görsel
@@ -239,9 +241,16 @@ Dört yerden görünür:
    sütuna geçer (`.yazi--yan`, ≥900px: 268px + kalan; altında tek sütun).
    Aktif sayfa vurgulanır ve dalı **sunucuda** açık gelir, JS beklenmez.
 
-   Yan menü etiketleri `tamAd` alanından gelir — orada yer bol olduğu için
-   canlı sitedeki tam adlar ("Yönlendirilebilir Yatay Sondaj Yapım Metodu");
-   header açılır menüsü ve kartlar dar olduğu için kısa `ad`ı kullanır.
+   Yan menü etiketleri `tamAd` alanından gelir, header açılır menüsü ve
+   kartlar kısa `ad`ı kullanır. Üç HDD sayfası yan menüde **"HDD Nedir?" /
+   "HDD Yapım Metodu" / "HDD Makinesi"** olarak kısaltıldı: üst üste üç kez
+   "Yönlendirilebilir Yatay Sondaj" okumak listeyi taratıyordu. `HDD` sitenin
+   kendi kısaltması (içerikte 51 kez, `YYS` 17 kez geçiyor).
+
+   **SEO etkisi kabul edilebilir:** sayfaların `<title>`, `<h1>`, URL ve gövde
+   metni değişmedi — sıralamayı taşıyan sinyaller onlar. Değişen yalnızca iç
+   bağlantı çapası; uzun anahtar kelime "Yönlendirilebilir Yatay Sondaj" üst
+   dal etiketinde ve kart ızgarasında hâlâ duruyor.
 
    > **İki tuzak:** (a) `<details>` kullanılmadı — kapanırken içerik anında
    > kaybolduğu için geçiş oynamıyor; onun yerine `grid-template-rows: 0fr→1fr`.
