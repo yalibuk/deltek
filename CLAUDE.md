@@ -680,6 +680,41 @@ sayfa eklenip çıkarılırsa) `.ust__gez` yeniden ölçülüp `--kusak` güncel
 document.querySelector('.ust__gez').getBoundingClientRect().width + 280
 ```
 
+### Katman PNG'lerinde pişmiş beyaz kalıntı (kontrol edildi, sorun değil)
+
+Banner sembollerindeki "pişmiş zemin" kusurunun hero'da da olup olmadığı
+kontrol edildi. **Yapısal olarak olamaz**: banner'daki hata, görselin içine
+pişmiş gradyanın kutunun CSS zeminiyle yalnız yükseklikler eşitken örtüşmesiydi.
+Hero katmanları fotoğrafın üstünde duran saydam PNG'ler — eşleşmesi gereken bir
+CSS rengi yok — ve katmanlar da arka plan da aynı container-query ölçeğiyle
+(`--olcek`, `object-fit: cover`) birlikte büyüyüp küçülüyor.
+
+Yine de katmanlar siyah zemine bindirilince birkaçında **kırpılmamış beyaz
+kalıntı** çıktı: `bit.png` (borunun altında geniş bir beyaz bant),
+`machinery1.png` (makinenin altında beyaz altlık), `toprak.png`,
+`button-hand.png` ve `deltek-robot-engineer.png` (küçük beyaz lekeler).
+
+Bunlar yerinde **görünmüyor**, çünkü oturdukları alanda arka planın ortalama
+parlaklığı 239-255 (neredeyse beyaz):
+
+| Katman | Slayt | Arka plan parlaklığı (ort / en koyu) |
+| --- | --- | --- |
+| `bit.png` | 4 | 254 / 220 |
+| `toprak.png` | 4 | 251 / 202 |
+| `machinery1.png` | 5 | 246 / 223 |
+| `button-hand.png` | 8 | 239 / 198 |
+| `deltek-robot-engineer.png` | 6 | 250 / 193 |
+
+**Risk:** bu slaytlardan birinin arka planı KOYU bir fotoğrafla değiştirilirse
+kalıntılar anında görünür hâle gelir. Arka plan değiştirilecekse katmanı önce
+siyah zemine bindirip bak (`scripts/` altında betik yok, tek seferlik yapıldı).
+Koyu zeminli tek katman `video-screen.png` (slayt 3, arka plan ort 128) ve onda
+matlaşma yok — zaten opak bir tablet.
+
+Ayrıca: slayt 6'daki `yatay-sondaj-pipe-analysis.png` beyaz zeminde **gri bir
+dikdörtgen** olarak duruyor. Bu kesim artığı değil, grafiğin kendi 3B çizim
+zemini — yani görselin tasarımı. Değiştirilecekse yeni bir grafik gerekir.
+
 ### Slayt butonları
 
 `eylem` yazılan slaytta gerçek bir `<a>` basılır; hedef `eylemHref`, verilmezse
