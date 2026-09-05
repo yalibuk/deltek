@@ -24,7 +24,7 @@ interface Props {
   aktif: string;
   baslik?: string;
 }
-const { agac, aktif, baslik = 'Deltek Kazısız Teknolojileri' } = Astro.props;
+const { agac, aktif, baslik = 'Deltek Kazısız Teknolojiler' } = Astro.props;
 
 /** Bir dalın altında (herhangi bir derinlikte) aktif sayfa var mı? */
 const dalAktif = (d: TekKart): boolean =>
@@ -40,14 +40,6 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
   <p class="yanm__bas">{baslik}</p>
 
   <ul class="yanm__l">
-    <li>
-      <a class:list={['yanm__s', aktif === TEKNOLOJI_KOK && 'yanm__s--aktif']}
-         href={`/${TEKNOLOJI_KOK}/`}
-         aria-current={aktif === TEKNOLOJI_KOK ? 'page' : undefined}>
-        Teknolojiye genel bakış
-      </a>
-    </li>
-
     {agac.map(d => (
       <li class="yanm__dal">
         {d.alt.length > 0 ? (

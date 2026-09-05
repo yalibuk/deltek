@@ -128,6 +128,7 @@ src/
     site.ts                 SITE sabitleri, KATEGORILER, KBAR
     i18n.ts                 CEVIRI (tr/en) arayüz metinleri
   data/icerik.ts            yazilar() sayfalar() kokIcerik() cevirisiVarMi() menuSayfalari()
+  data/gorselOlcu.ts        public/ altındaki görselin en/boy oranı (derleme sırasında)
   content/blog/tr/<slug>.md      Türkçe blog yazıları
   content/blog/en/<slug>.md      İngilizce çevirileri (zorunlu değil)
   content/sayfalar/tr/<slug>.md  Türkçe sayfalar
@@ -213,6 +214,15 @@ tablolar:                 # teknik veri tabloları (yatay kaydırmalı)
 galeri:
   - { foto: /images/uploads/y.jpg, alt: "..." }
 ```
+
+**Çok geniş görseller tam genişliğe yayılır.** Bir bloğun görselinin en/boy
+oranı **>= 2** ise iki sütunlu düzen kullanılmaz: görsel içerik sütununun
+tamamını kaplar, metin altına tek sütun olarak (`max-width: 70ch`) yazılır.
+Teknoloji sayfalarındaki 35 görselin 30'u 1170x350 (oran 3,34); yarım
+genişlikte 270x81'lik bir şeride dönüşüyor, etrafı bomboş kalıyordu.
+Oran derlemede dosya başlığından okunur (`src/data/gorselOlcu.ts` — JPEG/PNG/
+GIF; sharp'a bağımlı DEĞİL, çünkü sharp bu projede doğrudan bağımlılık değil).
+Okunamayan biçimlerde oran `null` gelir ve blok eski düzeninde kalır.
 
 Blok metninde desteklenen tek biçimlendirme **`**kalın**`**, `[bağlantı](/yol/)`
 ve satır başındaki **`### Alt başlık`**tır. `### ` ile başlayan bir paragraf
@@ -336,6 +346,12 @@ Ağaçta **yalnızca slug ve kısa menü adı** durur; başlık, özet ve görse
 sayfanın kendi frontmatter'ından okunur (`teknolojiAgaci()` — `src/data/icerik.ts`).
 Menü etiketleri sayfa başlıklarıyla aynı olmak zorunda değil; canlı sitedeki
 kısa adlar korundu.
+
+Yan menüde artık **"Teknolojiye genel bakış" maddesi yok**; bölüm kök sayfası
+(`/yatay-sondaj-teknoloji/`) yalnızca banner + kart haritasından ibaret bir
+dizin. Oraya header'daki "Teknoloji" bağlantısından ve sayfa altındaki
+"Teknoloji bölümünün tamamı" bağlantısından gidilir. Kök sayfanın makale
+içeriği `yonlendirilebilir-yatay-sondaj` sayfasının başına taşındı.
 
 **Ağaçtaki bir slug'ın sayfası yoksa build durur.** Menüde 404'e giden bağlantı
 bırakmaktansa hatayı derlemede görmek daha iyi; sayfa yeniden adlandırılırsa
@@ -803,6 +819,16 @@ rm -rf .astro node_modules/.astro node_modules/.vite && npm run build
 ```
 
 ve dev sunucusunu yeniden başlat. Bu oturumda üç kez gerekti.
+
+**Headless Chrome dar ekranı YALAN söylüyor.** Bu makinede
+`chrome --headless --window-size=390,H --screenshot` çıktısı 390 piksel
+genişliğinde ama sayfa **~474 piksellik bir yerleşim genişliğinde** render
+edilip 390'a KIRPILIYOR. Sonuç: içerik sağ kenardan taşıyormuş gibi görünür,
+metin kelime ortasından kesilir. 480 ve 500 için istenen genişlikler de aynı
+sağ kenarı (x=456) veriyor — yani ~474'ün altındaki her istek kırpma demek.
+Dar ekran doğrulaması için **Browser panelini** kullan (gerçek viewport
+öykünmesi yapar) ve kararı DOM ölçümüne dayandır:
+`document.documentElement.scrollWidth` ile taşan elemanları listele.
 
 ## Yapılacaklar
 

@@ -28,6 +28,8 @@
  *
  * Markdown gövdesi varsa bannerdan hemen sonra, blokların önünde çıkar.
  */
+import { gorselOrani } from '../data/gorselOlcu';
+
 interface Props {
   banner?: string;
   bannerAlt?: string;
@@ -36,6 +38,21 @@ interface Props {
   galeri?: any[];
 }
 const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Astro.props;
+
+/**
+ * ÇOK GENİŞ görseller (en/boy >= 2) iki sütunlu blokta yarım genişliğe
+ * oturunca bir şeride dönüşüyor, etrafı bomboş kalıyordu — teknoloji
+ * sayfalarındaki görsellerin çoğu 1170x350, yani oran 3,34. Bunlar tam
+ * genişliğe yayılır, metin altına tek sütun olarak yazılır.
+ * Ölçü derlemede dosya başlığından okunur (src/data/gorselOlcu.ts);
+ * okunamazsa oran null gelir ve blok eski düzeninde kalır.
+ */
+const GENIS_ESIK = 2;
+const oranlar = new Map<string, number | null>();
+for (const b of bloklar) {
+  if (b.gorsel && !oranlar.has(b.gorsel)) oranlar.set(b.gorsel, await gorselOrani(b.gorsel));
+}
+const genisMi = (src: string) => (oranlar.get(src) ?? 0) >= GENIS_ESIK;
 
 /** Blok metnindeki markdown kalın ve bağlantı işaretlerini HTML'e çevirir. */
 const zengin = (s: string) => s
@@ -59,7 +76,22 @@ const ALT_BASLIK = "### ";
   <slot />
 
   {bloklar.map((b: any, i: number) => (
-    b.gorsel && b.metin ? (
+    b.gorsel && b.metin && genisMi(b.gorsel) ? (
+      /* çok geniş görsel: tam genişlik, metin altında tek sütun */
+      <div class="hsg-yatay">
+        {b.baslik && <h3>{b.baslik}</h3>}
+        <div class="hsg-yatay__g">
+          <img src={b.gorsel} alt={b.baslik || ''} loading="lazy" />
+        </div>
+        <div class="hsg-yatay__t">
+          {paragraflar(b.metin).map((par: string) => (
+            par.startsWith(ALT_BASLIK)
+              ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+              : <p set:html={zengin(par)} />
+          ))}
+        </div>
+      </div>
+    ) : b.gorsel && b.metin ? (
       /* görsel + metin: iki sütun, dönüşümlü hizalanır */
       <div class={`hsg-ikili${(b.ters ?? i % 2 === 1) ? ' hsg-ikili--ters' : ''}`}>
         <div class="hsg-ikili__g">
@@ -148,14 +180,27 @@ const ALT_BASLIK = "### ";
 .hsg-ikili__t :global(strong), .hsg-metin :global(strong) { color: var(--mavi-900); font-weight: 700; }
 .hsg-ikili__t :global(a), .hsg-metin :global(a) { color: var(--mavi); text-decoration: underline; }
 
+/* çok geniş görsel bloğu: görsel tam genişlik, metin altında tek sütun */
+.hsg-yatay { display: flex; flex-direction: column; gap: 1.3rem; }
+.hsg-yatay h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem);
+  letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.hsg-yatay__g { border-radius: 10px; overflow: hidden; border: 1px solid var(--cizgi);
+  background: var(--kagit-2); box-shadow: 0 20px 44px -30px rgb(var(--blue-800-rgb) / .5); }
+.hsg-yatay__g img { width: 100%; height: auto; display: block; }
+.hsg-yatay__t { max-width: 70ch; }
+.hsg-yatay__t p { color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
+.hsg-yatay__t p + p { margin-top: .9rem; }
+.hsg-yatay__t :global(strong) { color: var(--mavi-900); font-weight: 700; }
+.hsg-yatay__t :global(a) { color: var(--mavi); text-decoration: underline; }
+
 /* yalnız metin bloğu — tam genişlik, boş görsel kutusu bırakmaz */
 .hsg-metin { max-width: 70ch; }
 .hsg-metin h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-metin p { margin-top: .9rem; color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
 /* `### ` ile yazilan alt basliklar */
-.hsg-ikili__t h4, .hsg-metin h4 { font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem;
+.hsg-ikili__t h4, .hsg-metin h4, .hsg-yatay__t h4 { font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem;
   letter-spacing: -.01em; color: var(--mavi-900); margin-top: 1.7rem; }
-.hsg-ikili__t h4 + p, .hsg-metin h4 + p { margin-top: .45rem; }
+.hsg-ikili__t h4 + p, .hsg-metin h4 + p, .hsg-yatay__t h4 + p { margin-top: .45rem; }
 
 /* görsel boyut yardımcıları */
 .hsg-ceyrek { width: 25% !important; margin: 0 auto; }
