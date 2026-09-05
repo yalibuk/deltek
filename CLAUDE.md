@@ -118,6 +118,7 @@ src/
     en/[slug].astro         EN yazı VE sayfa → /en/<slug>/
     en/blog/index.astro     EN blog listesi → /en/blog/
     admin/index.astro       Sveltia CMS paneli (noindex)
+  assets/banner/*.jpg       başlık banner'larının sembolleri (bkz. "Banner sembolleri")
   data/
     site.ts                 SITE sabitleri, KATEGORILER, KBAR
     i18n.ts                 CEVIRI (tr/en) arayüz metinleri
@@ -186,7 +187,8 @@ maskot blokları ve kategoriye özel dallanmalar çıkarıldı. Bileşen:
 
 ```yaml
 duzen: urun
-banner: /images/uploads/ust-gorsel.jpg
+bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # başlık banner'ı (aşağı bak)
+banner: /images/uploads/ust-gorsel.jpg                # düz üst görsel — sembol varsa yok sayılır
 bloklar:                  # görsel + metin, dönüşümlü hizalanır
   - baslik: "Malzeme ve üretim"
     metin: |-
@@ -214,6 +216,56 @@ Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
 | görsel + metin | iki sütun, sırayla sağa/sola dönüşümlü |
 | yalnız görsel | tam genişlik görsel |
 | yalnız metin | tam genişlik metin (boş görsel kutusu bırakmaz) |
+
+### Banner sembolleri
+
+Canlı sitede her teknoloji sayfasının tepesinde 1170×350'lik bir JPEG duruyordu:
+**solda sayfa başlığı büyük harflerle görselin İÇİNE gömülü**, sağda konuyu
+anlatan sembol. Bunun hemen üstünde bir de gerçek `<h1>` vardı — yani aynı
+başlık sayfada iki kez görünüyordu, biri de arama motorlarının okuyamadığı
+piksel hâlinde.
+
+Çözüm: başlık metni görselden atıldı, geriye yalnız sembol bırakıldı; başlık
+sayfanın **tek `<h1>`'i** olarak sembolün yanına, HTML metni olarak basılıyor.
+Bileşen: `src/components/SayfaBanner.astro`.
+
+```yaml
+bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.jpg
+```
+
+* Dosya `src/assets/banner/` altında; `astro:assets` ile içe aktarılır, böylece
+  `width`/`height` derlemede bilinir (CLS yok) ve **dosya yoksa build durur**.
+* `bannerSembol` verilen sayfada ayrı bir `<h1>` satırı ve `UrunDuzen`'in düz
+  `banner` görseli **basılmaz** — ikisi de aynı başlığı tekrar ederdi.
+* Başlığın üstündeki küçük etiket ağaçtaki üst dalın adıdır; **başlık zaten o
+  adla başlıyorsa basılmaz** (ör. üst dal "Yönlendirilebilir Yatay Sondaj",
+  başlık "Yönlendirilebilir Yatay Sondaj Yapım Metodu" → etiket yok). Aksi
+  hâlde giderdiğimiz tekrarın aynısı olurdu.
+* Sembolün genişliği `banner yüksekliği × doğal en/boy` olarak hesaplanır
+  (`--sembol-oran`), üst sınır kutunun %47'si. Dört sembol bu sınıra takılıyor
+  ve `object-fit: cover` ile **soldan** kırpılıyor (en çok boru-yenileme,
+  145px — orası zaten boş zemin). 720px altında sembol başlığın altına iner.
+* Kaynak görsellerin zemini x'ten bağımsız düşey bir gri gradyan: `#F5F5F5` →
+  `#ECECEC`. Banner kutusu **birebir bu iki tonu** kullanmak zorunda
+  (`--banner-ust` / `--banner-alt`), yoksa kesim yerinde dikiş görünür. Ölçüm:
+  13 sayfanın hepsinde dikişteki en büyük fark 1/255.
+* İki clipart'ın (`kazisiz-akilli-altyapi`, `..-nedir`) kırpılmamış **beyaz
+  kutusu** vardı; kenara bitişik beyaz bölge taşma-doldurma ile gradyana
+  boyandı. Nesnenin içindeki parlamalar kenara bağlı olmadığı için korundu.
+  Eşik 246 — zemin gradyanının tepesi 245, yani **normal zemine ve fotoğrafların
+  açık gri bölgelerine hiç dokunulmuyor**. 241 denendi: sonuç piksel piksel aynı
+  ama 13 görselin hepsinde zemini de yeniden boyuyordu, gereksiz risk.
+* Semboller `scripts/banner-sembol-kes.mjs` ile üretildi; kesim x'leri ve beyaz
+  kutu temizliği orada. Çıktılar depoda duruyor, betik yalnız kaynak görsel
+  değişirse yeniden çalıştırılır.
+* Metinli **orijinal JPEG'ler silinmedi** (`public/images/uploads/2015/08/…-1.jpg`).
+  Artık hiçbir sayfadan bağlanmıyorlar ama WordPress medya URL'leri korunsun
+  diye duruyorlar.
+* Yeni sembol eklenirse `public/admin/config.yml`'deki `bannerSembol` select
+  listesine de yazılmalı.
+
+`yatay-sondaj-teknoloji` (bölüm kök sayfası) bunun dışında: onun banner'ında
+gömülü başlık yok, o yüzden eskisi gibi `banner` + ayrı `<h1>` kullanıyor.
 
 ### Teknoloji bölümü
 
@@ -382,10 +434,16 @@ ihtiyaç olursa önce buraya eklenir.
 | `--blue-500` | `#0066FF` | | `--marka-mavi` | `#185AD6` |
 | `--gold` | `#FFD60A` | | `--sari-okul` | `#FFC300` |
 | `--koyu-kirmizi` | `#A4161A` | | `--beyaz` | `#FFFFFF` |
+| `--banner-ust` | `#F5F5F5` | | `--banner-alt` | `#ECECEC` |
 
 `--marka-mavi` **Deltek logo mavisi ve değişmez** — bağlantılar, butonlar,
 başlıklar bu rengi kullanmaya devam eder. `--beyaz` paletin parçası değil ama
 kaçınılmaz (sayfa zemini, mavi üstündeki yazı).
+
+`--banner-ust` / `--banner-alt` de paletten değil: `src/assets/banner/*.jpg`
+sembollerinin kendi zemini bu iki nötr gri, banner kutusu onlarla dikişsiz
+birleşmek zorunda. **Yalnız `SayfaBanner.astro` kullanır**; başka yerde bu
+griler yazılmaz.
 
 ### Anlamsal takma adlar
 
@@ -685,6 +743,13 @@ görselleri `public/images/uploads/` altına WP yol yapısını koruyarak indiri
 ```bash
 curl -s https://www.deltek.com.tr/feed/ -o feed.xml   # betikle aynı klasöre
 node scripts/wp-tasi.mjs .
+```
+
+`scripts/banner-sembol-kes.mjs` teknoloji banner'larından başlığı atıp sembolü
+`src/assets/banner/` altına yazar (bkz. "Banner sembolleri"):
+
+```bash
+node scripts/banner-sembol-kes.mjs
 ```
 
 `wp-sayfa-tasi.mjs` sayfanın `#contentWrapper` içeriğini alır, `.page-title` ve

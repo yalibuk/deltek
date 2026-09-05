@@ -2,7 +2,7 @@
 baslik: "Manyetik Alan"
 ozet: "Bu yöntemde delgi başlığı, üzerinden takip edilmeye ihtiyaç duymaz. Bunun yerine tijlerin içerisinden geçen bir kablo hattı yönlendirme başlığı içerisindeki sonda ile iletişimi sağlar. Sondanın iht…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-manyetik-yonlendirme-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-manyetik-yonlendirme"
 bloklar:
   - metin: |-
       Bu yöntemde delgi başlığı, üzerinden takip edilmeye ihtiyaç duymaz. Bunun yerine tijlerin içerisinden geçen bir kablo hattı yönlendirme başlığı içerisindeki sonda ile iletişimi sağlar. Sondanın ihtiyaç duyduğu elektrik enerjisi ise yine bu kablo hattı ile sağlanır. Dolayısıyla delgi başlığı toprak altındayken pilinin bitmesi sözkonusu değildir. Bu da uzun mesafeli geçişlerde çok büyük avantaj sağlar.

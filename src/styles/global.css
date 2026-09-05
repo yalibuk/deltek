@@ -61,6 +61,15 @@
      zeminde okunmuyor. Açık zeminde vurgulu metin bu tonu kullanır (6.82). */
   --vurgu-metin: var(--blue-600);
 
+  /* ── Banner zemini ──────────────────────────────────────
+     Teknoloji banner'larındaki sembol görselleri (src/assets/banner/*.jpg)
+     kendi nötr gri gradyanlarını taşıyor: tepede #F5F5F5, dipte #ECECEC,
+     x ekseninde sabit. Kesim dikişi görünmesin diye banner kutusunun zemini
+     BU İKİ DEĞERİ birebir kullanmak zorunda; palet mavilerinden biri
+     seçilemez. Görseller değişirse bu iki ton da güncellenmeli. */
+  --banner-ust: #F5F5F5;
+  --banner-alt: #ECECEC;
+
   --f-dis:    'Open Sans', system-ui, -apple-system, sans-serif;
   --f-metin:  'Open Sans', system-ui, -apple-system, sans-serif;
   --f-veri:   'Open Sans', system-ui, -apple-system, sans-serif;

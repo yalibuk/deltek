@@ -7,7 +7,9 @@
  * kalan yapı tamamen frontmatter'dan sürülür, yani CMS'ten düzenlenebilir:
  *
  *   duzen: urun
- *   banner: /images/uploads/ust-gorsel.jpg
+ *   banner: /images/uploads/ust-gorsel.jpg   # düz üst görsel
+ *   # Sayfa `bannerSembol` kullanıyorsa (bkz. SayfaBanner.astro) `banner`
+ *   # buraya hiç geçilmez: başlık banner'ı zaten sayfanın tepesinde durur.
  *   bloklar:                # görsel + metin, dönüşümlü hizalanır
  *     - baslik: "..."       (isteğe bağlı)
  *       metin: "..."

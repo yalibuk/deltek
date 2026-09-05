@@ -2,7 +2,7 @@
 baslik: "Yönlendirilebilir Yatay Sondaj Yapım Metodu"
 ozet: "YYS Makinası boru çekilecek güzergahın sonunda ya da başında konumlandırılır. Delici uç zeminin yapısına ve öngörülen yeraltı profiline göre yer yer iterek ve döndererek karşı tarafta yüzeye çıkarı…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-metodu-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-metodu"
 bloklar:
   - metin: |-
       YYS Makinası boru çekilecek güzergahın sonunda ya da başında konumlandırılır. Delici uç zeminin yapısına ve öngörülen yeraltı profiline göre yer yer iterek ve döndererek karşı tarafta yüzeye çıkarılır.

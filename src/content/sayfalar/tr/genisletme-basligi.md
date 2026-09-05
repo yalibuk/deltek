@@ -2,7 +2,7 @@
 baslik: "Genişletme Başlığı"
 ozet: "Pilot deliğin tamamlanmasının ardından yönlendirilebilir uç çıkarılır ve yerine kılavuzlanmış deliği borunun geçebileceği çapa kadar büyütecek olan genişletme başlığı (reamer) takılır. Genişletme b…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-genisletme-basligi-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-genisletme-basligi"
 bloklar:
   - metin: |-
       Pilot deliğin tamamlanmasının ardından yönlendirilebilir uç çıkarılır ve yerine kılavuzlanmış deliği borunun geçebileceği çapa kadar büyütecek olan genişletme başlığı (reamer) takılır.

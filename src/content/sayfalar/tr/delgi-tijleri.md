@@ -2,7 +2,7 @@
 baslik: "Delgi Tijleri"
 ozet: "Delgiyi yapacak olan tijler, kullanılan makinanın büyüklüğüne göre değişik çaplarda (2cm – 20cm) ve uzunluklarda (3m – 9m) olabilir. Aslında tijler içleri boş, uçlarına birbirine eklenmesi için kon…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-delgi-tijleri-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-delgi-tijleri"
 bloklar:
   - metin: |-
       Delgiyi yapacak olan tijler, kullanılan makinanın büyüklüğüne göre değişik çaplarda (2cm – 20cm) ve uzunluklarda (3m – 9m) olabilir. Aslında tijler içleri boş, uçlarına birbirine eklenmesi için konik diş açılmış birer borudur. Pompalacak sondaj çamuru tijlerin içerisindeki bu boşluktan deliğe basılır.

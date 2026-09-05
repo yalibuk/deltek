@@ -2,7 +2,7 @@
 baslik: "Yönlendirilebilir Yatay Sondaj Nedir?"
 ozet: "Tarihteki ilk yönlendirilebilir yatay sondaj uygulaması 1972 yılında Amerika Birleşik Devletleri’nin California eyaletinin Wotsonville yakınlarındaki Pajero nehrinin altından yapılmıştır. Yüksek ba…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-nedir-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-nedir"
 bloklar:
   - metin: |-
       Tarihteki ilk yönlendirilebilir yatay sondaj uygulaması 1972 yılında Amerika Birleşik Devletleri’nin California eyaletinin Wotsonville yakınlarındaki Pajero nehrinin altından yapılmıştır. Yüksek basınçlı gaz taşıyacak olan 180 metre uzunluğundaki bu geçiş Martin Cherrington’ın liderliğinde Titan Contractor (1965) firması tarafından gerçekleştirilmiştir.

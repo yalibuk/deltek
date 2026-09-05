@@ -2,7 +2,7 @@
 baslik: "Üzerinden Takip"
 ozet: "YYS’de en çok kullanılan yer bulma sistemidir. İsminden de anlaşılacağı gibi topograf yeraltından giden delici ucu yüzeyden yürüyerek takip eder. Yönlendirme başlığının içerisindeki sonda (transmit…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-uzerinden-takip-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-uzerinden-takip"
 bloklar:
   - metin: |-
       YYS’de en çok kullanılan yer bulma sistemidir.

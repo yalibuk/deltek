@@ -2,7 +2,7 @@
 baslik: "Yatay Sondaj Yer Belirleme Sistemleri"
 ozet: "Yeraltında pilot deliği açacak olan uca yön vermek ve dizayn edilen delik profilini oluşturabilmek YYS’nin en kritik aşamasıdır. Lokasyon sistemi projeye özel olarak seçilmelidir. Başarılı bir geçi…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-yer-belirleme-sistemleri-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-yer-belirleme-sistemleri"
 bloklar:
   - metin: |-
       Yeraltında pilot deliği açacak olan uca yön vermek ve dizayn edilen delik profilini oluşturabilmek YYS’nin en kritik aşamasıdır. Lokasyon sistemi projeye özel olarak seçilmelidir. Başarılı bir geçiş projesi için seçilebilecek en iyi yol benzer geçişlerde kanıtlanabilir tecrübeye sahip bir ekiple çalışmaktır.

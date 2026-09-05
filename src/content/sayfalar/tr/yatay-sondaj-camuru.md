@@ -2,7 +2,7 @@
 baslik: "Yatay Sondaj Çamuru"
 ozet: "Çamur, sondajın hayat sıvısıdır. Yani projenin başarıyla sonuçlandırılabilmesindeki en kritik etkenlerden biridir. Dolayısıyla sondaj çamurunun hazırlanması başlı başına bir bilimdir. Ana bileşenle…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-camuru-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-camuru"
 bloklar:
   - metin: |-
       Çamur, sondajın hayat sıvısıdır. Yani projenin başarıyla sonuçlandırılabilmesindeki en kritik etkenlerden biridir. Dolayısıyla sondaj çamurunun hazırlanması başlı başına bir bilimdir. Ana bileşenleri su ve bentonittir. Ancak istenilen çamur özelliklerinin sağlanabilmesi için sık sık polimerler de kullanılır.

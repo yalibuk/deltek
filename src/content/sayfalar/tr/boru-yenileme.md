@@ -2,7 +2,7 @@
 baslik: "Kazısız Boru Yenileme"
 ozet: "Artan şehirleşme ve buna paralel olarak ilerleyen altyapı ihtiyacı modern kentlerin en büyük sorunlarından bir haline geldi. Özellikle trafiğin ve yer üstü aktivitelerinin yoğun olduğu bölgelerde a…"
 duzen: urun
-banner: "/images/uploads/2015/08/kazisiz-boru-yenileme-1.jpg"
+bannerSembol: "kazisiz-boru-yenileme"
 bloklar:
   - metin: |-
       Artan şehirleşme ve buna paralel olarak ilerleyen altyapı ihtiyacı modern kentlerin en büyük sorunlarından bir haline geldi. Özellikle trafiğin ve yer üstü aktivitelerinin yoğun olduğu bölgelerde altyapı borularında yapılacak tamirat, yenileme, kapasite artışı… vs. gibi işlemler çoğu kez hayatı aksatmamak maksadıyla geçici çözümlerle rehabile edilir. Bu ihtiyaca cevap veren kazısız bir alternatif olan kazısız boru yenileme (patlatma olarak da bilinir) tabiri yerindeyse mucizevi çözümler sunuyor.

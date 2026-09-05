@@ -2,7 +2,7 @@
 baslik: "Yönlendirme Başlığı"
 ozet: "Bu ekipman da kullanılan makina ve uygulanan projeye göre çeşitlilik gösterse de en çok kullanılanı “ördek ağızlı (duckbill)” başlıktır. İçerisinde elektronik konumlandırma için kullanılan sonda (t…"
 duzen: urun
-banner: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-yonlendirme-basligi-1.jpg"
+bannerSembol: "yonlendirilebilir-yatay-sondaj-yonlendirme-basligi"
 bloklar:
   - metin: |-
       Bu ekipman da kullanılan makina ve uygulanan projeye göre çeşitlilik gösterse de en çok kullanılanı “ördek ağızlı (duckbill)” başlıktır. İçerisinde elektronik konumlandırma için kullanılan sonda (transmitter)’nın yerleştirileceği bir boşluk (sonde house) bulunur. Sondaj çamuru bu bölümün etrafından kanallardan ilerleyerek çıkış deliği (nozzle)’ne ulaşır. Bu sayede elektronik aksam hidrolik olarak soğutulmuş da olur.

@@ -95,6 +95,30 @@ collections:
       - { name: harita, label: "Google Haritalar gömme adresi (embed src)", widget: string, required: false, i18n: duplicate }
 
       # ── Aşağıdakiler yalnızca "Ürün / teknoloji şablonu" seçiliyken kullanılır ──
+      # Başlık banner'ı: sayfa başlığı METİN olarak sembolün yanına basılır
+      # (bkz. src/components/SayfaBanner.astro). Seçilirse aşağıdaki "Üst
+      # banner görseli" yok sayılır ve ayrı bir başlık satırı basılmaz.
+      # Semboller kodda durur (src/assets/banner/*.jpg); yenisi eklenirse bu
+      # listeye de yazılmalı, yoksa build durur.
+      - name: bannerSembol
+        label: "Başlık banner'ı sembolü"
+        widget: select
+        required: false
+        i18n: duplicate
+        options:
+          - "kazisiz-akilli-altyapi"
+          - "kazisiz-boru-yenileme"
+          - "yatay-sondaj-boru-surme-cakma"
+          - "yonlendirilebilir-yatay-sondaj-camuru"
+          - "yonlendirilebilir-yatay-sondaj-delgi-tijleri"
+          - "yonlendirilebilir-yatay-sondaj-genisletme-basligi"
+          - "yonlendirilebilir-yatay-sondaj-makinesi"
+          - "yonlendirilebilir-yatay-sondaj-manyetik-yonlendirme"
+          - "yonlendirilebilir-yatay-sondaj-metodu"
+          - "yonlendirilebilir-yatay-sondaj-nedir"
+          - "yonlendirilebilir-yatay-sondaj-uzerinden-takip"
+          - "yonlendirilebilir-yatay-sondaj-yer-belirleme-sistemleri"
+          - "yonlendirilebilir-yatay-sondaj-yonlendirme-basligi"
       - { name: banner, label: "Üst banner görseli", widget: image, required: false, i18n: duplicate }
       - name: bloklar
         label: "Görsel + metin blokları"

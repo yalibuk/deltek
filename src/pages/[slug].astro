@@ -10,6 +10,7 @@ import TeknolojiHaritasi from '../components/TeknolojiHaritasi.astro';
 import { teknolojiAgaci, teknolojiKomsulari } from '../data/icerik';
 import TeknolojiGezinme from '../components/TeknolojiGezinme.astro';
 import TeknolojiYanMenu from '../components/TeknolojiYanMenu.astro';
+import SayfaBanner from '../components/SayfaBanner.astro';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -39,6 +40,18 @@ const agacta = tur === 'sayfa' ? await teknolojiKomsulari('tr', slug) : null;
 const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci('tr')) : null;
 // Kök sayfada altta gezinme yok — orada zaten haritanın tamamı var.
 const tekKomsu = p.bolumHaritasi ? null : agacta;
+
+// Başlık banner'ı: başlık görselin içine gömülü değil, gerçek <h1> olarak
+// sembolün yanında durur. Varsa sayfanın ayrı <h1>'i ve UrunDuzen'in düz
+// banner'ı basılmaz — ikisi de aynı başlığı tekrar ederdi.
+const bannerSembol: string | undefined = p.bannerSembol;
+// Etiket: ağaçtaki üst dalın adı; kök seviyedeki sayfalarda bölümün adı.
+// Başlık zaten üst dalın adıyla başlıyorsa (ör. üst dal "Yönlendirilebilir
+// Yatay Sondaj", başlık "Yönlendirilebilir Yatay Sondaj Yapım Metodu")
+// etiket basılmaz — giderdiğimiz tekrarın aynısı olurdu.
+const tr = (m: string) => m.toLocaleLowerCase('tr-TR');
+const ustAd = bannerSembol && agacta ? (agacta.ust?.ad ?? 'Teknoloji') : undefined;
+const bannerEtiket = ustAd && !tr(p.baslik).includes(tr(ustAd)) ? ustAd : undefined;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
@@ -87,10 +100,14 @@ const sema = tur === 'yazi'
   <div class="yazi__ana">
   {tur === 'yazi' && <a class="yazi__geri" href="/blog/">← Blog</a>}
 
-  <header class="yazi__bas">
-    {tur === 'yazi' && p.tarih && <span class="yazi__tarih">{tarihFmt(p.tarih)}</span>}
-    <h1>{p.baslik}</h1>
-  </header>
+  {bannerSembol ? (
+    <SayfaBanner baslik={p.baslik} sembol={bannerSembol} etiket={bannerEtiket} />
+  ) : (
+    <header class="yazi__bas">
+      {tur === 'yazi' && p.tarih && <span class="yazi__tarih">{tarihFmt(p.tarih)}</span>}
+      <h1>{p.baslik}</h1>
+    </header>
+  )}
 
   {p.kapak && (
     <figure class="yazi__kapak"><img src={p.kapak} alt={p.baslik} /></figure>
@@ -109,7 +126,7 @@ const sema = tur === 'yazi'
       <div class="yazi__icerik"><Content /></div>
     </HizmetDuzen>
   ) : p.duzen === 'urun' ? (
-    <UrunDuzen banner={p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
+    <UrunDuzen banner={bannerSembol ? undefined : p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
                tablolar={p.tablolar} galeri={p.galeri}>
       <div class="yazi__icerik"><Content /></div>
     </UrunDuzen>

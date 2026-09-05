@@ -2,7 +2,7 @@
 baslik: "Boru Sürme/Çakma"
 ozet: "Auger boring kazısız geçiş alternatiflerinden biridir. Diğer sistemlerle karşılaştırıldığında diğerlerinden çok daha eski bir yöntemdir. Temel olarak giriş ve çıkış noktalarına açılan çukurların bi…"
 duzen: urun
-banner: "/images/uploads/2015/08/yatay-sondaj-boru-surme-cakma-1.jpg"
+bannerSembol: "yatay-sondaj-boru-surme-cakma"
 bloklar:
   - metin: |-
       Auger boring kazısız geçiş alternatiflerinden biridir. Diğer sistemlerle karşılaştırıldığında diğerlerinden çok daha eski bir yöntemdir. Temel olarak giriş ve çıkış noktalarına açılan çukurların birinden diğerine yatay olarak açılan tünelin içine boru itilmesiyle uygulanır. Bu yöntemle genellikle çelik ve beton borular kullanılsa da beton borular kullanımını her geçen gün yitirmekte ve yerini çelik borulara bırakmaktadır.

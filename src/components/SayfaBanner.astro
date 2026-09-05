@@ -1,0 +1,116 @@
+---
+/**
+ * Teknoloji sayfalarının başlık banner'ı.
+ *
+ * Canlı deltek.com.tr'de her teknoloji sayfasının tepesinde 1170x350'lik bir
+ * JPEG duruyordu: SOLDA sayfa başlığı büyük harflerle GÖRSELİN İÇİNE gömülü,
+ * SAĞDA konuyu anlatan sembol. Bunun hemen üstünde bir de gerçek <h1> vardı,
+ * yani aynı başlık sayfada iki kez görünüyordu — biri de arama motorlarının
+ * okuyamadığı piksel hâlinde.
+ *
+ * Burada başlık metni görselden çıkarıldı (`src/assets/banner/*.jpg` yalnız
+ * sembolü taşır, bkz. CLAUDE.md → "Banner sembolleri") ve yerine sayfanın
+ * TEK <h1>'i konuldu. Böylece tekrar kalktı, başlık metin tabanlı kaldı.
+ *
+ * Kutunun zemini görselin kendi gradyanının aynısı (--banner-ust/--banner-alt);
+ * kesim yerinde dikiş görünmemesi buna bağlı.
+ *
+ * Sembolün genişliği banner yüksekliği × kendi en/boy oranı olarak hesaplanır
+ * (--sembol-oran). Böylece görsel hep doğal oranında durur ve yüklenmeden önce
+ * de yeri ayrıldığı için sayfa oynamaz (CLS yok).
+ */
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  baslik: string;
+  /** src/assets/banner/<sembol>.jpg — uzantısız dosya adı. */
+  sembol: string;
+  /** Başlığın üstündeki küçük bölüm etiketi (ör. üst dal adı). */
+  etiket?: string;
+}
+const { baslik, sembol, etiket } = Astro.props;
+
+const gorseller = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/banner/*.jpg', { eager: true });
+const kayit = gorseller[`/src/assets/banner/${sembol}.jpg`];
+if (!kayit) {
+  throw new Error(
+    `Banner sembolü yok: src/assets/banner/${sembol}.jpg — ` +
+    `frontmatter'daki "bannerSembol" değeri dosya adıyla eşleşmeli.`);
+}
+const g = kayit.default;
+const oran = (g.width / g.height).toFixed(4);
+---
+<div class="sbn" style={`--sembol-oran:${oran}`}>
+  <div class="sbn__yazi">
+    {etiket && <span class="sbn__etiket">{etiket}</span>}
+    <h1 class="sbn__baslik">{baslik}</h1>
+  </div>
+  {/* Başlık artık gerçek metin olduğu için sembol dekoratif: alt="" */}
+  <img class="sbn__g" src={g.src} width={g.width} height={g.height}
+       alt="" fetchpriority="high" decoding="async" />
+</div>
+
+<style>
+.sbn {
+  --sbn-y: clamp(196px, 21vw, 262px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: var(--sbn-y);
+  background: linear-gradient(180deg, var(--banner-ust), var(--banner-alt));
+  border: 1px solid var(--cizgi);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 24px 50px -32px rgb(var(--blue-800-rgb) / .5);
+  margin-block: clamp(1.2rem, 3vw, 2.2rem);
+}
+.sbn__yazi {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  padding: clamp(1.3rem, 3.4%, 2.2rem) clamp(1.2rem, 3%, 2rem);
+}
+.sbn__etiket {
+  font-family: var(--f-dis); font-weight: 700; font-size: .72rem;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--vurgu-metin);
+}
+.sbn__baslik {
+  font-family: var(--f-dis); font-weight: 800;
+  font-size: clamp(1.3rem, 3.1vw, 2.05rem);
+  line-height: 1.12; letter-spacing: -.015em;
+  text-transform: uppercase; text-wrap: balance;
+  color: var(--mavi);
+}
+/* Sarı çizgi sitenin başlık imzası (bkz. .hsg-ikili__t h3) */
+.sbn__baslik::after {
+  content: ''; display: block; width: 54px; height: 4px;
+  margin-top: .75rem; border-radius: 2px; background: var(--sari);
+}
+.sbn__g {
+  flex: 0 0 auto;
+  height: var(--sbn-y);
+  /* Doğal oranında: yükseklik × en/boy. max-width metin sütununu ezmesini
+     engeller; o noktada object-fit sembolün sol tarafından kırpar. */
+  width: calc(var(--sbn-y) * var(--sembol-oran));
+  max-width: 47%;
+  object-fit: cover;
+  object-position: right center;
+  display: block;
+}
+
+/* Dar ekran: sembol başlığın altına iner, kendi doğal oranında ortalanır. */
+@media (max-width: 719px) {
+  .sbn { --sbn-y: 150px; flex-direction: column; align-items: stretch; }
+  .sbn__yazi { padding-bottom: .4rem; }
+  .sbn__g {
+    width: min(100%, calc(var(--sbn-y) * var(--sembol-oran)));
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+    object-fit: contain;
+  }
+}
+</style>

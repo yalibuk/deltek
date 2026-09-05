@@ -40,6 +40,12 @@ const sayfalar = defineCollection({
     // Boşsa normal makale akışı.
     duzen: z.enum(['logo-izgara', 'urun', 'iletisim', 'hizmet']).optional(),
 
+    // Başlık banner'ı: src/assets/banner/<deger>.jpg sembolünü sayfanın
+    // <h1>'iyle yan yana basar (bkz. components/SayfaBanner.astro). Verilirse
+    // `banner` alanı yok sayılır ve ayrı bir <h1> basılmaz — başlık banner'ın
+    // içindedir. Dosya yoksa build durur.
+    bannerSembol: z.string().optional(),
+
     // Sayfanın altına Teknoloji bölümünün kart haritasını basar
     // (bkz. components/TeknolojiHaritasi.astro). Yalnızca bölüm kök
     // sayfasında açılır.
