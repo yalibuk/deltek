@@ -75,6 +75,13 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
   sekme/akordiyon etkileşimi yok; bölümler art arda `###` başlıkla akıyor.
 - **Yan menü (sidebar) atıldı** — yeni sitede header menüsü karşılıyor.
   *(Teknoloji bölümünde geri geldi: bkz. "Teknoloji bölümü".)*
+- **Hizmetlerimiz sayfası yeniden tasarlandı** (`duzen: hizmet`). İçerik canlı
+  sayfayla aynı; düz makale akışı yerine kart ızgaralarına alındı. Metinde dört
+  bilinçli düzeltme var: canlı sayfada yarım kalan iki cümle parçası
+  ("… Daha az kazı, daha çok teknoloji. **Giriş/Çıkış**" ve "… Ayrıca bütün bu
+  işlemleri **sadece**") atıldı — uydurma bir son yazmak yerine; iki de yazım
+  hatası düzeltildi ("he myurt içi" → "hem yurt içinde", "telekömünikasyon" →
+  "telekomünikasyon", "yenilebiliyor" → "yenileyebiliyor").
 - **Hizmetlerimiz'deki teknik makale Teknoloji sayfasına taşındı.** Canlı
   sitede "Yatay Sondaj Nedir? Kazısız Delgi Yöntemlerine Teknik Bir Bakış"
   başlığından itibaren 6 bölüm `/hizmetlerimiz/` altındaydı; içeriği teknik
@@ -143,10 +150,11 @@ CMS'te "İçerik düzeni" açılır listesinden değiştirilir; kod değişikli�
 
 | `duzen` | Ne yapar | Örnek |
 | --- | --- | --- |
-| _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `hizmetlerimiz` |
+| _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `medyalar` |
 | `logo-izgara` | Art arda gelen görselleri yan yana dizer | `referanslar` |
 | `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` + 13 teknoloji/hizmet sayfası |
 | `iletisim` | İletişim şablonu (form yok) | `iletisim` |
+| `hizmet` | Hizmetlerimiz şablonu (kart ızgaraları) | `hizmetlerimiz` |
 
 Hangi sayfa hangi düzende olduğunu görmek için:
 
@@ -267,6 +275,38 @@ içindedir, alt sayfalar daha yakındır.
 > olurdu. Bunun yerine kart adı "gerilmiş bağlantı" (`.tkart__ad::after`
 > kartı kaplar), alt sayfa rozetleri `z-index: 1` ile üstte kalıp kendi
 > bağlantılarını korur. Kart görselsizse baş harf rozeti çıkar (5 sayfada).
+
+### `duzen: hizmet`
+
+`/hizmetlerimiz/` sayfasının şablonu. Bileşen: `src/components/HizmetDuzen.astro`.
+Canlı sitedeki bölüm sırası korundu, sunum yenilendi:
+
+1. **Dört ana hizmet** — kart ızgarası (4/2/1 sütun), her kart ilgili teknoloji
+   sayfasına gider
+2. **"Neden Bizi Seçtiler?"** — metin + işaretli madde listesi + görsel, iki sütun
+3. **"Son Projeler"** — üç görselli galeri
+4. **"Uygulama Alanlarımız"** — dört kart, hepsi `/iletisim/`'e
+
+```yaml
+duzen: hizmet
+hizmetler:
+  - baslik: "Yönlendirilebilir Yatay Sondaj"
+    kisaltma: "HDD"        # başlığın altındaki rozet
+    ikon: sondaj           # bileşendeki IKON setinden anahtar
+    href: "/yonlendirilebilir-yatay-sondaj-nedir/"
+    metin: "..."
+neden:   { baslik, metin, maddeler: [...], gorsel }
+projeler:{ baslik, metin, galeri: [{ foto, alt }] }
+alanlar: { baslik, ogeler: [{ baslik, metin, ikon, href }] }
+```
+
+Canlı sayfa FontAwesome ikonları kullanıyordu; burada aynı anlamları taşıyan
+kendi çizgi ikonlarımız var (`IKON` sabiti: `sondaj boru yenileme akilli kablo
+basinc cazibe nehir`). Yeni ikon önce oraya eklenir; **bilinmeyen anahtar
+sessizce ikonsuz kalır**, build patlamaz.
+
+Kartlar `<article>`; başlık "gerilmiş bağlantı" (`::after` kartı kaplar), böylece
+kartın her yeri tıklanabilir ama iç içe `<a>` üretilmez.
 
 ### `duzen: iletisim`
 

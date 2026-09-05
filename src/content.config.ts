@@ -38,7 +38,7 @@ const sayfalar = defineCollection({
     //   'iletisim'    → iletişim şablonu (hızlı iletişim + ofis kartları + harita;
     //                   ofisler src/data/site.ts OFISLER'den gelir, form YOK)
     // Boşsa normal makale akışı.
-    duzen: z.enum(['logo-izgara', 'urun', 'iletisim']).optional(),
+    duzen: z.enum(['logo-izgara', 'urun', 'iletisim', 'hizmet']).optional(),
 
     // Sayfanın altına Teknoloji bölümünün kart haritasını basar
     // (bkz. components/TeknolojiHaritasi.astro). Yalnızca bölüm kök
@@ -46,6 +46,37 @@ const sayfalar = defineCollection({
     bolumHaritasi: z.boolean().optional(),
     // Sol sütunda Teknoloji bölümünün ağaç menüsünü gösterir.
     yanMenu: z.boolean().optional(),
+
+    // ── duzen: 'hizmet' alanları ──────────────────────────────
+    // Hizmetlerimiz sayfası: kart ızgaraları + "neden biz" + proje galerisi.
+    // `ikon` HizmetDuzen.astro içindeki SVG setinden bir anahtar.
+    hizmetler: z.array(z.object({
+      baslik: z.string(),
+      kisaltma: z.string().optional(),
+      metin: z.string(),
+      href: z.string().optional(),
+      ikon: z.string().optional(),
+    })).optional(),
+    neden: z.object({
+      baslik: z.string().optional(),
+      metin: z.string().optional(),
+      maddeler: z.array(z.string()).optional(),
+      gorsel: z.string().optional(),
+    }).optional(),
+    projeler: z.object({
+      baslik: z.string().optional(),
+      metin: z.string().optional(),
+      galeri: z.array(z.object({ foto: z.string(), alt: z.string().optional() })).optional(),
+    }).optional(),
+    alanlar: z.object({
+      baslik: z.string().optional(),
+      ogeler: z.array(z.object({
+        baslik: z.string(),
+        metin: z.string(),
+        href: z.string().optional(),
+        ikon: z.string().optional(),
+      })).optional(),
+    }).optional(),
 
     // ── duzen: 'iletisim' alanları ────────────────────────────
     // Google Haritalar gömme (embed) adresi; boşsa harita bölümü çıkmaz.

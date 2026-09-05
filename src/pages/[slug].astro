@@ -5,6 +5,7 @@ import { kokIcerik, cevirisiVarMi } from '../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
 import IletisimDuzen from '../components/IletisimDuzen.astro';
+import HizmetDuzen from '../components/HizmetDuzen.astro';
 import TeknolojiHaritasi from '../components/TeknolojiHaritasi.astro';
 import { teknolojiAgaci, teknolojiKomsulari } from '../data/icerik';
 import TeknolojiGezinme from '../components/TeknolojiGezinme.astro';
@@ -103,7 +104,11 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  {p.duzen === 'urun' ? (
+  {p.duzen === 'hizmet' ? (
+    <HizmetDuzen hizmetler={p.hizmetler} neden={p.neden} projeler={p.projeler} alanlar={p.alanlar}>
+      <div class="yazi__icerik"><Content /></div>
+    </HizmetDuzen>
+  ) : p.duzen === 'urun' ? (
     <UrunDuzen banner={p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
                tablolar={p.tablolar} galeri={p.galeri}>
       <div class="yazi__icerik"><Content /></div>

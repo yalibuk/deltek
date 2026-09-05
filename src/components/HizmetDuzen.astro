@@ -1,0 +1,219 @@
+---
+/**
+ * Hizmetlerimiz sayfası şablonu (`duzen: hizmet`).
+ *
+ * Canlı deltek.com.tr/hizmetlerimiz/ sayfasının bölüm sırası korundu:
+ *   1. Dört ana hizmet — kart ızgarası, her kart ilgili teknoloji sayfasına
+ *   2. "Neden Bizi Seçtiler?" — metin + madde listesi + görsel, iki sütun
+ *   3. "Son Projeler" — üç görselli galeri
+ *   4. "Uygulama Alanlarımız" — dört kart, hepsi iletişime yönlendirir
+ *
+ * Canlı sayfada kartlar FontAwesome ikonlarıyla geliyordu; burada aynı
+ * anlamları taşıyan kendi çizgi ikonlarımız var (aşağıdaki IKON seti).
+ * Yeni bir ikon gerekirse önce oraya eklenir, sonra frontmatter'da
+ * `ikon: <anahtar>` ile seçilir; bilinmeyen anahtar sessizce ikonsuz kalır.
+ */
+interface Hizmet { baslik: string; kisaltma?: string; metin: string; href?: string; ikon?: string; }
+interface Alan { baslik: string; metin: string; href?: string; ikon?: string; }
+interface Props {
+  hizmetler?: Hizmet[];
+  neden?: { baslik?: string; metin?: string; maddeler?: string[]; gorsel?: string };
+  projeler?: { baslik?: string; metin?: string; galeri?: { foto: string; alt?: string }[] };
+  alanlar?: { baslik?: string; ogeler?: Alan[] };
+}
+const { hizmetler = [], neden, projeler, alanlar } = Astro.props;
+// Sayfanın markdown gövdesi — şu an boş ama biri giriş metni eklerse
+// sessizce kaybolmasın diye kartların önünde basılır.
+const govde = Astro.slots.has('default') ? (await Astro.slots.render('default')).trim() : '';
+
+// Tek renkli çizgi ikonlar — hepsi 24×24 kutuda, stroke: currentColor.
+const IKON: Record<string, string> = {
+  // yer altına yönlenen delgi ucu
+  sondaj: '<path d="M3 6h11l5 4-5 4H3" /><path d="M3 18h7" /><path d="M14 10h5" />',
+  // itilen boru kesiti
+  boru: '<rect x="2.5" y="8" width="13" height="8" rx="1.5" /><path d="M15.5 10h6M15.5 14h6" /><path d="M6 8v8" />',
+  // yenileme — dairesel ok
+  yenileme: '<path d="M20 12a8 8 0 1 1-2.6-5.9" /><path d="M20 4v4h-4" />',
+  // akıllı altyapı — ampul
+  akilli: '<path d="M9 18h6" /><path d="M10 21h4" /><path d="M12 3a6 6 0 0 1 3.5 10.9c-.5.4-.8 1-.8 1.6H9.3c0-.6-.3-1.2-.8-1.6A6 6 0 0 1 12 3Z" />',
+  // kablo / fiş
+  kablo: '<path d="M9 3v5M15 3v5" /><path d="M6 8h12v3a6 6 0 0 1-6 6 6 6 0 0 1-6-6V8Z" /><path d="M12 17v4" />',
+  // basınçlı hat — damla
+  basinc: '<path d="M12 3s6 6.3 6 10a6 6 0 0 1-12 0c0-3.7 6-10 6-10Z" /><path d="M9 13a3 3 0 0 0 3 3" />',
+  // cazibeli akış — aşağı inen dalgalar
+  cazibe: '<path d="M3 7c3-2 6 2 9 0s6-2 9 0" /><path d="M3 13c3-2 6 2 9 0s6-2 9 0" /><path d="M12 17v4M9.5 18.5 12 21l2.5-2.5" />',
+  // nehir geçişi — köprü ve su
+  nehir: '<path d="M2 9h20" /><path d="M5 9v5M12 9v7M19 9v5" /><path d="M2 19c3-2 5 2 8 0s5-2 8 0" />',
+};
+const ikonCiz = (a?: string) => (a && IKON[a]) || null;
+---
+<div class="hzm">
+
+  {govde && <div class="hzm__govde" set:html={govde} />}
+
+  {hizmetler.length > 0 && (
+    <section class="hzm__bolum">
+      <div class="hzm__izgara hzm__izgara--4">
+        {hizmetler.map(h => (
+          <article class="hkrt">
+            {ikonCiz(h.ikon) && (
+              <span class="hkrt__ikon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                     stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round" set:html={ikonCiz(h.ikon)} />
+              </span>
+            )}
+            <h2 class="hkrt__bas">
+              {h.href
+                ? <a class="hkrt__bag" href={h.href}>{h.baslik}</a>
+                : h.baslik}
+            </h2>
+            {h.kisaltma && <span class="hkrt__kis">{h.kisaltma}</span>}
+            <p class="hkrt__metin">{h.metin}</p>
+            {h.href && <span class="hkrt__git">Detaylı bilgi <i aria-hidden="true">→</i></span>}
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {neden && (
+    <section class="hzm__bolum hzm__neden">
+      <div class="hzm__nedenIc">
+        <div>
+          {neden.baslik && <h2 class="hzm__h2">{neden.baslik}</h2>}
+          {neden.metin && <p class="hzm__giris">{neden.metin}</p>}
+          {neden.maddeler && neden.maddeler.length > 0 && (
+            <ul class="hzm__liste">
+              {neden.maddeler.map(m => (
+                <li>
+                  <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor"
+                       stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m3 8.5 3.2 3.2L13 5" />
+                  </svg>
+                  <span>{m}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        {neden.gorsel && (
+          <figure class="hzm__nedenG"><img src={neden.gorsel} alt="" loading="lazy" /></figure>
+        )}
+      </div>
+    </section>
+  )}
+
+  {projeler && projeler.galeri && projeler.galeri.length > 0 && (
+    <section class="hzm__bolum">
+      {projeler.baslik && <h2 class="hzm__h2">{projeler.baslik}</h2>}
+      {projeler.metin && <p class="hzm__giris hzm__giris--gen">{projeler.metin}</p>}
+      <div class="hzm__galeri">
+        {projeler.galeri.map(g => (
+          <figure><img src={g.foto} alt={g.alt || ''} loading="lazy" /></figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {alanlar && alanlar.ogeler && alanlar.ogeler.length > 0 && (
+    <section class="hzm__bolum">
+      {alanlar.baslik && <h2 class="hzm__h2">{alanlar.baslik}</h2>}
+      <div class="hzm__izgara hzm__izgara--4">
+        {alanlar.ogeler.map(a => (
+          <article class="hkrt hkrt--alan">
+            {ikonCiz(a.ikon) && (
+              <span class="hkrt__ikon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                     stroke="currentColor" stroke-width="1.7"
+                     stroke-linecap="round" stroke-linejoin="round" set:html={ikonCiz(a.ikon)} />
+              </span>
+            )}
+            <h3 class="hkrt__bas">
+              {a.href ? <a class="hkrt__bag" href={a.href}>{a.baslik}</a> : a.baslik}
+            </h3>
+            <p class="hkrt__metin">{a.metin}</p>
+            {a.href && <span class="hkrt__git">Bize ulaşın <i aria-hidden="true">→</i></span>}
+          </article>
+        ))}
+      </div>
+    </section>
+  )}
+</div>
+
+<style>
+.hzm__bolum + .hzm__bolum { margin-top: clamp(2.6rem,6vw,4.2rem); }
+
+.hzm__h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.75rem);
+  letter-spacing: -.015em; color: var(--mavi-900); margin-bottom: .9rem; }
+.hzm__h2::after { content: ""; display: block; width: 68px; height: 3px; margin-top: .7rem;
+  background: linear-gradient(90deg, var(--mavi) 0 60%, var(--sari) 60% 100%); border-radius: 2px; }
+.hzm__giris { color: var(--mute); font-size: 1rem; line-height: 1.75; margin-bottom: 1.4rem; }
+.hzm__giris--gen { max-width: 78ch; }
+
+/* ─── Kart ızgarası ───────────────────────────────────── */
+.hzm__izgara { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .hzm__izgara--4 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .hzm__izgara--4 { grid-template-columns: repeat(4, 1fr); } }
+
+/* position: relative — .hkrt__bag::after kartın tamamını kaplayan bağlantı */
+.hkrt { position: relative; display: flex; flex-direction: column; gap: .55rem;
+  background: var(--beyaz); border: 1px solid var(--cizgi); border-top: 3px solid var(--mavi);
+  border-radius: 14px; padding: 1.5rem 1.4rem 1.4rem;
+  box-shadow: 0 20px 40px -32px rgb(var(--blue-800-rgb) / .45);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.hkrt:hover { transform: translateY(-4px); border-color: var(--mavi);
+  box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
+.hkrt:focus-within { border-color: var(--mavi); box-shadow: 0 0 0 3px var(--blue-200); }
+
+.hkrt__ikon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 12px;
+  background: var(--mavi-050); color: var(--mavi); border: 1px solid var(--cizgi);
+  transition: background .2s, color .2s, border-color .2s; }
+.hkrt:hover .hkrt__ikon { background: var(--mavi); color: var(--beyaz); border-color: var(--mavi); }
+
+.hkrt__bas { font-family: var(--f-dis); font-weight: 800; font-size: 1.02rem; line-height: 1.3;
+  letter-spacing: -.01em; color: var(--mavi-900); margin-top: .35rem; }
+.hkrt__bag { color: inherit; }
+/* Gerilmiş bağlantı: kartın her yeri tıklanabilir, iç içe <a> üretilmez. */
+.hkrt__bag::after { content: ""; position: absolute; inset: 0; }
+.hkrt:hover .hkrt__bas { color: var(--mavi); }
+
+.hkrt__kis { align-self: flex-start; font-family: var(--f-veri); font-size: .64rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--mavi);
+  background: var(--mavi-050); border: 1px solid var(--cizgi); border-radius: 999px;
+  padding: .22rem .6rem; }
+.hkrt__metin { color: var(--mute); font-size: .9rem; line-height: 1.65; }
+.hkrt__git { margin-top: auto; padding-top: .5rem; font-family: var(--f-dis); font-weight: 700;
+  font-size: .84rem; color: var(--mavi); }
+.hkrt__git i { font-style: normal; display: inline-block; transition: transform .2s; }
+.hkrt:hover .hkrt__git i { transform: translateX(4px); }
+
+/* Uygulama alanı kartlarında metin uzun bir liste — biraz daha sıkı */
+.hkrt--alan .hkrt__metin { font-size: .86rem; }
+
+.hzm__govde { color: var(--metin); font-size: 1.02rem; line-height: 1.75; margin-bottom: 2rem; }
+.hzm__govde :global(p) { margin-bottom: 1rem; }
+.hzm__govde :global(a) { color: var(--mavi); text-decoration: underline; }
+
+/* ─── Neden bizi seçtiler ─────────────────────────────── */
+.hzm__neden { background: var(--kagit); border: 1px solid var(--cizgi); border-radius: 18px;
+  padding: clamp(1.5rem,4vw,2.4rem); }
+.hzm__nedenIc { display: grid; gap: clamp(1.4rem,3vw,2.4rem); align-items: center; }
+@media (min-width: 860px) { .hzm__nedenIc { grid-template-columns: 1.35fr 1fr; } }
+.hzm__liste { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.hzm__liste li { display: flex; gap: .65rem; align-items: flex-start;
+  color: var(--metin); font-size: .95rem; line-height: 1.6; }
+.hzm__liste svg { flex: none; margin-top: .28rem; color: var(--mavi); }
+.hzm__nedenG { margin: 0; }
+.hzm__nedenG img { width: 100%; height: auto; }
+
+/* ─── Son projeler ────────────────────────────────────── */
+.hzm__galeri { display: grid; gap: .9rem; grid-template-columns: 1fr; }
+/* Kırılım kart ızgarasıyla aynı (600px): arada kalan bantta biri iki sütun,
+   diğeri tek sütun görünüyordu. */
+@media (min-width: 600px) { .hzm__galeri { grid-template-columns: repeat(3, 1fr); } }
+.hzm__galeri figure { margin: 0; border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--cizgi); aspect-ratio: 4/3; background: var(--kagit-2); }
+.hzm__galeri img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.hzm__galeri figure:hover img { transform: scale(1.05); }
+</style>
