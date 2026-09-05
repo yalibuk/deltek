@@ -31,10 +31,13 @@ const cevirisiVar = await cevirisiVarMi(slug, 'en');
 const tekAgac = p.bolumHaritasi ? await teknolojiAgaci('tr') : null;
 // Teknoloji ağacındaki sayfalar sayfa altı bölüm gezinmesi alır; kök sayfa
 // almaz, orada zaten haritanın tamamı var.
-// Yan menü ağacı: haritayla aynı veriden, ayrıca hesaplanmasın diye tekrar kullanılır.
-const yanAgac = p.yanMenu ? (tekAgac ?? await teknolojiAgaci('tr')) : null;
-const tekKomsu = (tur === 'sayfa' && !p.bolumHaritasi)
-  ? await teknolojiKomsulari('tr', slug) : null;
+// Sayfa teknoloji ağacında mı? Yan menü ve sayfa altı gezinme buna bağlı.
+const agacta = tur === 'sayfa' ? await teknolojiKomsulari('tr', slug) : null;
+// Yan menü canlı sitedeki gibi bölümün TÜM sayfalarında görünür; kök sayfa
+// ağaçta olmadığı için `yanMenu: true` ile ayrıca işaretlenir.
+const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci('tr')) : null;
+// Kök sayfada altta gezinme yok — orada zaten haritanın tamamı var.
+const tekKomsu = p.bolumHaritasi ? null : agacta;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';

@@ -69,6 +69,8 @@ import { TEKNOLOJI, type TekDugum } from './teknoloji';
 export type TekKart = {
   slug: string;
   ad: string;
+  /** Yan menüde kullanılan tam etiket (bkz. teknoloji.ts). */
+  tamAd: string;
   baslik: string;
   ozet?: string;
   gorsel?: string;
@@ -97,6 +99,7 @@ export async function teknolojiAgaci(dil: Dil): Promise<TekKart[]> {
       return {
         slug: d.slug,
         ad: d.ad || v.baslik,
+        tamAd: d.tamAd || d.ad || v.baslik,
         baslik: v.baslik,
         ozet: v.ozet,
         gorsel: v.banner || v.kapak,

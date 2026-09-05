@@ -232,11 +232,16 @@ Dört yerden görünür:
    her birinin altında: önceki/sonraki + komşu sayfa listesi + köke dönüş.
    Veri `teknolojiKomsulari()`; slug ağaçta değilse `null` döner ve bileşen
    hiç basılmaz, yani blog yazılarında ve diğer sayfalarda çıkmaz.
-4. **Yan menü** (`components/TeknolojiYanMenu.astro`) — kök sayfanın sol
-   sütununda akordiyon ağaç, canlı sitedeki sidebar widget'ın karşılığı.
-   `yanMenu: true` frontmatter alanıyla açılır; sayfa iki sütuna geçer
-   (`.yazi--yan`, ≥900px: 268px + kalan). Aktif sayfanın dalı **sunucuda**
-   açık gelir, JS beklenmez.
+4. **Yan menü** (`components/TeknolojiYanMenu.astro`) — akordiyon ağaç,
+   canlı sitedeki sidebar widget'ın karşılığı. **Bölümün 20 sayfasının
+   hepsinde** görünür (canlı sitede de öyle): ağaçtaki her sayfada otomatik,
+   kök sayfada `yanMenu: true` ile (kök ağacın parçası değil). Sayfa iki
+   sütuna geçer (`.yazi--yan`, ≥900px: 268px + kalan; altında tek sütun).
+   Aktif sayfa vurgulanır ve dalı **sunucuda** açık gelir, JS beklenmez.
+
+   Yan menü etiketleri `tamAd` alanından gelir — orada yer bol olduğu için
+   canlı sitedeki tam adlar ("Yönlendirilebilir Yatay Sondaj Yapım Metodu");
+   header açılır menüsü ve kartlar dar olduğu için kısa `ad`ı kullanır.
 
    > **İki tuzak:** (a) `<details>` kullanılmadı — kapanırken içerik anında
    > kaybolduğu için geçiş oynamıyor; onun yerine `grid-template-rows: 0fr→1fr`.

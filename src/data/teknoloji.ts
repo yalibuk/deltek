@@ -17,8 +17,13 @@
 export type TekDugum = {
   /** `content/sayfalar/tr/<slug>.md` — build sırasında varlığı doğrulanır. */
   slug: string;
-  /** Menüde/kartta görünecek kısa ad. Boşsa sayfanın `baslik`i kullanılır. */
+  /** Header açılır menüsü ve kartlarda görünen kısa ad. */
   ad: string;
+  /**
+   * Yan menüde görünen ad. Orada yer bol olduğu için canlı sitedeki tam
+   * etiket kullanılır; verilmezse `ad`e düşer.
+   */
+  tamAd?: string;
   alt?: TekDugum[];
 };
 
@@ -28,8 +33,10 @@ export const TEKNOLOJI: TekDugum[] = [
     ad: 'Yönlendirilebilir Yatay Sondaj',
     alt: [
       { slug: 'yonlendirilebilir-yatay-sondaj-nedir', ad: 'Yönlendirilebilir Yatay Sondaj Nedir?' },
-      { slug: 'yonlendirilebilir-yatay-sondaj-yapim-metodu', ad: 'Yapım Metodu' },
-      { slug: 'yonlendirilebilir-yatay-sondaj-makinesi', ad: 'Sondaj Makinesi' },
+      { slug: 'yonlendirilebilir-yatay-sondaj-yapim-metodu', ad: 'Yapım Metodu',
+        tamAd: 'Yönlendirilebilir Yatay Sondaj Yapım Metodu' },
+      { slug: 'yonlendirilebilir-yatay-sondaj-makinesi', ad: 'Sondaj Makinesi',
+        tamAd: 'Yönlendirilebilir Yatay Sondaj Makinesi' },
       { slug: 'yatay-sondaj-kazisiz-yatay-delgi', ad: 'Yatay Sondaj Kazısız Yatay Delgi' },
       { slug: 'delgi-tijleri', ad: 'Delgi Tijleri' },
       { slug: 'yonlendirme-basligi', ad: 'Yönlendirme Başlığı' },
