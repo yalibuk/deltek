@@ -255,6 +255,16 @@ bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.j
   Eşik 246 — zemin gradyanının tepesi 245, yani **normal zemine ve fotoğrafların
   açık gri bölgelerine hiç dokunulmuyor**. 241 denendi: sonuç piksel piksel aynı
   ama 13 görselin hepsinde zemini de yeniden boyuyordu, gereksiz risk.
+* Başlık, canlı görseldeki gibi **ağır ve sıkışık**: Open Sans'ın DEĞİŞKEN
+  sürümü + genişlik ekseni (`font-stretch: 75%`, ağırlık 800). Bunun için
+  `Layout.astro`'daki Google Fonts isteği `ital,wdth,wght@0,75..100,400..800`
+  oldu — ayrık ağırlıkları tek tek istemekten **ucuz**: latin+latin-ext için
+  4 dosya / 192KB, önceki 10 dosya / 359KB. Genişlik ekseni yalnız bu başlıkta
+  kullanılıyor, sitenin geri kalanı 100% (varsayılan) genişlikte kalıyor.
+* `line-height` 1.02 denenmişti: Türkçe büyük harflerde **J'nin kuyruğu, Ç/Ş
+  sedillası ve Ğ'nin şapkası** alt satıra ve sarı çizgiye giriyordu. 1.14 ikisini
+  de kurtarıyor. Punto da 3rem'den 2.8rem'e çekildi; 3rem'de "BORU SÜRME/ÇAKMA"
+  eğik çizgiden bölünüp iki satıra düşüyordu.
 * Semboller `scripts/banner-sembol-kes.mjs` ile üretildi; kesim x'leri ve beyaz
   kutu temizliği orada. Çıktılar depoda duruyor, betik yalnız kaynak görsel
   değişirse yeniden çalıştırılır.

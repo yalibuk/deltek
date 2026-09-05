@@ -78,9 +78,17 @@ const oran = (g.width / g.height).toFixed(4);
   letter-spacing: .12em; text-transform: uppercase; color: var(--vurgu-metin);
 }
 .sbn__baslik {
+  /* Canlı sitede bu başlık görselin içinde ağır ve SIKIŞIK bir grotesk ile
+     yazılıydı. Aynı etkiyi aile değiştirmeden veriyoruz: Open Sans değişken
+     sürümünün genişlik ekseni (Layout.astro'da wdth 75..100 isteniyor).
+     Sıkışık harfler dar olduğu için punto da bir tık büyütüldü. */
   font-family: var(--f-dis); font-weight: 800;
-  font-size: clamp(1.3rem, 3.1vw, 2.05rem);
-  line-height: 1.12; letter-spacing: -.015em;
+  font-stretch: 75%;
+  font-size: clamp(1.5rem, 3.8vw, 2.8rem);
+  /* 1.02 denendi: Türkçe büyük harflerde J'nin kuyruğu ile Ç/Ş sedillası ve
+     Ğ'nin şapkası alt satıra ve sarı çizgiye giriyordu. 1.14 ikisini de
+     kurtarıyor, satır aralığı hâlâ sıkı duruyor. */
+  line-height: 1.14; letter-spacing: -.01em;
   text-transform: uppercase; text-wrap: balance;
   color: var(--mavi);
 }

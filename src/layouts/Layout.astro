@@ -84,7 +84,11 @@ const jsonLd = {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" />
+  {/* Open Sans DEĞİŞKEN sürüm: ağırlık 400-800 + GENİŞLİK ekseni 75-100.
+      Genişlik ekseni banner başlıkları için gerekli (font-stretch: 75%,
+      bkz. SayfaBanner.astro). Ayrık ağırlıkları tek tek istemekten daha
+      ucuz: latin+latin-ext için 4 dosya / 192KB, önceki 10 dosya / 359KB. */}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
   <link rel="canonical" href={kanonik} />
   {trAlt && <link rel="alternate" hreflang="tr" href={trAlt} />}
   {enAlt && <link rel="alternate" hreflang="en" href={enAlt} />}
