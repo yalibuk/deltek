@@ -186,6 +186,21 @@ sokulursa boş görsel kutuları çıkardı.
 `boru-surme-boru-cakma-auger-boring`, `auger-boring-nedir-…` ve
 `mikrotunel-nedir` de bu gruptaydı, sonradan kaldırıldılar.)
 
+### Makale içinde sağa kayan görsel
+
+Markdown gövdesinde bir görselin yazının etrafından akmasını istiyorsan
+görseli `saga-kayan` sınıflı bir `<span>` ile sar:
+
+```markdown
+<span class="saga-kayan">![alt](/images/uploads/…/x.jpg)</span>Metin buradan devam eder…
+```
+
+Bunu CSS ile otomatik yapmak MÜMKÜN DEĞİL: `p > img:first-child` tek başına
+duran görselleri de yakalıyor (referanslar logoları, blog görselleri),
+`:not(:only-child)` ise işe yaramıyor — img'den sonra gelen DÜZ METİN element
+sayılmadığı için img yine `:only-child` oluyor. Bu yüzden işaret içeriğe
+konuluyor. 560px altında kayma kapanır, görsel tam genişliğe döner.
+
 ### `duzen: urun`
 
 Boremak sitesindeki ekipman sayfası şablonundan uyarlandı; Boremak'a özgü içerik,

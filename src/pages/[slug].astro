@@ -195,6 +195,21 @@ const sema = tur === 'yazi'
 .yazi__icerik :global(ul), .yazi__icerik :global(ol) { margin: 0 0 1.1rem 1.4rem; }
 .yazi__icerik :global(li) { margin-bottom: .4rem; }
 .yazi__icerik :global(img) { max-width: 100%; border-radius: 6px; margin: 1rem 0; }
+/* Metnin içine gömülü, yazının etrafından aktığı görsel. Markdown'da
+   görsel `<span class="saga-kayan">…</span>` ile sarılarak işaretlenir
+   (bkz. hakkimizda.md). CSS ile ayırt edilemiyor: `p > img:first-child`
+   tek başına duran görselleri de yakalıyor, `:not(:only-child)` ise
+   işe yaramıyor çünkü img'den sonraki DÜZ METİN element sayılmıyor —
+   yani img yine `:only-child`. */
+.yazi__icerik :global(.saga-kayan) {
+  float: right; max-width: 42%; margin: .2rem 0 1rem 1.6rem; }
+.yazi__icerik :global(.saga-kayan img) { display: block; margin: 0; }
+/* Kayan görselin bir sonraki bölümün başlığına taşmaması için */
+.yazi__icerik :global(h2), .yazi__icerik :global(h3), .yazi__icerik :global(h4) { clear: both; }
+@media (max-width: 560px) {
+  .yazi__icerik :global(.saga-kayan) {
+    float: none; display: block; max-width: 100%; margin: 0 0 1rem; }
+}
 .yazi__icerik :global(a) { color: var(--mavi); text-decoration: underline; }
 .yazi__icerik :global(table) { width: 100%; border-collapse: collapse; margin: 1.6rem 0; font-size: .95rem; }
 .yazi__icerik :global(th), .yazi__icerik :global(td) { border: 1px solid var(--cizgi); padding: .6rem .8rem; text-align: left; vertical-align: top; }

@@ -7,7 +7,7 @@ ozet: "Aklı öncelleyip gereksiz kapasite kullanımını ve ek maliyetleri orta
 
 ### Genel Bilgi
 
-![deltek-hk](/images/uploads/2014/12/deltek-hk.jpg)Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
+<span class="saga-kayan">![deltek-hk](/images/uploads/2014/12/deltek-hk.jpg)</span>Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
 
 Aklı öncelleyip gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak günün sonunda iş ortaklarımıza sürdürülebilir bir “KAZAN-KAZAN” ilişkisi sunabilmeyi kendine ilke edinmiş bir ekibiz. Bu noktada sektöre yıllarını vermiş, teorik/akademik eğitim almış ve aynı zamanda saha tecrübesine de haiz mühendislerimiz “AKILLI ALTYAPI (SMART UNDERGROUNDING)” kavramını literatüre kazandırmış ve söz konusu altyapı projesini en makul ve en tasarruflu şekilde sunabilecek bilimsel, ölçülebilir çözümleri üretmek için durmadan, yorulmadan çalışmaktadır.
 
