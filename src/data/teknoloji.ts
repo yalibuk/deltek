@@ -55,8 +55,6 @@ export const TEKNOLOJI: TekDugum[] = [
   { slug: 'boru-surmecakma', ad: 'Boru Sürme/Çakma' },
   { slug: 'boru-yenileme', ad: 'Boru Yenileme' },
   { slug: 'akilli-altyapi', ad: 'Akıllı Altyapı' },
-  { slug: 'auger-boring-nedir-modern-yatay-delgi-teknolojisi', ad: 'Auger Boring' },
-  { slug: 'mikrotunel-nedir', ad: 'Mikrotünel Nedir' },
 ];
 
 /** Teknoloji bölümünün kök sayfası — menüdeki "Teknoloji" bağlantısı. */

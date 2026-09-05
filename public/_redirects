@@ -16,6 +16,11 @@
 # "Kazısız Altyapı ve Kazısız Teknolojiler" bölümün genel bakış sayfasıydı.
 /kazisiz-altyapi-ve-kazisiz-teknolojiler/ /yatay-sondaj-teknoloji/                 301
 
+# Auger Boring ve Mikrotünel ayrı sayfa olmaktan çıktı; ikisi de artık
+# Boru Sürme/Çakma sayfasında başlıklı birer bölüm.
+/auger-boring-nedir-modern-yatay-delgi-teknolojisi/ /boru-surmecakma/  301
+/mikrotunel-nedir/                                  /boru-surmecakma/  301
+
 # WordPress artıkları
 /feed/          /blog/   301
 /wp-login.php   /        301

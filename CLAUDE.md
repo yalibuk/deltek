@@ -46,6 +46,8 @@ Bunun mimariye yansıması:
 | `/boru-surme-boru-cakma-auger-boring/` | `/boru-surmecakma/` | Aynı konuda iki sayfa vardı; menüde mükerrer görünüyordu |
 | `/yatay-sondaj-kazisiz-yatay-delgi/` | `/yonlendirilebilir-yatay-sondaj-nedir/` | Sayfa kaldırıldı; HDD Nedir? ile aynı konuyu anlatıyordu |
 | `/kazisiz-altyapi-ve-kazisiz-teknolojiler/` | `/yatay-sondaj-teknoloji/` | Sayfa kaldırıldı; bölümün genel bakış sayfasıydı |
+| `/auger-boring-nedir-modern-yatay-delgi-teknolojisi/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
+| `/mikrotunel-nedir/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
 
 ## Taşınan içerik
 
@@ -175,12 +177,13 @@ grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (12)
 ```
 
 **Normal akışta kalanlar ve nedeni:** `hakkimizda`, `hizmetlerimiz`,
-`medyalar` kurumsal sayfalar; `mikrotunel-nedir`, `auger-boring-nedir-…`,
-`yatay-delgi-nedir`, `yatay-sondaj`, `yonlendirilebilir-yatay-delgi`,
-`yonlendirilebilir-yatay-sondaj` ise **hiç görseli olmayan**, başlık/liste
-yapılı uzun makaleler — ürün şablonuna sokulursa boş görsel kutuları çıkardı.
-(`yatay-sondaj-kazisiz-yatay-delgi`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`
-ve `boru-surme-boru-cakma-auger-boring` bu gruptaydı, sonradan kaldırıldılar.)
+`medyalar` kurumsal sayfalar; `yatay-delgi-nedir`, `yatay-sondaj`,
+`yonlendirilebilir-yatay-delgi`, `yonlendirilebilir-yatay-sondaj` ise **hiç
+görseli olmayan**, başlık/liste yapılı uzun makaleler — ürün şablonuna
+sokulursa boş görsel kutuları çıkardı.
+(`yatay-sondaj-kazisiz-yatay-delgi`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`,
+`boru-surme-boru-cakma-auger-boring`, `auger-boring-nedir-…` ve
+`mikrotunel-nedir` de bu gruptaydı, sonradan kaldırıldılar.)
 
 ### `duzen: urun`
 
@@ -210,6 +213,11 @@ tablolar:                 # teknik veri tabloları (yatay kaydırmalı)
 galeri:
   - { foto: /images/uploads/y.jpg, alt: "..." }
 ```
+
+Blok metninde desteklenen tek biçimlendirme **`**kalın**`**, `[bağlantı](/yol/)`
+ve satır başındaki **`### Alt başlık`**tır. `### ` ile başlayan bir paragraf
+`<h4>` olur; blok başlığı `<h3>` olduğu için hiyerarşi h1 > h3 > h4 kalır.
+Tek yıldızlı italik DESTEKLENMEZ — yazarsan sayfada düz yıldız olarak çıkar.
 
 Markdown gövdesi bannerdan sonra, blokların önünde çıkar (giriş metni için).
 Alanların hepsi isteğe bağlı. Blok üç şekilde render olur:
@@ -311,22 +319,23 @@ gömülü başlık yok, o yüzden eskisi gibi `banner` + ayrı `<h1>` kullanıyo
 
 ### Teknoloji bölümü
 
-19 teknoloji/yöntem sayfası taşınmıştı ama **14'ü yetimdi** (biri sonradan
-mükerrer olduğu için kaldırıldı, bkz. 301 tablosu — bölüm bugün 18 sayfa): adresi çalışıyordu,
-hiçbir yerden bağlantı verilmiyordu. Bilgi mimarisi canlı sitedeki "Teknoloji"
+19 teknoloji/yöntem sayfası taşınmıştı ama **14'ü yetimdi**: adresi
+çalışıyordu, hiçbir yerden bağlantı verilmiyordu. Beşi sonradan kaldırıldı
+(mükerrer ya da başka bir sayfaya taşındı, bkz. 301 tablosu) — **bölüm bugün
+kök dahil 16 sayfa.** Bilgi mimarisi canlı sitedeki "Teknoloji"
 açılır menüsünden alınıp `src/data/teknoloji.ts` içine ağaç olarak yazıldı.
 
 ```
 Teknoloji (/yatay-sondaj-teknoloji/)
-├── Yönlendirilebilir Yatay Sondaj      9 alt sayfa
+├── Yönlendirilebilir Yatay Sondaj      8 alt sayfa
 │   └── Yer Belirleme                   → Üzerinden Takip, Manyetik Alan
-└── Diğer kazısız yöntemler             6 sayfa
+└── Diğer kazısız yöntemler             3 sayfa
 ```
 
 Ağaçta **yalnızca slug ve kısa menü adı** durur; başlık, özet ve görsel
 sayfanın kendi frontmatter'ından okunur (`teknolojiAgaci()` — `src/data/icerik.ts`).
-Menü etiketleri sayfa başlıklarıyla aynı değil, canlı sitedeki kısa adlar
-korundu ("Auger Boring" ↔ "Auger Boring Nedir? Modern Yatay Delgi Teknolojisi").
+Menü etiketleri sayfa başlıklarıyla aynı olmak zorunda değil; canlı sitedeki
+kısa adlar korundu.
 
 **Ağaçtaki bir slug'ın sayfası yoksa build durur.** Menüde 404'e giden bağlantı
 bırakmaktansa hatayı derlemede görmek daha iyi; sayfa yeniden adlandırılırsa
@@ -781,6 +790,19 @@ rm -rf node_modules/.astro .astro dist && npm run build
 ```
 
 Cloudflare Pages'te `node_modules` her build'de sıfırdan kurulduğu için orada sorun olmaz.
+
+**Dev sunucusu bileşen `<style>` ve `<script>` değişikliklerini güvenilir
+şekilde tazelemiyor.** Bir bileşenin CSS'ini değiştirdikten sonra tarayıcıda
+ESKİ kural yürürlükte kalabiliyor; silinmiş bir CSS değişkenine referans veren
+eski kural yüzünden bir kez zemin tamamen kaybolmuş gibi göründü, bir kez de
+flex yönü eski hâlinde kaldı. `astro build` çıktısı her seferinde doğruydu.
+Tarayıcıda gördüğün ile `dist/` çıktısı çelişiyorsa **önce dist'e bak**, sonra:
+
+```bash
+rm -rf .astro node_modules/.astro node_modules/.vite && npm run build
+```
+
+ve dev sunucusunu yeniden başlat. Bu oturumda üç kez gerekti.
 
 ## Yapılacaklar
 

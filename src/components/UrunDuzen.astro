@@ -42,6 +42,12 @@ const zengin = (s: string) => s
   .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
+/**
+ * Tek basina `### ` ile baslayan bir paragraf ALT BASLIK olur (<h4>).
+ * Blok basligi zaten <h3>; baslik hiyerarsisi h1 > h3 > h4 olarak korunur.
+ * (Boru Surme/Cakma sayfasinda mikrotunel makine tipleri icin eklendi.)
+ */
+const ALT_BASLIK = "### ";
 ---
 {banner && (
   <div class="hsg-genis hsg-genis--bosluk">
@@ -61,7 +67,11 @@ const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(B
         </div>
         <div class="hsg-ikili__t">
           {b.baslik && <h3>{b.baslik}</h3>}
-          {paragraflar(b.metin).map((par: string) => <p set:html={zengin(par)} />)}
+          {paragraflar(b.metin).map((par: string) => (
+            par.startsWith(ALT_BASLIK)
+              ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+              : <p set:html={zengin(par)} />
+          ))}
         </div>
       </div>
     ) : b.gorsel ? (
@@ -73,7 +83,11 @@ const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(B
       /* yalnız metin: tam genişlik — boş görsel kutusu bırakmaz */
       <div class="hsg-metin">
         {b.baslik && <h3>{b.baslik}</h3>}
-        {paragraflar(b.metin).map((par: string) => <p set:html={zengin(par)} />)}
+        {paragraflar(b.metin).map((par: string) => (
+          par.startsWith(ALT_BASLIK)
+            ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+            : <p set:html={zengin(par)} />
+        ))}
       </div>
     ) : null
   ))}
@@ -138,6 +152,10 @@ const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(B
 .hsg-metin { max-width: 70ch; }
 .hsg-metin h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-metin p { margin-top: .9rem; color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
+/* `### ` ile yazilan alt basliklar */
+.hsg-ikili__t h4, .hsg-metin h4 { font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: -.01em; color: var(--mavi-900); margin-top: 1.7rem; }
+.hsg-ikili__t h4 + p, .hsg-metin h4 + p { margin-top: .45rem; }
 
 /* görsel boyut yardımcıları */
 .hsg-ceyrek { width: 25% !important; margin: 0 auto; }

@@ -18,10 +18,12 @@ const YOLLAR = [
   '/yonlendirilebilir-yatay-sondaj/', '/delgi-tijleri/', '/yonlendirme-basligi/',
   '/genisletme-basligi/', '/yer-belirleme/', '/uzerinden-takip/', '/manyetik-alan/',
   '/yatay-sondaj-camuru/', '/boru-surmecakma/', '/boru-yenileme/', '/akilli-altyapi/',
+  // Aşağıdaki BEŞİ taşındı ama sonradan KALDIRILDI: ikisi mükerrer/genel
+  // bakış içerikti, ikisi (auger boring, mikrotünel) Boru Sürme/Çakma
+  // sayfasına bölüm olarak taşındı. 301'leri public/_redirects'te.
+  // Liste taşımanın kaydı olarak duruyor; betik yeniden çalıştırılırsa
+  // beşi de geri gelir, tekrar silinmeli.
   '/auger-boring-nedir-modern-yatay-delgi-teknolojisi/', '/mikrotunel-nedir/',
-  // Bu üçü taşındı ama sonradan KALDIRILDI (mükerrer/genel bakış içerik;
-  // 301'leri public/_redirects'te). Liste taşımanın kaydı olarak duruyor;
-  // betik yeniden çalıştırılırsa üçü de geri gelir, tekrar silinmeli.
   '/boru-surme-boru-cakma-auger-boring/', '/kazisiz-altyapi-ve-kazisiz-teknolojiler/',
   '/yatay-sondaj-kazisiz-yatay-delgi/',
 ];

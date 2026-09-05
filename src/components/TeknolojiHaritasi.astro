@@ -5,11 +5,15 @@
  *
  * Yapı `src/data/teknoloji.ts`, içerik sayfaların kendi frontmatter'ından.
  * Ağacın iki katmanı var:
- *   1. "Yönlendirilebilir Yatay Sondaj" — 9 alt sayfalı ana yöntem; kendi
- *      başlığı altında görsel kart ızgarası olarak açılır.
- *   2. Diğer yöntemler — tek seviyeli, aynı ızgara.
- * "Yer Belirleme"nin iki alt sayfası kartın içinde satır olarak listelenir;
- * üçüncü bir ızgara seviyesi görsel olarak dağıtıyordu.
+ *   1. "Yönlendirilebilir Yatay Sondaj" — alt sayfalı ana yöntem
+ *   2. Diğer yöntemler — tek seviyeli
+ * "Yer Belirleme"nin iki alt sayfası kartın içinde rozet olarak listelenir;
+ * üçüncü bir liste seviyesi görsel olarak dağıtıyordu.
+ *
+ * Kartlar önce görselli üç sütunlu bir ızgaraydı; sayfa sonundaki
+ * "önceki / sonraki" kartlarıyla (TeknolojiGezinme.astro `.tgez__ok`) aynı
+ * dile getirilip ALT ALTA dizildi. Görsel küçük resimler kaldırıldı: bölüm
+ * kök sayfasında okunacak şey sayfa adı ve özeti.
  */
 import type { TekKart } from '../data/icerik';
 interface Props { agac: TekKart[]; }
@@ -17,9 +21,6 @@ const { agac } = Astro.props;
 
 const kok = agac.find(d => d.alt.length > 0);
 const digerleri = agac.filter(d => d.alt.length === 0);
-
-// Görseli olmayan sayfalar için baş harf rozetleri
-const bas = (s: string) => s.trim().charAt(0).toLocaleUpperCase('tr');
 ---
 <section class="tekh">
   <div class="tekh__bas">
@@ -35,14 +36,9 @@ const bas = (s: string) => s.trim().charAt(0).toLocaleUpperCase('tr');
         <a href={`/${kok.slug}/`}>{kok.ad}</a>
         <span class="tekh__sayi">{kok.alt.length} sayfa</span>
       </h3>
-      <div class="tekh__izgara">
+      <div class="tekh__liste">
         {kok.alt.map(k => (
           <article class="tkart">
-            <span class="tkart__g">
-              {k.gorsel
-                ? <img src={k.gorsel} alt="" loading="lazy" />
-                : <span class="tkart__yok" aria-hidden="true">{bas(k.ad)}</span>}
-            </span>
             <span class="tkart__b">
               <a class="tkart__ad" href={`/${k.slug}/`}>{k.ad}</a>
               {k.ozet && <span class="tkart__oz">{k.ozet}</span>}
@@ -54,6 +50,10 @@ const bas = (s: string) => s.trim().charAt(0).toLocaleUpperCase('tr');
                 </span>
               )}
             </span>
+            <svg class="tkart__ok" viewBox="0 0 16 16" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </article>
         ))}
       </div>
@@ -65,18 +65,17 @@ const bas = (s: string) => s.trim().charAt(0).toLocaleUpperCase('tr');
       <span>Diğer kazısız yöntemler</span>
       <span class="tekh__sayi">{digerleri.length} sayfa</span>
     </h3>
-    <div class="tekh__izgara">
+    <div class="tekh__liste">
       {digerleri.map(k => (
         <article class="tkart">
-          <span class="tkart__g">
-            {k.gorsel
-              ? <img src={k.gorsel} alt="" loading="lazy" />
-              : <span class="tkart__yok" aria-hidden="true">{bas(k.ad)}</span>}
-          </span>
           <span class="tkart__b">
             <a class="tkart__ad" href={`/${k.slug}/`}>{k.ad}</a>
             {k.ozet && <span class="tkart__oz">{k.ozet}</span>}
           </span>
+          <svg class="tkart__ok" viewBox="0 0 16 16" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </article>
       ))}
     </div>
@@ -111,41 +110,35 @@ const bas = (s: string) => s.trim().charAt(0).toLocaleUpperCase('tr');
   letter-spacing: .1em; text-transform: uppercase; color: var(--mute);
   background: var(--kagit); border: 1px solid var(--cizgi); border-radius: 999px; padding: .26rem .7rem; }
 
-/* ─── Kart ızgarası ───────────────────────────────────── */
-.tekh__izgara { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
-@media (min-width: 620px) { .tekh__izgara { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 980px) { .tekh__izgara { grid-template-columns: repeat(3, 1fr); } }
+/* ─── Kartlar: sayfa sonundaki önceki/sonraki kartlarıyla aynı dil ───── */
+.tekh__liste { display: flex; flex-direction: column; gap: .9rem; }
 
 /* position: relative — gerilmiş bağlantının (.tkart__ad::after) hizalandığı kutu */
-.tkart { position: relative; display: flex; flex-direction: column; background: var(--beyaz);
-  border: 1px solid var(--cizgi); border-radius: 14px; overflow: hidden;
-  box-shadow: 0 18px 38px -30px rgb(var(--blue-800-rgb) / .45);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-.tkart:hover { transform: translateY(-3px); border-color: var(--mavi);
-  box-shadow: 0 26px 48px -26px rgb(var(--blue-800-rgb) / .55); }
+.tkart { position: relative; display: flex; align-items: center; gap: 1rem;
+  padding: 1rem 1.15rem; background: var(--beyaz);
+  border: 1px solid var(--cizgi); border-radius: 12px;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.tkart:hover { transform: translateY(-2px); border-color: var(--mavi);
+  box-shadow: 0 18px 34px -26px rgb(var(--blue-800-rgb) / .5); }
+.tkart:focus-within { border-color: var(--mavi); box-shadow: 0 0 0 3px var(--blue-200); }
 
-.tkart__g { display: block; aspect-ratio: 16/10; background: var(--kagit-2); overflow: hidden; }
-.tkart__g img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
-.tkart:hover .tkart__g img { transform: scale(1.05); }
-.tkart__yok { width: 100%; height: 100%; display: grid; place-items: center;
-  font-family: var(--f-dis); font-weight: 800; font-size: 2.6rem; color: var(--blue-600);
-  background: linear-gradient(140deg, var(--blue-50), var(--blue-100)); }
-
-.tkart__b { display: flex; flex-direction: column; gap: .5rem; padding: 1.1rem 1.2rem 1.25rem; flex: 1; }
+.tkart__b { display: flex; flex-direction: column; gap: .3rem; flex: 1; min-width: 0; }
 /* Kart adı "gerilmiş bağlantı": ::after ile tüm kartı kaplar, böylece kartın
    her yeri tıklanabilir olur ama iç içe <a> üretilmez. Alt sayfa rozetleri
    z-index ile üstte kalır, kendi bağlantıları çalışır. */
-.tkart__ad { position: static; font-family: var(--f-dis); font-weight: 800; font-size: 1.05rem;
-  letter-spacing: -.01em; color: var(--mavi-900); line-height: 1.3; }
+.tkart__ad { font-family: var(--f-dis); font-weight: 700; font-size: .98rem;
+  line-height: 1.35; color: var(--mavi-900); }
 .tkart__ad::after { content: ""; position: absolute; inset: 0; z-index: 0; }
-.tkart:hover .tkart__ad { color: var(--mavi); }
 .tkart__ad:focus-visible { outline: none; }
-.tkart:focus-within { border-color: var(--mavi); box-shadow: 0 0 0 3px var(--blue-200); }
-.tkart__oz { color: var(--mute); font-size: .88rem; line-height: 1.6;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.tkart:hover .tkart__ad { color: var(--mavi); }
+.tkart__oz { color: var(--mute); font-size: .86rem; line-height: 1.55;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.tkart__ok { flex: none; color: var(--mavi); transition: transform .18s ease; }
+.tkart:hover .tkart__ok { transform: translateX(3px); }
 
 /* Kartın içindeki alt sayfalar (ör. Yer Belirleme → Üzerinden Takip) */
-.tkart__alt { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: auto; padding-top: .5rem; }
+.tkart__alt { display: flex; flex-wrap: wrap; gap: .35rem; padding-top: .35rem; }
 .tkart__rozet { position: relative; z-index: 1; font-family: var(--f-veri); font-size: .66rem;
   letter-spacing: .06em; text-transform: uppercase; color: var(--mavi); background: var(--mavi-050);
   border: 1px solid var(--cizgi); border-radius: 999px; padding: .2rem .55rem;
