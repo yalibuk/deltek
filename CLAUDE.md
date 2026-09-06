@@ -205,6 +205,18 @@ tek satırlık beyaz Deltek logosu, ortada ÜÇ satır ortalanmış yazı
 satır aralığı 1.07, **yazı %78 saydam** (`opacity: .78`) — harflerin içinden
 fotoğraf görünüyor.
 
+**Üç satır da aynı genişlikte** (`.tecrube__s`, `transform: scaleX(--g)`).
+`--g` her satırın yatay esnetme çarpanı; en geniş satır 1 kabul edilip
+diğerleri ona oranlandı (111px puntoda doğal genişlikler 733 / 860 / 966px
+→ 1.318 / 1.123 / 1). Oranlar puntodan bağımsız (harf aralığı da `em`),
+ama **metin değişirse yeniden ölçülmeli**.
+
+> Neden bu yol: tek biçimli `scale` ile aynı genişliği tutturmak satır
+> yüksekliklerini de değiştirirdi (en dar satır %32 daha uzun olurdu);
+> harf aralığını açmak ise istenen sıkışık görünümü bozardı. `scaleX`
+> yükseklikleri ve aralığı korur. Span `inline-block` olmalı — blok olsaydı
+> kutu tüm satırı kaplar, esnetme metni değil kutuyu gererdi.
+
 Bandın yüksekliği fotoğrafın kendi oranından (`1920×790` → `41.1vw`) —
 görselin tamamı görünsün, yatay dilim gibi kırpılmasın diye.
 

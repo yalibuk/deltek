@@ -244,6 +244,12 @@ section[id] { scroll-margin-top: 150px; }
   letter-spacing: -.045em; text-transform: uppercase;
   color: var(--beyaz); opacity: .78;
   text-shadow: 0 4px 26px rgb(var(--blue-950-rgb) / .6); }
+/* Satırlar aynı genişliğe YATAY esnetmeyle yayılıyor. Tek biçimli (scale)
+   büyütme aynı genişlik için satır yüksekliklerini de değiştirirdi; harf
+   aralığını açmak ise sıkışık görünümü bozardı. inline-block olmalı:
+   blok olsaydı kutu tüm satırı kaplar, esnetme metni değil kutuyu gererdi. */
+.tecrube__s { display: inline-block; transform: scaleX(var(--g, 1));
+  transform-origin: center; }
 
 /* ─── Ana sayfa: rakamlar şeridi ─────────────────────── */
 .rakam { background: var(--mavi-900); border-block: 3px solid var(--sari);
