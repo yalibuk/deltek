@@ -126,9 +126,11 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 > etiketleri bu yüzden silindi.
 
 `/iletisim/` sayfasındaki gömülü Google haritası ve üstündeki "Merkez
-ofisimiz" başlığı **kaldırıldı**. Yerine sayfanın altındaki tanıtım görseli
-geldi: frontmatter'daki `gorsel` alanı (eskiden `harita`), açık mavi altlık
-(`--mavi-050`) üzerinde tam genişlikte, altında gölge. Görsel dosyası:
+ofisimiz" başlığı **kaldırıldı**. Tanıtım görseli sayfanın **başında,
+başlığın hemen altında**: frontmatter'daki `gorsel` alanı (eskiden `harita`),
+açık mavi altlık (`--mavi-050`) üzerinde tam genişlikte, altında gölge.
+Ekranın üstünde durduğu için `loading="lazy"` DEĞİL, `fetchpriority="high"`
+kullanılıyor. Görsel dosyası:
 `public/images/iletisim/deltek_iletisim_banner.jpg` (1920×935).
 
 ## Ana sayfa bölümleri

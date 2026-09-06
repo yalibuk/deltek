@@ -7,8 +7,8 @@
  * Ziyaretçi tek dokunuşla arayabilsin diye telefon ve e-posta en üstte,
  * büyük dokunma hedefleri olarak duruyor.
  *
- * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir. Sayfanın altındaki
- * tanıtım görseli frontmatter'daki `gorsel` alanından. (Burada önce gömülü
+ * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir. Başlığın hemen
+ * altındaki tanıtım görseli frontmatter'daki `gorsel` alanından. (Burada önce gömülü
  * bir Google haritası ve "Merkez ofisimiz" başlığı vardı; ikisi de kaldırıldı.)
  * Etiketler CEVIRI'de
  * (iki dilli sabit metin sayfaya gömülmez — bkz. CLAUDE.md).
@@ -32,6 +32,15 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
     {ozet && <p class="ilet__ozet">{ozet}</p>}
     <p class="ilet__unvan">{SITE.unvan}</p>
   </header>
+
+  {/* ── Tanıtım görseli — başlığın hemen altında ───────── */}
+  {gorsel && (
+    <section class="kap ilet__bolum">
+      <div class="ilet__gorsel">
+        <img src={gorsel} alt="" width="1920" height="935" fetchpriority="high" decoding="async" />
+      </div>
+    </section>
+  )}
 
   {/* ── Hızlı iletişim: telefon + e-posta ──────────────── */}
   <div class="kap">
@@ -88,15 +97,6 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
       ))}
     </div>
   </section>
-
-  {/* ── Tanıtım görseli (eskiden harita vardı) ─────────── */}
-  {gorsel && (
-    <section class="kap ilet__bolum">
-      <div class="ilet__gorsel">
-        <img src={gorsel} alt="" width="1920" height="935" loading="lazy" decoding="async" />
-      </div>
-    </section>
-  )}
 
   {/* ── Kapanış çağrısı ────────────────────────────────── */}
   <section class="kap ilet__bolum">
