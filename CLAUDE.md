@@ -205,17 +205,22 @@ tek satırlık beyaz Deltek logosu, ortada ÜÇ satır ortalanmış yazı
 satır aralığı 1.07, **yazı %78 saydam** (`opacity: .78`) — harflerin içinden
 fotoğraf görünüyor.
 
-**Üç satır da aynı genişlikte** (`.tecrube__s`, `transform: scaleX(--g)`).
-`--g` her satırın yatay esnetme çarpanı; en geniş satır 1 kabul edilip
-diğerleri ona oranlandı (111px puntoda doğal genişlikler 733 / 860 / 966px
-→ 1.318 / 1.123 / 1). Oranlar puntodan bağımsız (harf aralığı da `em`),
-ama **metin değişirse yeniden ölçülmeli**.
+**Üç satır da aynı genişlikte, harflerin en/boy oranı BOZULMADAN**: her
+satırın PUNTOSU farklı (`.tecrube__s`, `font-size: calc(1em * var(--o))`).
+`--o` punto çarpanı; en geniş satır 1 kabul edilip diğerleri ona oranlandı.
+1920px'te sonuç: 143.7 / 124.2 / 111.4px punto, üç satır da 966px.
 
-> Neden bu yol: tek biçimli `scale` ile aynı genişliği tutturmak satır
-> yüksekliklerini de değiştirirdi (en dar satır %32 daha uzun olurdu);
-> harf aralığını açmak ise istenen sıkışık görünümü bozardı. `scaleX`
-> yükseklikleri ve aralığı korur. Span `inline-block` olmalı — blok olsaydı
-> kutu tüm satırı kaplar, esnetme metni değil kutuyu gererdi.
+Çarpanlar önce doğal genişlik oranından hesaplandı (966/733 = 1.318,
+966/860 = 1.123) ama render'da %2 sapma bıraktı: punto değişince harf
+yerleşimi tam doğrusal olmuyor. **Render üzerinden düzeltilmiş** son
+değerler `1.290` / `1.1149` / `1` — sapma %0.10.
+
+> **Metin değişirse çarpanlar yeniden ölçülmeli.** Yöntem: çarpanları 1
+> yapıp her satırın doğal genişliğini ölç, en genişe oranla, sonra render'da
+> ölçüp bir tur düzelt.
+>
+> Yatay esnetme (`scaleX`) da denendi ve bırakıldı: genişlikleri eşitliyor
+> ama harfleri geriyor, yani karakterlerin en/boy oranını bozuyor.
 
 Bandın yüksekliği fotoğrafın kendi oranından (`1920×790` → `41.1vw`) —
 görselin tamamı görünsün, yatay dilim gibi kırpılmasın diye.

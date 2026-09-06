@@ -114,15 +114,16 @@ const projeTarih = (d: any) =>
        width="674" height="125" loading="lazy" decoding="async" />
   <div class="tecrube__ic">
     <p class="tecrube__y">
-      {/* Üç satır da AYNI genişliğe yayılıyor. `--g` her satırın yatay
-          esnetme çarpanı: en geniş satırın (Saha tecrübesi) doğal genişliği
-          1 kabul edilip diğerleri ona oranlandı — 111px puntoda ölçülen
-          doğal genişlikler 733 / 860 / 966px. Oranlar puntodan bağımsız
-          (harf aralığı da em cinsinden), ama METİN DEĞİŞİRSE yeniden
-          ölçülmeli. */}
-      <span class="tecrube__s" style="--g:1.318">20 yılı aşkın</span><br />
-      <span class="tecrube__s" style="--g:1.123">Uluslararası</span><br />
-      <span class="tecrube__s" style="--g:1">Saha tecrübesi</span>
+      {/* Üç satır da AYNI genişlikte, ama harflerin oranı BOZULMADAN:
+          her satırın PUNTOSU değişiyor. `--o` punto çarpanı — en geniş
+          satır (Saha tecrübesi) 1 kabul edilip diğerleri ona oranlandı.
+          Çarpanlar doğal genişlik oranından hesaplanıp (966/733, 966/860)
+          sonra RENDER ÜZERİNDEN düzeltildi: punto değişince harf yerleşimi
+          tam doğrusal olmadığı için ilk değerler %2 sapma bırakıyordu.
+          METİN DEĞİŞİRSE yeniden ölçülmeli. */}
+      <span class="tecrube__s" style="--o:1.290">20 yılı aşkın</span>
+      <span class="tecrube__s" style="--o:1.1149">Uluslararası</span>
+      <span class="tecrube__s" style="--o:1">Saha tecrübesi</span>
     </p>
   </div>
 </section>
