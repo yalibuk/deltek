@@ -135,6 +135,20 @@ okunur — elle yazılan 1920×935 dosya 1920×539 çıkınca yanlış oranda ye
 ayrılıyordu. Görsel dosyası:
 `public/images/iletisim/deltek_iletisim_banner.jpg`.
 
+#### Görselin boyutunu değiştirme
+
+Tek yer: `src/components/IletisimDuzen.astro` → `.ilet__gorsel` kuralları.
+`width`/`height` öznitelikleri boyut belirlemez; onlar dosyadan okunur ve
+yalnızca yüklenmeden önce doğru oranda yer ayırmaya yarar.
+
+| İstenen | Yazılacak |
+| --- | --- |
+| Daha dar (ör. en çok 900px, ortalanmış) | `.ilet__gorsel { max-width: 900px; margin-inline: auto; }` |
+| Konteynerin tamamı (şu anki hâli) | `.ilet__gorsel img { width: 100%; }` |
+| Ekran kenarından kenara (full-bleed) | `.ilet__gorsel { width: 100vw; margin-inline: calc(50% - 50vw); border-radius: 0; }` ve img'de `border-radius: 0` |
+| Sabit yükseklik, taşanı kırp | `.ilet__gorsel img { aspect-ratio: 1920/380; object-fit: cover; }` |
+| Üst/alt boşluk | `.ilet__gorsel { margin-block: … }` |
+
 > Başlık bloğunun 62ch sınırı artık `.ilet__bas`ta değil, içindeki iki
 > `.ilet__basMetin` sarmalayıcısında — görsel aradan konteynerin tamamını
 > kullanabilsin diye. Sınır TEK sarmalayıcıda tutulmalı: çocuklara tek tek

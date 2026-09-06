@@ -211,9 +211,11 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 .ofis__yol:hover { background: var(--mavi); color: var(--beyaz); }
 
 /* ─── Tanıtım görseli ─────────────────────────────────── */
-/* Açık mavi altlık görselin arkasından taşar; görselin kendi gölgesi altında. */
 /* Arkada açık mavi bir altlık vardı, kaldırıldı; sarmalayıcı yalnız boşluk
-   veriyor. Yuvarlak köşe ve gölge görselin kendisinde. */
+   veriyor. Yuvarlak köşe ve gölge görselin kendisinde.
+   GÖRSELİN BOYUTU buradan ayarlanır — ayrıntı CLAUDE.md → "İletişim sayfası
+   tanıtım görseli". `width`/`height` öznitelikleri ölçü DEĞİL, yalnızca
+   yüklenmeden önce doğru oranda yer ayırmak için (dosyadan okunuyor). */
 .ilet__gorsel { margin-block: clamp(1.6rem, 3.4vw, 2.6rem); }
 .ilet__gorsel img { display: block; width: 100%; height: auto; border-radius: 12px;
   box-shadow: 0 26px 50px -28px rgb(var(--blue-800-rgb) / .65); }
