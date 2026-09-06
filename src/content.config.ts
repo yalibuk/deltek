@@ -90,8 +90,10 @@ const sayfalar = defineCollection({
     }).optional(),
 
     // ── duzen: 'iletisim' alanları ────────────────────────────
-    // Google Haritalar gömme (embed) adresi; boşsa harita bölümü çıkmaz.
-    harita: z.string().optional(),
+    // duzen: 'iletisim' — sayfanın altındaki tanıtım görseli (public/ yolu).
+    // Boşsa o bölüm hiç basılmaz. (Burada önce Google Haritalar gömme adresi
+    // vardı; harita bölümü kaldırıldı.)
+    gorsel: z.string().optional(),
 
     // ── duzen: 'urun' alanları ────────────────────────────────
     banner: z.string().optional(),

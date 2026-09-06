@@ -7,15 +7,17 @@
  * Ziyaretçi tek dokunuşla arayabilsin diye telefon ve e-posta en üstte,
  * büyük dokunma hedefleri olarak duruyor.
  *
- * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir; harita gömme adresi
- * sayfanın frontmatter'ındaki `harita` alanından. Etiketler CEVIRI'de
+ * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir. Sayfanın altındaki
+ * tanıtım görseli frontmatter'daki `gorsel` alanından. (Burada önce gömülü
+ * bir Google haritası ve "Merkez ofisimiz" başlığı vardı; ikisi de kaldırıldı.)
+ * Etiketler CEVIRI'de
  * (iki dilli sabit metin sayfaya gömülmez — bkz. CLAUDE.md).
  */
 import { SITE, OFISLER, yolTarifi } from '../data/site';
 import { CEVIRI, type Dil } from '../data/i18n';
 
-interface Props { dil: Dil; baslik: string; ozet?: string; harita?: string; }
-const { dil, baslik, ozet, harita } = Astro.props;
+interface Props { dil: Dil; baslik: string; ozet?: string; gorsel?: string; }
+const { dil, baslik, ozet, gorsel } = Astro.props;
 const t = CEVIRI[dil].iletisim;
 // Markdown gövdesi boşsa hiç kutu basma (slot her zaman geçildiği için
 // Astro.slots.has yetmiyor; render edip içeriğe bakıyoruz).
@@ -69,9 +71,6 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
         <article class="ofis">
           <div class="ofis__bas">
             <h3>{o.sehir}</h3>
-            <span class={`ofis__rozet${o.merkez ? ' ofis__rozet--merkez' : ''}`}>
-              {o.merkez ? t.merkez : t.bolge}
-            </span>
           </div>
           <dl class="ofis__veri">
             <dt>{t.adres}</dt>
@@ -90,13 +89,11 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
     </div>
   </section>
 
-  {/* ── Harita ─────────────────────────────────────────── */}
-  {harita && (
+  {/* ── Tanıtım görseli (eskiden harita vardı) ─────────── */}
+  {gorsel && (
     <section class="kap ilet__bolum">
-      <h2 class="ilet__h2">{t.haritaBaslik}</h2>
-      <div class="ilet__harita">
-        <iframe src={harita} title={t.haritaAlt} loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <div class="ilet__gorsel">
+        <img src={gorsel} alt="" width="1920" height="935" loading="lazy" decoding="async" />
       </div>
     </section>
   )}
@@ -181,12 +178,11 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
   transition: transform .2s ease, box-shadow .2s ease; }
 .ofis:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
 .ofis__bas { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
-.ofis__bas h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.35rem;
-  letter-spacing: -.015em; color: var(--mavi-900); }
-.ofis__rozet { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--mute); background: var(--kagit); border: 1px solid var(--cizgi);
-  border-radius: 999px; padding: .28rem .7rem; }
-.ofis__rozet--merkez { color: var(--mavi); background: var(--mavi-050); }
+/* Şehir adı, karttaki "Yol tarifi" butonuyla (.ofis__yol) aynı hap biçiminde.
+   Başlık olduğu için tıklanabilir değil; hover durumu da yok. */
+.ofis__bas h3 { display: inline-flex; align-items: center;
+  font-family: var(--f-dis); font-weight: 700; font-size: .88rem; color: var(--mavi);
+  border: 1px solid var(--mavi); border-radius: 999px; padding: .55rem 1.05rem; }
 
 .ofis__veri { margin-top: 1.2rem; display: grid; grid-template-columns: auto 1fr; gap: .55rem 1.1rem; }
 .ofis__veri dt { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
@@ -201,12 +197,12 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
   transition: background .15s, color .15s; }
 .ofis__yol:hover { background: var(--mavi); color: var(--beyaz); }
 
-/* ─── Harita ──────────────────────────────────────────── */
-.ilet__harita { position: relative; aspect-ratio: 21/9; border-radius: 16px; overflow: hidden;
-  border: 1px solid var(--cizgi); background: var(--kagit-2);
-  box-shadow: 0 26px 50px -34px rgb(var(--blue-800-rgb) / .5); }
-.ilet__harita iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-@media (max-width: 700px) { .ilet__harita { aspect-ratio: 4/3; } }
+/* ─── Tanıtım görseli ─────────────────────────────────── */
+/* Açık mavi altlık görselin arkasından taşar; görselin kendi gölgesi altında. */
+.ilet__gorsel { background: var(--mavi-050); border: 1px solid var(--cizgi);
+  border-radius: 18px; padding: clamp(.7rem, 1.6vw, 1.2rem); }
+.ilet__gorsel img { display: block; width: 100%; height: auto; border-radius: 12px;
+  box-shadow: 0 26px 50px -28px rgb(var(--blue-800-rgb) / .65); }
 
 /* ─── Kapanış çağrısı ─────────────────────────────────── */
 .ilet__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;

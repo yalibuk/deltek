@@ -91,7 +91,7 @@ const sema = tur === 'yazi'
 <Layout title={`${belgeBaslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
         image={p.kapak} sema={sema} cevirisiVar={cevirisiVar}>
 {p.duzen === 'iletisim' ? (
-  <IletisimDuzen dil="tr" baslik={p.baslik} ozet={p.ozet} harita={p.harita}>
+  <IletisimDuzen dil="tr" baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel}>
     <Content />
   </IletisimDuzen>
 ) : (

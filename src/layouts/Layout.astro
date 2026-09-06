@@ -234,7 +234,7 @@ const jsonLd = {
         <a href={`mailto:${SITE.eposta}`}>{SITE.eposta}</a>
         {OFISLER.map(o => (
           <a class="alt__ofis" href={yolTarifi(o)} target="_blank" rel="noopener">
-            <strong>{o.sehir}<span>{o.merkez ? t.iletisim.merkez : t.iletisim.bolge}</span></strong>
+            <strong>{o.sehir}</strong>
             {o.adres}<br />{o.adres2}
           </a>
         ))}
@@ -402,7 +402,6 @@ a.tekdd__b:hover { background: var(--mavi-050); }
 .alt__ofis { display: block; }
 .alt__ofis + .alt__ofis { margin-top: .7rem; }
 .alt__ofis strong { display: flex; align-items: center; gap: .5rem; font-family: var(--f-dis); font-weight: 700; color: var(--mavi-900); }
-.alt__ofis strong span { font-family: var(--f-veri); font-weight: 700; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); background: var(--mavi-050); border: 1px solid var(--cizgi); border-radius: 999px; padding: .1rem .45rem; }
 .alt__ofis:hover strong { color: var(--mavi); }
 .alt__telif { margin-top: 2rem; padding-top: 1.3rem; border-top: 1px solid var(--cizgi); font-family: var(--f-veri); font-size: .7rem; color: var(--mute); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 

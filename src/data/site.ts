@@ -15,8 +15,10 @@ export const SITE = {
   kanonikal: "https://www.deltek.com.tr",
 };
 
-// Tüm ofisler — /iletisim/ sayfasında (duzen: iletisim) kart olarak listelenir.
-// `merkez` yalnızca bir ofiste true olmalı; harita bölümü onu gösterir.
+// Tüm ofisler — /iletisim/ sayfasında (duzen: iletisim) kart olarak ve
+// footer'da listelenir. Merkez/şube ibaresi SAYFADA GÖSTERİLMEZ; `merkez`
+// bayrağı yalnızca hangi adresin JSON-LD'ye (SITE.adres1/2) gittiğini
+// işaretler ve dizideki sırayı belirler. Yalnız bir ofiste true olmalı.
 export const OFISLER = [
   {
     sehir: "İzmir",

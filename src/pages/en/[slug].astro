@@ -58,7 +58,7 @@ const sema = tur === 'yazi'
 <Layout title={`${p.baslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
         image={p.kapak} sema={sema} cevirisiVar={cevirisiVar}>
 {p.duzen === 'iletisim' ? (
-  <IletisimDuzen dil="en" baslik={p.baslik} ozet={p.ozet} harita={p.harita}>
+  <IletisimDuzen dil="en" baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel}>
     <Content />
   </IletisimDuzen>
 ) : (

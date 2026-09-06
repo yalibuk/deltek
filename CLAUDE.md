@@ -115,16 +115,21 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 **Merkez İZMİR, İstanbul ŞUBE.** Tek kaynak `src/data/site.ts`:
 
 * `OFISLER` dizisi — merkez olan başta, `merkez: true` yalnız birinde.
-  `/iletisim/` kartları ve footer bu diziden basılır; etiketler `i18n.ts`
-  (`merkez: 'Merkez ofis'`, `bolge: 'Şube'`).
+  `/iletisim/` kartları ve footer bu diziden basılır.
 * `SITE.adres1/adres2` — **merkezin** adresi; JSON-LD `streetAddress` bunu
   kullanır. `OFISLER`'deki merkezle aynı tutulmalı.
 
-> `/iletisim/` sayfasındaki gömülü Google haritası hâlâ **İstanbul**
-> koordinatlarını gösteriyor (`iletisim.md` → `harita`). Merkez İzmir olduğu
-> için haritanın da İzmir'e çevrilmesi gerekir; gömme adresi elle alınmalı
-> (Google Haritalar > Paylaş > Harita yerleştir). Şimdilik harita başlığı
-> tarafsızlaştırıldı ("Deltek ofis konumu").
+> **"Merkez ofis" / "Şube" ibareleri hiçbir yerde GÖSTERİLMEZ.** Adres geçen
+> her yerde (iletişim kartları, footer) yalnız şehir adı ve adres var.
+> `merkez` bayrağı sayfada görünmez; yalnızca hangi adresin JSON-LD'ye
+> gideceğini ve sıralamayı belirler. `i18n.ts`'teki `merkez`/`bolge`
+> etiketleri bu yüzden silindi.
+
+`/iletisim/` sayfasındaki gömülü Google haritası ve üstündeki "Merkez
+ofisimiz" başlığı **kaldırıldı**. Yerine sayfanın altındaki tanıtım görseli
+geldi: frontmatter'daki `gorsel` alanı (eskiden `harita`), açık mavi altlık
+(`--mavi-050`) üzerinde tam genişlikte, altında gölge. Görsel dosyası:
+`public/images/iletisim/deltek_iletisim_banner.jpg` (1920×935).
 
 ## Ana sayfa bölümleri
 
