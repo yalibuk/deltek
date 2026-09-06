@@ -169,54 +169,55 @@ Poppins 13 KB, Manrope 21 KB, Archivo 27 KB. Değiştirmek için tek yer:
 
 ## Logo
 
-Görünen logoların hepsi **`public/deltek_logo.svg`** (header ve footer),
+Görünen logoların hepsi **`public/deltek_logo.svg`** (header ve footer);
+ana sayfadaki tecrübe bandında tek satırlık beyaz sürüm
+**`public/deltek_logo_single_line_white.svg`** kullanılıyor,
 oran 674.14×163.78. JSON-LD'deki `logo` alanı bilerek **PNG** kaldı
 (`deltek-logo.png`): yapısal veri görselleri için raster bekleniyor, SVG'nin
 doğal piksel ölçüsü yok. `scripts/og-gorsel-uret.mjs` de PNG kullanır.
 
-### Header gölgesi ("kalkık köşe")
+### Logo gölgesi
 
-Canlı deltek.com.tr'deki header gölgesinin aynısı. Orada `.nav-4` üzerinde
-iki ince şerit var; ölçüldü: yükseklik ~1,8px, `bottom: 8px`, kenarlardan
-%2 içeride, genişlik ~%38, gölge `0 6px 8px`, şeritler **∓2°** döndürülmüş.
-Aynı reçete `.ust::before` / `.ust::after` olarak uygulandı
-(`src/layouts/Layout.astro`).
+Header'ın gölgesi YOK (`.ust` yalnız alt çizgi). Gölge sadece logoda ve
+`drop-shadow` ile — `box-shadow` dikdörtgen kutuyu gölgelerdi, `drop-shadow`
+SVG'nin kendi biçimini takip eder. **Işık açısı 90°**, yani tam tepeden:
+yatay kayma 0, gölge düz aşağı düşer.
 
 | Değişken | Ne yapar |
 | --- | --- |
-| `--ug-aci` | şeritlerin dönme açısı (∓) |
-| `--ug-y` | gölgenin dikey kayması |
-| `--ug-bulanik` | yumuşaklık |
-| `--ug-koyu` | koyuluk (0–1) |
-| `--ug-ic` | kenarlardan içeri boşluk |
-| `--ug-dip` | şeridin header dibinden yüksekliği |
-| `--ug-kalinlik` | şeridin kalınlığı |
+| `--lg-y` | gölgenin düşme mesafesi |
+| `--lg-bulanik` | yumuşaklık |
+| `--lg-koyu` | koyuluk (0–1) |
 
-Kapatmak için: `.ust::before, .ust::after { display: none; }`
-
-> **Şeridin yüksekliği yüzdeyle verilmemeli.** Canlı sitedeki
-> `top: 78%; bottom: 8px` 51px'lik bir çubukta ~1,8px veriyordu; bizim
-> header 165px olduğu için aynı yüzdeler 28px'lik bir dikdörtgen üretip
-> gölgeyi bozdu. Bu yüzden `height` sabit.
+Kapatmak için: `.logo img { filter: none; }`
+Logo yüksekliği 55px (46px'ten %20 büyütüldü).
 
 ## Ana sayfa bölümleri
 
 Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar** →
 **tecrübe bandı** → blog → hakkımızda → çağrı bandı.
 
-**Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde: bant `.kap` içinde
-değil, doğrudan gövdede; YAZILAR ise içerideki `.kap` sarmalayıcıda, yani
-sayfa genişliğini aşmıyorlar. "20 yılı aşkın" sol üstte, "Saha tecrübesi"
-sağ altta. Yazı tipi `--f-vurgu` (Montserrat 800).
+**Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde ve düzeni kullanıcının
+verdiği örnekten (`deltek_hdd_1_sample.webp`) alındı: sağ üstte %50 saydam
+tek satırlık beyaz Deltek logosu, ortada iki satır ortalanmış yazı
+("20 yılı aşkın / Uluslararası saha tecrübesi"), yazı bloğu dikeyde bandın
+%60'ında. Yazı tipi `--f-vurgu` (Montserrat 800), punto örnekle aynı oranda
+(1920px'te 80px = 4.2vw).
 
-Görselin üstündeki **mavi filtre gerekli** — ölçümde filtresiz hâlde yazı
-bölgesinin en açık noktası 218 parlaklıktaydı ve beyaz yazı orada 1.40
-kontrast veriyordu. Filtreli hâlde en kötü noktalar: üst yazı **5.39**,
-alt yazı **6.30** (büyük kalın yazı eşiği 3.0). Koyuluk `--tf-koyu`.
+Bandın yüksekliği fotoğrafın kendi oranından (`1920×790` → `41.1vw`) —
+görselin tamamı görünsün, yatay dilim gibi kırpılmasın diye.
 
-> **Görsel `position: absolute` olmak zorunda.** Grid öğesi olarak
-> bırakıldığında 1920×1080 doğal oranıyla satır yüksekliğini kendi dayatıyor
-> ve bant 490px yerine 802px oluyordu.
+Logo ve yazı `.kap`'a SIĞDIRILMAZ (max 1280px): örnekte logo sayfanın sağ
+kenarında ve ikinci satır 1920px'te ~1380px, yani konteynerden geniş.
+İkisi de bandın kendi genişliğinde, sayfa payı kadar içeride.
+
+Görselin üstündeki **mavi filtre gerekli** (`--tf-koyu: .50`). Ölçüm:
+filtresiz en açık nokta 218 → kontrast 1.40; `.30`'da 2.96, `.42`'de 2.99,
+`.50`'de **3.56** (büyük kalın yazı eşiği 3.0). Fotoğrafı daha parlak
+istersen `--tf-koyu`yu düşür, ama 3.0'ın altına inme.
+
+> **Görsel `position: absolute` olmak zorunda.** Normal öğe olarak
+> bırakıldığında kendi doğal oranıyla bandın yüksekliğini dayatıyor.
 
 Hizmet kartları ve rakamlar `src/pages/index.astro` frontmatter'ında
 (`HIZMETLER`, `RAKAMLAR`) duruyor; ikisi de canlı deltek.com.tr ana

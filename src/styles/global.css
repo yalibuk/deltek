@@ -210,33 +210,38 @@ section[id] { scroll-margin-top: 150px; }
 .hkart:hover .hkart__ok { transform: translateX(4px); }
 
 /* ─── Ana sayfa: tecrübe bandı ───────────────────────── */
-/* Tam sayfa genişliği: bant .kap içinde değil, doğrudan gövdede. Yazılar
-   ise .kap sarmalayıcıda, yani sayfa genişliğini aşmıyor: biri sol ÜSTTE,
-   diğeri sağ ALTTA.
-   Görselin üstündeki MAVİ FİLTRE gerekli — ölçümde filtresiz hâlde yazı
-   bölgesinin en açık noktası 218 parlaklıktaydı ve beyaz yazı orada 1.40
-   kontrast veriyordu. Yazılar artık üst ve alt kenarda olduğu için filtre
-   düz (ortası koyu gradyan değil). Koyuluk: --tf-koyu. */
-/* Görsel AKIŞ DIŞI (position:absolute) olmak zorunda: grid öğesi olarak
-   bırakılınca 1920x1080 doğal oranıyla satır yüksekliğini kendi dayatıyor
-   ve bant 802px'e çıkıyordu. Yüksekliği içerideki kutu belirler. */
-.tecrube { --tf-koyu: .60;
+/* Düzen kullanıcının verdiği örnekten (deltek_hdd_1_sample.webp) alındı:
+   sağ üstte %50 saydam Deltek logosu, ortada iki satır ortalanmış yazı,
+   yazı bloğu dikeyde merkezin biraz altında.
+   Bant tam sayfa genişliğinde (.kap içinde DEĞİL); logo ve yazı ise
+   içerideki .kap sarmalayıcıda, sayfa genişliğini aşmıyorlar.
+   Punto örnekle aynı oranda: örnekte 1920px genişlikte ~80px, yani 4.2vw. */
+.tecrube { --tf-koyu: .50;
   position: relative; overflow: hidden; isolation: isolate; background: var(--blue-900); }
+/* Görsel AKIŞ DIŞI olmak zorunda: normal öğe olarak bırakılırsa kendi doğal
+   oranıyla bandın yüksekliğini dayatır. */
 .tecrube__g { position: absolute; inset: 0; z-index: 0;
   width: 100%; height: 100%; object-fit: cover; }
 .tecrube::after { content: ""; position: absolute; inset: 0; z-index: 1;
   background: rgb(var(--blue-900-rgb) / var(--tf-koyu)); }
+/* Logo ve yazı .kap'a SIĞDIRILMIYOR (max 1280px): örnekte logo sayfanın sağ
+   kenarında, ikinci satır da 1920px'te ~1380px, yani konteynerden geniş.
+   İkisi de bandın kendi genişliğinde, sayfa payı kadar içeride duruyor. */
 .tecrube__ic { position: relative; z-index: 2;
-  min-height: clamp(280px, 34vw, 520px);
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding-block: clamp(1.6rem, 3.4vw, 3rem); }
-.tecrube__y { margin: 0; font-family: var(--f-vurgu); font-weight: 800;
-  font-size: clamp(1.9rem, 6.4vw, 5rem); line-height: 1;
+  /* Yükseklik fotoğrafın kendi oranından (1920x790 -> 41.1vw): örnekteki
+     gibi görselin TAMAMI görünsün, yatay dilim gibi kırpılmasın. */
+  min-height: clamp(280px, 41.1vw, 790px);
+  display: flex; flex-direction: column;
+  padding: clamp(1.2rem, 2.6vw, 2.2rem) clamp(1.15rem, 4vw, 2.75rem); }
+.tecrube__logo { position: absolute; z-index: 2;
+  top: clamp(1rem, 2.2vw, 2.6rem); right: clamp(1.15rem, 2.3vw, 2.75rem);
+  width: clamp(120px, 17vw, 330px); height: auto; opacity: .5; }
+.tecrube__y { margin: auto auto clamp(1.2rem, 7vw, 7rem); text-align: center;
+  font-family: var(--f-vurgu); font-weight: 800;
+  font-size: clamp(1.15rem, 4.2vw, 5rem); line-height: 1.08;
   letter-spacing: -.045em; text-transform: uppercase;
-  color: var(--beyaz); text-wrap: balance;
+  color: var(--beyaz);
   text-shadow: 0 4px 26px rgb(var(--blue-950-rgb) / .6); }
-.tecrube__y--ust { align-self: flex-start; text-align: left; }
-.tecrube__y--alt { align-self: flex-end; text-align: right; }
 
 /* ─── Ana sayfa: rakamlar şeridi ─────────────────────── */
 .rakam { background: var(--mavi-900); border-block: 3px solid var(--sari);

@@ -17,9 +17,9 @@ Tasarladığımız her projede mühendisliğin ”4E” kuralını (sırasıyla 
 
 ### Hangi Hizmetleri Sunuyoruz?
 
-Sunduğumuz farklı yöntem ve tekniklerle boru ve kablo hatlarının yer üstünden kazı yapılmadan yer altına alınması için inovatif çözümler sunuyoruz. Bu anlamda sunduğumuz yönlendirilebilir yatay sondaj ve boru sürme/çakma metodlarıyla kilometrelerce hattı yer altına aldık; devam ediyoruz.
+Sunduğumuz farklı yöntem ve tekniklerle boru ve kablo hatlarının yer üstünden kazı yapılmadan yer altına alınması için inovatif çözümler sunuyoruz. Bu anlamda sunduğumuz yönlendirilebilir yatay sondaj ve boru sürme/çakma metotlarıyla kilometrelerce hattı yer altına aldık; devam ediyoruz.
 
-Yönlendirilebilir yatay sondaj yönteminde 250 ton, boru sürmede 800 tona varan makine kapasitemizle her ölçekte projeye çözüm üretebiliecek bir yapıya sahibiz. Elektrik/enerji hatları, fiber optik kablo kanalları, içme suyu hatları, doğalgaz boru hatları, akaryakıt boru hatları, kanalizasyon ve yağmur suyu hatları, drenaj hatları, endüstriyel sıvı iletim hatları için sunduğumuz kazısız çözümler sayesinde sayısız projeye hayat verdik.
+Yönlendirilebilir yatay sondaj yönteminde 660 ton, boru sürmede 2200 tona varan makine kapasitemizle her ölçekte projeye çözüm üretebilecek bir yapıya sahibiz. Elektrik/enerji hatları, fiber optik kablo kanalları, içme suyu hatları, doğalgaz boru hatları, akaryakıt boru hatları, kanalizasyon ve yağmur suyu hatları, drenaj hatları, endüstriyel sıvı iletim hatları için sunduğumuz kazısız çözümler sayesinde sayısız projeye hayat verdik.
 
 En uygun makine ve ekip seçimi ve ücretsiz fizibilite raporu için proje departmanımızla [iletişim](/iletisim/)‘e geçebilirsiniz.
 
