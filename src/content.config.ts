@@ -35,10 +35,12 @@ const sayfalar = defineCollection({
     //   'logo-izgara' → art arda gelen görselleri yan yana dizer (referans logoları)
     //   'urun'        → ürün/teknoloji şablonu (banner + görsel-metin blokları
     //                   + teknik tablolar + galeri; bkz. components/UrunDuzen.astro)
+    //   'referanslar' → sayfanın başına kayan logo şeridi basar
+    //                   (bkz. components/LogoSerit.astro), altına markdown gövdesi
     //   'iletisim'    → iletişim şablonu (hızlı iletişim + ofis kartları + harita;
     //                   ofisler src/data/site.ts OFISLER'den gelir, form YOK)
     // Boşsa normal makale akışı.
-    duzen: z.enum(['logo-izgara', 'urun', 'iletisim', 'hizmet']).optional(),
+    duzen: z.enum(['logo-izgara', 'urun', 'iletisim', 'hizmet', 'referanslar']).optional(),
 
     // <title> ve OG başlığı. Sayfanın görünen başlığı (<h1>) kısaltıldığında
     // arama motorlarına giden uzun, anahtar kelimeli başlık burada saklanır.

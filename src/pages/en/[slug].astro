@@ -4,6 +4,7 @@ import { SITE } from '../../data/site';
 import { kokIcerik, cevirisiVarMi } from '../../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../../components/UrunDuzen.astro';
+import LogoSerit from '../../components/LogoSerit.astro';
 import IletisimDuzen from '../../components/IletisimDuzen.astro';
 
 /**
@@ -82,7 +83,12 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  {p.duzen === 'urun' ? (
+  {p.duzen === 'referanslar' ? (
+    <>
+      <LogoSerit />
+      <div class="yazi__icerik yazi__icerik--referanslar"><Content /></div>
+    </>
+  ) : p.duzen === 'urun' ? (
     <UrunDuzen banner={p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
                tablolar={p.tablolar} galeri={p.galeri}>
       <div class="yazi__icerik"><Content /></div>

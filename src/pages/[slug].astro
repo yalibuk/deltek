@@ -4,6 +4,7 @@ import { SITE } from '../data/site';
 import { kokIcerik, cevirisiVarMi } from '../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
+import LogoSerit from '../components/LogoSerit.astro';
 import IletisimDuzen from '../components/IletisimDuzen.astro';
 import HizmetDuzen from '../components/HizmetDuzen.astro';
 import TeknolojiHaritasi from '../components/TeknolojiHaritasi.astro';
@@ -125,7 +126,13 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  {p.duzen === 'hizmet' ? (
+  {p.duzen === 'referanslar' ? (
+    <>
+      {/* Şerit makale sütununun dışına taşar: logolar sayfanın tamamını kullansın */}
+      <LogoSerit />
+      <div class="yazi__icerik yazi__icerik--referanslar"><Content /></div>
+    </>
+  ) : p.duzen === 'hizmet' ? (
     <HizmetDuzen hizmetler={p.hizmetler} neden={p.neden} projeler={p.projeler} alanlar={p.alanlar}>
       <div class="yazi__icerik"><Content /></div>
     </HizmetDuzen>
@@ -227,6 +234,8 @@ const sema = tur === 'yazi'
 .yazi__icerik--logo-izgara :global(p) { margin: 0; }
 .yazi__icerik--logo-izgara :global(img) { margin: 0; max-height: 72px; width: auto; border-radius: 0; filter: grayscale(1); opacity: .72; transition: filter .2s, opacity .2s; }
 .yazi__icerik--logo-izgara :global(img:hover) { filter: none; opacity: 1; }
+/* Referanslar: kayan şerit makale sütununun dışına taşar, metin normal akışta */
+.yazi__icerik--referanslar { margin-top: clamp(1.8rem, 4vw, 2.8rem); }
 .yazi__galeri { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-top: 2rem; }
 @media (min-width: 640px) { .yazi__galeri { grid-template-columns: repeat(3, 1fr); } }
 .yazi__galeri figure { margin: 0; border-radius: 4px; overflow: hidden; border: 1px solid var(--cizgi); aspect-ratio: 4/3; }

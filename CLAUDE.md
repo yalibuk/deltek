@@ -412,6 +412,32 @@ seoBaslik: "Yönlendirilebilir Yatay Sondaj Nedir?"      # <title>, og:title, JS
 `src/data/teknoloji.ts`'teki `ad` (kart/dropdown) ve `tamAd` (yan menü)
 etiketleri bundan bağımsız, elle yazılıyor.
 
+### `duzen: referanslar` — kayan logo şeridi
+
+`/referanslar/` sayfasının başında logolar otomatik kayan bir şerit olarak
+basılır (`components/LogoSerit.astro`), altında markdown gövdesi gelir.
+Reçete **Boremak sitesindeki "Delgi Başlıkları" şeridinden** alındı: liste
+DÖRT kez basılır ve ray `-25%` kaydırılır; ikinci kopya tam birincinin yerine
+geldiği için ek görünmez, sonsuz döner. Kenarlar `mask-image` ile söner,
+fareyle üzerine gelince durur, `prefers-reduced-motion`'da hiç oynamaz.
+
+* Logolar `src/data/referanslar.ts` (`REFERANS_LOGOLARI`) içinde, sıra
+  şeritteki sıradır.
+* **Dosyası olmayan logo hiç basılmaz** — `gorselOlcu()` null dönerse kayıt
+  atlanır. Böylece henüz eklenmemiş bir logo kırık ikon olarak çıkmaz;
+  dosya konulduğu anda kendiliğinden görünür.
+* Logo yüksekliği **144px** — eski statik ızgaranın (72px) iki katı.
+  620px altında 96px.
+* Şerit `width: 100vw; margin-inline: calc(50% - 50vw)` ile makale
+  sütununun dışına, sayfanın tamamına taşar. `body { overflow-x: hidden }`
+  global.css'te tanımlı olduğu için yatay taşma yaratmaz.
+* Şeridin zemini **beyaz** olmalı: logolar beyaz kareli JPEG, `--kagit`
+  zeminde her biri ayrı bir kare leke gibi görünüyordu.
+
+> **Saipem ve Aramco logoları henüz yok.** Dosyalar
+> `public/images/referans/saipem.png` ve `.../aramco.png` olarak konulduğunda
+> şeritte kendiliğinden belirirler; kod hazır.
+
 ### Banner sembolleri
 
 Canlı sitede her teknoloji sayfasının tepesinde 1170×350'lik bir JPEG duruyordu:

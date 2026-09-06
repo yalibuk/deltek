@@ -1,0 +1,69 @@
+---
+/**
+ * Referans logolarının otomatik kayan şeridi.
+ *
+ * Reçete Boremak sitesindeki "Delgi Başlıkları" şeridinden alındı: liste
+ * DÖRT kez basılır ve ray `-25%` kaydırılır — bir tur bittiğinde ikinci
+ * kopya tam olarak birincinin yerine geldiği için ek olmaz, sonsuz döner.
+ * Kenarlardaki sertlik `mask-image` ile söndürülür. Fareyle üzerine
+ * gelince durur, `prefers-reduced-motion` açıksa hiç oynamaz.
+ *
+ * Dosyası olmayan logo BASILMAZ: `gorselOlcu()` null dönerse kayıt atlanır,
+ * böylece henüz eklenmemiş görsel kırık ikon olarak çıkmaz (bkz.
+ * src/data/referanslar.ts).
+ */
+import { REFERANS_LOGOLARI } from '../data/referanslar';
+import { gorselOlcu } from '../data/gorselOlcu';
+
+interface Props {
+  /** Tam turun süresi; uzatmak yavaşlatır. */
+  sure?: string;
+}
+const { sure = '34s' } = Astro.props;
+
+const olculu = await Promise.all(
+  REFERANS_LOGOLARI.map(async l => ({ ...l, olcu: await gorselOlcu(l.src) })),
+);
+const logolar = olculu.filter(l => l.olcu);
+---
+{logolar.length > 0 && (
+  <div class="lserit" style={`--lserit-sure:${sure}`}>
+    <div class="lserit__ray">
+      {[0, 1, 2, 3].map(kopya =>
+        logolar.map(l => (
+          <div class="lserit__k">
+            <img src={l.src} alt={kopya === 0 ? l.ad : ''}
+                 aria-hidden={kopya === 0 ? undefined : 'true'}
+                 width={l.olcu!.en} height={l.olcu!.boy} loading="lazy" decoding="async" />
+          </div>
+        )),
+      )}
+    </div>
+  </div>
+)}
+
+<style>
+/* Şerit makale sütununun (820px) dışına, sayfanın tamamına taşar.
+   `body { overflow-x: hidden }` global.css'te tanımlı olduğu için 100vw
+   kaydırma çubuğu varken bile yatay taşma yaratmaz. */
+.lserit { width: 100vw; margin-inline: calc(50% - 50vw);
+  overflow: hidden; border-block: 1px solid var(--cizgi);
+  /* Zemin BEYAZ olmalı: logolar beyaz kareli JPEG, açık mavi (--kagit)
+     zeminde her biri ayrı bir kare leke gibi görünüyordu. */
+  background: var(--beyaz); padding-block: clamp(1rem, 2.4vw, 1.6rem);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.lserit__ray { display: flex; width: max-content;
+  animation: lserit-kay var(--lserit-sure, 34s) linear infinite; }
+.lserit:hover .lserit__ray { animation-play-state: paused; }
+/* Yükseklik 144px — sayfadaki eski ızgara boyutunun (72px) iki katı. */
+.lserit__k { flex: 0 0 auto; height: 144px; padding-inline: clamp(1.4rem, 3vw, 2.6rem);
+  display: flex; align-items: center; justify-content: center; }
+.lserit__k img { height: 100%; width: auto; object-fit: contain; display: block;
+  filter: grayscale(1); opacity: .72; transition: filter .2s, opacity .2s; }
+.lserit__k img:hover { filter: none; opacity: 1; }
+@media (max-width: 620px) { .lserit__k { height: 96px; } }
+/* Dört kopyanın biri kadar kayınca desen başa döner. */
+@keyframes lserit-kay { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+@media (prefers-reduced-motion: reduce) { .lserit__ray { animation: none; } }
+</style>

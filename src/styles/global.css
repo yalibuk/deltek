@@ -219,7 +219,7 @@ section[id] { scroll-margin-top: 150px; }
 .tecrube { --tf-koyu: .70;
   position: relative; overflow: hidden; isolation: isolate; background: var(--blue-900);
   /* üstte sarı, altta mavi kenarlık — kalınlık rakamlar şeridiyle aynı (3px) */
-  border-top: 3px solid var(--sari); border-bottom: 3px solid var(--mavi); }
+  border-top: 3px solid var(--sari); border-bottom: 3px solid var(--sari); }
 /* Görsel AKIŞ DIŞI olmak zorunda: normal öğe olarak bırakılırsa kendi doğal
    oranıyla bandın yüksekliğini dayatır. */
 .tecrube__g { position: absolute; inset: 0; z-index: 0;
