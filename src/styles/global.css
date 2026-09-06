@@ -75,6 +75,11 @@
   --f-dis:    'Open Sans', system-ui, -apple-system, sans-serif;
   --f-metin:  'Open Sans', system-ui, -apple-system, sans-serif;
   --f-veri:   'Open Sans', system-ui, -apple-system, sans-serif;
+  /* Vurgu başlığı — şu an yalnız ana sayfadaki tecrübe bandı kullanıyor.
+     Montserrat 800, tek ağırlık: latin+latin-ext 51KB, Türkçe karakterler
+     tam. Open Sans ile AYNI Google Fonts isteğinde geliyor, ek istek yok.
+     Kullanılmadığı sayfalarda dosya hiç indirilmez. */
+  --f-vurgu:  'Montserrat', 'Open Sans', system-ui, -apple-system, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; }
@@ -205,28 +210,33 @@ section[id] { scroll-margin-top: 150px; }
 .hkart:hover .hkart__ok { transform: translateX(4px); }
 
 /* ─── Ana sayfa: tecrübe bandı ───────────────────────── */
-/* Tam sayfa genişliği: bant .kap içinde değil, doğrudan gövdede.
-   Görselin üstünde MAVİ FİLTRE var ve gereklidir: ölçümde yazı bandının
-   en açık noktası 218 parlaklıktaydı, beyaz yazı orada 1.40 kontrast
-   veriyordu. Filtre olmadan yazı okunmuyor. */
-.tecrube { position: relative; display: grid; place-items: center;
-  overflow: hidden; isolation: isolate;
-  min-height: clamp(230px, 32vw, 460px); background: var(--blue-900); }
-.tecrube__g { position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; z-index: 0; }
-/* mavi filtre — koyuluğu buradan ayarlanır */
+/* Tam sayfa genişliği: bant .kap içinde değil, doğrudan gövdede. Yazılar
+   ise .kap sarmalayıcıda, yani sayfa genişliğini aşmıyor: biri sol ÜSTTE,
+   diğeri sağ ALTTA.
+   Görselin üstündeki MAVİ FİLTRE gerekli — ölçümde filtresiz hâlde yazı
+   bölgesinin en açık noktası 218 parlaklıktaydı ve beyaz yazı orada 1.40
+   kontrast veriyordu. Yazılar artık üst ve alt kenarda olduğu için filtre
+   düz (ortası koyu gradyan değil). Koyuluk: --tf-koyu. */
+/* Görsel AKIŞ DIŞI (position:absolute) olmak zorunda: grid öğesi olarak
+   bırakılınca 1920x1080 doğal oranıyla satır yüksekliğini kendi dayatıyor
+   ve bant 802px'e çıkıyordu. Yüksekliği içerideki kutu belirler. */
+.tecrube { --tf-koyu: .60;
+  position: relative; overflow: hidden; isolation: isolate; background: var(--blue-900); }
+.tecrube__g { position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover; }
 .tecrube::after { content: ""; position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(180deg,
-    rgb(var(--blue-900-rgb) / .52) 0%,
-    rgb(var(--blue-900-rgb) / .66) 50%,
-    rgb(var(--blue-900-rgb) / .52) 100%); }
-.tecrube__y { position: relative; z-index: 2; margin: 0;
-  padding-inline: clamp(1.15rem, 4vw, 2.75rem); text-align: center;
-  font-family: var(--f-dis); font-weight: 800; font-stretch: 75%;
-  font-size: clamp(2rem, 7vw, 5.4rem); line-height: 1.02;
-  letter-spacing: -.035em; text-transform: uppercase;
+  background: rgb(var(--blue-900-rgb) / var(--tf-koyu)); }
+.tecrube__ic { position: relative; z-index: 2;
+  min-height: clamp(280px, 34vw, 520px);
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding-block: clamp(1.6rem, 3.4vw, 3rem); }
+.tecrube__y { margin: 0; font-family: var(--f-vurgu); font-weight: 800;
+  font-size: clamp(1.9rem, 6.4vw, 5rem); line-height: 1;
+  letter-spacing: -.045em; text-transform: uppercase;
   color: var(--beyaz); text-wrap: balance;
-  text-shadow: 0 4px 24px rgb(var(--blue-950-rgb) / .55); }
+  text-shadow: 0 4px 26px rgb(var(--blue-950-rgb) / .6); }
+.tecrube__y--ust { align-self: flex-start; text-align: left; }
+.tecrube__y--alt { align-self: flex-end; text-align: right; }
 
 /* ─── Ana sayfa: rakamlar şeridi ─────────────────────── */
 .rakam { background: var(--mavi-900); border-block: 3px solid var(--sari);

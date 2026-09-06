@@ -156,6 +156,17 @@ yalnızca yüklenmeden önce doğru oranda yer ayırmaya yarar.
 > verilirse `ch` her elemanın kendi puntosuna göre çözülür ve başlık, özet,
 > unvan farklı genişliklerde çıkar (denendi, öyle oldu).
 
+### Yazı tipleri
+
+Gövde ve başlıklar **Open Sans** (değişken: ağırlık 400–800 + genişlik
+75–100). Ana sayfadaki tecrübe bandı **Montserrat 800** kullanıyor
+(`--f-vurgu`). İkisi de TEK Google Fonts isteğinde geliyor, ek istek yok.
+
+Montserrat'ın latin+latin-ext maliyeti tek ağırlıkta **51 KB** ve Türkçe
+karakterleri tam. Daha hafif alternatifler (hepsinde latin-ext var):
+Poppins 13 KB, Manrope 21 KB, Archivo 27 KB. Değiştirmek için tek yer:
+`global.css` → `--f-vurgu` ve `Layout.astro`'daki font bağlantısı.
+
 ## Logo
 
 Görünen logoların hepsi **`public/deltek_logo.svg`** (header ve footer),
@@ -163,34 +174,49 @@ oran 674.14×163.78. JSON-LD'deki `logo` alanı bilerek **PNG** kaldı
 (`deltek-logo.png`): yapısal veri görselleri için raster bekleniyor, SVG'nin
 doğal piksel ölçüsü yok. `scripts/og-gorsel-uret.mjs` de PNG kullanır.
 
-### Header logosunun gölgesi
+### Header gölgesi ("kalkık köşe")
 
-Logonun arkasında, yuvarlatılmış **ters V (∧)** biçiminde yumuşak bir gölge
-var: tepesi logonun üstünde, kolları aşağı iner ve sönerek biter. Biçimi
-`clip-path` çiziyor, yuvarlaklığı `blur`, alt uçtaki sönümü `mask-image`.
-Kural: `src/layouts/Layout.astro` → `.logo` / `.logo::before`.
+Canlı deltek.com.tr'deki header gölgesinin aynısı. Orada `.nav-4` üzerinde
+iki ince şerit var; ölçüldü: yükseklik ~1,8px, `bottom: 8px`, kenarlardan
+%2 içeride, genişlik ~%38, gölge `0 6px 8px`, şeritler **∓2°** döndürülmüş.
+Aynı reçete `.ust::before` / `.ust::after` olarak uygulandı
+(`src/layouts/Layout.astro`).
 
 | Değişken | Ne yapar |
 | --- | --- |
-| `--lg-en` | gölgenin genişliği |
-| `--lg-boy` | gölgenin yüksekliği |
-| `--lg-y` | dikey konum (eksi = yukarı) |
-| `--lg-bulanik` | yumuşaklık; `0` verilirse keskin ters V |
-| `--lg-renk` | renk ve koyuluk, `rgb(... / alfa)` |
+| `--ug-aci` | şeritlerin dönme açısı (∓) |
+| `--ug-y` | gölgenin dikey kayması |
+| `--ug-bulanik` | yumuşaklık |
+| `--ug-koyu` | koyuluk (0–1) |
+| `--ug-ic` | kenarlardan içeri boşluk |
+| `--ug-dip` | şeridin header dibinden yüksekliği |
+| `--ug-kalinlik` | şeridin kalınlığı |
 
-Kapatmak için: `.logo::before { display: none; }`
+Kapatmak için: `.ust::before, .ust::after { display: none; }`
+
+> **Şeridin yüksekliği yüzdeyle verilmemeli.** Canlı sitedeki
+> `top: 78%; bottom: 8px` 51px'lik bir çubukta ~1,8px veriyordu; bizim
+> header 165px olduğu için aynı yüzdeler 28px'lik bir dikdörtgen üretip
+> gölgeyi bozdu. Bu yüzden `height` sabit.
 
 ## Ana sayfa bölümleri
 
 Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar** →
 **tecrübe bandı** → blog → hakkımızda → çağrı bandı.
 
-**Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde: `.kap` içinde değil,
-doğrudan gövdede. Görselin üstündeki **mavi filtre gerekli** — ölçümde
-filtresiz hâlde yazı bandının en açık noktası 218 parlaklıktaydı ve beyaz
-yazı orada 1.40 kontrast veriyordu. Filtreli hâlde yazının arkasındaki en
-açık nokta 97, kontrast **6.20** (büyük kalın yazı eşiği 3.0). Filtrenin
-koyuluğu `.tecrube::after` içindeki gradyandan ayarlanır.
+**Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde: bant `.kap` içinde
+değil, doğrudan gövdede; YAZILAR ise içerideki `.kap` sarmalayıcıda, yani
+sayfa genişliğini aşmıyorlar. "20 yılı aşkın" sol üstte, "Saha tecrübesi"
+sağ altta. Yazı tipi `--f-vurgu` (Montserrat 800).
+
+Görselin üstündeki **mavi filtre gerekli** — ölçümde filtresiz hâlde yazı
+bölgesinin en açık noktası 218 parlaklıktaydı ve beyaz yazı orada 1.40
+kontrast veriyordu. Filtreli hâlde en kötü noktalar: üst yazı **5.39**,
+alt yazı **6.30** (büyük kalın yazı eşiği 3.0). Koyuluk `--tf-koyu`.
+
+> **Görsel `position: absolute` olmak zorunda.** Grid öğesi olarak
+> bırakıldığında 1920×1080 doğal oranıyla satır yüksekliğini kendi dayatıyor
+> ve bant 490px yerine 802px oluyordu.
 
 Hizmet kartları ve rakamlar `src/pages/index.astro` frontmatter'ında
 (`HIZMETLER`, `RAKAMLAR`) duruyor; ikisi de canlı deltek.com.tr ana

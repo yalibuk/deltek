@@ -90,7 +90,7 @@ const jsonLd = {
       Genişlik ekseni banner başlıkları için gerekli (font-stretch: 75%,
       bkz. SayfaBanner.astro). Ayrık ağırlıkları tek tek istemekten daha
       ucuz: latin+latin-ext için 4 dosya / 192KB, önceki 10 dosya / 359KB. */}
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
   <link rel="canonical" href={kanonik} />
   {trAlt && <link rel="alternate" hreflang="tr" href={trAlt} />}
   {enAlt && <link rel="alternate" hreflang="en" href={enAlt} />}
@@ -268,8 +268,33 @@ const jsonLd = {
 @media (max-width: 979px) { .icerik { padding-top: var(--baslik-y, 130px); } }
 body.anasayfa .icerik { padding-top: 0; }
 
-.ust { position: fixed; inset: 0 0 auto; z-index: 50; background: var(--beyaz);
-  border-bottom: 1px solid var(--cizgi); box-shadow: 0 2px 10px -6px rgb(var(--blue-950-rgb) / .25); }
+/* ── Header ve "kalkık köşe" gölgesi ───────────────────────────────
+   Canlı deltek.com.tr'deki header gölgesinin aynısı. Orada `.nav-4`
+   üzerinde iki ince şerit var; ölçtüm: yükseklik ~1.8px, konum top %77 /
+   bottom 8px, kenarlardan 2% içeride, genişlik ~%38, gölge 0 6px 8px ve
+   şeritler ∓2° döndürülmüş. Aynı reçete burada header'a uygulandı.
+
+   AYAR:
+     --ug-aci      şeritlerin dönme açısı (∓)
+     --ug-y        gölgenin dikey kayması
+     --ug-bulanik  yumuşaklık
+     --ug-koyu     koyuluk (0-1)
+     --ug-ic       kenarlardan içeri boşluk
+     --ug-dip      şeridin header dibinden yüksekliği
+     --ug-kalinlik şeridin kalınlığı
+   Kapatmak için: `.ust::before, .ust::after { display: none; }` */
+.ust { --ug-aci: 2deg; --ug-y: 6px; --ug-bulanik: 8px; --ug-koyu: .5; --ug-ic: 2%;
+  --ug-dip: 9px; --ug-kalinlik: 2px;
+  position: fixed; inset: 0 0 auto; z-index: 50; background: var(--beyaz);
+  border-bottom: 1px solid var(--cizgi); }
+/* Şeridin yüksekliği SABİT (canlı sitede top:78%/bottom:8px, 51px'lik bir
+   çubukta ~1.8px veriyordu; bizim header 165px olduğu için aynı yüzdeler
+   28px'lik bir dikdörtgen üretip gölgeyi bozuyordu). */
+.ust::before, .ust::after { content: ""; position: absolute; z-index: -1;
+  bottom: var(--ug-dip, 9px); height: var(--ug-kalinlik, 2px); pointer-events: none;
+  box-shadow: 0 var(--ug-y) var(--ug-bulanik) rgb(var(--blue-950-rgb) / var(--ug-koyu)); }
+.ust::before { left: var(--ug-ic); right: 60%; transform: rotate(calc(-1 * var(--ug-aci))); }
+.ust::after  { left: 60%; right: var(--ug-ic); transform: rotate(var(--ug-aci)); }
 
 /* üst iletişim şeridi */
 .ust-serit { background: var(--kagit); border-bottom: 1px solid var(--cizgi); font-size: .78rem; }
@@ -295,32 +320,8 @@ body.anasayfa .icerik { padding-top: 0; }
 /* logo + gezinme */
 .ust__ic { display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: .75rem; padding-block: .9rem .2rem; transition: gap .2s, padding .2s; position: relative; }
-/* ── Logo ve arkasındaki gölge ─────────────────────────────────────
-   Logonun ARKASINDA, yuvarlatılmış ters V (∧) biçiminde yumuşak bir gölge:
-   tepesi logonun üstünde kalır, kolları aşağı doğru iner.
-   Biçimi `clip-path` çiziyor, yuvarlaklığı `blur` veriyor.
-
-   AYAR — hepsi aşağıdaki beş değişkenden:
-     --lg-en       gölgenin genişliği
-     --lg-boy      gölgenin yüksekliği
-     --lg-y        dikey konum (eksi değer yukarı taşır)
-     --lg-bulanik  yumuşaklık; 0 verilirse keskin ters V olur
-     --lg-renk     rengi ve koyuluğu (rgb(... / alfa))
-   Gölgeyi tamamen kapatmak için: `.logo::before { display: none; }` */
-.logo { --lg-en: 300px; --lg-boy: 132px; --lg-y: -30px;
-  --lg-bulanik: 18px; --lg-renk: rgb(var(--marka-mavi-rgb) / .22);
-  position: relative; display: inline-flex; }
-.logo::before { content: ""; position: absolute; z-index: 0; pointer-events: none;
-  left: 50%; top: var(--lg-y); translate: -50% 0;
-  width: var(--lg-en); height: var(--lg-boy);
-  background: var(--lg-renk);
-  /* tepe ortada, kollar aşağı: ters V */
-  clip-path: polygon(50% 0%, 100% 100%, 72% 100%, 50% 38%, 28% 100%, 0% 100%);
-  filter: blur(var(--lg-bulanik));
-  /* kolların ucu düz kesilmesin, aşağı doğru sönsün */
-  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 45%, transparent 100%); }
-.logo img { position: relative; z-index: 1; height: 46px; width: auto; transition: height .2s; }
+.logo { position: relative; display: inline-flex; }
+.logo img { height: 46px; width: auto; transition: height .2s; }
 .ust__gez { display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
   gap: 0; font-family: var(--f-dis); font-weight: 600; font-size: .82rem; }
 .ust__gez > a, .dd__t { padding: .85rem 1.05rem; color: var(--metin); text-transform: uppercase;
