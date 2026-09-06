@@ -126,12 +126,18 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 > etiketleri bu yüzden silindi.
 
 `/iletisim/` sayfasındaki gömülü Google haritası ve üstündeki "Merkez
-ofisimiz" başlığı **kaldırıldı**. Tanıtım görseli sayfanın **başında,
-başlığın hemen altında**: frontmatter'daki `gorsel` alanı (eskiden `harita`),
+ofisimiz" başlığı **kaldırıldı**. Tanıtım görseli sayfanın başında,
+**`<h1>` ile özet metninin arasında**: frontmatter'daki `gorsel` alanı (eskiden `harita`),
 açık mavi altlık (`--mavi-050`) üzerinde tam genişlikte, altında gölge.
 Ekranın üstünde durduğu için `loading="lazy"` DEĞİL, `fetchpriority="high"`
 kullanılıyor. Görsel dosyası:
 `public/images/iletisim/deltek_iletisim_banner.jpg` (1920×935).
+
+> Başlık bloğunun 62ch sınırı artık `.ilet__bas`ta değil, içindeki iki
+> `.ilet__basMetin` sarmalayıcısında — görsel aradan konteynerin tamamını
+> kullanabilsin diye. Sınır TEK sarmalayıcıda tutulmalı: çocuklara tek tek
+> verilirse `ch` her elemanın kendi puntosuna göre çözülür ve başlık, özet,
+> unvan farklı genişliklerde çıkar (denendi, öyle oldu).
 
 ## Ana sayfa bölümleri
 

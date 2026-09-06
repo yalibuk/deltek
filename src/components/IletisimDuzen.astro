@@ -7,8 +7,8 @@
  * Ziyaretçi tek dokunuşla arayabilsin diye telefon ve e-posta en üstte,
  * büyük dokunma hedefleri olarak duruyor.
  *
- * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir. Başlığın hemen
- * altındaki tanıtım görseli frontmatter'daki `gorsel` alanından. (Burada önce gömülü
+ * Ofisler `src/data/site.ts` içindeki OFISLER'den gelir. Başlık ile özet
+ * metninin arasındaki tanıtım görseli frontmatter'daki `gorsel` alanından. (Burada önce gömülü
  * bir Google haritası ve "Merkez ofisimiz" başlığı vardı; ikisi de kaldırıldı.)
  * Etiketler CEVIRI'de
  * (iki dilli sabit metin sayfaya gömülmez — bkz. CLAUDE.md).
@@ -27,20 +27,22 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 
   {/* ── Başlık ─────────────────────────────────────────── */}
   <header class="kap ilet__bas">
-    <span class="ilet__kunye">{CEVIRI[dil].footer.iletisim}</span>
-    <h1>{baslik}</h1>
-    {ozet && <p class="ilet__ozet">{ozet}</p>}
-    <p class="ilet__unvan">{SITE.unvan}</p>
-  </header>
-
-  {/* ── Tanıtım görseli — başlığın hemen altında ───────── */}
-  {gorsel && (
-    <section class="kap ilet__bolum">
+    <div class="ilet__basMetin">
+      <span class="ilet__kunye">{CEVIRI[dil].footer.iletisim}</span>
+      <h1>{baslik}</h1>
+    </div>
+    {/* Tanıtım görseli: başlık ile özet metninin ARASINDA. Metinler 62ch'lik
+        sarmalayıcıda kalır, görsel konteynerin tamamını kullanır. */}
+    {gorsel && (
       <div class="ilet__gorsel">
         <img src={gorsel} alt="" width="1920" height="935" fetchpriority="high" decoding="async" />
       </div>
-    </section>
-  )}
+    )}
+    <div class="ilet__basMetin">
+      {ozet && <p class="ilet__ozet">{ozet}</p>}
+      <p class="ilet__unvan">{SITE.unvan}</p>
+    </div>
+  </header>
 
   {/* ── Hızlı iletişim: telefon + e-posta ──────────────── */}
   <div class="kap">
@@ -119,7 +121,12 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 .ilet__bolum { margin-top: clamp(2.4rem,5vw,3.6rem); }
 
 /* ─── Başlık ──────────────────────────────────────────── */
-.ilet__bas { text-align: center; max-width: 62ch; }
+/* 62ch sınırı bloğun kendisinde DEĞİL, metin sarmalayıcılarında: aradaki
+   tanıtım görseli konteynerin tamamını kullanabilsin diye. Sınır tek bir
+   sarmalayıcıda tutuluyor; çocuklara tek tek verilseydi `ch` her elemanın
+   kendi puntosuna göre çözülür ve her satır farklı genişlikte olurdu. */
+.ilet__bas { text-align: center; }
+.ilet__basMetin { max-width: 62ch; margin-inline: auto; }
 .ilet__kunye { display: inline-block; font-family: var(--f-dis); font-weight: 700; font-size: .78rem;
   letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); background: var(--mavi-050);
   border: 1px solid var(--cizgi); padding: .38rem .95rem; border-radius: 999px; }
@@ -199,7 +206,8 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 
 /* ─── Tanıtım görseli ─────────────────────────────────── */
 /* Açık mavi altlık görselin arkasından taşar; görselin kendi gölgesi altında. */
-.ilet__gorsel { background: var(--mavi-050); border: 1px solid var(--cizgi);
+.ilet__gorsel { margin-block: clamp(1.6rem, 3.4vw, 2.6rem);
+  background: var(--mavi-050); border: 1px solid var(--cizgi);
   border-radius: 18px; padding: clamp(.7rem, 1.6vw, 1.2rem); }
 .ilet__gorsel img { display: block; width: 100%; height: auto; border-radius: 12px;
   box-shadow: 0 26px 50px -28px rgb(var(--blue-800-rgb) / .65); }
