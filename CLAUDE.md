@@ -194,8 +194,8 @@ Logo yüksekliği 55px (46px'ten %20 büyütüldü).
 
 ## Ana sayfa bölümleri
 
-Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar** →
-**tecrübe bandı** → blog → hakkımızda → çağrı bandı.
+Sırasıyla: hero slider → "DELTEK" şeridi → **rakamlar** → **hizmetler** →
+**tecrübe bandı** → hakkımızda → blog → çağrı bandı.
 
 **Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde ve düzeni kullanıcının
 verdiği örnekten (`deltek_hdd_1_sample.webp`) alındı: sağ üstte %50 saydam

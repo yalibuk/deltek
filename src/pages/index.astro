@@ -68,6 +68,18 @@ const projeTarih = (d: any) =>
   </div>
 </div>
 
+<!-- ── RAKAMLAR ───────────────────────────── -->
+<section class="rakam" aria-label="Deltek rakamlarla">
+  <div class="kap rakam__izgara">
+    {RAKAMLAR.map(r => (
+      <div class="rakam__k">
+        <span class="rakam__s">{r.deger}{r.birim && <em>{r.birim}</em>}</span>
+        <span class="rakam__a">{r.ad}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
 <!-- ── HİZMETLER ──────────────────────────── -->
 <section class="bolum kap" id="hizmetler">
   <div class="sahadan__bas">
@@ -94,18 +106,6 @@ const projeTarih = (d: any) =>
   </div>
 </section>
 
-<!-- ── RAKAMLAR ───────────────────────────── -->
-<section class="rakam" aria-label="Deltek rakamlarla">
-  <div class="kap rakam__izgara">
-    {RAKAMLAR.map(r => (
-      <div class="rakam__k">
-        <span class="rakam__s">{r.deger}{r.birim && <em>{r.birim}</em>}</span>
-        <span class="rakam__a">{r.ad}</span>
-      </div>
-    ))}
-  </div>
-</section>
-
 <!-- ── TECRÜBE BANDI ──────────────────────────── -->
 <section class="tecrube" aria-label="Saha tecrübesi">
   <img class="tecrube__g" src="/images/uploads/deltek_hdd_1.webp" alt=""
@@ -125,6 +125,35 @@ const projeTarih = (d: any) =>
       <span class="tecrube__s" style="--o:1.1149">Uluslararası</span>
       <span class="tecrube__s" style="--o:1">Saha tecrübesi</span>
     </p>
+  </div>
+</section>
+
+
+<!-- ── HAKKIMIZDA ──────────────────────────── -->
+<section class="kanit" id="hakkimizda">
+  <div class="kap">
+    <div class="kanit__bas">
+      <span class="kanit__etiket">Hakkımızda</span>
+      <h2>Kazısız altyapıda <em>multidisipliner bir ekip.</em></h2>
+      <p>İnşaat ve altyapı sektöründeki tecrübesiyle farklı mühendislik kollarını tek çatı altında birleştiren; gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak iş ortaklarına sürdürülebilir bir ilişki sunan bir ekibiz.</p>
+    </div>
+    <div class="kanit__ic">
+      <article class="kanit__h">
+        <span class="kanit__no">01</span>
+        <h4>Mühendisliğin 4E kuralı</h4>
+        <p>Tasarladığımız her projede sırasıyla Emniyet, Ekonomi, Estetik ve Evrensellik. Basmakalıp iş yapma geleneğinin yerine, her aşaması ölçülebilir bir yol haritası.</p>
+      </article>
+      <article class="kanit__h">
+        <span class="kanit__no">02</span>
+        <h4>Akıllı altyapı yaklaşımı</h4>
+        <p>“Smart Undergrounding” kavramını literatüre kazandıran mühendislerimiz, her hat için en makul ve en tasarruflu çözümü daha işe başlamadan hesaplıyor.</p>
+      </article>
+      <article class="kanit__h">
+        <span class="kanit__no">03</span>
+        <h4>Her ölçeğe yeten makine parkı</h4>
+        <p>Yönlendirilebilir yatay sondajda 250 ton, boru sürmede 800 tona varan kapasite. En uygun makine ve ekip seçimi için fizibilite raporunu ücretsiz çıkarıyoruz.</p>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -156,34 +185,6 @@ const projeTarih = (d: any) =>
   </div>
 </section>
 )}
-
-<!-- ── HAKKIMIZDA ──────────────────────────── -->
-<section class="kanit" id="hakkimizda">
-  <div class="kap">
-    <div class="kanit__bas">
-      <span class="kanit__etiket">Hakkımızda</span>
-      <h2>Kazısız altyapıda <em>multidisipliner bir ekip.</em></h2>
-      <p>İnşaat ve altyapı sektöründeki tecrübesiyle farklı mühendislik kollarını tek çatı altında birleştiren; gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak iş ortaklarına sürdürülebilir bir ilişki sunan bir ekibiz.</p>
-    </div>
-    <div class="kanit__ic">
-      <article class="kanit__h">
-        <span class="kanit__no">01</span>
-        <h4>Mühendisliğin 4E kuralı</h4>
-        <p>Tasarladığımız her projede sırasıyla Emniyet, Ekonomi, Estetik ve Evrensellik. Basmakalıp iş yapma geleneğinin yerine, her aşaması ölçülebilir bir yol haritası.</p>
-      </article>
-      <article class="kanit__h">
-        <span class="kanit__no">02</span>
-        <h4>Akıllı altyapı yaklaşımı</h4>
-        <p>“Smart Undergrounding” kavramını literatüre kazandıran mühendislerimiz, her hat için en makul ve en tasarruflu çözümü daha işe başlamadan hesaplıyor.</p>
-      </article>
-      <article class="kanit__h">
-        <span class="kanit__no">03</span>
-        <h4>Her ölçeğe yeten makine parkı</h4>
-        <p>Yönlendirilebilir yatay sondajda 250 ton, boru sürmede 800 tona varan kapasite. En uygun makine ve ekip seçimi için fizibilite raporunu ücretsiz çıkarıyoruz.</p>
-      </article>
-    </div>
-  </div>
-</section>
 
 <!-- ── ÇAĞRI ───────────────────────────────── -->
 <section class="kap" id="iletisim" style="padding-block:clamp(2rem,5vw,4rem)">
