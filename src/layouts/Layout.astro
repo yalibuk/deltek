@@ -301,10 +301,10 @@ body.anasayfa .icerik { padding-top: 0; }
    kayma 0, gölge düz aşağı düşüyor.
    AYAR: --lg-y düşme mesafesi, --lg-bulanik yumuşaklık, --lg-koyu koyuluk.
    Kapatmak için: `.logo img { filter: none; }` */
-.logo { --lg-y: 6px; --lg-bulanik: 7px; --lg-koyu: .38;
+.logo { --lg-y: 1px; --lg-bulanik: 1px; --lg-koyu: .18;
   position: relative; display: inline-flex; }
-/* 46px idi, %20 büyütüldü */
-.logo img { height: 55px; width: auto; transition: height .2s;
+/* 46px idi, büyütüldü */
+.logo img { height: 60px; width: auto; transition: height .2s;
   filter: drop-shadow(0 var(--lg-y) var(--lg-bulanik) rgb(var(--blue-950-rgb) / var(--lg-koyu))); }
 .ust__gez { display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
   gap: 0; font-family: var(--f-dis); font-weight: 600; font-size: .82rem; }

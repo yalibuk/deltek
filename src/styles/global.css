@@ -216,7 +216,7 @@ section[id] { scroll-margin-top: 150px; }
    Bant tam sayfa genişliğinde (.kap içinde DEĞİL); logo ve yazı ise
    içerideki .kap sarmalayıcıda, sayfa genişliğini aşmıyorlar.
    Punto örnekle aynı oranda: örnekte 1920px genişlikte ~80px, yani 4.2vw. */
-.tecrube { --tf-koyu: .50;
+.tecrube { --tf-koyu: .70;
   position: relative; overflow: hidden; isolation: isolate; background: var(--blue-900); }
 /* Görsel AKIŞ DIŞI olmak zorunda: normal öğe olarak bırakılırsa kendi doğal
    oranıyla bandın yüksekliğini dayatır. */
@@ -236,11 +236,13 @@ section[id] { scroll-margin-top: 150px; }
 .tecrube__logo { position: absolute; z-index: 2;
   top: clamp(1rem, 2.2vw, 2.6rem); right: clamp(1.15rem, 2.3vw, 2.75rem);
   width: clamp(120px, 17vw, 330px); height: auto; opacity: .5; }
+/* Üç satır, örnekteki ölçüde: 1920px'te ~111px punto (5.8vw).
+   Yazı %78 saydam — arkasındaki fotoğraf harflerin içinden görünüyor. */
 .tecrube__y { margin: auto auto clamp(1.2rem, 7vw, 7rem); text-align: center;
   font-family: var(--f-vurgu); font-weight: 800;
-  font-size: clamp(1.15rem, 4.2vw, 5rem); line-height: 1.08;
+  font-size: clamp(1.6rem, 5.8vw, 7rem); line-height: 1.07;
   letter-spacing: -.045em; text-transform: uppercase;
-  color: var(--beyaz);
+  color: var(--beyaz); opacity: .78;
   text-shadow: 0 4px 26px rgb(var(--blue-950-rgb) / .6); }
 
 /* ─── Ana sayfa: rakamlar şeridi ─────────────────────── */

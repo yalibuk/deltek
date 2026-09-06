@@ -199,10 +199,11 @@ Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar**
 
 **Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde ve düzeni kullanıcının
 verdiği örnekten (`deltek_hdd_1_sample.webp`) alındı: sağ üstte %50 saydam
-tek satırlık beyaz Deltek logosu, ortada iki satır ortalanmış yazı
-("20 yılı aşkın / Uluslararası saha tecrübesi"), yazı bloğu dikeyde bandın
-%60'ında. Yazı tipi `--f-vurgu` (Montserrat 800), punto örnekle aynı oranda
-(1920px'te 80px = 4.2vw).
+tek satırlık beyaz Deltek logosu, ortada ÜÇ satır ortalanmış yazı
+("20 yılı aşkın / Uluslararası / Saha tecrübesi"). Yazı tipi `--f-vurgu`
+(Montserrat 800), punto örnekle aynı oranda (1920px'te ~111px = 5.8vw),
+satır aralığı 1.07, **yazı %78 saydam** (`opacity: .78`) — harflerin içinden
+fotoğraf görünüyor.
 
 Bandın yüksekliği fotoğrafın kendi oranından (`1920×790` → `41.1vw`) —
 görselin tamamı görünsün, yatay dilim gibi kırpılmasın diye.
@@ -211,10 +212,11 @@ Logo ve yazı `.kap`'a SIĞDIRILMAZ (max 1280px): örnekte logo sayfanın sağ
 kenarında ve ikinci satır 1920px'te ~1380px, yani konteynerden geniş.
 İkisi de bandın kendi genişliğinde, sayfa payı kadar içeride.
 
-Görselin üstündeki **mavi filtre gerekli** (`--tf-koyu: .50`). Ölçüm:
-filtresiz en açık nokta 218 → kontrast 1.40; `.30`'da 2.96, `.42`'de 2.99,
-`.50`'de **3.56** (büyük kalın yazı eşiği 3.0). Fotoğrafı daha parlak
-istersen `--tf-koyu`yu düşür, ama 3.0'ın altına inme.
+Görselin üstündeki **mavi filtre gerekli** (`--tf-koyu: .50`) ve yazı
+saydamlaştıktan sonra daha da gerekli oldu. Ölçüm (en koyu harf pikseli /
+en açık zemin pikseli): filtreyle **3.80**, ortalama 8.65; filtre
+kaldırılırsa en parlak zemin lekelerinde ~2.25'e düşer (eşik 3.0).
+`--tf-koyu`yu düşürmek fotoğrafı parlatır ama okunabilirliği bozar.
 
 > **Görsel `position: absolute` olmak zorunda.** Normal öğe olarak
 > bırakıldığında kendi doğal oranıyla bandın yüksekliğini dayatıyor.
