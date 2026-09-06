@@ -21,6 +21,9 @@
 /auger-boring-nedir-modern-yatay-delgi-teknolojisi/ /boru-surmecakma/  301
 /mikrotunel-nedir/                                  /boru-surmecakma/  301
 
+# Medyalar sayfası kaldırıldı; içindeki tek video blog yazısı oldu.
+/medyalar/   /deltek-yatay-sondaj-kaya-delgi-rock-drilling/   301
+
 # WordPress artıkları
 /feed/          /blog/   301
 /wp-login.php   /        301

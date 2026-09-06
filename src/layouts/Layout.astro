@@ -58,6 +58,8 @@ const jsonLd = {
   url: SITE.kanonikal,
   ...(SITE.telefonHam ? { telephone: SITE.telefonHam } : {}),
   ...(SITE.eposta ? { email: SITE.eposta } : {}),
+  // JSON-LD'de bilerek PNG: yapısal veri görselleri için raster bekleniyor,
+  // SVG'nin doğal piksel ölçüsü yok. Görünen logolar SVG (deltek_logo.svg).
   logo: SITE.kanonikal + '/deltek-logo.png',
   image: ogGorsel,
   ...(SITE.adres1 ? {
@@ -132,7 +134,7 @@ const jsonLd = {
   </div>
   <div class="kap ust__ic">
     <a class="logo" href={yol('/')} aria-label={t.aria.home}>
-      <img src="/deltek-logo.png" width="200" height="46" alt={SITE.isim} />
+      <img src="/deltek_logo.svg" width="200" height="49" alt={SITE.isim} />
     </a>
     <button class="ham" id="ham" aria-label={t.aria.menu} aria-expanded="false">
       <span></span><span></span><span></span>
@@ -217,7 +219,7 @@ const jsonLd = {
   <div class="kap">
     <div class="alt__ic">
       <div>
-        <div class="alt__logo"><img src="/deltek-logo.png" width="200" height="46" alt={SITE.isim}></div>
+        <div class="alt__logo"><img src="/deltek_logo.svg" width="200" height="49" alt={SITE.isim}></div>
         {t.footer.slogan && <small>{t.footer.slogan}</small>}
       </div>
       <div>
@@ -293,7 +295,32 @@ body.anasayfa .icerik { padding-top: 0; }
 /* logo + gezinme */
 .ust__ic { display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: .75rem; padding-block: .9rem .2rem; transition: gap .2s, padding .2s; position: relative; }
-.logo img { height: 46px; width: auto; transition: height .2s; }
+/* ── Logo ve arkasındaki gölge ─────────────────────────────────────
+   Logonun ARKASINDA, yuvarlatılmış ters V (∧) biçiminde yumuşak bir gölge:
+   tepesi logonun üstünde kalır, kolları aşağı doğru iner.
+   Biçimi `clip-path` çiziyor, yuvarlaklığı `blur` veriyor.
+
+   AYAR — hepsi aşağıdaki beş değişkenden:
+     --lg-en       gölgenin genişliği
+     --lg-boy      gölgenin yüksekliği
+     --lg-y        dikey konum (eksi değer yukarı taşır)
+     --lg-bulanik  yumuşaklık; 0 verilirse keskin ters V olur
+     --lg-renk     rengi ve koyuluğu (rgb(... / alfa))
+   Gölgeyi tamamen kapatmak için: `.logo::before { display: none; }` */
+.logo { --lg-en: 300px; --lg-boy: 132px; --lg-y: -30px;
+  --lg-bulanik: 18px; --lg-renk: rgb(var(--marka-mavi-rgb) / .22);
+  position: relative; display: inline-flex; }
+.logo::before { content: ""; position: absolute; z-index: 0; pointer-events: none;
+  left: 50%; top: var(--lg-y); translate: -50% 0;
+  width: var(--lg-en); height: var(--lg-boy);
+  background: var(--lg-renk);
+  /* tepe ortada, kollar aşağı: ters V */
+  clip-path: polygon(50% 0%, 100% 100%, 72% 100%, 50% 38%, 28% 100%, 0% 100%);
+  filter: blur(var(--lg-bulanik));
+  /* kolların ucu düz kesilmesin, aşağı doğru sönsün */
+  -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 45%, transparent 100%); }
+.logo img { position: relative; z-index: 1; height: 46px; width: auto; transition: height .2s; }
 .ust__gez { display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
   gap: 0; font-family: var(--f-dis); font-weight: 600; font-size: .82rem; }
 .ust__gez > a, .dd__t { padding: .85rem 1.05rem; color: var(--metin); text-transform: uppercase;

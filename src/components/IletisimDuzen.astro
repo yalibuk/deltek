@@ -217,8 +217,8 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
    tanıtım görseli". `width`/`height` öznitelikleri ölçü DEĞİL, yalnızca
    yüklenmeden önce doğru oranda yer ayırmak için (dosyadan okunuyor). */
 .ilet__gorsel { margin-block: clamp(1.6rem, 3.4vw, 2.6rem); }
-.ilet__gorsel img { display: block; width: 100%; height: auto; border-radius: 12px;
-  box-shadow: 0 26px 50px -28px rgb(var(--blue-800-rgb) / .65); }
+.ilet__gorsel img { display: block; width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--mavi);
+box-shadow: 0 16px 40px -18px rgb(var(--blue-800-rgb) / .65); }
 
 /* ─── Kapanış çağrısı ─────────────────────────────────── */
 .ilet__cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;

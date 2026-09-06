@@ -48,6 +48,7 @@ Bunun mimariye yansıması:
 | `/kazisiz-altyapi-ve-kazisiz-teknolojiler/` | `/yatay-sondaj-teknoloji/` | Sayfa kaldırıldı; bölümün genel bakış sayfasıydı |
 | `/auger-boring-nedir-modern-yatay-delgi-teknolojisi/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
 | `/mikrotunel-nedir/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
+| `/medyalar/` | `/deltek-yatay-sondaj-kaya-delgi-rock-drilling/` | Sayfa kaldırıldı; içindeki tek video blog yazısı oldu |
 
 ## Taşınan içerik
 
@@ -155,10 +156,41 @@ yalnızca yüklenmeden önce doğru oranda yer ayırmaya yarar.
 > verilirse `ch` her elemanın kendi puntosuna göre çözülür ve başlık, özet,
 > unvan farklı genişliklerde çıkar (denendi, öyle oldu).
 
+## Logo
+
+Görünen logoların hepsi **`public/deltek_logo.svg`** (header ve footer),
+oran 674.14×163.78. JSON-LD'deki `logo` alanı bilerek **PNG** kaldı
+(`deltek-logo.png`): yapısal veri görselleri için raster bekleniyor, SVG'nin
+doğal piksel ölçüsü yok. `scripts/og-gorsel-uret.mjs` de PNG kullanır.
+
+### Header logosunun gölgesi
+
+Logonun arkasında, yuvarlatılmış **ters V (∧)** biçiminde yumuşak bir gölge
+var: tepesi logonun üstünde, kolları aşağı iner ve sönerek biter. Biçimi
+`clip-path` çiziyor, yuvarlaklığı `blur`, alt uçtaki sönümü `mask-image`.
+Kural: `src/layouts/Layout.astro` → `.logo` / `.logo::before`.
+
+| Değişken | Ne yapar |
+| --- | --- |
+| `--lg-en` | gölgenin genişliği |
+| `--lg-boy` | gölgenin yüksekliği |
+| `--lg-y` | dikey konum (eksi = yukarı) |
+| `--lg-bulanik` | yumuşaklık; `0` verilirse keskin ters V |
+| `--lg-renk` | renk ve koyuluk, `rgb(... / alfa)` |
+
+Kapatmak için: `.logo::before { display: none; }`
+
 ## Ana sayfa bölümleri
 
 Sırasıyla: hero slider → "DELTEK" şeridi → **hizmetler** → **rakamlar** →
-blog → hakkımızda → çağrı bandı.
+**tecrübe bandı** → blog → hakkımızda → çağrı bandı.
+
+**Tecrübe bandı** (`.tecrube`) tam sayfa genişliğinde: `.kap` içinde değil,
+doğrudan gövdede. Görselin üstündeki **mavi filtre gerekli** — ölçümde
+filtresiz hâlde yazı bandının en açık noktası 218 parlaklıktaydı ve beyaz
+yazı orada 1.40 kontrast veriyordu. Filtreli hâlde yazının arkasındaki en
+açık nokta 97, kontrast **6.20** (büyük kalın yazı eşiği 3.0). Filtrenin
+koyuluğu `.tecrube::after` içindeki gradyandan ayarlanır.
 
 Hizmet kartları ve rakamlar `src/pages/index.astro` frontmatter'ında
 (`HIZMETLER`, `RAKAMLAR`) duruyor; ikisi de canlı deltek.com.tr ana
