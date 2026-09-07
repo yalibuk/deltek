@@ -2,7 +2,7 @@
 //
 // GÖRSEL KATMANLAR canlı deltek.com.tr'deki Revolution Slider'dan birebir
 // çıkarıldı: konum, geçiş tipi, gecikme ve süre orijinaliyle aynı
-// (ör. 4. slaytta sondaj biti soldan gelip toprak adasına giriyor).
+// (ör. 2. slaytta sondaj biti soldan gelip toprak adasına giriyor).
 //
 // YAZILAR ise yeniden tasarlandı. Orijinaldeki metin katmanları 2016 tema
 // efektleriyle geliyordu (sert çift gölge, renkli kutucuklar, 17px'e düşen
@@ -14,7 +14,7 @@
 // tasarım ızgarasındaki piksellerdir. HeroSlider bunları container-query
 // birimiyle orantılı ölçekler.
 //
-// Not: 7. slaydın deltek-proje-danismani.png katmanı canlı sunucuda 404 veriyor; orijinali
+// Not: 1. slaydın deltek-proje-danismani.png katmanı canlı sunucuda 404 veriyor; orijinali
 // web arşivinden (2025-04-01 anlık görüntüsü) alınıp depoya kondu.
 
 export type HeroKatman = {
@@ -55,67 +55,95 @@ export type HeroYazi = {
   konum: 'sol' | 'merkez' | 'sag';
   /** Dikey hizası — katmanların kapladığı bandın dışına konumlanır. */
   dikey: 'ust' | 'orta' | 'alt';
+  /**
+   * `konum`/`dikey` ile seçilen dokuz hazır yerin üstüne İNCE AYAR.
+   * Birim, katmanlarla AYNI: 1920×500 tasarım ızgarası pikseli — yani ekranla
+   * birlikte orantılı ölçeklenir, sabit CSS pikseli değildir. Böylece bir
+   * katmanı `x: 40` kaydırmakla yazıyı `kaydir: { x: 40 }` kaydırmak aynı
+   * mesafeyi verir.
+   *
+   *   x: pozitif → sağa,  negatif → sola
+   *   y: pozitif → aşağı, negatif → yukarı
+   *
+   * İki sınırı var:
+   * - **Dar ekranda (≤820px) yok sayılır.** Orada katmanlar gizleniyor ve
+   *   yazı tam genişlikte ortalanıyor; masaüstü için verilen kaydırma o
+   *   düzeni bozardı.
+   * - `eylemKonum: 'dip'` ile ayrılan buton bloğuna yalnız **x** uygulanır.
+   *   Buton bilerek slaytın dibine sabit; y'yi ona da uygulamak o sabitlemeyi
+   *   anlamsız kılardı. x uygulanır ki buton yazıyla hizalı kalsın.
+   */
+  kaydir?: { x?: number; y?: number };
   /** Arka plan koyu mu açık mı: yazı ve perde rengini belirler. */
   tema: 'koyu' | 'acik';
   /**
    * Butonun yeri. Varsayılan 'akis': metin bloğunun sonunda, akış içinde.
    * 'dip': metin bloğundan koparılıp slaytın en altına sabitlenir — metnin
-   * altındaki bandı bir katman kapladığında kullanılır (bkz. 4. slayt).
+   * altındaki bandı bir katman kapladığında kullanılır (bkz. 2. slayt).
    */
   eylemKonum?: 'akis' | 'dip';
 };
 
-export type HeroSlayt = { arka: string; alt: string; yazi: HeroYazi; katmanlar: HeroKatman[] };
+/**
+ * Bir slaydın İngilizce metni.
+ *
+ * DÜZEN ALANLARI BURADA YOK: `konum`, `dikey`, `tema`, `eylemKonum` ve
+ * `kaydir` slaydın Türkçe tanımından miras alınır — düzen dile göre değil
+ * arka plandaki görsele göre seçiliyor, iki dilde ayrı tutmanın anlamı yok.
+ * (Ayrı tutulduğunda kaçınılmaz olarak ayrışıyordu: TR'de düzeltilen bir
+ * konum EN'de eski haliyle kalıyordu.)
+ *
+ * Gerçekten dile bağlı bir istisna çıkarsa — İngilizce başlık bir satır
+ * uzun sarıp katmana değiyor gibi — o alanı burada yazıp ezebilirsiniz;
+ * yanına NEDEN gerektiğini de yazın.
+ */
+export type HeroYaziEN =
+  Pick<HeroYazi, 'ustlik' | 'baslik' | 'satirlar' | 'eylem' | 'eylemHref'> &
+  Partial<Pick<HeroYazi, 'konum' | 'dikey' | 'tema' | 'eylemKonum' | 'kaydir'>>;
+
+export type HeroSlayt = {
+  arka: string;
+  alt: string;
+  yazi: HeroYazi;
+  katmanlar: HeroKatman[];
+  /**
+   * Slaydın İngilizcesi — metin ve arka plan alt'ı. Her slaydın KENDİ
+   * içinde durur; eskiden ayrı `EN_YAZI`/`EN_ALT` dizilerindeydi ve
+   * slaytlarla sıra numarasından eşleşiyordu. Bir slayt eklemek, silmek
+   * ya da yer değiştirmek diziyi kaydırıp her slaydı yanlış İngilizce
+   * metinle eşliyordu; üstelik hata vermeden, yalnız /en/ sayfasında.
+   */
+  en: { alt: string; yazi: HeroYaziEN };
+};
 
 /** Canlı slider'ın tasarım ızgarası — ölçekleme bu değerlere göre yapılır. */
 export const HERO_IZGARA = { g: 1920, y: 500 };
 
 export const HERO_TR: HeroSlayt[] = [
   {
-    // Saha fotoğrafı: sondaj makinesi solda, deniz sağda → yazı sağa.
-    arka: '/images/hero/deltek-onshore-hdd-yatay-sondaj-sahasi.webp',
-    alt: 'Deltek onshore yönlendirilebilir yatay sondaj (HDD) sahası — kıyıda kurulu HDD makinesi',
+    // Portre katmanı sağda (x1295) → yazı sola.
+    arka: '/images/hero/kazisiz-altyapi-projesi-arkaplan.webp',
+    alt: 'Kazısız altyapı projesi — 2 mm ile 2000 mm çap arası yatay sondaj çözümleri',
     yazi: {
-      ustlik: 'Onshore / Offshore',
-      baslik: 'HDD projelerinde güvenilir iş ortağınız',
-      konum: 'sag', dikey: 'orta', tema: 'koyu',
-    },
-    katmanlar: [],
-  },
-  {
-    // Koyu mavi tonlu şantiye; sağdaki boru hattı dolu → yazı sola.
-    arka: '/images/hero/boru-hatti-yatay-sondaj-santiyesi.webp',
-    alt: 'Yatay sondaj ile döşenen boru hattı şantiyesi — elektrik, doğalgaz ve içme suyu geçişleri',
-    yazi: {
-      ustlik: 'Kullanım alanları',
-      baslik: 'Yatay sondaja ihtiyaç duyduğunuz her alanda yanınızdayız',
-      // Satır kırmak için \n kullanılır; <br /> düz metin olarak basılır.
-      satirlar: ['Elektrik · Doğalgaz · Kanalizasyon\nTelekomünikasyon · İçme suyu ve drenaj'],
-      eylem: 'İletişime geçin',
-      konum: 'sol', dikey: 'orta', tema: 'koyu',
-    },
-    katmanlar: [],
-  },
-  {
-    // Video ekranı katmanı sağda (x1060) → yazı sola.
-    arka: '/images/hero/kaya-delgi-yatay-sondaj-arkaplan.webp',
-    alt: 'Kaya delgi — sert zeminde yönlendirilebilir yatay sondaj uygulaması',
-    yazi: {
-      ustlik: 'Sert zemin',
-      baslik: 'Kaya delgi & muazzam güç',
-      konum: 'sol', dikey: 'orta', tema: 'koyu',
+      ustlik: 'Hemen arayın',
+      baslik: 'Sizin için projelendirelim',
+      satirlar: ["2 mm'den 2000 mm'ye varan çaplarda altyapı projelerine çözüm."],
+      kaydir: { x:100, y:0},
+      eylem: 'Teklif isteyin',
+      konum: 'sol', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/kaya-delgi-video-tablet.webp', w: 574, h: 400, x: 1060, y: 80, gecis: 'sfb', basla: 500, sure: 1500 },
-      // Ölçüler tablet PNG'sinin koyu ekran dikdörtgeninden ölçüldü (474×351 @ 1110,104).
-      // Canlı slider 486×356 @ 1109,99 diyor ama o değer ekranı birkaç piksel taşırıyor.
-      //
-      // Orijinalde video da tabletle aynı anda (500 ms) başlıyor ama 300 ms'de
-      // yerine oturuyordu; tablet 1500 ms kaydığı için ekran 1,2 sn boyunca
-      // çerçeveden ayrık kalıyordu. Artık tablet oturduktan sonra ekran
-      // yanıyor — hem kusur gidiyor hem iframe uçarken render edilmiyor.
-      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 474, h: 351, x: 1110, y: 104, gecis: 'fade', basla: 2000, sure: 700 },
+      { tur: 'gorsel', src: '/images/hero/katman/deltek-proje-danismani.webp', w: 309, h: 451, x: 1220, y: 38, gecis: 'sfb', basla: 400, sure: 1800 },
     ],
+    en: {
+      alt: 'Trenchless infrastructure project — HDD solutions from 2 mm to 2000 mm diameter',
+      yazi: {
+        ustlik: 'Call us now',
+        baslik: 'Let us engineer it for you',
+        satirlar: ['Solutions for infrastructure projects from 2 mm to 2000 mm in diameter.'],
+        eylem: 'Request a quote', eylemHref: '/en/iletisim/',
+      },
+    },
   },
   {
     // Tij şeridi altta (y312+), toprak adası sağda → yazı sol üste.
@@ -124,6 +152,7 @@ export const HERO_TR: HeroSlayt[] = [
     yazi: {
       ustlik: 'Teknoloji',
       baslik: 'Yatay delgi ve sondaj teknolojileri',
+      kaydir: { x:100, y:0},
       satirlar: ['Amacınıza en uygun yatay sondaj yöntemini seçerek işe başlayın.'],
       eylem: 'Bize ulaşın',
       // Delgi tijinin mavi borusu y334-376'yı kaplıyor; buton akışta kalınca
@@ -138,26 +167,15 @@ export const HERO_TR: HeroSlayt[] = [
       // ~1,5 sn'de yerine oturuyor.
       { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-toprak-kesiti.webp', w: 325, h: 430, x: 1132, y: 102, gecis: 'lfr', basla: 200, sure: 1200 },
     ],
-  },
-  {
-    // Makine görseli üst bandı kaplıyor (y76-308) → yazı sol alta.
-    arka: '/images/hero/deltek-yatay-sondaj-makine-parki.webp',
-    alt: 'Deltek yatay sondaj makine parkı — yönlendirilebilir yatay sondaj makinesi',
-    yazi: {
-      ustlik: 'Doğru yerdesiniz',
-      // Makine görseli genişleyince yazı sağa alındı; başlık ve gövde
-      // metni dar sütuna sığsın diye \n ile elle kırılıyor.
-      baslik: 'Yatay Sondaj\nUzmanı',
-      satirlar: ['Yüksek teknolojik altyapı,\ngeniş makine parkı'],
-      konum: 'sag', dikey: 'orta', tema: 'acik',
+    en: {
+      alt: 'Horizontal drilling and boring technologies — drill rod and soil cross-section',
+      yazi: {
+        ustlik: 'Technology',
+        baslik: 'Horizontal drilling and boring technologies',
+        satirlar: ['Start by choosing the drilling method that fits your purpose.'],
+        eylem: 'Contact us', eylemHref: '/en/iletisim/',
+      },
     },
-    katmanlar: [
-      // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
-      // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
-      // tutturmak için öne çekildi.
-      { tur: 'gorsel', src: '/images/hero/katman/yonlendirilebilir-yatay-sondaj-makinesi.webp', w: 600, h: 232, x: 630, y: 86, gecis: 'sfl', basla: 400, sure: 1800 },
-      { tur: 'gorsel', src: '/images/hero/katman/deltek-saha-iscisi.webp', w: 150, h: 350, x: 480, y: 90, gecis: 'sfl', basla: 1300, sure: 900, darGizle: true },
-    ],
   },
   {
     // Mühendis solda, analiz görseli sağ üstte (y6-267) → yazı sağ alta.
@@ -178,21 +196,115 @@ export const HERO_TR: HeroSlayt[] = [
       // boyutta görselin alt kenarı başlığın ilk satırına biniyordu.
       { tur: 'gorsel', src: '/images/hero/katman/yatay-sondaj-pipe-analysis.webp', w: 306, h: 183, x: 1080, y: 36, gecis: 'lfr', basla: 700, sure: 1800 },
     ],
+    en: {
+      alt: 'Computer modelling of a horizontal directional drilling project — Deltek engineering',
+      yazi: {
+        ustlik: 'Engineering',
+        baslik: 'Success takes more than coincidence',
+        satirlar: ['We model the project in software and share the results before work begins.'],
+      },
+    },
   },
   {
-    // Portre katmanı sağda (x1295) → yazı sola.
-    arka: '/images/hero/kazisiz-altyapi-projesi-arkaplan.webp',
-    alt: 'Kazısız altyapı projesi — 2 mm ile 2000 mm çap arası yatay sondaj çözümleri',
+    // Koyu mavi tonlu şantiye; sağdaki boru hattı dolu → yazı sola.
+    arka: '/images/hero/boru-hatti-yatay-sondaj-santiyesi.webp',
+    alt: 'Yatay sondaj ile döşenen boru hattı şantiyesi — elektrik, doğalgaz ve içme suyu geçişleri',
     yazi: {
-      ustlik: 'Hemen arayın',
-      baslik: 'Sizin için projelendirelim',
-      satirlar: ["2 mm'den 2000 mm'ye varan çaplarda altyapı projelerine çözüm."],
-      eylem: 'Teklif isteyin',
-      konum: 'sol', dikey: 'orta', tema: 'acik',
+      ustlik: 'Kullanım alanları',
+      baslik: 'Yatay sondaja ihtiyaç duyduğunuz her alanda yanınızdayız',
+      // Satır kırmak için \n kullanılır; <br /> düz metin olarak basılır.
+      satirlar: ['Elektrik · Doğalgaz · Kanalizasyon\nTelekomünikasyon · İçme suyu ve drenaj'],
+      eylem: 'İletişime geçin',
+      konum: 'merkez', dikey: 'orta', tema: 'koyu',
+    },
+    katmanlar: [],
+    en: {
+      alt: 'Pipeline construction site with horizontal directional drilling — power, gas and water crossings',
+      yazi: {
+        ustlik: 'Where we work',
+        baslik: 'Wherever you need horizontal drilling, we are with you',
+        satirlar: ['Power · Natural gas · Sewerage\nTelecoms · Potable water and drainage'],
+        eylem: 'Get in touch', eylemHref: '/en/iletisim/',
+      },
+    },
+  },
+  {
+    // Saha fotoğrafı: sondaj makinesi solda, deniz sağda → yazı sağa.
+    arka: '/images/hero/deltek-onshore-hdd-yatay-sondaj-sahasi.webp',
+    alt: 'Deltek onshore yönlendirilebilir yatay sondaj (HDD) sahası — kıyıda kurulu HDD makinesi',
+    yazi: {
+      ustlik: 'Onshore / Offshore',
+      baslik: 'HDD projelerinde güvenilir iş ortağınız',
+      kaydir: {x: -100, y:0},
+      konum: 'sag', dikey: 'orta', tema: 'koyu',
+    },
+    katmanlar: [],
+    en: {
+      alt: 'Deltek onshore horizontal directional drilling (HDD) site — HDD rig set up on the shore',
+      yazi: {
+        ustlik: 'Onshore / Offshore',
+        baslik: 'Your reliable partner in HDD projects',
+      },
+    },
+  },
+  {
+    // Makine görseli üst bandı kaplıyor (y76-308) → yazı sol alta.
+    arka: '/images/hero/deltek-yatay-sondaj-makine-parki.webp',
+    alt: 'Deltek yatay sondaj makine parkı — yönlendirilebilir yatay sondaj makinesi',
+    yazi: {
+      ustlik: 'Doğru yerdesiniz',
+      // Makine görseli genişleyince yazı sağa alındı; başlık ve gövde
+      // metni dar sütuna sığsın diye \n ile elle kırılıyor.
+      baslik: 'Yatay Sondaj\nUzmanı',
+      satirlar: ['Yüksek teknolojik altyapı,\ngeniş makine parkı'],
+      konum: 'sag', dikey: 'orta', tema: 'acik',
     },
     katmanlar: [
-      { tur: 'gorsel', src: '/images/hero/katman/deltek-proje-danismani.webp', w: 309, h: 451, x: 1295, y: 38, gecis: 'sfb', basla: 400, sure: 1800 },
+      // Makine soldan girer, ardından işçi sağdan katılır. Orijinalde işçi
+      // 3350 ms'de başlıyordu (toplam 4,35 sn); diğer slaytlarla aynı ritmi
+      // tutturmak için öne çekildi.
+      { tur: 'gorsel', src: '/images/hero/katman/yonlendirilebilir-yatay-sondaj-makinesi.webp', w: 600, h: 232, x: 630, y: 86, gecis: 'sfl', basla: 400, sure: 1800 },
+      { tur: 'gorsel', src: '/images/hero/katman/deltek-saha-iscisi.webp', w: 150, h: 350, x: 480, y: 90, gecis: 'sfl', basla: 1300, sure: 900, darGizle: true },
     ],
+    en: {
+      alt: 'Deltek horizontal drilling fleet — horizontal directional drilling rig',
+      yazi: {
+        ustlik: 'You are in the right place',
+        // Başlık TR'de iki, EN'de üç satır; ikisi de makine görselinin sağındaki
+        // dar sütuna \n ile elle kırılıyor.
+        baslik: 'Horizontal\ndrilling\nspecialists',
+        satirlar: ['Advanced technical infrastructure,\nextensive machine fleet'],
+      },
+    },
+  },
+  {
+    // Video ekranı katmanı sağda (x1060) → yazı sola.
+    arka: '/images/hero/kaya-delgi-yatay-sondaj-arkaplan.webp',
+    alt: 'Kaya delgi — sert zeminde yönlendirilebilir yatay sondaj uygulaması',
+    yazi: {
+      ustlik: 'Sert zemin',
+      baslik: 'Kaya delgi & muazzam güç',
+      kaydir: { x: 120, y: 0 },
+      konum: 'sol', dikey: 'orta', tema: 'koyu',
+    },
+    katmanlar: [
+      { tur: 'gorsel', src: '/images/hero/katman/kaya-delgi-video-tablet.webp', w: 574, h: 400, x: 1060, y: 80, gecis: 'sfb', basla: 500, sure: 1500 },
+      // Ölçüler tablet PNG'sinin koyu ekran dikdörtgeninden ölçüldü (474×351 @ 1110,104).
+      // Canlı slider 486×356 @ 1109,99 diyor ama o değer ekranı birkaç piksel taşırıyor.
+      //
+      // Orijinalde video da tabletle aynı anda (500 ms) başlıyor ama 300 ms'de
+      // yerine oturuyordu; tablet 1500 ms kaydığı için ekran 1,2 sn boyunca
+      // çerçeveden ayrık kalıyordu. Artık tablet oturduktan sonra ekran
+      // yanıyor — hem kusur gidiyor hem iframe uçarken render edilmiyor.
+      { tur: 'video', video: 'https://www.youtube.com/embed/96BoFl4XQOc', w: 474, h: 351, x: 1110, y: 104, gecis: 'fade', basla: 2000, sure: 700 },
+    ],
+    en: {
+      alt: 'Rock drilling — horizontal directional drilling in hard ground',
+      yazi: {
+        ustlik: 'Hard ground',
+        baslik: 'Rock drilling & immense power',
+      },
+    },
   },
   {
     // El görseli sağ altta (x940-1230, y225-502) → yazı sola.
@@ -203,6 +315,7 @@ export const HERO_TR: HeroSlayt[] = [
     yazi: {
       ustlik: 'Altyapıda fark',
       baslik: 'Etkin çözümlerimizle rakiplerinizin önüne geçin',
+      kaydir: { x: 100, y: 0},
       konum: 'sol', dikey: 'ust', tema: 'acik',
     },
     katmanlar: [
@@ -210,46 +323,45 @@ export const HERO_TR: HeroSlayt[] = [
       // boş kalıyordu. Yazının hemen ardına alındı.
       { tur: 'gorsel', src: '/images/hero/katman/deltek-cozum-dugmesi-el.webp', w: 290, h: 277, x: 940, y: 225, gecis: 'lfb', basla: 1400, sure: 900 },
     ],
+    en: {
+      alt: 'Trenchless infrastructure solutions — a competitive edge with Deltek HDD',
+      yazi: {
+        ustlik: 'A difference in infrastructure',
+        baslik: 'Get ahead of your competitors with effective solutions',
+      },
+    },
   },
 ];
 
-// İngilizce metinler Türkçe orijinallerin çevirisidir, Deltek onayından
-// geçmedi (bkz. CLAUDE.md). Görsel katmanlar TR ile aynıdır.
-const EN_YAZI: HeroYazi[] = [
-  { ustlik: 'Onshore / Offshore', baslik: 'Your reliable partner in HDD projects',
-    konum: 'sag', dikey: 'orta', tema: 'koyu' },
-  { ustlik: 'Where we work', baslik: 'Wherever you need horizontal drilling, we are with you',
-    satirlar: ['Power · Natural gas · Sewerage · Telecoms · Potable water and drainage'],
-    eylem: 'Get in touch', eylemHref: '/en/iletisim/', konum: 'sol', dikey: 'orta', tema: 'koyu' },
-  { ustlik: 'Hard ground', baslik: 'Rock drilling & immense power',
-    konum: 'sol', dikey: 'orta', tema: 'koyu' },
-  { ustlik: 'Technology', baslik: 'Horizontal drilling and boring technologies',
-    satirlar: ['Start by choosing the drilling method that fits your purpose.'],
-    eylem: 'Contact us', eylemHref: '/en/iletisim/', eylemKonum: 'dip', konum: 'sol', dikey: 'ust', tema: 'acik' },
-  // TR ile aynı düzen: yeni makine görseli solu kapladığı için yazı sağda,
-  // başlık tek kelimelik üç satır.
-  { ustlik: 'You are in the right place', baslik: 'Horizontal\ndrilling\nspecialists',
-    satirlar: ['Advanced technical infrastructure,\nextensive machine fleet'],
-    konum: 'sag', dikey: 'alt', tema: 'acik' },
-  { ustlik: 'Engineering', baslik: 'Success takes more than coincidence',
-    satirlar: ['We model the project in software and share the results before work begins.'],
-    konum: 'sag', dikey: 'alt', tema: 'acik' },
-  { ustlik: 'Call us now', baslik: 'Let us engineer it for you',
-    satirlar: ['Solutions for infrastructure projects from 2 mm to 2000 mm in diameter.'],
-    eylem: 'Request a quote', eylemHref: '/en/iletisim/', konum: 'sol', dikey: 'orta', tema: 'acik' },
-  { ustlik: 'A difference in infrastructure', baslik: 'Get ahead of your competitors with effective solutions',
-    konum: 'sol', dikey: 'ust', tema: 'acik' },
-];
-
-// EN arka plan alt metinleri (görsel arama + erişilebilirlik).
-const EN_ALT = [
-  'Deltek onshore horizontal directional drilling (HDD) site — HDD rig set up on the shore',
-  'Pipeline construction site with horizontal directional drilling — power, gas and water crossings',
-  'Rock drilling — horizontal directional drilling in hard ground',
-  'Horizontal drilling and boring technologies — drill rod and soil cross-section',
-  'Deltek horizontal drilling fleet — horizontal directional drilling rig',
-  'Computer modelling of a horizontal directional drilling project — Deltek engineering',
-  'Trenchless infrastructure project — HDD solutions from 2 mm to 2000 mm diameter',
-  'Trenchless infrastructure solutions — a competitive edge with Deltek HDD',
-];
-export const HERO_EN: HeroSlayt[] = HERO_TR.map((s, i) => ({ ...s, alt: EN_ALT[i], yazi: EN_YAZI[i] }));
+/**
+ * Sitenin İngilizce ana sayfasındaki slaytlar.
+ *
+ * Görsel katmanlar, arka planlar ve DÜZEN Türkçe slayttan aynen gelir;
+ * değişen yalnız metin ve arka plan alt'ıdır. Böylece slayt sırasını
+ * değiştirmek, slayt eklemek ya da silmek iki dili birden taşır.
+ *
+ * Metin alanları TAMAMEN `en.yazi`den alınır: `en.yazi`de olmayan bir metin
+ * alanı İngilizce sayfada BOŞ kalır, Türkçesine düşmez. (Düşseydi
+ * eksik çeviri, Türkçe bir satır olarak /en/'de yayına çıkardı.)
+ *
+ * İNGİLİZCE METİNLER ÇEVİRİDİR, Deltek onayından geçmedi (bkz. CLAUDE.md).
+ */
+export const HERO_EN: HeroSlayt[] = HERO_TR.map((s, i) => {
+  // Destructuring metni düzenden ayırıyor: adı yazılanlar metin, geri kalan
+  // (`...duzen`) EN'e özel düzen ezmesi.
+  const { ustlik, baslik, satirlar, eylem, eylemHref, ...duzen } = s.en.yazi;
+  // eylemHref boş bırakılırsa HeroSlider `/iletisim/`e düşer: İngilizce
+  // sayfadaki buton Türkçe iletişim sayfasına götürür. Sessiz bir kusur,
+  // build'de yakalansın.
+  if (eylem && !eylemHref?.startsWith('/en/')) {
+    throw new Error(
+      `Hero slayt ${i + 1}: en.yazi.eylem var ama eylemHref "/en/" ile başlamıyor ` +
+      `— "${eylemHref ?? '(verilmemiş)'}". İngilizce buton Türkçe sayfaya götürür. ` +
+      `(src/data/hero.ts)`);
+  }
+  return {
+    ...s,
+    alt: s.en.alt,
+    yazi: { ...s.yazi, ...duzen, ustlik, baslik, satirlar, eylem, eylemHref },
+  };
+});

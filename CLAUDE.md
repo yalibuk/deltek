@@ -832,13 +832,15 @@ OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render et
 **Hero slider** — `src/components/HeroSlider.astro`, veri `src/data/hero.ts`.
 
 **Görsel katmanlar** canlı deltek.com.tr'deki Revolution Slider'dan birebir alındı:
-8 slayt (9.'su kaldırıldı), 8 görsel + 1 YouTube katmanı; konum, geçiş tipi, gecikme ve süre
-orijinaliyle aynı (4. slaytta sondaj biti soldan gelip toprak adasına giriyor).
+8 slayt (canlı slider'ın 9.'su kaldırıldı), 8 görsel + 1 YouTube katmanı; konum, geçiş
+tipi, gecikme ve süre orijinaliyle aynı (2. slaytta sondaj biti soldan gelip toprak
+adasına giriyor). **Slayt sırası canlı siteninkinden farklı** (bkz. "Slaytların
+sırasını değiştirmek"), o yüzden canlı slider'a bakarken numaralar tutmaz.
 Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
 (`HERO_IZGARA`); bileşen container-query birimiyle (`--olcek`) orantılı ölçekler.
 **`.slider__ray` en-boy oranı `1920/500` olmak zorunda** — değişirse katmanlar kayar.
 
-3. slayttaki YouTube gömüsü tablet çerçevesinin (`kaya-delgi-video-tablet.webp`) koyu ekran
+7. slayttaki YouTube gömüsü tablet çerçevesinin (`kaya-delgi-video-tablet.webp`) koyu ekran
 dikdörtgenine birebir oturur: **474×351 @ (1110,104)**, PNG'nin `#222` ekran
 alanı ölçülerek bulundu. Canlı slider `486×356 @ (1109,99)` diyor ama o değer
 ekranı birkaç piksel taşırıyor. Video katmanı, görsellerden farklı olarak
@@ -858,11 +860,12 @@ yazi:
   eylemHref: '/iletisim/'        # buton bağlantısı (varsayılan /iletisim/)
   konum: sol | merkez | sag      # yatay yer ('orta' DEĞİL — o `dikey`in değeri)
   dikey: ust | orta | alt        # katmanların kapladığı bandın dışı
+  kaydir: { x: -40, y: 20 }      # dokuz hazır yerin üstüne ince ayar (aşağı bak)
   tema:  koyu | acik             # arka plan koyu mu açık mı
 ```
 
-`tema` yazı ve perde rengini belirler: **1-3. slaytlar koyu fotoğraf** (beyaz yazı,
-koyu perde), **4-8. slaytlar çok açık zemin** (lacivert yazı, açık perde). Perde
+`tema` yazı ve perde rengini belirler: **4, 5 ve 7. slaytlar koyu fotoğraf** (beyaz
+yazı, koyu perde), **kalan beşi çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
 
 **Satır kırmak için `\n` kullanılır**, `<br />` değil. Metinler kaçışlanarak
@@ -871,9 +874,115 @@ basıldığı için ham HTML düz metin olarak görünür; `\n` bileşende gerç
 
 `konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi.
 
+### İngilizce metin her slaydın İÇİNDE
+
+Her slaydın bir `en` alanı var; İngilizce sayfa `HERO_EN` ile ondan türetiliyor:
+
+```yaml
+en:
+  alt: 'Deltek horizontal drilling fleet — ...'   # arka planın EN alt'ı
+  yazi:
+    ustlik: 'You are in the right place'
+    baslik: 'Horizontal\ndrilling\nspecialists'
+    satirlar: ['...']
+    eylem: 'Request a quote'
+    eylemHref: '/en/iletisim/'
+```
+
+İki kural:
+
+* **Düzen `en`de YOK.** `konum`, `dikey`, `tema`, `eylemKonum` ve `kaydir`
+  Türkçe slayttan miras alınır — düzen dile değil arka plandaki görsele bağlı.
+  Gerçekten dile bağlı bir istisna çıkarsa (İngilizce başlık bir satır uzun
+  sarıp katmana değiyor gibi) alanı `en.yazi` içinde yazıp ezebilirsiniz,
+  ama **neden** gerektiğini de yazın.
+* **Metin tamamen `en.yazi`den gelir.** `en.yazi`de olmayan bir metin alanı
+  `/en/`de BOŞ kalır, Türkçesine düşmez. Düşseydi eksik çeviri, Türkçe bir
+  satır olarak İngilizce sayfada yayına çıkardı.
+
+`en.yazi.eylem` varsa `eylemHref` `/en/` ile başlamak zorunda; başlamazsa
+derleme durur. (Varsayılan `/iletisim/`e düşmek, İngilizce butonu Türkçe
+iletişim sayfasına götürürdü — sessiz bir kusur.)
+
+> **Neden böyle:** İngilizce metinler eskiden `EN_YAZI`/`EN_ALT` adlı ayrı
+> dizilerdeydi ve slaytlarla **sıra numarasından** eşleşiyordu
+> (`HERO_TR.map((s, i) => ({ ...s, yazi: EN_YAZI[i] }))`). Bir slayt eklemek,
+> silmek ya da yerini değiştirmek diziyi kaydırıp her slaydı yanlış İngilizce
+> metinle eşliyordu — hata vermeden, yalnız `/en/` sayfasında. Aynı desen iki
+> kez ayrışma üretti (`deltek-cozum-dugmesi-el.webp` slaydında düzeltme yalnız
+> TR'ye uygulandı; `deltek-yatay-sondaj-makine-parki.webp` slaydında `dikey` iki
+> dilde farklı kaldı).
+
+### Slaytların sırasını değiştirmek
+
+`HERO_TR` içindeki nesneleri yer değiştirmek yeterli — slaytlar dizideki
+sırayla çıkar, noktalar ve otomatik geçiş sayıdan türer, İngilizce sayfa da
+aynı sırayı alır (metin artık slaydın içinde).
+
+Dikkat edilecek tek şey **1. slaydın LCP olması**: arka planı
+`loading="eager"` + `fetchpriority="high"` ile, katmanları da `eager` ile
+yüklenir; kalan slaytlar tembel. Yani başa aldığınız slaydın ağırlığı doğrudan
+ilk açılış hızına yazılır.
+
+| Slayt | Arka plan | Katman | İlk ekranda inen |
+| --- | --- | --- | --- |
+| 1 `kazisiz-altyapi-projesi` | 23 KB | 1 | **59 KB** |
+| 2 `yatay-delgi-sondaj-teknolojileri` | 12 KB | 2 | 71 KB |
+| 3 `yatay-sondaj-proje-modelleme` | 36 KB | 2 | 123 KB |
+| 4 `boru-hatti-yatay-sondaj-santiyesi` | 262 KB | — | 262 KB |
+| 5 `deltek-onshore-hdd-yatay-sondaj-sahasi` | 289 KB | — | 289 KB |
+| 6 `deltek-yatay-sondaj-makine-parki` | 2 KB | 2 | 97 KB |
+| 7 `kaya-delgi-yatay-sondaj-arkaplan` | 56 KB | 1 | 58 KB |
+| 8 `kazisiz-altyapi-cozumleri` | 3 KB | 1 | 17 KB |
+
+İki ağır fotoğraf (4 ve 5) bilerek başta değil: 2026-09-07 sıralamasından önce
+289 KB'lık slayt birinci sıradaydı, şimdi ilk indirme **59 KB**.
+
+Sıra değişirse bu belgedeki ve `hero.ts` yorumlarındaki **slayt numarası
+atıfları bayatlar** (7. slayttaki video, 2. slayttaki tij/buton, 8. slayttaki
+el gibi) — birlikte güncelleyin. En son 2026-09-07'de sıralandı:
+eski 7·4·6·2·1·5·3·8 → yeni 1·2·3·4·5·6·7·8. Derleme hata mesajlarındaki numaralar çalışma
+anında hesaplandığı için kendiliğinden doğru kalır.
+
+### `kaydir` — dokuz hazır yerin üstüne ince ayar
+
+`konum`/`dikey` dokuz köşe veriyor; arada bir yer gerekiyorsa `kaydir`:
+
+```yaml
+kaydir: { x: -40, y: 20 }   # 40 sola, 20 aşağı
+```
+
+**Birim katmanlarla aynı: 1920×500 tasarım ızgarası pikseli**, sabit CSS
+pikseli değil — yani ekranla orantılı ölçeklenir. Bir katmanı `x: 40`
+kaydırmakla yazıyı `kaydir: { x: 40 }` kaydırmak aynı mesafeyi verir.
+x pozitif sağa, y pozitif aşağı. Verilmeyen eksen 0.
+
+Ölçüldü (1440 px ekran, ölçek 0.7422): `x: 40` → 29,7 px sağa; `y: -20` →
+14,8 px yukarı. Sağa hizalı bloklarda da (`konum: sag`) pozitif x sağa
+götürür, yön ters dönmez.
+
+İki sınırı var, ikisi de bilinçli:
+
+* **Dar ekranda (≤820px) yok sayılır** (`translate: none !important`). Orada
+  katmanlar gizlenip yazı tam genişlikte ortalanıyor; masaüstü için verilmiş
+  bir kaydırma o düzeni merkezden kaçırırdı.
+* **`eylemKonum: 'dip'` butonuna yalnız `x` uygulanır.** Buton bilerek slaytın
+  dibine sabit; `y`'yi ona da uygulamak o sabitlemeyi anlamsız kılardı. `x`
+  uygulanır ki buton yazıyla hizalı kalsın. (Ölçüldü: `kaydir: { x: 80, y: 30 }`
+  verilen 2. slaytta buton 59 px sağa gitti, dikeyde 1 px oynamadı.)
+
+> **`transform` DEĞİL `translate` üretiliyor.** `.yazi--orta` dikey ortalama
+> için zaten `transform: translateY(-50%)` kullanıyor; aynı özelliği ikinci
+> kez yazmak onu ezer ve blok dikeyde yerinden oynardı. `translate` ayrı bir
+> özellik olduğu için üstüne biniyor. Aynı gerekçe yazının giriş
+> animasyonunda da var (`yazi-gir`).
+
+Değer sayı olmak zorunda; `'40px'` gibi bir metin CSS `calc()`'ini sessizce
+çökertip kaydırmayı hiç uygulamazdı, o yüzden derlemede yakalanıyor.
+
 > **Geçersiz değer sayfayı sessizce bozar — artık build'de yakalanıyor.**
-> Bu alanlar doğrudan CSS sınıfına çevriliyor (`yazi--${konum}` …). 2. slaytta
-> `konum: 'orta'` yazılmıştı; 'orta' `dikey`in değeri, yataydaki karşılığı
+> Bu alanlar doğrudan CSS sınıfına çevriliyor (`yazi--${konum}` …). 'Kullanım
+> alanları' slaytında `konum: 'orta'` yazılmıştı; 'orta' `dikey`in değeri, yataydaki karşılığı
 > 'merkez'. Sonuç: `yazi--orta` iki kez basıldı, YATAY konum sınıfı
 > (`--sol/--merkez/--sag`) hiç basılmadı. `.yazi` mutlak konumlu ve yatay
 > yerini yalnız o sınıflardan aldığı için blok `left` almadan kaldı, slaytın
@@ -909,10 +1018,9 @@ Bu yöntemle bugünkü durum:
 
 | Sayfa | Slayt | Katman | Çakışan genişlik | Altındaki opak piksel |
 | --- | --- | --- | --- | --- |
-| `/` ve `/en/` | 4 | `yatay-sondaj-delgi-tiji-ve-bit.webp` (gri gölge şeridi) | 100 px | %95 |
-| `/en/` | 5 | `yonlendirilebilir-yatay-sondaj-makinesi.webp` | 330 px | %86 |
+| `/` ve `/en/` | 2 | `yatay-sondaj-delgi-tiji-ve-bit.webp` (gri gölge şeridi) | 100 px | %95 |
 
-**4. slayt kabul edilen durum.** `yatay-sondaj-delgi-tiji-ve-bit.webp` iki ayrı opak banttan oluşuyor:
+**2. slayt kabul edilen durum.** `yatay-sondaj-delgi-tiji-ve-bit.webp` iki ayrı opak banttan oluşuyor:
 **mavi delgi borusu y334-376** ve altında **açık gri gölge şeridi y405-449**
 (`rgb(225,225,225)`). Buton akışta kalınca boruya biniyordu; `eylemKonum: 'dip'`
 ile slaytın dibine alındı (y411-474) ve **boru 35 px boşlukla tamamen kurtuldu**.
@@ -920,18 +1028,22 @@ Gölge şeridine değmesi kaçınılmaz: şeridin altında 50 px kalıyor, buton
 Sıfırlamak isteyen butonu küçültmeli ya da `yatay-sondaj-delgi-tiji-ve-bit.webp`'yi yukarı almalı — ikisi de
 görsel bir bedel.
 
-**5. slayt yalnızca `/en/`'de bozuk.** `Horizontal drilling specialists` başlığı
-İngilizcede iki satıra sarıyor (TR'de tek satır), blok y244'ten başlayıp makine
-görselinin bandına (y76-308) giriyor. Başlık tek satıra inmeden çözülmüyor.
-
 Giderilenler:
+
+- **6. slayt, yalnızca `/en/`'de** (giderildi 2026-09-07): `Horizontal drilling
+  specialists` başlığı İngilizcede sarıp makine görselinin bandına giriyordu.
+  Sebebi çeviri değil düzen ayrışmasıydı: EN slayt `dikey: 'alt'`, TR aynı
+  slayt `dikey: 'orta'` idi. İngilizce metin slaydın içine taşınıp düzen TR'den
+  miras alınınca ikisi eşitlendi. Yeniden ölçüldü (880 / 1000 / 1440 px):
+  **çakışma yok**, katman altında opak piksel %0.
 
 - **8. slayt** (`deltek-cozum-dugmesi-el.webp`): `dikey: orta` iken başlığın ilk satırı elin
   tuttuğu düğmeye biniyordu → `dikey: ust`.
-  > **`HERO_TR` ve `EN_YAZI` ayrı dizilerdir.** Bir slaydın `yazi` alanını
-  > değiştirirken ikisini birden güncelleyin; bu düzeltme önce yalnızca TR'ye
-  > uygulanmış, `/en/` bozuk kalmıştı.
-- **6. slayt** (`yatay-sondaj-pipe-analysis.webp`): görselin alt kenarı başlığa
+  > Bu düzeltme önce yalnızca TR'ye uygulanmış, `/en/` bozuk kalmıştı:
+  > İngilizce metinler o zaman ayrı bir `EN_YAZI` dizisindeydi ve düzeni de
+  > ayrı taşıyordu. Artık düzen tek yerde (aşağıya bakın), bu ayrışma
+  > yapısal olarak mümkün değil.
+- **3. slayt** (`yatay-sondaj-pipe-analysis.webp`): görselin alt kenarı başlığa
   biniyordu → %30 küçültülüp (437→306) 150 px sola alındı (x 1094→944).
   Görselin `h` alanı yalnızca belgeleme amaçlı; **görsel katmanların yüksekliği
   veriden değil, `w` ve doğal en-boy oranından gelir** (yalnızca video katmanı
@@ -981,10 +1093,10 @@ parlaklığı 239-255 (neredeyse beyaz):
 **Risk:** bu slaytlardan birinin arka planı KOYU bir fotoğrafla değiştirilirse
 kalıntılar anında görünür hâle gelir. Arka plan değiştirilecekse katmanı önce
 siyah zemine bindirip bak (`scripts/` altında betik yok, tek seferlik yapıldı).
-Koyu zeminli tek katman `kaya-delgi-video-tablet.webp` (slayt 3, arka plan ort 128) ve onda
+Koyu zeminli tek katman `kaya-delgi-video-tablet.webp` (slayt 7, arka plan ort 128) ve onda
 matlaşma yok — zaten opak bir tablet.
 
-Ayrıca: slayt 6'daki `yatay-sondaj-pipe-analysis.webp` beyaz zeminde **gri bir
+Ayrıca: slayt 3'teki `yatay-sondaj-pipe-analysis.webp` beyaz zeminde **gri bir
 dikdörtgen** olarak duruyor. Bu kesim artığı değil, grafiğin kendi 3B çizim
 zemini — yani görselin tasarımı. Değiştirilecekse yeni bir grafik gerekir.
 
@@ -1020,7 +1132,7 @@ Otomatik geçiş 8 sn — en geç görsel katman 4000 ms gecikmeli.
 **Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif katmanlar gizlenir, perde
 alttan yukarı koyulaşır ve yazı tam genişlikte ortalanıp beyaza döner.
 
-> Canlı sitedeki 7. slaydın `deltek-proje-danismani.webp` katmanı sunucuda **404** veriyor —
+> Canlı sitedeki 7. slaydın (bizde 1. slayt) `deltek-proje-danismani.webp` katmanı sunucuda **404** veriyor —
 > orijinali (309×451, saydam PNG) web arşivinin 2025-04-01 anlık görüntüsünden
 > alınıp depoya kondu.
 > `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.

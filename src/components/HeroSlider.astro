@@ -4,7 +4,7 @@
  *
  * GÖRSEL KATMANLAR canlı deltek.com.tr'deki Revolution Slider'dan geldiği gibi
  * durur: konum, geçiş tipi (sfl/sfr/sft/sfb/lfl/lfr/lft/lfb), gecikme ve süre
- * orijinaliyle aynı — 4. slaytta sondaj bitinin soldan gelip toprağa girmesi
+ * orijinaliyle aynı — 2. slaytta sondaj bitinin soldan gelip toprağa girmesi
  * gibi hareketler korunuyor.
  *
  * YAZI ise yeniden tasarlandı: orijinaldeki 2016 tema efektleri (sert çift
@@ -30,7 +30,8 @@ const { g: IG, y: IY } = HERO_IZGARA;
  * `astro build` tip denetimi YAPMAZ (@astrojs/check kurulu değil), yani
  * sessizce geçer: eşleşen kural bulunamaz, kutu o özelliği hiç almaz.
  *
- * Yaşandı: 2. slaytta `konum: 'orta'` yazılmıştı ('orta' `dikey`in değeri,
+ * Yaşandı: 'Kullanım alanları' slaytında `konum: 'orta'` yazılmıştı
+ * ('orta' `dikey`in değeri,
  * yatayda karşılığı 'merkez'). Sonuç: `yazi--orta` iki kez basıldı, YATAY
  * konum sınıfı (`--sol/--merkez/--sag`) hiç basılmadı; `.yazi` mutlak
  * konumlu ve yatay yerini yalnız o sınıflardan aldığı için blok `left`
@@ -54,10 +55,38 @@ slaytlar.forEach((s, i) => {
       throw new Error(
         `Hero slayt ${i + 1}: "${alan}" değeri geçersiz — "${deger}". ` +
         `Geçerli değerler: ${izin.join(', ')}. ` +
-        `(src/data/hero.ts; HERO_TR ve EN_YAZI AYRI dizilerdir, ikisini de kontrol edin.)`);
+        `(src/data/hero.ts — slayt düzeni tek yerde: HERO_TR. İngilizce sayfa ` +
+        `da bu değeri kullanır, en.yazi ayrıca ezmediği sürece.)`);
+    }
+  }
+  // kaydir sayı olmalı: metin verilirse CSS calc() sessizce çöker ve
+  // kaydırma hiç uygulanmaz — hatayı build'de görmek daha iyi.
+  for (const eksen of ['x', 'y'] as const) {
+    const d = s.yazi.kaydir?.[eksen];
+    if (d !== undefined && typeof d !== 'number') {
+      throw new Error(
+        `Hero slayt ${i + 1}: "kaydir.${eksen}" sayı olmalı — "${d}" verilmiş. ` +
+        `Birim 1920×500 tasarım ızgarası pikseli, tırnaksız yazın (ör. kaydir: { ${eksen}: -40 }).`);
     }
   }
 });
+
+/**
+ * `kaydir`ı CSS değişkenine çevirir. Ölçek katmanlarla aynı (`--olcek`),
+ * yani değer ekranla orantılı büyüyüp küçülür.
+ *
+ * `transform` DEĞİL `translate` üretiliyor: `.yazi--orta` dikey ortalama için
+ * zaten `transform: translateY(-50%)` kullanıyor, aynı özelliği ikinci kez
+ * yazmak onu ezerdi. `translate` ayrı bir özellik olduğu için üstüne biniyor.
+ * (Aynı gerekçe yazının giriş animasyonunda da var, bkz. `yazi-gir`.)
+ */
+const kaydirStil = (k: { x?: number; y?: number } | undefined, yalnizYatay = false) => {
+  if (!k) return undefined;
+  const p: string[] = [];
+  if (k.x) p.push(`--kx:calc(${k.x} * var(--olcek))`);
+  if (k.y && !yalnizYatay) p.push(`--ky:calc(${k.y} * var(--olcek))`);
+  return p.length ? p.join(';') : undefined;
+};
 
 // Görsellerin doğal ölçüsü derlemede dosyadan okunur ve width/height olarak
 // basılır: CSS boyutu belirler, öznitelik yalnızca yüklenmeden önce oranı
@@ -106,7 +135,7 @@ const satirlaraBol = (m: string) => m.split('\n');
           )
         ))}
 
-        <div class={`yazi yazi--${s.yazi.konum} yazi--${s.yazi.dikey} yazi--${s.yazi.tema}`}>
+        <div class={`yazi yazi--${s.yazi.konum} yazi--${s.yazi.dikey} yazi--${s.yazi.tema}`} style={kaydirStil(s.yazi.kaydir)}>
           {s.yazi.ustlik && <p class="yazi__ustlik">{s.yazi.ustlik}</p>}
           <h2 class="yazi__baslik">
             {satirlaraBol(s.yazi.baslik).map((p, k) => (
@@ -128,7 +157,7 @@ const satirlaraBol = (m: string) => m.split('\n');
         {/* eylemKonum: 'dip' — buton metin bloğundan koparılıp slaytın
             en altına sabitlenir; yatay hizası yazıyla aynı kalır. */}
         {s.yazi.eylem && s.yazi.eylemKonum === 'dip' && (
-          <div class={`yazi yazi--${s.yazi.konum} yazi--dip yazi--${s.yazi.tema}`}>
+          <div class={`yazi yazi--${s.yazi.konum} yazi--dip yazi--${s.yazi.tema}`} style={kaydirStil(s.yazi.kaydir, true)}>
             <a class="yazi__eylem" href={s.yazi.eylemHref ?? '/iletisim/'}>{s.yazi.eylem}</a>
           </div>
         )}
@@ -209,7 +238,10 @@ const satirlaraBol = (m: string) => m.split('\n');
   --kusak: min(1077px, calc(100cqw - 2 * var(--kap-pad)));
   --kenar: calc((100cqw - var(--kusak)) / 2);
   position: absolute; z-index: 3;
-  width: min(calc(700 * var(--olcek)), calc(var(--kusak) * .55)); }
+  width: min(calc(700 * var(--olcek)), calc(var(--kusak) * .55));
+  /* Slayta ozel ince ayar (hero.ts -> yazi.kaydir). Degiskenler yoksa 0.
+     `transform` degil `translate`: .yazi--orta zaten transform kullaniyor. */
+  translate: var(--kx, 0) var(--ky, 0); }
 .yazi--sol { left: var(--kenar); }
 .yazi--sag { right: var(--kenar); text-align: right; }
 /* Yatayda ortalanmış blok. `transform` KULLANILMIYOR: dikey ortalama
@@ -304,6 +336,9 @@ const satirlaraBol = (m: string) => m.split('\n');
   .perde { background: linear-gradient(180deg, rgb(var(--blue-900-rgb) / .15) 0%, rgb(var(--blue-900-rgb) / .72) 100%) !important; }
   .yazi { --olcek: calc(100cqw / 620); left: 6% !important; right: 6% !important;
     width: auto; max-width: none; top: auto !important; bottom: 12%; transform: none !important;
+    /* Masaustu icin verilen `kaydir` burada anlamsiz: yazi tam genislikte
+       ortalaniyor, kaydirma onu merkezden kacirirdi. */
+    translate: none !important;
     text-align: center; }
   .yazi--sag .yazi__satir { margin-inline: auto; }
   .yazi__baslik { color: var(--beyaz) !important; }
