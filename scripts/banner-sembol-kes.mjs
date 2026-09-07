@@ -115,7 +115,7 @@ function beyazKutuyuTemizle(data, W, H, C) {
 await mkdir(HEDEF, { recursive: true });
 for (const [ad, sol] of Object.entries(KESIM)) {
   const kaynak = path.join(KAYNAK, ad);
-  const cikti = path.join(HEDEF, ad.replace(/-1\.jpg$/, '.jpg'));
+  const cikti = path.join(HEDEF, ad.replace(/-1\.jpg$/, '.webp'));
 
   const { data, info } = await sharp(kaynak)
     .extract({ left: sol, top: 0, width: 1170 - sol, height: 350 })
@@ -124,12 +124,12 @@ for (const [ad, sol] of Object.entries(KESIM)) {
   gradyaniDuzle(data, info.width, info.height, info.channels);
   const boyanan = beyazKutuyuTemizle(data, info.width, info.height, info.channels);
   const { size } = await sharp(data, { raw: info })
-    .jpeg({ quality: 88, mozjpeg: true }).toFile(cikti);
+    .webp({ quality: 78, effort: 6, smartSubsample: true }).toFile(cikti);
 
   console.log(`${String(info.width).padStart(4)}x${info.height}  ${String(Math.round(size / 1024)).padStart(3)}KB` +
     `  ${boyanan ? String(boyanan).padStart(6) + ' px boyandı' : '              '}  ${path.basename(cikti)}`);
 }
 
-const n = (await readdir(HEDEF)).filter((f) => f.endsWith('.jpg')).length;
+const n = (await readdir(HEDEF)).filter((f) => f.endsWith('.webp')).length;
 console.log(`\n${n} sembol → ${HEDEF}/`);
 console.log('Yeni sembol eklendiyse public/admin/config.yml bannerSembol listesine de yaz.');

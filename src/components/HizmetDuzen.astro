@@ -16,13 +16,20 @@
 interface Hizmet { baslik: string; kisaltma?: string; metin: string; href?: string; ikon?: string; }
 interface Alan { baslik: string; metin: string; href?: string; ikon?: string; }
 import { ikonCiz } from '../data/ikon';
+import { gorselOznitelik } from '../data/gorselOlcu';
+import { CEVIRI, type Dil } from '../data/i18n';
 interface Props {
+  dil?: Dil;
   hizmetler?: Hizmet[];
-  neden?: { baslik?: string; metin?: string; maddeler?: string[]; gorsel?: string };
+  neden?: { baslik?: string; metin?: string; maddeler?: string[]; gorsel?: string; gorselAlt?: string };
   projeler?: { baslik?: string; metin?: string; galeri?: { foto: string; alt?: string }[] };
   alanlar?: { baslik?: string; ogeler?: Alan[] };
 }
-const { hizmetler = [], neden, projeler, alanlar } = Astro.props;
+const { dil = 'tr', hizmetler = [], neden, projeler, alanlar } = Astro.props;
+const t = CEVIRI[dil].hizmet;
+// width/height derlemede dosyadan okunur — yer ayrılır, sayfa oynamaz (CLS).
+const nedenOlcu = neden?.gorsel ? await gorselOznitelik(neden.gorsel) : {};
+const galeriOlcu = await Promise.all((projeler?.galeri ?? []).map(g => gorselOznitelik(g.foto)));
 // Sayfanın markdown gövdesi — şu an boş ama biri giriş metni eklerse
 // sessizce kaybolmasın diye kartların önünde basılır.
 const govde = Astro.slots.has('default') ? (await Astro.slots.render('default')).trim() : '';
@@ -53,7 +60,7 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
             </h2>
             {h.kisaltma && <span class="hkrt__kis">{h.kisaltma}</span>}
             <p class="hkrt__metin">{h.metin}</p>
-            {h.href && <span class="hkrt__git">Detaylı bilgi <i aria-hidden="true">→</i></span>}
+            {h.href && <span class="hkrt__git">{t.detay} <i aria-hidden="true">→</i></span>}
           </article>
         ))}
       </div>
@@ -81,7 +88,7 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
           )}
         </div>
         {neden.gorsel && (
-          <figure class="hzm__nedenG"><img src={neden.gorsel} alt="" loading="lazy" /></figure>
+          <figure class="hzm__nedenG"><img src={neden.gorsel} alt={neden.gorselAlt || neden.baslik || ''} {...nedenOlcu} loading="lazy" decoding="async" /></figure>
         )}
       </div>
     </section>
@@ -92,8 +99,8 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
       {projeler.baslik && <h2 class="hzm__h2">{projeler.baslik}</h2>}
       {projeler.metin && <p class="hzm__giris hzm__giris--gen">{projeler.metin}</p>}
       <div class="hzm__galeri">
-        {projeler.galeri.map(g => (
-          <figure><img src={g.foto} alt={g.alt || ''} loading="lazy" /></figure>
+        {projeler.galeri.map((g, i) => (
+          <figure><img src={g.foto} alt={g.alt || projeler.baslik || ''} {...galeriOlcu[i]} loading="lazy" decoding="async" /></figure>
         ))}
       </div>
     </section>
@@ -116,7 +123,7 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
               {a.href ? <a class="hkrt__bag" href={a.href}>{a.baslik}</a> : a.baslik}
             </h3>
             <p class="hkrt__metin">{a.metin}</p>
-            {a.href && <span class="hkrt__git">Bize ulaşın <i aria-hidden="true">→</i></span>}
+            {a.href && <span class="hkrt__git">{t.ulasin} <i aria-hidden="true">→</i></span>}
           </article>
         ))}
       </div>

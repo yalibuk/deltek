@@ -17,8 +17,9 @@ import { SITE, OFISLER, yolTarifi } from '../data/site';
 import { CEVIRI, type Dil } from '../data/i18n';
 import { gorselOlcu } from '../data/gorselOlcu';
 
-interface Props { dil: Dil; baslik: string; ozet?: string; gorsel?: string; }
-const { dil, baslik, ozet, gorsel } = Astro.props;
+interface Props { dil: Dil; baslik: string; ozet?: string; gorsel?: string; gorselAlt?: string; }
+const { dil, baslik, ozet, gorsel, gorselAlt } = Astro.props;
+const gorselAltMetin = gorselAlt || CEVIRI[dil].iletisim.gorselAlt;
 const t = CEVIRI[dil].iletisim;
 // Görselin en/boy ölçüsü derlemede dosyadan okunur. Elle yazılırsa görsel
 // değiştiğinde bayatlar ve yanlış oranda yer ayrılıp sayfa oynar (oldu:
@@ -40,7 +41,7 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
         sarmalayıcıda kalır, görsel konteynerin tamamını kullanır. */}
     {gorsel && (
       <div class="ilet__gorsel">
-        <img src={gorsel} alt="" width={olcu?.en} height={olcu?.boy}
+        <img src={gorsel} alt={gorselAltMetin} width={olcu?.en} height={olcu?.boy}
              fetchpriority="high" decoding="async" />
       </div>
     )}

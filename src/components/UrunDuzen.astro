@@ -28,16 +28,24 @@
  *
  * Markdown gövdesi varsa bannerdan hemen sonra, blokların önünde çıkar.
  */
-import { gorselOrani } from '../data/gorselOlcu';
+import { gorselOlcu } from '../data/gorselOlcu';
 
 interface Props {
   banner?: string;
   bannerAlt?: string;
+  /** Sayfa başlığı — alt metni verilmemiş görseller için son çare. */
+  sayfaBaslik?: string;
   bloklar?: any[];
   tablolar?: any[];
   galeri?: any[];
 }
-const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Astro.props;
+const { banner, bannerAlt = '', sayfaBaslik = '', bloklar = [], tablolar = [], galeri = [] } = Astro.props;
+
+/**
+ * Görsel alt metni: blok `alt` > blok başlığı > sayfa başlığı. Hiçbir görsel
+ * alt'sız kalmaz — Google Görseller ve ekran okuyucular bunu okuyor.
+ */
+const altMetin = (b: any) => b.alt || b.baslik || sayfaBaslik;
 
 /**
  * ÇOK GENİŞ görseller (en/boy >= 2) iki sütunlu blokta yarım genişliğe
@@ -48,11 +56,13 @@ const { banner, bannerAlt = '', bloklar = [], tablolar = [], galeri = [] } = Ast
  * okunamazsa oran null gelir ve blok eski düzeninde kalır.
  */
 const GENIS_ESIK = 2;
-const oranlar = new Map<string, number | null>();
-for (const b of bloklar) {
-  if (b.gorsel && !oranlar.has(b.gorsel)) oranlar.set(b.gorsel, await gorselOrani(b.gorsel));
+const olculer = new Map<string, { en: number; boy: number } | null>();
+for (const src of [banner, ...bloklar.map((b: any) => b.gorsel), ...galeri.map((g: any) => g.foto)]) {
+  if (src && !olculer.has(src)) olculer.set(src, await gorselOlcu(src));
 }
-const genisMi = (src: string) => (oranlar.get(src) ?? 0) >= GENIS_ESIK;
+const genisMi = (src: string) => { const o = olculer.get(src); return !!o && o.en / o.boy >= GENIS_ESIK; };
+/** width/height öznitelikleri — yüklenmeden önce yer ayrılsın (CLS yok). */
+const olcu = (src: string) => { const o = olculer.get(src); return o ? { width: o.en, height: o.boy } : {}; };
 
 /** Blok metnindeki markdown kalın ve bağlantı işaretlerini HTML'e çevirir. */
 const zengin = (s: string) => s
@@ -68,7 +78,7 @@ const ALT_BASLIK = "### ";
 ---
 {banner && (
   <div class="hsg-genis hsg-genis--bosluk">
-    <img src={banner} alt={bannerAlt} />
+    <img src={banner} alt={bannerAlt || sayfaBaslik} {...olcu(banner)} fetchpriority="high" decoding="async" />
   </div>
 )}
 
@@ -81,7 +91,7 @@ const ALT_BASLIK = "### ";
       <div class="hsg-yatay">
         {b.baslik && <h3>{b.baslik}</h3>}
         <div class="hsg-yatay__g">
-          <img src={b.gorsel} alt={b.baslik || ''} loading="lazy" />
+          <img src={b.gorsel} alt={altMetin(b)} {...olcu(b.gorsel)} loading="lazy" decoding="async" />
         </div>
         <div class="hsg-yatay__t">
           {paragraflar(b.metin).map((par: string) => (
@@ -95,7 +105,7 @@ const ALT_BASLIK = "### ";
       /* görsel + metin: iki sütun, dönüşümlü hizalanır */
       <div class={`hsg-ikili${(b.ters ?? i % 2 === 1) ? ' hsg-ikili--ters' : ''}`}>
         <div class="hsg-ikili__g">
-          <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />
+          <img src={b.gorsel} alt={altMetin(b)} {...olcu(b.gorsel)} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" decoding="async" />
         </div>
         <div class="hsg-ikili__t">
           {b.baslik && <h3>{b.baslik}</h3>}
@@ -109,7 +119,7 @@ const ALT_BASLIK = "### ";
     ) : b.gorsel ? (
       /* yalnız görsel: tam genişlik */
       <div class="hsg-genis">
-        <img src={b.gorsel} alt={b.baslik || ''} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" />
+        <img src={b.gorsel} alt={altMetin(b)} {...olcu(b.gorsel)} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" decoding="async" />
       </div>
     ) : b.metin ? (
       /* yalnız metin: tam genişlik — boş görsel kutusu bırakmaz */
@@ -152,7 +162,7 @@ const ALT_BASLIK = "### ";
   {galeri.length > 0 && (
     <div class="hsg-galeri">
       {galeri.map((g: any) => g.foto && (
-        <div class="hsg-galeri__k"><img src={g.foto} alt={g.alt || ''} loading="lazy" /></div>
+        <div class="hsg-galeri__k"><img src={g.foto} alt={g.alt || sayfaBaslik} {...olcu(g.foto)} loading="lazy" decoding="async" /></div>
       ))}
     </div>
   )}

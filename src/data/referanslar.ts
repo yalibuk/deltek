@@ -5,21 +5,22 @@
  * BASILMAZ (bkz. LogoSerit.astro): kırık görsel yerine boşluk bırakılır,
  * dosya eklendiği anda kendiliğinden görünür.
  *
- * Mevcut yedi logo canlı deltek.com.tr'den taşındı (WordPress yolları
- * korunuyor). Saipem ve Aramco'nun görselleri HENÜZ YOK — dosyalar
- * `public/images/referans/` altına aşağıdaki adlarla konulmalı.
+ * Buradaki dosyalar KIRPILMIŞ kopyalardır: `scripts/referans-logo-kirp.mjs`
+ * kaynaklardaki boş payı atar, böylece her dosya = logonun kendisi olur ve
+ * şeritte optik olarak dengeli görünürler. Kaynaklar
+ * `public/images/uploads/2015/08/` (canlı siteden gelen yedi logo) ve
+ * `public/images/referans/kaynak/` (Saipem, Aramco) altında durur.
  */
 export type ReferansLogo = { src: string; ad: string };
 
 export const REFERANS_LOGOLARI: ReferansLogo[] = [
-  { src: '/images/uploads/2015/08/kolin.jpg',    ad: 'Kolin İnşaat' },
-  { src: '/images/uploads/2015/08/tcdd.jpg',     ad: 'TCDD' },
-  { src: '/images/uploads/2015/08/ericsson.jpg', ad: 'Ericsson' },
-  { src: '/images/uploads/2015/08/iski.jpg',     ad: 'İSKİ' },
-  { src: '/images/uploads/2015/08/siemens.jpg',  ad: 'Siemens' },
-  { src: '/images/uploads/2015/08/teias.jpg',    ad: 'TEİAŞ' },
-  { src: '/images/uploads/2015/08/botas.jpg',    ad: 'BOTAŞ' },
-  // ── Görseli beklenenler ────────────────────────────────────────
-  { src: '/images/referans/saipem.png', ad: 'Saipem' },
-  { src: '/images/referans/aramco.png', ad: 'Aramco' },
+  { src: '/images/referans/kolin.jpg',    ad: 'Kolin İnşaat' },
+  { src: '/images/referans/tcdd.jpg',     ad: 'TCDD' },
+  { src: '/images/referans/ericsson.jpg', ad: 'Ericsson' },
+  { src: '/images/referans/iski.jpg',     ad: 'İSKİ' },
+  { src: '/images/referans/siemens.jpg',  ad: 'Siemens' },
+  { src: '/images/referans/teias.jpg',    ad: 'TEİAŞ' },
+  { src: '/images/referans/botas.jpg',    ad: 'BOTAŞ' },
+  { src: '/images/referans/saipem.png',   ad: 'Saipem' },
+  { src: '/images/referans/aramco.png',   ad: 'Aramco' },
 ];

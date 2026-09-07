@@ -1,6 +1,12 @@
 ---
 baslik: "Yatay Delgi Dizel Elektrik Karşılaştırma"
-ozet: "Yönlendirilebilir Yatay Sondaj (HDD – Horizontal Directional Drilling) sektöründe son 5–10 yılda elektrifikasyon, hibrit güç sistemleri, akıllı kontrol ve otomasyon üç ana teknolojik trend olarak ö…"
+seoBaslik: "Elektrikli mi Dizel mi? Yatay Delgi Makineleri"
+ozet: "Elektrikli, hibrit ve dizel HDD makinelerinin karşılaştırması: enerji verimi, emisyon, gürültü, şehir içi kullanım ve tam elektrikli yatay delgi rigleri."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+  - "gunde-1-km"
+  - "yatay-sondaj"
+anahtarKelimeler: "elektrikli yatay delgi makinesi, elektrikli HDD, hibrit HDD rig, dizel HDD, yatay sondaj makinesi karşılaştırma, GRUNDODRILL, Goodeng, enerji verimliliği"
 tarih: 2026-04-13
 ---
 

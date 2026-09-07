@@ -2,19 +2,35 @@
 import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
 import { yazilar } from '../../data/icerik';
+import { gorselOznitelik } from '../../data/gorselOlcu';
 
 // Canlı sitede /blog/ yalnızca liste sayfası; yazıların kendisi kök dizinde.
 const liste = await yazilar('tr');
+const kapakOlcu = await Promise.all(liste.map(({ entry }) => entry.data.kapak ? gorselOznitelik(entry.data.kapak) : Promise.resolve({})));
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+const sema = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': SITE.kanonikal + '/blog/#blog',
+  name: `${SITE.isim} Blog — Yatay Sondaj Haberleri`,
+  url: SITE.kanonikal + '/blog/',
+  inLanguage: 'tr',
+  publisher: { '@id': SITE.kanonikal + '/#organization' },
+  blogPost: liste.map(({ entry, slug }) => ({ '@type': 'BlogPosting', headline: entry.data.baslik, url: `${SITE.kanonikal}/${slug}/`,
+    ...(entry.data.tarih ? { datePublished: new Date(entry.data.tarih).toISOString().slice(0, 10) } : {}) })),
+};
 ---
-<Layout title={`Blog — ${SITE.isim}`}
-        description="Yatay sondaj, boru sürme ve kazısız geçiş teknolojileri üzerine yazılar ve haberler.">
+<Layout title={`Yatay Sondaj Blogu: HDD Haberleri ve Teknik Yazılar — ${SITE.isim}`}
+        description="Yönlendirilebilir yatay sondaj (HDD), boru sürme ve kazısız geçiş teknolojileri üzerine teknik yazılar, dünya rekorları ve sektör haberleri. Deltek blog."
+        keywords="yatay sondaj blog, HDD haberleri, yönlendirilebilir yatay delgi, kazısız teknoloji haberleri, Deltek"
+        sema={sema}>
 <section class="kap bolum">
   <span class="kunye">Blog</span>
-  <h1>Yazılar ve haberler.</h1>
+  <h1>Yatay sondaj yazıları ve haberler.</h1>
   <p style="color:var(--mute);margin-top:.6rem;max-width:62ch">
-    Yatay sondaj, boru sürme ve kazısız geçiş teknolojileri üzerine yazılar.
+    Yönlendirilebilir yatay sondaj (HDD), boru sürme, mikrotünel ve kazısız geçiş
+    teknolojileri üzerine teknik yazılar; dünyadan rekor kıran HDD projeleri ve sektör haberleri.
   </p>
 
   {liste.length === 0 ? (
@@ -24,11 +40,11 @@ const tarihFmt = (d: any) =>
     </div>
   ) : (
     <div class="pgrid">
-      {liste.map(({ entry, slug }) => (
+      {liste.map(({ entry, slug }, i) => (
         <a class="pkart" href={`/${slug}/`}>
           <div class="pkart__g">
             {entry.data.kapak
-              ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
+              ? <img src={entry.data.kapak} alt={entry.data.kapakAlt || entry.data.baslik} {...kapakOlcu[i]} loading="lazy" decoding="async" />
               : <div class="pkart__yok">DELTEK</div>}
             {entry.data.video && <span class="pkart__vid" aria-hidden="true">▶</span>}
           </div>

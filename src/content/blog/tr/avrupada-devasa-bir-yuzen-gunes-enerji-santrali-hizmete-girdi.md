@@ -1,8 +1,15 @@
 ---
 baslik: "AVRUPA’DA DEVASA BİR YÜZEN GÜNEŞ ENERJİ SANTRALİ HİZMETE GİRDİ"
-ozet: "Belçika’nın Obourg kentinde, eski bir kireçtaşı ocağının suyla dolmasıyla oluşan gölde kurulan yüzer güneş enerjisi santrali, bu hafta enerji devi TotalEnergies ve küresel yapı malzemeleri firması…"
+seoBaslik: "Yüzer Güneş Santralinde 700 Metre HDD Kablo Geçişi"
+ozet: "Belçika Obourg'daki 31 MW'lık yüzer güneş santralinin elektriği, 700 metreyi aşan yönlendirilebilir yatay delgi (HDD) ile peyzaja dokunmadan karaya bağlandı."
+ilgili:
+  - "iskandinavya-ai-super-otoyolunu-guclendirmek-icin-yonlendirilebilir-yatay-delgi-yyd-hdd"
+  - "yonlendirilebilir-yatay-sondaj"
+  - "hizmetlerimiz"
+anahtarKelimeler: "yüzer güneş enerji santrali, HDD kablo geçişi, yenilenebilir enerji yatay delgi, TotalEnergies, Holcim, Obourg, yönlendirilebilir yatay delgi"
 tarih: 2026-05-07
-kapak: "/images/uploads/avrupa-yuzen-gunes-enerji-santrali.jpg"
+kapak: "/images/uploads/avrupa-yuzen-gunes-enerji-santrali.webp"
+kapakAlt: "Belçika Obourg'daki yüzer güneş enerji santrali — HDD ile karaya bağlanan kablo hattı"
 ---
 
 Belçika’nın Obourg kentinde, eski bir kireçtaşı ocağının suyla dolmasıyla oluşan gölde kurulan yüzer güneş enerjisi santrali, bu hafta enerji devi **TotalEnergies** ve küresel yapı malzemeleri firması **Holcim** tarafından resmen açıldı. Projenin dikkat çekici yönlerinden biri, güneş panellerinin ürettiği elektriğin trafo merkezine iletilmesi için uygulanan **700 metreden fazla Yönlendirilebilir Yatay Delgi (YYD / HDD)** çalışmasıdır.

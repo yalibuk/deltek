@@ -13,8 +13,11 @@
  */
 import type { TekKomsu } from '../data/icerik';
 import { TEKNOLOJI_KOK } from '../data/teknoloji';
-interface Props { komsu: TekKomsu; }
-const { komsu } = Astro.props;
+import { CEVIRI, type Dil } from '../data/i18n';
+interface Props { komsu: TekKomsu; dil?: Dil; }
+const { komsu, dil = 'tr' } = Astro.props;
+const t = CEVIRI[dil].tek;
+const yol = (p: string) => dil === 'en' ? '/en' + p : p;
 const { onceki, sonraki, kardesler, ust, kendi } = komsu;
 
 // Grup sayfasındaysak (alt sayfası olan düğüm) kardeşler yerine kendi alt
@@ -22,22 +25,22 @@ const { onceki, sonraki, kardesler, ust, kendi } = komsu;
 const grupMu = kendi.alt.length > 0;
 const liste = grupMu ? kendi.alt : kardesler;
 const listeBasligi = grupMu
-  ? `${kendi.ad} — alt sayfalar`
-  : (ust ? `${ust.ad} — diğer sayfalar` : 'Diğer kazısız yöntemler');
+  ? `${kendi.ad} — ${t.altSayfalar}`
+  : (ust ? `${ust.ad} — ${t.digerSayfalar}` : t.diger);
 ---
-<nav class="tgez" aria-label="Teknoloji bölümü gezinmesi">
+<nav class="tgez" aria-label={t.gezinmeAria}>
 
   {(onceki || sonraki) && (
     <div class="tgez__ardisik">
       {onceki ? (
-        <a class="tgez__ok tgez__ok--geri" href={`/${onceki.slug}/`} rel="prev">
-          <span class="tgez__et">← Önceki</span>
+        <a class="tgez__ok tgez__ok--geri" href={yol(`/${onceki.slug}/`)} rel="prev">
+          <span class="tgez__et">{t.onceki}</span>
           <span class="tgez__ad">{onceki.ad}</span>
         </a>
       ) : <span></span>}
       {sonraki && (
-        <a class="tgez__ok tgez__ok--ileri" href={`/${sonraki.slug}/`} rel="next">
-          <span class="tgez__et">Sonraki →</span>
+        <a class="tgez__ok tgez__ok--ileri" href={yol(`/${sonraki.slug}/`)} rel="next">
+          <span class="tgez__et">{t.sonraki}</span>
           <span class="tgez__ad">{sonraki.ad}</span>
         </a>
       )}
@@ -49,17 +52,17 @@ const listeBasligi = grupMu
       <h2 class="tgez__bas">{listeBasligi}</h2>
       <ul class="tgez__liste">
         {liste.map(k => (
-          <li><a href={`/${k.slug}/`}>{k.ad}</a></li>
+          <li><a href={yol(`/${k.slug}/`)}>{k.ad}</a></li>
         ))}
       </ul>
     </div>
   )}
 
-  <a class="tgez__kok" href={`/${TEKNOLOJI_KOK}/`}>
+  <a class="tgez__kok" href={yol(`/${TEKNOLOJI_KOK}/`)}>
     <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
       <path d="M2 4.5h12M2 8h12M2 11.5h8" stroke-linecap="round"/>
     </svg>
-    Teknoloji bölümünün tamamı
+    {t.tamami}
   </a>
 </nav>
 

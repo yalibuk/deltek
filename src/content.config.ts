@@ -12,11 +12,22 @@ const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: z.object({
     baslik: z.string(),
+    // <title>/OG başlığı. Uzun ya da BÜYÜK HARFLİ yazı başlıklarında arama
+    // sonuçları için kısa, anahtar kelimeli başlık buraya yazılır; boşsa `baslik`.
+    seoBaslik: z.string().optional(),
     ozet: z.string().optional(),
+    // <meta name="keywords"> — virgülle ayrılmış. Boşsa site geneli varsayılan.
+    anahtarKelimeler: z.string().optional(),
     tarih: z.coerce.date().optional(),
+    // Son güncelleme — JSON-LD dateModified. Boşsa `tarih` kullanılır.
+    guncelleme: z.coerce.date().optional(),
     kapak: z.string().optional(),
+    // Kapak görselinin alt metni. Boşsa başlık kullanılır.
+    kapakAlt: z.string().optional(),
     video: z.string().optional(),
-    galeri: z.array(z.object({ foto: z.string().optional() })).optional(),
+    galeri: z.array(z.object({ foto: z.string().optional(), alt: z.string().optional() })).optional(),
+    // Yazının altında "İlgili sayfalar" olarak listelenecek slug'lar.
+    ilgili: z.array(z.string()).optional(),
   }),
 });
 
@@ -46,6 +57,10 @@ const sayfalar = defineCollection({
     // arama motorlarına giden uzun, anahtar kelimeli başlık burada saklanır.
     // Boşsa `baslik` kullanılır — yani normal sayfalarda hiç yazılmaz.
     seoBaslik: z.string().optional(),
+    // <meta name="keywords"> — virgülle ayrılmış. Boşsa site geneli varsayılan.
+    anahtarKelimeler: z.string().optional(),
+    // Kapak görselinin alt metni. Boşsa başlık kullanılır.
+    kapakAlt: z.string().optional(),
 
     // Başlık banner'ı: src/assets/banner/<deger>.jpg sembolünü sayfanın
     // <h1>'iyle yan yana basar (bkz. components/SayfaBanner.astro). Verilirse
@@ -59,6 +74,9 @@ const sayfalar = defineCollection({
     bolumHaritasi: z.boolean().optional(),
     // Sol sütunda Teknoloji bölümünün ağaç menüsünü gösterir.
     yanMenu: z.boolean().optional(),
+    // Sayfanın altında "İlgili sayfalar" olarak listelenecek slug'lar
+    // (iç bağlantı: yetim sayfa kalmasın, konu kümeleri birbirine bağlansın).
+    ilgili: z.array(z.string()).optional(),
 
     // ── duzen: 'hizmet' alanları ──────────────────────────────
     // Hizmetlerimiz sayfası: kart ızgaraları + "neden biz" + proje galerisi.
@@ -75,6 +93,7 @@ const sayfalar = defineCollection({
       metin: z.string().optional(),
       maddeler: z.array(z.string()).optional(),
       gorsel: z.string().optional(),
+      gorselAlt: z.string().optional(),
     }).optional(),
     projeler: z.object({
       baslik: z.string().optional(),
@@ -96,13 +115,18 @@ const sayfalar = defineCollection({
     // Boşsa o bölüm hiç basılmaz. (Burada önce Google Haritalar gömme adresi
     // vardı; harita bölümü kaldırıldı.)
     gorsel: z.string().optional(),
+    gorselAlt: z.string().optional(),
 
     // ── duzen: 'urun' alanları ────────────────────────────────
     banner: z.string().optional(),
+    bannerAlt: z.string().optional(),
     bloklar: z.array(z.object({
       baslik: z.string().optional(),
       metin: z.string().optional(),
       gorsel: z.string().optional(),
+      // Görselin alt metni (görsel arama + erişilebilirlik). Boşsa blok
+      // başlığı, o da yoksa sayfa başlığı kullanılır.
+      alt: z.string().optional(),
       ters: z.boolean().optional(),
       boyut: z.enum(['ceyrek', 'otuz', 'kirk', 'elli', 'yari', 'kucuk']).optional(),
     })).optional(),

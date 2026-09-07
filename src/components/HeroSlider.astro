@@ -18,10 +18,57 @@
  * container-query birimiyle (`--olcek`) orantılı ölçeklenir.
  */
 import { HERO_IZGARA, type HeroSlayt } from '../data/hero';
+import { gorselOznitelik } from '../data/gorselOlcu';
 
 interface Props { slaytlar: HeroSlayt[]; etiket: string; oncekiEtiket: string; sonrakiEtiket: string; }
 const { slaytlar, etiket, oncekiEtiket, sonrakiEtiket } = Astro.props;
 const { g: IG, y: IY } = HERO_IZGARA;
+
+/**
+ * Yazı bloğunun konum/dikey/tema değerleri DOĞRUDAN CSS sınıfına çevriliyor
+ * (`yazi--${konum}` …). Geçersiz bir değer TypeScript'te hata verir ama
+ * `astro build` tip denetimi YAPMAZ (@astrojs/check kurulu değil), yani
+ * sessizce geçer: eşleşen kural bulunamaz, kutu o özelliği hiç almaz.
+ *
+ * Yaşandı: 2. slaytta `konum: 'orta'` yazılmıştı ('orta' `dikey`in değeri,
+ * yatayda karşılığı 'merkez'). Sonuç: `yazi--orta` iki kez basıldı, YATAY
+ * konum sınıfı (`--sol/--merkez/--sag`) hiç basılmadı; `.yazi` mutlak
+ * konumlu ve yatay yerini yalnız o sınıflardan aldığı için blok `left`
+ * almadan kaldı, slaytın sol kenarından taşıp ekran dışında kesildi.
+ *
+ * Bu yüzden değerler derlemede doğrulanıyor — hatayı sayfada değil build'de
+ * görmek daha iyi (aynı yaklaşım SayfaBanner ve teknolojiAgaci'nde de var).
+ */
+const GECERLI: Record<string, readonly string[]> = {
+  konum: ['sol', 'merkez', 'sag'],
+  dikey: ['ust', 'orta', 'alt'],
+  tema: ['koyu', 'acik'],
+  eylemKonum: ['akis', 'dip'],
+};
+
+slaytlar.forEach((s, i) => {
+  for (const [alan, izin] of Object.entries(GECERLI)) {
+    const deger = (s.yazi as any)[alan];
+    if (deger === undefined) continue;              // isteğe bağlı alan
+    if (!izin.includes(deger)) {
+      throw new Error(
+        `Hero slayt ${i + 1}: "${alan}" değeri geçersiz — "${deger}". ` +
+        `Geçerli değerler: ${izin.join(', ')}. ` +
+        `(src/data/hero.ts; HERO_TR ve EN_YAZI AYRI dizilerdir, ikisini de kontrol edin.)`);
+    }
+  }
+});
+
+// Görsellerin doğal ölçüsü derlemede dosyadan okunur ve width/height olarak
+// basılır: CSS boyutu belirler, öznitelik yalnızca yüklenmeden önce oranı
+// verir (CLS). Ölçülemeyen dosyada öznitelik basılmaz.
+const olcuBellek = new Map<string, { width?: number; height?: number }>();
+for (const s of slaytlar) {
+  for (const src of [s.arka, ...s.katmanlar.map(k => k.src)]) {
+    if (src && !olcuBellek.has(src)) olcuBellek.set(src, await gorselOznitelik(src));
+  }
+}
+const olcu = (src?: string) => (src && olcuBellek.get(src)) || {};
 
 const katmanStil = (k: any) => [
   `left:${(k.x / IG) * 100}%`,
@@ -41,7 +88,8 @@ const satirlaraBol = (m: string) => m.split('\n');
   <div class="slider__ray" id="ray">
     {slaytlar.map((s, i) => (
       <div class="slide" data-aktif={i === 0 ? 'true' : 'false'}>
-        <img class="slide__arka" src={s.arka} alt={s.alt} loading={i === 0 ? 'eager' : 'lazy'} />
+        <img class="slide__arka" src={s.arka} alt={s.alt} {...olcu(s.arka)}
+             loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
 
         {/* metin bloğunun arkasındaki yumuşak perde — yalnızca o yanda */}
         <div class={`perde perde--${s.yazi.konum} perde--${s.yazi.tema}`} aria-hidden="true"></div>
@@ -49,7 +97,7 @@ const satirlaraBol = (m: string) => m.split('\n');
         {s.katmanlar.map(k => (
           k.tur === 'gorsel' ? (
             <img class={`kat kat--${k.gecis}${k.darGizle ? ' kat--darGizle' : ''}`} src={k.src} alt="" aria-hidden="true"
-                 loading={i === 0 ? 'eager' : 'lazy'} style={katmanStil(k)} />
+                 {...olcu(k.src)} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" style={katmanStil(k)} />
           ) : (
             <div class={`kat kat--${k.gecis} kat__video`} style={katmanStil(k)}>
               <iframe src={k.video} title={etiket} loading="lazy" allowfullscreen

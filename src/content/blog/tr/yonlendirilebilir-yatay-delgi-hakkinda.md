@@ -1,8 +1,15 @@
 ---
 baslik: "Yönlendirilebilir Yatay Delgi Hakkında"
-ozet: "Yönlendirilebilir yatay delgi, modern şehirlerin altyapı ihtiyaçlarını karşılamada devrim yaratan kazısız geçiş teknolojilerinin en gelişmiş yöntemidir ve yeraltı hatlarının metrelerce derinlikte h…"
+seoBaslik: "Yönlendirilebilir Yatay Delgi: Aşamalar ve Avantajlar"
+ozet: "Yönlendirilebilir yatay delgi nasıl çalışır: pilot delik, genişletme ve boru çekme; kazısız geçişin maliyet, süre ve çevre avantajları; uygulama alanları."
+ilgili:
+  - "yonlendirilebilir-yatay-delgi"
+  - "yonlendirilebilir-yatay-sondaj-nedir"
+  - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
+anahtarKelimeler: "yönlendirilebilir yatay delgi, YYD, HDD aşamaları, pilot delik, genişletme, boru çekme, kazısız geçiş avantajları"
 tarih: 2017-11-17
-kapak: "/images/uploads/2015/09/haberler2.jpg"
+kapak: "/images/uploads/2015/09/haberler2.webp"
+kapakAlt: "Yönlendirilebilir yatay delgi uygulaması — şehir içi kazısız altyapı geçişi"
 ---
 
 **Yönlendirilebilir Yatay Delgi: Kazısız Altyapının Hassas Çözümü**

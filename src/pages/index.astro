@@ -3,8 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import { SITE } from '../data/site';
 import HeroSlider from '../components/HeroSlider.astro';
 import { HERO_TR } from '../data/hero';
-import { yazilar } from '../data/icerik';
+import { yazilar, teknolojiRehberleri } from '../data/icerik';
 import { ikonCiz } from '../data/ikon';
+import { gorselOznitelik } from '../data/gorselOlcu';
 
 
 // Ana sayfa hizmet kartları ve rakamlar — canlı deltek.com.tr ana
@@ -33,12 +34,33 @@ const RAKAMLAR = [
 
 // Son blog yazıları — en yeni 3 tanesi (varsa)
 const sonYazilar = (await yazilar('tr')).slice(0, 3);
+const kapakOlcu = await Promise.all(sonYazilar.map(({ entry }) => entry.data.kapak ? gorselOznitelik(entry.data.kapak) : Promise.resolve({})));
 const projeTarih = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+
+// Konu rehberleri (yatay sondaj / yatay delgi / yönlendirilebilir yatay delgi)
+// ve HDD temel sayfaları — ana sayfadan iç bağlantı, yetim sayfa kalmasın.
+const rehberler = await teknolojiRehberleri('tr');
+const tecrubeOlcu = await gorselOznitelik('/images/uploads/deltek_hdd_1.webp');
+
+// Hizmet şeması: dört ana hizmet, Google "Service" olarak okur.
+const hizmetSema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Deltek kazısız geçiş hizmetleri',
+  itemListElement: HIZMETLER.map((h, i) => ({
+    '@type': 'ListItem', position: i + 1,
+    item: { '@type': 'Service', name: h.ad, alternateName: h.kisa, description: h.metin,
+      url: SITE.kanonikal + h.href, provider: { '@id': SITE.kanonikal + '/#organization' },
+      areaServed: { '@type': 'Country', name: 'Türkiye' } },
+  })),
+};
 ---
 <Layout
   title={`${SITE.isim} — Yatay Sondaj ve Kazısız Geçiş Teknolojileri`}
-  description={"Yönlendirilebilir yatay sondaj (HDD), boru sürme-çakma ve kazısız boru yenileme. 2-2000 mm çaplarda kazısız altyapı çözümleri; İstanbul ve İzmir ofisleri."}>
+  description={"Yönlendirilebilir yatay sondaj (HDD), boru sürme-çakma ve kazısız boru yenileme. 2-2000 mm çaplarda kazısız altyapı çözümleri; İstanbul ve İzmir ofisleri."}
+  keywords="yatay sondaj, yönlendirilebilir yatay sondaj, HDD, yatay delgi, kazısız geçiş, boru sürme, auger boring, mikrotünel, kazısız boru yenileme, yatay sondaj firması, İstanbul, İzmir"
+  sema={hizmetSema}>
 
 <!-- ── HERO: SLIDER ─────────────────────────── -->
 <section class="hero">
@@ -108,9 +130,10 @@ const projeTarih = (d: any) =>
 
 <!-- ── TECRÜBE BANDI ──────────────────────────── -->
 <section class="tecrube" aria-label="Saha tecrübesi">
-  <img class="tecrube__g" src="/images/uploads/deltek_hdd_1.webp" alt=""
-       width="1920" height="1080" loading="lazy" decoding="async" />
-  <img class="tecrube__logo" src="/deltek_logo_single_line_white.svg" alt=""
+  <img class="tecrube__g" src="/images/uploads/deltek_hdd_1.webp"
+       alt="Deltek yönlendirilebilir yatay sondaj (HDD) sahası — 20 yılı aşkın uluslararası saha tecrübesi"
+       width={tecrubeOlcu.width ?? 1920} height={tecrubeOlcu.height ?? 790} loading="lazy" decoding="async" />
+  <img class="tecrube__logo" src="/deltek_logo_single_line_white.svg" alt="" aria-hidden="true"
        width="674" height="125" loading="lazy" decoding="async" />
   <div class="tecrube__ic">
     <p class="tecrube__y">
@@ -136,6 +159,7 @@ const projeTarih = (d: any) =>
       <span class="kanit__etiket">Hakkımızda</span>
       <h2>Kazısız altyapıda <em>multidisipliner bir ekip.</em></h2>
       <p>İnşaat ve altyapı sektöründeki tecrübesiyle farklı mühendislik kollarını tek çatı altında birleştiren; gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak iş ortaklarına sürdürülebilir bir ilişki sunan bir ekibiz.</p>
+      <p>Deltek, İstanbul ve İzmir ofislerinden Türkiye genelinde <a href="/yatay-sondaj/">yatay sondaj</a>, <a href="/yonlendirilebilir-yatay-sondaj-nedir/">yönlendirilebilir yatay sondaj (HDD)</a>, <a href="/boru-surmecakma/">boru sürme, auger boring ve mikrotünel</a> ile <a href="/boru-yenileme/">kazısız boru yenileme</a> hizmeti veren bir kazısız geçiş yüklenicisidir. Doğalgaz, içme suyu, kanalizasyon, enerji ve fiber optik hatlarını nehir, otoyol, demiryolu ve şehir içi geçişlerde açık kazı yapmadan yer altına alıyoruz.</p>
     </div>
     <div class="kanit__ic">
       <article class="kanit__h">
@@ -157,6 +181,27 @@ const projeTarih = (d: any) =>
   </div>
 </section>
 
+{rehberler.length > 0 && (
+<section class="bolum kap rehber" id="rehber">
+  <div class="sahadan__bas">
+    <div>
+      <span class="kunye">Rehber</span>
+      <h2>Yatay sondaj nedir, nasıl yapılır?</h2>
+    </div>
+    <a class="sahadan__tum" href="/yatay-sondaj-teknoloji/">Teknoloji bölümü →</a>
+  </div>
+  <p class="rehber__giris">Yatay sondaj, yatay delgi ve yönlendirilebilir yatay delgi kavramlarını, HDD makinelerini, delgi tijlerini, yönlendirme ve genişletme başlıklarını, yer belirleme sistemlerini ve sondaj çamurunu anlatan teknik sayfalarımız. Kazısız geçiş yöntemini seçmeden önce okumanızı öneririz.</p>
+  <ul class="rehber__l">
+    {rehberler.map(r => (
+      <li><a href={`/${r.slug}/`}><strong>{r.baslik}</strong>{r.ozet && <span>{r.ozet}</span>}</a></li>
+    ))}
+    <li><a href="/yonlendirilebilir-yatay-sondaj-yapim-metodu/"><strong>HDD Yapım Metodu</strong><span>Pilot delgi, genişletme ve boru çekme aşamalarının saha görselleriyle adım adım anlatımı.</span></a></li>
+    <li><a href="/yonlendirilebilir-yatay-sondaj-makinesi/"><strong>HDD Makinesi</strong><span>İtme, çekme ve tork kapasitesine göre yatay sondaj makinesi sınıfları ve doğru makine seçimi.</span></a></li>
+    <li><a href="/yatay-sondaj-camuru/"><strong>Yatay Sondaj Çamuru</strong><span>Bentonit esaslı sondaj çamurunun altı işlevi ve zemin tipine göre hazırlanması.</span></a></li>
+  </ul>
+</section>
+)}
+
 {sonYazilar.length > 0 && (
 <section class="bolum kap" id="blog">
   <div class="sahadan__bas">
@@ -167,11 +212,11 @@ const projeTarih = (d: any) =>
     <a class="sahadan__tum" href="/blog/">Tüm yazılar →</a>
   </div>
   <div class="sahadan__grid">
-    {sonYazilar.map(({ entry, slug }) => (
+    {sonYazilar.map(({ entry, slug }, i) => (
       <a class="skart" href={`/${slug}/`}>
         <div class="skart__g">
           {entry.data.kapak
-            ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
+            ? <img src={entry.data.kapak} alt={entry.data.kapakAlt || entry.data.baslik} {...kapakOlcu[i]} loading="lazy" decoding="async" />
             : <div class="skart__yok">DELTEK</div>}
           {entry.data.video && <span class="skart__vid" aria-hidden="true">▶</span>}
         </div>
@@ -198,6 +243,22 @@ const projeTarih = (d: any) =>
 </section>
 
 </Layout>
+
+<style>
+/* Rehber bölümü — konu rehberlerine iç bağlantı listesi */
+.rehber { padding-top: 0; }
+.rehber__giris { color: var(--mute); font-size: 1rem; line-height: 1.75; max-width: 78ch; margin-top: .4rem; }
+.rehber__l { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: .8rem; }
+@media (min-width: 640px) { .rehber__l { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 980px) { .rehber__l { grid-template-columns: 1fr 1fr 1fr; } }
+.rehber__l a { display: block; height: 100%; padding: 1rem 1.1rem; background: var(--beyaz); border: 1px solid var(--cizgi);
+  border-left: 3px solid var(--sari); border-radius: 8px; color: var(--metin); transition: border-color .15s, transform .15s; }
+.rehber__l a:hover { border-color: var(--mavi); transform: translateY(-2px); }
+.rehber__l strong { display: block; font-family: var(--f-dis); font-weight: 800; font-size: 1rem; color: var(--mavi-900); }
+.rehber__l a:hover strong { color: var(--mavi); }
+.rehber__l span { display: block; margin-top: .35rem; font-size: .86rem; line-height: 1.55; color: var(--mute);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
 
 <script>
 (function(){

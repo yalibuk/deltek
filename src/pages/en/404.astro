@@ -1,0 +1,40 @@
+---
+/**
+ * EN 404 — Cloudflare Pages `dist/en/404.html` dosyasını /en/* altındaki
+ * bulunamayan adresler için sunar (dizin bazlı 404). TR aslı: ../404.astro
+ * noindex: arama motoru bu sayfayı dizine almaz; bağlantılar taranır.
+ */
+import Layout from '../../layouts/Layout.astro';
+import { SITE } from '../../data/site';
+import { CEVIRI } from '../../data/i18n';
+import { menuSayfalari, teknolojiRehberleri } from '../../data/icerik';
+const t = CEVIRI.en;
+const menu = await menuSayfalari('en');
+const rehberler = await teknolojiRehberleri('en');
+---
+<Layout title={`${t.hata404.baslik} (404) — ${SITE.isim} Horizontal Drilling`} description={t.hata404.metin} noindex={true} cevirisiVar={false}>
+<section class="kap bolum h404">
+  <span class="kunye">404</span>
+  <h1>{t.hata404.baslik}</h1>
+  <p class="h404__m">{t.hata404.metin}</p>
+  <div class="h404__eylem">
+    <a class="btn btn--dolu" href="/en/">{t.hata404.anasayfa}</a>
+    <a class="btn btn--cizgi" href="/en/yatay-sondaj-teknoloji/">{t.hata404.teknoloji}</a>
+  </div>
+  <ul class="h404__l">
+    {menu.map(({ entry, slug }) => (
+      <li><a href={`/en/${slug}/`}>{(entry.data as any).menuAd || (entry.data as any).baslik}</a></li>
+    ))}
+    {rehberler.map(r => <li><a href={`/en/${r.slug}/`}>{r.baslik}</a></li>)}
+    <li><a href="/en/blog/">{t.footer.blog}</a></li>
+  </ul>
+</section>
+<style>
+.h404 { max-width: 760px; }
+.h404__m { color: var(--mute); margin-top: .8rem; font-size: 1.05rem; line-height: 1.7; }
+.h404__eylem { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.6rem; }
+.h404__l { list-style: none; margin: 2rem 0 0; padding: 1.2rem 0 0; border-top: 1px solid var(--cizgi);
+  display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+.h404__l a { color: var(--mavi); font-weight: 600; }
+</style>
+</Layout>

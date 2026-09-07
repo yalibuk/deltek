@@ -1,13 +1,20 @@
 ---
 baslik: "Hakkımızda"
+seoBaslik: "Hakkımızda: Kazısız Altyapı ve Yatay Sondaj Firması"
 menuSira: 1
 menuAd: "Kurumsal"
-ozet: "Aklı öncelleyip gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak günün sonunda iş ortaklarımıza sürdürülebilir bir “KAZAN-KAZAN” ilişkisi sunabilmeyi kendine ilke edinmiş bir ekib…"
+ozet: "Deltek, İstanbul ve İzmir merkezli bir yatay sondaj ve kazısız altyapı firmasıdır. Akıllı altyapı yaklaşımı, 4E mühendislik kuralı, misyon ve değerlerimiz."
+ilgili:
+  - "hizmetlerimiz"
+  - "referanslar"
+  - "yatay-sondaj-teknoloji"
+  - "iletisim"
+anahtarKelimeler: "Deltek hakkında, yatay sondaj firması, kazısız altyapı, akıllı altyapı, smart undergrounding, HDD müteahhidi, İstanbul, İzmir"
 ---
 
 ### Genel Bilgi
 
-<span class="saga-kayan">![deltek-hk](/images/uploads/2014/12/deltek-hk.jpg)</span>Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
+<span class="saga-kayan">![Deltek kazısız altyapı ve yatay sondaj ekibi — sahada HDD projesi](/images/uploads/2014/12/deltek-hk.webp)</span>Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
 
 Aklı öncelleyip gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak günün sonunda iş ortaklarımıza sürdürülebilir bir “KAZAN-KAZAN” ilişkisi sunabilmeyi kendine ilke edinmiş bir ekibiz. Bu noktada sektöre yıllarını vermiş, teorik/akademik eğitim almış ve aynı zamanda saha tecrübesine de haiz mühendislerimiz “AKILLI ALTYAPI (SMART UNDERGROUNDING)” kavramını literatüre kazandırmış ve söz konusu altyapı projesini en makul ve en tasarruflu şekilde sunabilecek bilimsel, ölçülebilir çözümleri üretmek için durmadan, yorulmadan çalışmaktadır.
 

@@ -1,6 +1,12 @@
 ---
 baslik: "4058 Metre Dünya Rekoru"
-ozet: "Engineers India Limited (EIL), 26 inçlik bir boru hattı için dünyanın en uzun Yönlendirilebilir Yatay Sondaj (HDD) geçişini tamamladıktan sonra yeni bir dünya rekoru kırdığını iddia etti. Medya rap…"
+seoBaslik: "4058 Metre HDD Dünya Rekoru — Brahmaputra Geçişi"
+ozet: "Engineers India Limited, Brahmaputra Nehri altında 4058 metrelik 26 inç HDD geçişiyle yönlendirilebilir yatay sondajda yeni dünya rekoru kırdı."
+ilgili:
+  - "the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimini-gerceklestirdi"
+  - "manyetik-alan"
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+anahtarKelimeler: "HDD dünya rekoru, 4058 metre HDD, Brahmaputra HDD geçişi, en uzun yatay sondaj, Engineers India Limited, PNCPL, nehir altı boru hattı"
 tarih: 2026-04-13
 ---
 
@@ -33,3 +39,9 @@ Boru hattı faaliyete geçtiğinde:
 beklenmektedir.
 
 EIL, PSU Watch’a Brahmaputra Nehri geçişinin tamamlanmasının, ulusal öneme sahip bu projenin zamanında teslim edilmesi yolunda önemli bir adım olduğunu ve kabul ettiğini söyledi.
+
+## Rekorun teknik anlamı
+
+4 kilometreyi aşan bir **yönlendirilebilir yatay sondaj** geçişi, yöntemin sınırlarının nerede olduğunu gösterir. Bu uzunlukta çekme kuvveti, boru dış yüzeyindeki sürtünme ve sondaj çamurunun sirkülasyonu belirleyici olur; 26 inç çapındaki çelik boru hattının geri çekilmesi (pullback) tek seferde ve kesintisiz tamamlanmak zorundadır. Bu tür geçişlerde yer belirleme için [manyetik alan](/manyetik-alan/) sistemleri, çoğu zaman da iki makinenin yer altında buluştuğu kesişim (intersect) tekniği kullanılır.
+
+Türkiye'de nehir, boğaz ve otoyol altı geçişler genellikle birkaç yüz metre ile 1–2 km arasında kalır; ancak makine kapasitesi, tij seti, genişletme kademeleri ve çamur yönetimi aynı ilkelerle planlanır. Deltek olarak İstanbul ve İzmir'deki ekiplerimizle uzun mesafeli yatay sondaj geçişlerinde bu planlamayı işverenle birlikte yapıyoruz; projeniz için [HDD makinesi seçimi](/yonlendirilebilir-yatay-sondaj-makinesi/) sayfasına göz atabilir ya da bizimle iletişime geçebilirsiniz.

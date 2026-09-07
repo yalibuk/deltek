@@ -63,7 +63,7 @@ export async function menuSayfalari(dil: Dil): Promise<Kayit[]> {
 
 /* ─── Teknoloji bölümü ──────────────────────────────────────── */
 
-import { TEKNOLOJI, type TekDugum } from './teknoloji';
+import { TEKNOLOJI, TEK_REHBERLER, type TekDugum } from './teknoloji';
 
 /** Ağaç düğümü + sayfanın kendi verisi (başlık, özet, banner). */
 export type TekKart = {
@@ -84,29 +84,49 @@ export type TekKart = {
  * bağlantı bırakmaktansa hatayı derlemede görmek daha iyi. Aynı şekilde bir
  * sayfa yeniden adlandırılırsa burada yakalanır.
  */
-export async function teknolojiAgaci(dil: Dil): Promise<TekKart[]> {
+export async function teknolojiAgaci(dil: Dil, zorunlu = dil === 'tr'): Promise<TekKart[]> {
   const hepsi = new Map((await sayfalar(dil)).map(k => [k.slug, k]));
   const donustur = (dugumler: TekDugum[]): TekKart[] =>
-    dugumler.map(d => {
+    dugumler.flatMap(d => {
       const k = hepsi.get(d.slug);
       if (!k) {
+        // TR'de eksik sayfa build'i durdurur; EN'de çevirisi olmayan düğüm
+        // (alt dalıyla birlikte) menüden düşer — 404'e giden bağlantı basılmaz.
+        if (!zorunlu) return [];
         throw new Error(
           `Teknoloji ağacındaki "${d.slug}" için sayfa yok ` +
           `(src/content/sayfalar/${dil}/${d.slug}.md). Sayfa yeniden ` +
           `adlandırıldıysa src/data/teknoloji.ts da güncellenmeli.`);
       }
       const v = k.entry.data as any;
-      return {
+      const etiket = dil === 'en' ? d.en : undefined;
+      return [{
         slug: d.slug,
-        ad: d.ad || v.baslik,
-        tamAd: d.tamAd || d.ad || v.baslik,
+        ad: etiket?.ad || (dil === 'en' ? v.baslik : d.ad) || v.baslik,
+        tamAd: etiket?.tamAd || etiket?.ad || (dil === 'en' ? v.baslik : (d.tamAd || d.ad)) || v.baslik,
         baslik: v.baslik,
         ozet: v.ozet,
         gorsel: v.banner || v.kapak,
         alt: d.alt ? donustur(d.alt) : [],
-      };
+      }];
     });
   return donustur(TEKNOLOJI);
+}
+
+/** Verilen slug'ların sayfa kayıtları (başlık + özet) — "İlgili sayfalar" ve rehber listeleri için. */
+export async function ilgiliSayfalar(dil: Dil, sluglar: string[]): Promise<{ slug: string; baslik: string; ozet?: string }[]> {
+  const hepsi = new Map((await kokIcerik(dil)).map(k => [k.slug, k]));
+  return sluglar.flatMap(slug => {
+    const k = hepsi.get(slug);
+    if (!k) return [];
+    const v = k.entry.data as any;
+    return [{ slug, baslik: v.baslik, ozet: v.ozet }];
+  });
+}
+
+/** Teknoloji bölümünün konu rehberleri — ağaçta olmayan uzun makale sayfaları. */
+export async function teknolojiRehberleri(dil: Dil) {
+  return ilgiliSayfalar(dil, TEK_REHBERLER);
 }
 
 /** Teknoloji ağacındaki bir sayfanın komşuları — sayfa altı gezinme için. */

@@ -1,6 +1,14 @@
 ---
 baslik: "Yatay Sondaj Çamuru"
-ozet: "Çamur, sondajın hayat sıvısıdır. Yani projenin başarıyla sonuçlandırılabilmesindeki en kritik etkenlerden biridir. Dolayısıyla sondaj çamurunun hazırlanması başlı başına bir bilimdir. Ana bileşenle…"
+seoBaslik: "Yatay Sondaj Çamuru: Bentonit ve Sondaj Sıvısı İşlevleri"
+ozet: "Yatay sondaj çamuru: bentonit, su ve polimerden hazırlanan sondaj sıvısının altı işlevi — hafriyat taşıma, delik stabilitesi, soğutma, boru çekme, koruma."
+ilgili:
+  - "genisletme-basligi"
+  - "yonlendirme-basligi"
+  - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
+  - "delgi-tijleri"
+bannerAlt: "Yatay sondaj çamuru — bentonit esaslı HDD sondaj sıvısı illüstrasyonu"
+anahtarKelimeler: "yatay sondaj çamuru, sondaj çamuru, bentonit, sondaj sıvısı, drilling fluid, polimer, çamur ayrıştırma, recycling, HDD çamur"
 duzen: urun
 bannerSembol: "yonlendirilebilir-yatay-sondaj-camuru"
 bloklar:
@@ -13,7 +21,8 @@ bloklar:
       Bentonit ve su karışının özkütlesi 1,2 – 1,5 g/cm³ arasındadır. Bu sayede içeride elmaslar tarafından öğütülen zemin parçacıkları çamur içerisinde suspanse edilir (yüzdürülür) ve akıcı kıvamı sayesinde deliğin giriş ve çıkış noktalarından dışarı atılır. Bu toprakla karışmış çamur ayrıştırma ünitelerinde (recycling system) elenir ve arındırılan çamur tekrar kullanılmak üzere sisteme dahil edilir. Eleğin üstünde kalan parçacıklar ise zeminin yapısı hakkında son derecede önemli bilgiler taşır. Hazırlanacak çamur ve uygulanacak işlemler bu numunelerden edinilen tecrübeler sonucu şekillenir.
 
       Zeminde varolan çatlaklar ya da kaçaklar bir süre sonra bentonit ile dolar ve geçirimsiz bir tabaka elde edilir. Bu durum, kesintisiz bir çamur sirkülasyonu açısından son derece önemlidir. Diğer taraftan bu işlem, zemindeki çatlakları doldurarak zemini sıkılaştırır; bir nevi zemin rehabilitasyonu sağlamış olur.
-    gorsel: "/images/uploads/2015/08/025.jpg"
+    gorsel: "/images/uploads/2015/08/025.webp"
+    alt: "Sondaj çamurunun hafriyatı dışarı taşıması ve çamur ayrıştırma (recycling) ünitesi"
   - metin: |-
       **2 – Açılan deliğin stabil kalmasını sağlar**
 
@@ -22,18 +31,21 @@ bloklar:
       **3 – Hidrolik delme sağlar**
 
       Zemine basınçla püskürtülen sondaj çamuru zemini örseler ve yumuşatır. Bu da mekanik delmeyi sağlayan elmas uçlar için kolaylık sağlar.
-    gorsel: "/images/uploads/2015/08/026.jpg"
+    gorsel: "/images/uploads/2015/08/026.webp"
+    alt: "Sondaj çamurunun deliği stabil tutması ve hidrolik delmeye katkısı"
   - metin: |-
       **4 – Ekipmanların fazla ısınmasını önler**
 
       Delgiyi yapan delici uçların zeminle sürtünmesi sonucu ortaya çıkan ısı bitlerin ve bunların içerisindeki elektronik lokasyon cihazlarının aşırı ısınmasına sebep olur. Bu istenmeyen bir durumdur. Özellikle daha hassas olan elektronik aksam 50 °C ‘nin üzerinde işlevini yitirir.
       Sondaj çamuru sürtünmeden kaynaklanan ve istenmeyen bu ısıyı absorbe ederek istenilen sıcaklık aralıklarında çalışmayı sağlar.
-    gorsel: "/images/uploads/2015/08/027.jpg"
+    gorsel: "/images/uploads/2015/08/027.webp"
+    alt: "Sondaj çamurunun delici uçları ve elektronik sondayı soğutması"
   - metin: |-
       **5 – Borunun hasarsız olarak yeraltına çekilmesini sağlar.**
 
       Tamamen zeminin özellikleri analiz edilerek özel olarak üretilmiş sondaj çamuru ile dolu olan delik, yeraltına döşenecek olan boru için bir çamur havuzu vazifesi görür ve yüzdürülerek çekilmesini sağlar. Bu sayede boru ve zemin arasındaki sürtünme azaltılır, borunun zarar görmesi önlenir.
-    gorsel: "/images/uploads/2015/08/028.jpg"
+    gorsel: "/images/uploads/2015/08/028.webp"
+    alt: "Çamurla dolu delikte borunun yüzdürülerek hasarsız çekilmesi"
   - metin: |-
       **6 – İşletme güvenliği sağlar.**
 

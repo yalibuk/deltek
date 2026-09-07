@@ -16,36 +16,42 @@
  * kök sayfasında okunacak şey sayfa adı ve özeti.
  */
 import type { TekKart } from '../data/icerik';
-interface Props { agac: TekKart[]; }
-const { agac } = Astro.props;
+import { teknolojiRehberleri } from '../data/icerik';
+import { CEVIRI, type Dil } from '../data/i18n';
+interface Props { agac: TekKart[]; dil?: Dil; }
+const { agac, dil = 'tr' } = Astro.props;
+const t = CEVIRI[dil].tek;
+const yol = (p: string) => dil === 'en' ? '/en' + p : p;
 
 const kok = agac.find(d => d.alt.length > 0);
 const digerleri = agac.filter(d => d.alt.length === 0);
+// Konu rehberleri: ağaçta olmayan uzun makaleler (yatay sondaj, yatay delgi…).
+// Buradan bağlanmazlarsa yetim kalırlar.
+const rehberler = await teknolojiRehberleri(dil);
 ---
 <section class="tekh">
   <div class="tekh__bas">
-    <span class="tekh__kunye">Teknoloji</span>
-    <h2>Yöntemler ve bileşenler</h2>
-    <p>Kazısız geçiş teknolojilerinin her biri için ayrı bir sayfa hazırladık —
-       yöntemin ne olduğu, nasıl uygulandığı ve hangi ekipmanla yapıldığı.</p>
+    <span class="tekh__kunye">{t.kunye}</span>
+    <h2>{t.haritaBaslik}</h2>
+    <p>{t.haritaMetin}</p>
   </div>
 
   {kok && (
     <div class="tekh__grup">
       <h3 class="tekh__gbas">
-        <a href={`/${kok.slug}/`}>{kok.ad}</a>
-        <span class="tekh__sayi">{kok.alt.length} sayfa</span>
+        <a href={yol(`/${kok.slug}/`)}>{kok.ad}</a>
+        <span class="tekh__sayi">{kok.alt.length} {t.sayfa}</span>
       </h3>
       <div class="tekh__liste">
         {kok.alt.map(k => (
           <article class="tkart">
             <span class="tkart__b">
-              <a class="tkart__ad" href={`/${k.slug}/`}>{k.ad}</a>
+              <a class="tkart__ad" href={yol(`/${k.slug}/`)}>{k.ad}</a>
               {k.ozet && <span class="tkart__oz">{k.ozet}</span>}
               {k.alt.length > 0 && (
                 <span class="tkart__alt">
                   {k.alt.map(a => (
-                    <a class="tkart__rozet" href={`/${a.slug}/`}>{a.ad}</a>
+                    <a class="tkart__rozet" href={yol(`/${a.slug}/`)}>{a.ad}</a>
                   ))}
                 </span>
               )}
@@ -60,16 +66,17 @@ const digerleri = agac.filter(d => d.alt.length === 0);
     </div>
   )}
 
+  {digerleri.length > 0 && (
   <div class="tekh__grup">
     <h3 class="tekh__gbas">
-      <span>Diğer kazısız yöntemler</span>
-      <span class="tekh__sayi">{digerleri.length} sayfa</span>
+      <span>{t.diger}</span>
+      <span class="tekh__sayi">{digerleri.length} {t.sayfa}</span>
     </h3>
     <div class="tekh__liste">
       {digerleri.map(k => (
         <article class="tkart">
           <span class="tkart__b">
-            <a class="tkart__ad" href={`/${k.slug}/`}>{k.ad}</a>
+            <a class="tkart__ad" href={yol(`/${k.slug}/`)}>{k.ad}</a>
             {k.ozet && <span class="tkart__oz">{k.ozet}</span>}
           </span>
           <svg class="tkart__ok" viewBox="0 0 16 16" width="16" height="16" fill="none"
@@ -80,9 +87,35 @@ const digerleri = agac.filter(d => d.alt.length === 0);
       ))}
     </div>
   </div>
+  )}
+
+  {rehberler.length > 0 && (
+  <div class="tekh__grup">
+    <h3 class="tekh__gbas">
+      <span>{t.rehberler}</span>
+      <span class="tekh__sayi">{rehberler.length} {t.sayfa}</span>
+    </h3>
+    <p class="tekh__gmetin">{t.rehberMetin}</p>
+    <div class="tekh__liste">
+      {rehberler.map(k => (
+        <article class="tkart">
+          <span class="tkart__b">
+            <a class="tkart__ad" href={yol(`/${k.slug}/`)}>{k.baslik}</a>
+            {k.ozet && <span class="tkart__oz">{k.ozet}</span>}
+          </span>
+          <svg class="tkart__ok" viewBox="0 0 16 16" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </article>
+      ))}
+    </div>
+  </div>
+  )}
 </section>
 
 <style>
+.tekh__gmetin { color: var(--mute); font-size: .92rem; line-height: 1.6; margin: -.4rem 0 .9rem; max-width: 62ch; }
 .tekh { margin-top: clamp(2.6rem,6vw,4.2rem); padding-top: clamp(2.2rem,5vw,3.4rem);
   border-top: 1px solid var(--cizgi); }
 

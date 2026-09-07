@@ -1,11 +1,21 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
-import { kokIcerik, cevirisiVarMi } from '../../data/icerik';
+import { CEVIRI } from '../../data/i18n';
+import { kokIcerik, cevirisiVarMi, ilgiliSayfalar } from '../../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../../components/UrunDuzen.astro';
 import LogoSerit from '../../components/LogoSerit.astro';
 import IletisimDuzen from '../../components/IletisimDuzen.astro';
+import HizmetDuzen from '../../components/HizmetDuzen.astro';
+import TeknolojiHaritasi from '../../components/TeknolojiHaritasi.astro';
+import { teknolojiAgaci, teknolojiKomsulari } from '../../data/icerik';
+import TeknolojiGezinme from '../../components/TeknolojiGezinme.astro';
+import TeknolojiYanMenu from '../../components/TeknolojiYanMenu.astro';
+import SayfaBanner from '../../components/SayfaBanner.astro';
+import IlgiliSayfalar from '../../components/IlgiliSayfalar.astro';
+import { gorselOznitelik } from '../../data/gorselOlcu';
+import { TEKNOLOJI_KOK } from '../../data/teknoloji';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -14,70 +24,169 @@ import IletisimDuzen from '../../components/IletisimDuzen.astro';
  *
  * Canlı deltek.com.tr'de de ikisi de kök dizinde; /blog/ yalnızca liste sayfası.
  * İki koleksiyon aynı slug'ı kullanırsa kokIcerik() build'i hatayla durdurur.
+ *
+ * TR aslı `[slug].astro` — bu dosya ondan türetilmiştir (dil='en', '/en' öneki,
+ * en-GB tarih biçimi). TR'de yapılan bir değişiklik buraya da işlenmeli.
  */
 export async function getStaticPaths() {
   const kayitlar = await kokIcerik('en');
   return kayitlar.map(k => ({ params: { slug: k.slug }, props: k }));
 }
 
+const dil = 'en' as const;
+const t = CEVIRI[dil];
+const yol = (p: string) => '/en' + p;               // EN /en/ altında
 const { tur, entry, slug } = Astro.props;
 const p = entry.data as any;
 const { Content } = await render(entry as any);
 const cevirisiVar = await cevirisiVarMi(slug, 'tr');
+// Bölüm haritası yalnızca istendiğinde hesaplanır (ağaç build'de doğrulanır).
+const tekAgac = p.bolumHaritasi ? await teknolojiAgaci(dil) : null;
+// Sayfa teknoloji ağacında mı? Yan menü ve sayfa altı gezinme buna bağlı.
+const agacta = tur === 'sayfa' ? await teknolojiKomsulari(dil, slug) : null;
+// Yan menü canlı sitedeki gibi bölümün TÜM sayfalarında görünür; kök sayfa
+// ağaçta olmadığı için `yanMenu: true` ile ayrıca işaretlenir.
+const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci(dil)) : null;
+// Kök sayfada altta gezinme yok — orada zaten haritanın tamamı var.
+const tekKomsu = p.bolumHaritasi ? null : agacta;
+// "İlgili sayfalar" — frontmatter'daki slug listesi (iç bağlantı).
+const ilgili = p.ilgili?.length ? await ilgiliSayfalar(dil, p.ilgili) : [];
+
+// Başlık banner'ı: başlık görselin içine gömülü değil, gerçek <h1> olarak
+// sembolün yanında durur. Varsa sayfanın ayrı <h1>'i ve UrunDuzen'in düz
+// banner'ı basılmaz — ikisi de aynı başlığı tekrar ederdi.
+const bannerSembol: string | undefined = p.bannerSembol;
+// Etiket: ağaçtaki üst dalın adı; kök seviyedeki sayfalarda bölümün adı.
+// Başlık zaten üst dalın adıyla başlıyorsa (ör. üst dal "Yönlendirilebilir
+// Yatay Sondaj", başlık "Yönlendirilebilir Yatay Sondaj Yapım Metodu")
+// etiket basılmaz — giderdiğimiz tekrarın aynısı olurdu.
+const kucuk = (m: string) => m.toLocaleLowerCase('en-US');
+const ustAd = bannerSembol && agacta ? (agacta.ust?.ad ?? t.tek.kunye) : undefined;
+const bannerEtiket = ustAd && !kucuk(p.baslik).includes(kucuk(ustAd)) ? ustAd : undefined;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+const isoTarih = (d: any) => d ? new Date(d).toISOString().slice(0, 10) : undefined;
 
-function ytEmbed(url: string | undefined) {
+/** YouTube ya da Vimeo bağlantısından gömme adresi. */
+function videoEmbed(url: string | undefined) {
   if (!url) return null;
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
-  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+  const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  if (yt) return { src: `https://www.youtube.com/embed/${yt[1]}`, sayfa: `https://www.youtube.com/watch?v=${yt[1]}`, kucuk: `https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg` };
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return { src: `https://player.vimeo.com/video/${vm[1]}`, sayfa: `https://vimeo.com/${vm[1]}`, kucuk: undefined };
+  return null;
 }
-const embed = ytEmbed(p.video);
+const embed = videoEmbed(p.video);
+const kapakOlcu = p.kapak ? await gorselOznitelik(p.kapak) : {};
+const galeriOlcu = await Promise.all(((p.galeri ?? []) as any[]).map((g: any) => g.foto ? gorselOznitelik(g.foto) : Promise.resolve({})));
 
-const sema = tur === 'yazi'
+// <title>/OG başlığı: <h1> kısaltılan sayfalarda (ör. "HDD Nedir?") uzun,
+// anahtar kelimeli başlık `seoBaslik`te durur; diğerlerinde ikisi aynı.
+const belgeBaslik = p.seoBaslik || p.baslik;
+const sayfaUrl = `${SITE.kanonikal}${yol(`/${slug}/`)}`;
+const orgId = SITE.kanonikal + '/#organization';
+const yayinci = { '@type': 'Organization', '@id': orgId, name: SITE.isim,
+  logo: { '@type': 'ImageObject', url: SITE.kanonikal + '/deltek-logo.png' } };
+
+/**
+ * Ekmek kırıntısı — Google sonuçlarda yol olarak gösterir.
+ *   yazı:            Ana sayfa › Blog › Yazı
+ *   teknoloji sayfası: Ana sayfa › Teknoloji › [üst dal] › Sayfa
+ *   diğer sayfa:     Ana sayfa › Sayfa
+ */
+const kirinti: { ad: string; url: string }[] = [{ ad: t.seo.breadcrumbAna, url: SITE.kanonikal + yol('/') }];
+if (tur === 'yazi') kirinti.push({ ad: t.nav.blog[0], url: SITE.kanonikal + yol('/blog/') });
+else if (agacta || p.bolumHaritasi || p.yanMenu) {
+  if (slug !== TEKNOLOJI_KOK) kirinti.push({ ad: t.tek.kunye, url: SITE.kanonikal + yol(`/${TEKNOLOJI_KOK}/`) });
+  if (agacta?.ust) kirinti.push({ ad: agacta.ust.ad, url: SITE.kanonikal + yol(`/${agacta.ust.slug}/`) });
+}
+kirinti.push({ ad: p.baslik, url: sayfaUrl });
+const kirintiSema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: kirinti.map((k, i) => ({ '@type': 'ListItem', position: i + 1, name: k.ad, item: k.url })),
+};
+
+const sayfaSema = tur === 'yazi'
   ? {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
+      '@id': sayfaUrl + '#article',
       headline: p.baslik,
       ...(p.ozet ? { description: p.ozet } : {}),
-      ...(p.tarih ? { datePublished: new Date(p.tarih).toISOString().slice(0, 10) } : {}),
+      ...(p.tarih ? { datePublished: isoTarih(p.tarih) } : {}),
+      ...(p.guncelleme || p.tarih ? { dateModified: isoTarih(p.guncelleme || p.tarih) } : {}),
       ...(p.kapak ? { image: SITE.kanonikal + p.kapak } : {}),
-      mainEntityOfPage: `${SITE.kanonikal}/en/${slug}/`,
-      publisher: { '@type': 'Organization', name: SITE.isim },
-      inLanguage: 'en',
+      ...(p.anahtarKelimeler ? { keywords: p.anahtarKelimeler } : {}),
+      mainEntityOfPage: { '@type': 'WebPage', '@id': sayfaUrl },
+      author: { '@type': 'Organization', '@id': orgId, name: SITE.isim },
+      publisher: yayinci,
+      inLanguage: dil,
+      isPartOf: { '@type': 'Blog', '@id': SITE.kanonikal + yol('/blog/') + '#blog', name: `${SITE.isim} Blog` },
     }
   : {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: p.baslik,
+      '@id': sayfaUrl,
+      name: belgeBaslik,
       ...(p.ozet ? { description: p.ozet } : {}),
-      url: `${SITE.kanonikal}/en/${slug}/`,
-      inLanguage: 'en',
+      url: sayfaUrl,
+      inLanguage: dil,
+      ...(p.kapak || p.banner ? { primaryImageOfPage: { '@type': 'ImageObject', url: SITE.kanonikal + (p.kapak || p.banner) } } : {}),
+      ...(p.guncelleme ? { dateModified: isoTarih(p.guncelleme) } : {}),
+      isPartOf: { '@type': 'WebSite', '@id': SITE.kanonikal + '/#website' },
+      about: { '@id': orgId },
+      breadcrumb: { '@id': sayfaUrl + '#breadcrumb' },
     };
+// Video gömülü yazı: VideoObject — Google video sonuçları için.
+const videoSema = embed ? {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: p.baslik,
+  description: p.ozet || p.baslik,
+  ...(p.tarih ? { uploadDate: isoTarih(p.tarih) } : {}),
+  thumbnailUrl: p.kapak ? SITE.kanonikal + p.kapak : (embed.kucuk || SITE.kanonikal + '/og-image.jpg'),
+  embedUrl: embed.src,
+  contentUrl: embed.sayfa,
+  publisher: yayinci,
+  inLanguage: dil,
+} : null;
+const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ...(videoSema ? [videoSema] : [])];
 ---
-<Layout title={`${p.baslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
-        image={p.kapak} sema={sema} cevirisiVar={cevirisiVar}>
+<Layout title={`${belgeBaslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
+        image={p.kapak} imageAlt={p.kapakAlt || p.baslik} keywords={p.anahtarKelimeler}
+        sema={sema} cevirisiVar={cevirisiVar}>
 {p.duzen === 'iletisim' ? (
-  <IletisimDuzen dil="en" baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel}>
+  <IletisimDuzen dil={dil} baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel} gorselAlt={p.gorselAlt}>
     <Content />
   </IletisimDuzen>
 ) : (
-<article class="kap yazi">
-  {tur === 'yazi' && <a class="yazi__geri" href="/en/blog/">← Blog</a>}
+<article class:list={['kap', 'yazi', yanAgac && 'yazi--yan', p.duzen === 'hizmet' && 'yazi--genis']}>
+  {yanAgac && (
+    <aside class="yazi__yan">
+      <TeknolojiYanMenu agac={yanAgac} aktif={slug} dil={dil} />
+    </aside>
+  )}
+  <div class="yazi__ana">
+  {tur === 'yazi' && <a class="yazi__geri" href={yol('/blog/')}>{t.sayfa.blogGeri}</a>}
 
-  <header class="yazi__bas">
-    {tur === 'yazi' && p.tarih && <span class="yazi__tarih">{tarihFmt(p.tarih)}</span>}
-    <h1>{p.baslik}</h1>
-  </header>
+  {bannerSembol ? (
+    <SayfaBanner baslik={p.baslik} sembol={bannerSembol} etiket={bannerEtiket} alt={p.bannerAlt || `${p.baslik} — Deltek trenchless technology illustration`} />
+  ) : (
+    <header class="yazi__bas">
+      {tur === 'yazi' && p.tarih && <span class="yazi__tarih">{tarihFmt(p.tarih)}</span>}
+      <h1>{p.baslik}</h1>
+    </header>
+  )}
 
   {p.kapak && (
-    <figure class="yazi__kapak"><img src={p.kapak} alt={p.baslik} /></figure>
+    <figure class="yazi__kapak"><img src={p.kapak} alt={p.kapakAlt || p.baslik} {...kapakOlcu} fetchpriority="high" decoding="async" /></figure>
   )}
 
   {embed && (
     <div class="yazi__video">
-      <iframe src={embed} title={p.baslik} loading="lazy"
+      <iframe src={embed.src} title={p.baslik} loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen></iframe>
     </div>
@@ -85,12 +194,17 @@ const sema = tur === 'yazi'
 
   {p.duzen === 'referanslar' ? (
     <>
+      {/* Şerit makale sütununun dışına taşar: logolar sayfanın tamamını kullansın */}
       <LogoSerit />
       <div class="yazi__icerik yazi__icerik--referanslar"><Content /></div>
     </>
+  ) : p.duzen === 'hizmet' ? (
+    <HizmetDuzen dil={dil} hizmetler={p.hizmetler} neden={p.neden} projeler={p.projeler} alanlar={p.alanlar}>
+      <div class="yazi__icerik"><Content /></div>
+    </HizmetDuzen>
   ) : p.duzen === 'urun' ? (
-    <UrunDuzen banner={p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
-               tablolar={p.tablolar} galeri={p.galeri}>
+    <UrunDuzen banner={bannerSembol ? undefined : p.banner} bannerAlt={p.bannerAlt || p.baslik} sayfaBaslik={p.baslik}
+               bloklar={p.bloklar} tablolar={p.tablolar} galeri={p.galeri}>
       <div class="yazi__icerik"><Content /></div>
     </UrunDuzen>
   ) : (
@@ -99,16 +213,21 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  {p.galeri && p.galeri.length > 0 && (
+  {p.galeri && p.galeri.length > 0 && p.duzen !== 'urun' && (
     <div class="yazi__galeri">
-      {p.galeri.map((g: any) => g.foto && (
-        <figure><img src={g.foto} alt={p.baslik} loading="lazy" /></figure>
+      {p.galeri.map((g: any, i: number) => g.foto && (
+        <figure><img src={g.foto} alt={g.alt || p.baslik} {...galeriOlcu[i]} loading="lazy" decoding="async" /></figure>
       ))}
     </div>
   )}
 
+  {tekAgac && <TeknolojiHaritasi agac={tekAgac} dil={dil} />}
+  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} dil={dil} />}
+  {ilgili.length > 0 && <IlgiliSayfalar sayfalar={ilgili} dil={dil} />}
+  </div>
+
   <div class="yazi__cta">
-    <p>{tur === 'yazi' ? 'Get in touch about your project.' : 'Talk to us about this.'}</p>
+    <p>{tur === 'yazi' ? t.sayfa.ctaYazi : t.sayfa.ctaSayfa}</p>
     <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>{SITE.telefon}</a>
   </div>
 </article>
@@ -116,10 +235,27 @@ const sema = tur === 'yazi'
 
 <style>
 .yazi { max-width: 820px; padding-block: clamp(1.5rem,4vw,2.5rem) clamp(3rem,6vw,5rem); }
+/* Yan menülü düzen: sol sütunda ağaç, sağda sayfanın kendisi. `.yazi__ana`
+   sarmalayıcı her sayfada var (yan menüsüz sayfalarda düz bir blok, görsel
+   etkisi yok) — koşullu açılıp kapanan bir etiket yazmamak için. */
+/* Kart ızgaralı düzenler makale genişliğine (820px) sığmıyor: dört sütun
+   170px'e iniyor ve kartlar 1000px'i aşıyordu. */
+.yazi--yan, .yazi--genis { max-width: 1180px; }
+@media (min-width: 900px) {
+  .yazi--yan { display: grid; grid-template-columns: 268px minmax(0, 1fr);
+    gap: clamp(1.6rem, 3vw, 2.8rem); align-items: start; }
+  .yazi__yan { position: sticky; top: calc(var(--baslik-y, 210px) - 40px); }
+}
+@media (max-width: 899px) { .yazi__yan { margin-bottom: 1.8rem; } }
 .yazi__geri { display: inline-block; font-family: var(--f-veri); font-size: .8rem; color: var(--mavi); margin-bottom: 1.4rem; }
 .yazi__geri:hover { color: var(--mavi-900); }
 .yazi__bas { margin-bottom: 1.6rem; }
 .yazi__tarih { font-family: var(--f-veri); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mavi); }
+/* Tarih satırı yoksa h1'in üst boşluğu `.yazi__bas`tan taşıp (margin
+   collapse) başlığı yan menüden 8px aşağı kaydırıyordu. Banner'lı sayfalarla
+   aynı hizada başlasın diye ilk çocukken sıfırlanır; blog yazılarında h1 ilk
+   çocuk değil (üstünde tarih var), orada boşluk korunur. */
+.yazi__bas h1:first-child { margin-top: 0; }
 .yazi__bas h1 { font-family: var(--f-dis); font-weight: 900; font-size: clamp(1.7rem,4vw,2.6rem); letter-spacing: -.025em; line-height: 1.05; color: var(--mavi-900); margin-top: .5rem; text-wrap: balance; }
 .yazi__kapak { margin: 0 0 1.8rem; border-radius: 6px; overflow: hidden; border: 1px solid var(--cizgi); }
 .yazi__kapak img { width: 100%; height: auto; display: block; }
@@ -165,6 +301,8 @@ const sema = tur === 'yazi'
 .yazi__icerik--logo-izgara :global(p) { margin: 0; }
 .yazi__icerik--logo-izgara :global(img) { margin: 0; max-height: 72px; width: auto; border-radius: 0; filter: grayscale(1); opacity: .72; transition: filter .2s, opacity .2s; }
 .yazi__icerik--logo-izgara :global(img:hover) { filter: none; opacity: 1; }
+/* Referanslar: kayan şerit makale sütununun dışına taşar, metin normal akışta */
+.yazi__icerik--referanslar { margin-top: clamp(1.8rem, 4vw, 2.8rem); }
 .yazi__galeri { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-top: 2rem; }
 @media (min-width: 640px) { .yazi__galeri { grid-template-columns: repeat(3, 1fr); } }
 .yazi__galeri figure { margin: 0; border-radius: 4px; overflow: hidden; border: 1px solid var(--cizgi); aspect-ratio: 4/3; }

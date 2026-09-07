@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import gorselOlcu from './scripts/gorsel-olcu-integration.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,6 +11,8 @@ export default defineConfig({
   // Slug'ları birebir korumak için bu ayar 'always' olmalı (bkz. CLAUDE.md).
   trailingSlash: 'always',
   integrations: [
+    // Build sonrası dist HTML'lerinde width/height'sız <img>'lere ölçü ekler (CLS)
+    gorselOlcu(),
     sitemap({
       // CMS paneli ve içeriksiz sayfaları sitemap dışında bırak
       filter: (page) => !page.includes('/admin'),

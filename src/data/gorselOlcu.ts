@@ -11,6 +11,10 @@
  * görsel servisi üzerinden geliyor. Uygulama kodunun ona dayanmaması için
  * ölçü doğrudan dosya başlığından okunuyor. Desteklenmeyen bir biçimde
  * `null` döner; çağıran taraf o zaman eski (iki sütunlu) düzende bırakır.
+ *
+ * Desteklenen biçimler: JPEG, PNG, GIF, WebP. WebP şart: hero görselleri ve
+ * ana sayfadaki tecrübe bandı WebP (bkz. scripts/gorsel-webp.mjs); okunamazsa
+ * `<img>`e width/height basılmaz ve sayfa yüklenirken oynar (CLS).
  */
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -45,6 +49,23 @@ function gif(b: Buffer) {
   return { en: b.readUInt16LE(6), boy: b.readUInt16LE(8) };
 }
 
+/**
+ * WebP üç alt biçimde gelir ve ölçü her birinde başka yerde durur:
+ *   VP8  (kayıplı)   — 26. bayttan itibaren 14'er bit
+ *   VP8L (kayıpsız)  — 21. bayttan itibaren paketlenmiş, değerler 1 eksik
+ *   VP8X (genişletmeli, alfa/animasyon) — 24. bayttan 24'er bit, 1 eksik
+ */
+function webp(b: Buffer) {
+  const tur = b.toString('ascii', 12, 16);
+  if (tur === 'VP8 ') return { en: b.readUInt16LE(26) & 0x3fff, boy: b.readUInt16LE(28) & 0x3fff };
+  if (tur === 'VP8L') {
+    const bit = b.readUInt32LE(21);
+    return { en: (bit & 0x3fff) + 1, boy: ((bit >> 14) & 0x3fff) + 1 };
+  }
+  if (tur === 'VP8X') return { en: 1 + b.readUIntLE(24, 3), boy: 1 + b.readUIntLE(27, 3) };
+  return null;
+}
+
 /** `/images/…` yolundan ölçü. Dosya yoksa ya da biçim tanınmazsa `null`. */
 export async function gorselOlcu(src: string) {
   if (bellek.has(src)) return bellek.get(src)!;
@@ -55,6 +76,7 @@ export async function gorselOlcu(src: string) {
       if (b[0] === 0xff && b[1] === 0xd8) sonuc = jpeg(b);
       else if (b.toString('ascii', 1, 4) === 'PNG') sonuc = png(b);
       else if (b.toString('ascii', 0, 3) === 'GIF') sonuc = gif(b);
+      else if (b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') sonuc = webp(b);
     }
   } catch {
     sonuc = null;   // yol yanlışsa sayfa yine de derlensin
@@ -68,4 +90,14 @@ export async function gorselOlcu(src: string) {
 export async function gorselOrani(src: string) {
   const o = await gorselOlcu(src);
   return o ? o.en / o.boy : null;
+}
+
+/**
+ * `<img width height>` öznitelikleri için hazır nesne — `{...await gorselOznitelik(src)}`
+ * diye yayılır. Ölçülemeyen dosyada boş nesne döner, öznitelik basılmaz.
+ * Tarayıcı yüklenmeden önce doğru oranda yer ayırsın diye (CLS = 0).
+ */
+export async function gorselOznitelik(src: string): Promise<{ width?: number; height?: number }> {
+  const o = await gorselOlcu(src);
+  return o ? { width: o.en, height: o.boy } : {};
 }

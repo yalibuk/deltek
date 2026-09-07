@@ -3,23 +3,71 @@ import Layout from '../../layouts/Layout.astro';
 import { SITE } from '../../data/site';
 import HeroSlider from '../../components/HeroSlider.astro';
 import { HERO_EN } from '../../data/hero';
-import { yazilar } from '../../data/icerik';
+import { yazilar, teknolojiRehberleri } from '../../data/icerik';
+import { ikonCiz } from '../../data/ikon';
+import { gorselOznitelik } from '../../data/gorselOlcu';
 
+/**
+ * EN ana sayfa — TR `index.astro` ile aynı bölümler ve aynı sıra:
+ * hero slider → "DELTEK" şeridi → rakamlar → hizmetler → tecrübe bandı →
+ * hakkımızda → rehber → blog → çağrı. Metinler Türkçe aslından çeviridir,
+ * Deltek onayından geçmedi (bkz. CLAUDE.md). Bölüm CSS'i global.css'te,
+ * TR ile paylaşılır.
+ */
+const HIZMETLER = [
+  { ikon: 'sondaj', ad: 'Horizontal Directional Drilling', kisa: 'HDD',
+    href: '/en/yonlendirilebilir-yatay-sondaj/',
+    metin: 'We install natural gas, potable water, sewer, power and fibre-optic lines underground. GPS guidance and electronic targeting track the bore path with millimetre precision.' },
+  { ikon: 'boru', ad: 'Pipe Jacking / Auger Boring', kisa: 'Auger Boring',
+    href: '/en/boru-surmecakma/',
+    metin: 'The method for installing large-diameter steel pipes underground. Pipe jacking, auger boring and microtunnelling save both cost and time.' },
+  { ikon: 'yenileme', ad: 'Trenchless Pipe Bursting', kisa: 'Pipe Bursting',
+    href: '/en/boru-yenileme/',
+    metin: 'We replace old lines with new pipes without excavation — and, if you wish, in larger diameters.' },
+  { ikon: 'akilli', ad: 'Smart Undergrounding Consultancy', kisa: 'Smart Undergrounding',
+    href: '/en/akilli-altyapi/',
+    metin: 'More than 20 years of experience in infrastructure planning. Innovative underground solutions bring projects to life that once seemed impossible.' },
+];
+
+const RAKAMLAR = [
+  { deger: '196,210', birim: 'metres', ad: 'Total bore length' },
+  { deger: '28,136',  birim: 'hours',  ad: 'Working hours' },
+  { deger: '324',     birim: '',       ad: 'Satisfied partners' },
+  { deger: '1,275',   birim: 'tonnes', ad: 'Fleet capacity' },
+];
 
 // Latest blog posts — newest 3 (if any)
 const sonYazilar = (await yazilar('en')).slice(0, 3);
+const kapakOlcu = await Promise.all(sonYazilar.map(({ entry }) => entry.data.kapak ? gorselOznitelik(entry.data.kapak) : Promise.resolve({})));
 const projeTarih = (d: any) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+
+const rehberler = await teknolojiRehberleri('en');
+const tecrubeOlcu = await gorselOznitelik('/images/uploads/deltek_hdd_1.webp');
+
+const hizmetSema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Deltek trenchless services',
+  itemListElement: HIZMETLER.map((h, i) => ({
+    '@type': 'ListItem', position: i + 1,
+    item: { '@type': 'Service', name: h.ad, alternateName: h.kisa, description: h.metin,
+      url: SITE.kanonikal + h.href, provider: { '@id': SITE.kanonikal + '/#organization' },
+      areaServed: { '@type': 'Country', name: 'Türkiye' } },
+  })),
+};
 ---
 <Layout
-  title={`${SITE.isim} — Horizontal Drilling & Trenchless Technologies`}
-  description={"Horizontal directional drilling (HDD), auger boring and trenchless pipe bursting, 2 to 2000 mm. Istanbul and Izmir offices, serving all of Türkiye."}>
+  title={`${SITE.isim} — HDD & Trenchless Technologies in Türkiye`}
+  description={"Horizontal directional drilling (HDD), auger boring, microtunnelling and pipe bursting contractor in Türkiye. Crossings from 2 to 2000 mm; Istanbul and Izmir."}
+  keywords="horizontal directional drilling, HDD contractor Turkey, trenchless technology, auger boring, pipe jacking, microtunnelling, pipe bursting, river crossing HDD, Istanbul, Izmir"
+  sema={hizmetSema}>
 
 <!-- ── HERO: SLIDER ─────────────────────────── -->
 <section class="hero">
   <div class="hero__grid"></div>
   <div class="hero__ic">
-    <HeroSlider slaytlar={HERO_EN} etiket="Deltek horizontal drilling projects"
+    <HeroSlider slaytlar={HERO_EN} etiket="Deltek horizontal directional drilling projects"
                 oncekiEtiket="Previous image" sonrakiEtiket="Next image" />
   </div>
 </section>
@@ -31,7 +79,7 @@ const projeTarih = (d: any) =>
   <div class="kap">
     <span class="rozet"><i></i>Deltek</span>
     <h1>We put your infrastructure underground <em>without touching the surface.</em></h1>
-    <p class="hero__alt">Horizontal directional drilling (HDD), auger boring, trenchless pipe bursting and smart undergrounding consultancy. For diameters from 2&nbsp;mm to 2000&nbsp;mm, serving all of Türkiye from our Istanbul and Izmir offices.</p>
+    <p class="hero__alt">Horizontal directional drilling (HDD), auger boring and pipe jacking, trenchless pipe bursting and smart undergrounding consultancy. For diameters from 2&nbsp;mm to 2000&nbsp;mm, serving all of Türkiye from our Istanbul and Izmir offices.</p>
     <div class="hero__eylem">
       <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>
         <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M3.6 1.4 5.9 1a.7.7 0 0 1 .78.4l1.06 2.4a.7.7 0 0 1-.2.82l-1.2.98a8.6 8.6 0 0 0 4.06 4.06l.98-1.2a.7.7 0 0 1 .82-.2l2.4 1.06a.7.7 0 0 1 .4.78l-.4 2.3a.7.7 0 0 1-.69.58C6.8 13 3 9.2 3 2.1a.7.7 0 0 1 .6-.7Z"/></svg>
@@ -42,34 +90,61 @@ const projeTarih = (d: any) =>
   </div>
 </div>
 
-{sonYazilar.length > 0 && (
-<section class="bolum kap" id="blog">
+<!-- ── FIGURES ───────────────────────────── -->
+<section class="rakam" aria-label="Deltek in figures">
+  <div class="kap rakam__izgara">
+    {RAKAMLAR.map(r => (
+      <div class="rakam__k">
+        <span class="rakam__s">{r.deger}{r.birim && <em>{r.birim}</em>}</span>
+        <span class="rakam__a">{r.ad}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- ── SERVICES ──────────────────────────── -->
+<section class="bolum kap" id="hizmetler">
   <div class="sahadan__bas">
     <div>
-      <span class="kunye">Blog</span>
-      <h2>Latest articles.</h2>
+      <span class="kunye">Services</span>
+      <h2>Four methods, one team.</h2>
     </div>
-    <a class="sahadan__tum" href="/en/blog/">All articles →</a>
+    <a class="sahadan__tum" href="/en/hizmetlerimiz/">All services →</a>
   </div>
-  <div class="sahadan__grid">
-    {sonYazilar.map(({ entry, slug }) => (
-      <a class="skart" href={`/en/${slug}/`}>
-        <div class="skart__g">
-          {entry.data.kapak
-            ? <img src={entry.data.kapak} alt={entry.data.baslik} loading="lazy" />
-            : <div class="skart__yok">DELTEK</div>}
-          {entry.data.video && <span class="skart__vid" aria-hidden="true">▶</span>}
-        </div>
-        <div class="skart__b">
-          {entry.data.tarih && <span class="skart__tarih">{projeTarih(entry.data.tarih)}</span>}
-          <h3>{entry.data.baslik}</h3>
-          {entry.data.ozet && <p>{entry.data.ozet}</p>}
-        </div>
+  <div class="hkart__izgara">
+    {HIZMETLER.map(h => (
+      <a class="hkart" href={h.href}>
+        <span class="hkart__i">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+               stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true" set:html={ikonCiz(h.ikon)} />
+        </span>
+        <h3 class="hkart__ad">{h.ad}</h3>
+        <span class="hkart__kisa">{h.kisa}</span>
+        <p class="hkart__m">{h.metin}</p>
+        <span class="hkart__ok" aria-hidden="true">→</span>
       </a>
     ))}
   </div>
 </section>
-)}
+
+<!-- ── EXPERIENCE BAND ──────────────────────────── -->
+<section class="tecrube" aria-label="Field experience">
+  <img class="tecrube__g" src="/images/uploads/deltek_hdd_1.webp"
+       alt="Deltek horizontal directional drilling (HDD) site — more than 20 years of international field experience"
+       width={tecrubeOlcu.width ?? 1920} height={tecrubeOlcu.height ?? 790} loading="lazy" decoding="async" />
+  <img class="tecrube__logo" src="/deltek_logo_single_line_white.svg" alt="" aria-hidden="true"
+       width="674" height="125" loading="lazy" decoding="async" />
+  <div class="tecrube__ic">
+    <p class="tecrube__y">
+      {/* Üç satır aynı genişlikte olsun diye punto çarpanları — TR'den farklı
+          metin, çarpanlar İngilizce satırlara göre yaklaşık; bkz. CLAUDE.md. */}
+      <span class="tecrube__s" style="--o:1.19">Over 20 years</span>
+      <span class="tecrube__s" style="--o:1.14">International</span>
+      <span class="tecrube__s" style="--o:1">Field experience</span>
+    </p>
+  </div>
+</section>
 
 <!-- ── ABOUT ───────────────────────────────── -->
 <section class="kanit" id="hakkimizda">
@@ -78,6 +153,7 @@ const projeTarih = (d: any) =>
       <span class="kanit__etiket">About us</span>
       <h2>A multidisciplinary team <em>in trenchless infrastructure.</em></h2>
       <p>We bring different engineering disciplines together under one roof, drawing on years of construction and infrastructure experience — and we remove unnecessary capacity and extra cost to build partnerships that last.</p>
+      <p>Deltek is a trenchless contractor providing <a href="/en/yatay-sondaj/">horizontal drilling</a>, <a href="/en/yonlendirilebilir-yatay-sondaj-nedir/">horizontal directional drilling (HDD)</a>, <a href="/en/boru-surmecakma/">pipe jacking, auger boring and microtunnelling</a> and <a href="/en/boru-yenileme/">trenchless pipe bursting</a> across Türkiye from its Istanbul and Izmir offices. We install natural gas, water, sewer, power and fibre-optic lines under rivers, motorways, railways and city streets without open-cut excavation.</p>
     </div>
     <div class="kanit__ic">
       <article class="kanit__h">
@@ -99,6 +175,56 @@ const projeTarih = (d: any) =>
   </div>
 </section>
 
+{rehberler.length > 0 && (
+<section class="bolum kap rehber" id="rehber">
+  <div class="sahadan__bas">
+    <div>
+      <span class="kunye">Guides</span>
+      <h2>What is horizontal drilling and how is it done?</h2>
+    </div>
+    <a class="sahadan__tum" href="/en/yatay-sondaj-teknoloji/">Technology section →</a>
+  </div>
+  <p class="rehber__giris">Our technical pages explain horizontal drilling, trenchless boring and horizontal directional drilling; HDD rigs, drill rods, steering heads and reamers, locating systems and drilling fluid. We recommend reading them before choosing a trenchless method.</p>
+  <ul class="rehber__l">
+    {rehberler.map(r => (
+      <li><a href={`/en/${r.slug}/`}><strong>{r.baslik}</strong>{r.ozet && <span>{r.ozet}</span>}</a></li>
+    ))}
+    <li><a href="/en/yonlendirilebilir-yatay-sondaj-yapim-metodu/"><strong>HDD Construction Method</strong><span>Pilot bore, reaming and pullback explained step by step with site photographs.</span></a></li>
+    <li><a href="/en/yonlendirilebilir-yatay-sondaj-makinesi/"><strong>HDD Drilling Rig</strong><span>Rig classes by thrust, pullback and torque, and how to choose the right machine.</span></a></li>
+    <li><a href="/en/yatay-sondaj-camuru/"><strong>Drilling Fluid</strong><span>The six functions of bentonite-based drilling mud and how it is prepared for each soil type.</span></a></li>
+  </ul>
+</section>
+)}
+
+{sonYazilar.length > 0 && (
+<section class="bolum kap" id="blog">
+  <div class="sahadan__bas">
+    <div>
+      <span class="kunye">Blog</span>
+      <h2>Latest articles.</h2>
+    </div>
+    <a class="sahadan__tum" href="/en/blog/">All articles →</a>
+  </div>
+  <div class="sahadan__grid">
+    {sonYazilar.map(({ entry, slug }, i) => (
+      <a class="skart" href={`/en/${slug}/`}>
+        <div class="skart__g">
+          {entry.data.kapak
+            ? <img src={entry.data.kapak} alt={entry.data.kapakAlt || entry.data.baslik} {...kapakOlcu[i]} loading="lazy" decoding="async" />
+            : <div class="skart__yok">DELTEK</div>}
+          {entry.data.video && <span class="skart__vid" aria-hidden="true">▶</span>}
+        </div>
+        <div class="skart__b">
+          {entry.data.tarih && <span class="skart__tarih">{projeTarih(entry.data.tarih)}</span>}
+          <h3>{entry.data.baslik}</h3>
+          {entry.data.ozet && <p>{entry.data.ozet}</p>}
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+)}
+
 <!-- ── CALL ───────────────────────────────── -->
 <section class="kap" id="iletisim" style="padding-block:clamp(2rem,5vw,4rem)">
   <div class="bit-cta">
@@ -112,6 +238,22 @@ const projeTarih = (d: any) =>
 
 </Layout>
 
+<style>
+/* Guides section — same rules as TR index.astro */
+.rehber { padding-top: 0; }
+.rehber__giris { color: var(--mute); font-size: 1rem; line-height: 1.75; max-width: 78ch; margin-top: .4rem; }
+.rehber__l { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: .8rem; }
+@media (min-width: 640px) { .rehber__l { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 980px) { .rehber__l { grid-template-columns: 1fr 1fr 1fr; } }
+.rehber__l a { display: block; height: 100%; padding: 1rem 1.1rem; background: var(--beyaz); border: 1px solid var(--cizgi);
+  border-left: 3px solid var(--sari); border-radius: 8px; color: var(--metin); transition: border-color .15s, transform .15s; }
+.rehber__l a:hover { border-color: var(--mavi); transform: translateY(-2px); }
+.rehber__l strong { display: block; font-family: var(--f-dis); font-weight: 800; font-size: 1rem; color: var(--mavi-900); }
+.rehber__l a:hover strong { color: var(--mavi); }
+.rehber__l span { display: block; margin-top: .35rem; font-size: .86rem; line-height: 1.55; color: var(--mute);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
+
 <script>
 (function(){
   const ray = document.getElementById('ray') as HTMLElement;
@@ -123,15 +265,13 @@ const projeTarih = (d: any) =>
   for (let k = 0; k < n; k++) {
     const b = document.createElement('button');
     b.setAttribute('role','tab');
-    b.setAttribute('aria-label', `image ${k+1}`);
+    b.setAttribute('aria-label', `Image ${k+1}`);
     b.onclick = () => { git(k); sifirla(); };
     nokta.appendChild(b);
   }
   function ciz() {
     (ray as HTMLElement).style.transform = `translateX(${-i*100}%)`;
     Array.from(nokta.children).forEach((d,k) => d.setAttribute('aria-current', k===i?'true':'false'));
-    // aktif slayt işaretlenince katman görselleri yumuşak biçimde giriyor.
-    // inert: ekran dışındaki slaytların butonları klavyeyle odaklanmasın.
     Array.from(ray.children).forEach((s,k) => {
       (s as HTMLElement).setAttribute('data-aktif', k===i?'true':'false');
       (s as HTMLElement).inert = k !== i;
@@ -142,9 +282,23 @@ const projeTarih = (d: any) =>
   function basla() { if(azalt) return; dur(); oto = setInterval(ileri, 8000); }
   function dur() { if (oto) { clearInterval(oto); oto = null; } }
   function sifirla() { dur(); basla(); }
-  const bI = document.getElementById('ileri'); const bG = document.getElementById('geri');
-  if (bI) bI.onclick = () => { ileri(); sifirla(); };
-  if (bG) bG.onclick = () => { geri(); sifirla(); };
+  (document.getElementById('ileri') as HTMLElement).onclick = () => { ileri(); sifirla(); };
+  (document.getElementById('geri') as HTMLElement).onclick = () => { geri(); sifirla(); };
+  const sl = document.querySelector('.slider') as HTMLElement;
+  sl.addEventListener('mouseenter', dur);
+  sl.addEventListener('mouseleave', basla);
+  sl.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key==='ArrowRight') { ileri(); sifirla(); }
+    if (e.key==='ArrowLeft') { geri(); sifirla(); }
+  });
+  let x0: number | null = null;
+  sl.addEventListener('touchstart', (e: TouchEvent) => { x0 = e.touches[0].clientX; dur(); }, {passive:true});
+  sl.addEventListener('touchend', (e: TouchEvent) => {
+    if (x0===null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx)>40) { dx<0?ileri():geri(); }
+    x0=null; basla();
+  }, {passive:true});
   ciz(); basla();
 })();
 </script>

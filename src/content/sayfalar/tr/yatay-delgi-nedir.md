@@ -1,10 +1,18 @@
 ---
 baslik: "Yatay Delgi Nedir?"
-ozet: "Günümüz inşaat dünyasında yatay delgi teknolojisi, geleneksel kazı yöntemlerine alternatif olarak ortaya çıkan devrim niteliğinde bir çözüm haline geldi. Bu özel teknik sayesinde, yerin altındaki a…"
+seoBaslik: "Yatay Delgi Nedir? Yöntemler, Makineler, Avantajlar"
+ozet: "Yatay delgi nedir, nasıl çalışır? Kazısız yatay delgi çeşitleri, uygulama alanları, makine özellikleri, planlama, avantajları ve Türkiye'de yatay delgi."
+ilgili:
+  - "yatay-sondaj"
+  - "yonlendirilebilir-yatay-delgi"
+  - "yonlendirilebilir-yatay-sondaj-nedir"
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+  - "boru-surmecakma"
+yanMenu: true
+anahtarKelimeler: "yatay delgi, yatay delgi nedir, kazısız yatay delgi, yatay delgi makinesi, yatay delgi firması, yatay delgi fiyat, yatay delgi İstanbul, yatay delgi İzmir"
 ---
 
 ## Yatay Delgi
-
 
 Günümüz inşaat dünyasında yatay delgi teknolojisi, geleneksel kazı yöntemlerine alternatif olarak ortaya çıkan devrim niteliğinde bir çözüm haline geldi. Bu özel teknik sayesinde, yerin altındaki altyapı sistemlerine müdahale edilirken üst yüzeyde minimum hasar oluşuyor. Peki yatay delgi nasıl çalışıyor ve neden bu kadar önemli?
 
@@ -22,7 +30,7 @@ Yatay delgi teknolojisi özellikle büyük şehirlerde tercih ediliyor. Çünkü
 ### Su ve Kanalizasyon Hatları
 
 
-Şehir içi su dağıtım sistemlerinde yatay delgi teknolojisi sıklıkla kullanılıyor. Özellikle ana caddelerde veya işlek bölgelerde yapılacak kanalizasyon hattı döşemelerinde bu yöntem ideal çözüm sunuyor. Miami’deki kanalizasyon projemizde de bu tekniği başarıyla uyguladık.
+Şehir içi su dağıtım sistemlerinde yatay delgi teknolojisi sıklıkla kullanılıyor. Özellikle ana caddelerde veya işlek bölgelerde yapılacak kanalizasyon hattı döşemelerinde bu yöntem ideal çözüm sunuyor. Miami’deki [kanalizasyon projesinde](/miamide-kanalizasyon-yapimi/) de bu teknik başarıyla uygulandı.
 
 ### Doğalgaz ve Elektrik Hatları
 

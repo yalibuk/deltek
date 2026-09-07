@@ -1,8 +1,15 @@
 ---
 baslik: "İSKANDİNAVYA AI SÜPER OTOYOLUNU GÜÇLENDİRMEK İÇİN YÖNLENDİRİLEBİLİR YATAY DELGİ (YYD / HDD)"
-ozet: "Yaygınlaşan AI iş yüklerinin yol açtığı artan trafik taleplerini karşılamak üzere Danimarka ağındaki kapasitenin artırılması kapsamında, deniz kablolarının karaya çıkarılması için Yönlendirilebilir…"
+seoBaslik: "İskandinavya AI Otoyolu: Deniz Kablosu İçin HDD"
+ozet: "Arelion, Danimarka Nørre Nebel'de deniz kablolarını karaya çıkarmak için yönlendirilebilir yatay delgi (HDD) kullanıyor. AI veri merkezi altyapısında HDD."
+ilgili:
+  - "avrupada-devasa-bir-yuzen-gunes-enerji-santrali-hizmete-girdi"
+  - "manyetik-alan"
+  - "yonlendirilebilir-yatay-sondaj"
+anahtarKelimeler: "deniz kablosu karaya çıkış HDD, landfall HDD, Arelion, Nørre Nebel, veri merkezi altyapı, yönlendirilebilir yatay delgi, fiber optik HDD"
 tarih: 2026-05-21
-kapak: "/images/uploads/iskandinavya-ai-super-otoyolu-yonlendirilebilir-yatay-delgi.jpg"
+kapak: "/images/uploads/iskandinavya-ai-super-otoyolu-yonlendirilebilir-yatay-delgi.webp"
+kapakAlt: "Danimarka Nørre Nebel kablo karaya çıkış istasyonu — deniz kablosu için yönlendirilebilir yatay delgi"
 ---
 
 Yaygınlaşan AI iş yüklerinin yol açtığı artan trafik taleplerini karşılamak üzere Danimarka ağındaki kapasitenin artırılması kapsamında, deniz kablolarının karaya çıkarılması için **Yönlendirilebilir Yatay Delgi (YYD/HDD)** kullanılacak. Arelion, Nørre Nebel kablo karaya çıkarma istasyonunda yaptığı iyileştirmeleri ve gelişmeleri duyurdu.

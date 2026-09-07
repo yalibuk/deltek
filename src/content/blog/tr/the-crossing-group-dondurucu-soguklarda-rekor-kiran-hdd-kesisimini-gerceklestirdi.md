@@ -1,8 +1,15 @@
 ---
 baslik: "THE CROSSING GROUP, DONDURUCU SOĞUKLARDA REKOR KIRAN HDD KESİŞİMİNİ GERÇEKLEŞTİRDİ"
-ozet: "The Crossing Group, kısa süre önce 2.955 metrelik bir Kesişim Yönlendirilebilir Yatay Delgi (YYD/HDD) geçişini tamamladı. Aralık 2025’ten bu yılın Şubat ayına kadar, şirketin ekipleri maxi yatay so…"
+seoBaslik: "The Crossing Group: 2.955 m Kesişim HDD Rekoru"
+ozet: "The Crossing Group, Kanada'da Athabasca Nehri altından 2.955 metrelik kesişim (intersect) HDD geçişini dondurucu soğukta tamamladı. Teknik detaylar."
+ilgili:
+  - "4058-metre-dunya-rekoru"
+  - "manyetik-alan"
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+anahtarKelimeler: "kesişim HDD, intersect HDD, Athabasca Nehri HDD, uzun mesafe yatay delgi, kılıf borusu casing, The Crossing Group, maxi HDD rig"
 tarih: 2026-05-21
-kapak: "/images/uploads/the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimi.jpg"
+kapak: "/images/uploads/the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimi.webp"
+kapakAlt: "Athabasca Nehri altında 2.955 metrelik kesişim HDD geçişi — The Crossing Group sahası"
 ---
 
 The Crossing Group, kısa süre önce **2.955 metrelik bir Kesişim Yönlendirilebilir Yatay Delgi (YYD/HDD)** geçişini tamamladı.

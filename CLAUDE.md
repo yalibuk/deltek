@@ -108,8 +108,9 @@ Slug'lar birebir korundu; `sitemap.xml` + `/feed/` ile diff'lenerek doğrulandı
 - **Cloudflare e-posta gizlemesi çözüldü**, adresler gerçek `mailto:` bağlantısı oldu.
 - **Google harita ve Vimeo gömüleri korundu** (`<div class="gomu">` sarmalayıcısıyla,
   responsive 16:9).
-- **Referans logoları** `duzen: logo-izgara` alanıyla yan yana diziliyor
-  (markdown her görseli ayrı paragrafa koyduğu için).
+- **Referans logoları** artık markdown gövdesinde değil, sayfanın başında
+  otomatik kayan bir şeritte (`duzen: referanslar`, bkz. aşağı). Eski
+  `logo-izgara` düzeni kodda duruyor ama hiçbir sayfa kullanmıyor.
 
 ## Ofis yapısı
 
@@ -259,9 +260,10 @@ src/
     index.astro             TR ana sayfa
     [slug].astro            TR yazı VE sayfa → /<slug>/ (iki koleksiyon tek route)
     blog/index.astro        TR blog listesi → /blog/
-    en/index.astro          EN ana sayfa → /en/
-    en/[slug].astro         EN yazı VE sayfa → /en/<slug>/
+    en/index.astro          EN ana sayfa → /en/ (TR ile aynı bölümler)
+    en/[slug].astro         EN yazı VE sayfa → /en/<slug>/ ([slug].astro'dan türetildi)
     en/blog/index.astro     EN blog listesi → /en/blog/
+    404.astro, en/404.astro 404 sayfaları (noindex; EN'inki build sonrası en/404.html'e taşınır)
     admin/index.astro       Sveltia CMS paneli (noindex)
   assets/banner/*.jpg       başlık banner'larının sembolleri (bkz. "Banner sembolleri")
   data/
@@ -270,6 +272,8 @@ src/
   data/icerik.ts            yazilar() sayfalar() kokIcerik() cevirisiVarMi() menuSayfalari()
   data/gorselOlcu.ts        public/ altındaki görselin en/boy oranı (derleme sırasında)
   data/ikon.ts              çizgi ikon seti (ana sayfa kartları + HizmetDuzen)
+  components/IlgiliSayfalar.astro  frontmatter `ilgili` listesinden iç bağlantı bloğu
+  data/teknoloji.ts         TEKNOLOJI ağacı (+ `en` etiketleri), TEK_REHBERLER
   content/blog/tr/<slug>.md      Türkçe blog yazıları
   content/blog/en/<slug>.md      İngilizce çevirileri (zorunlu değil)
   content/sayfalar/tr/<slug>.md  Türkçe sayfalar
@@ -279,7 +283,11 @@ src/
 public/
   admin/config.yml          CMS koleksiyon tanımları (i18n: multiple_folders)
   _redirects                Cloudflare Pages 301'leri
-  images/hero/              hero slider görselleri (şu an placeholder SVG)
+  images/hero/              hero slider görselleri — açıklayıcı adlarla, WebP (bkz. "SEO")
+scripts/
+  seo-denetim.mjs           dist/ üzerinde statik SEO denetimi (npm run seo)
+  gorsel-olcu-integration.mjs  build sonrası <img>'lere width/height + en/404.html taşıma
+  gorsel-webp.mjs           hero görsellerini WebP'ye çevirir (npm run webp)
   images/uploads/           CMS medya klasörü
 ```
 
@@ -296,6 +304,16 @@ public/
 - **Çevirisi olmayan yazı**: EN route hiç üretilmez; TR sayfası da EN `hreflang`'ini
   basmaz ve dil düğmesi `/en/`'e düşer. Bunu `Layout`'un `cevirisiVar` prop'u yönetir —
   yeni bir çift dilli sayfa yazarken bu prop'u geçirmeyi unutmayın.
+- **EN içerik tam (2026-09-06):** 22 sayfa + 11 blog yazısının İngilizcesi
+  `content/*/en/` altında. Metinler Türkçe aslından çeviridir, **Deltek onayından
+  geçmedi** — yayın öncesi doğrulama gerekiyor. Teknoloji ağacının EN menü
+  etiketleri `teknoloji.ts` → `en: { ad, tamAd }`; `teknolojiAgaci('en')`
+  çevirisi olmayan düğümü (build'i durdurmadan) menüden düşürür.
+- **EN route'ları TR'nin türevidir:** `en/[slug].astro` ve `en/404.astro`,
+  TR dosyalarından `dil='en'` + `/en` öneki + `en-GB` tarih değişiklikleriyle
+  üretildi. TR route'unda yapılan yapısal bir değişiklik EN'e de işlenmeli.
+  Bileşenler (`TeknolojiHaritasi/Gezinme/YanMenu`, `HizmetDuzen`,
+  `IlgiliSayfalar`) `dil` prop'u alır; etiketleri `CEVIRI[dil].tek/hizmet/sayfa`.
 
 ## Sayfa düzenleri
 
@@ -305,7 +323,8 @@ CMS'te "İçerik düzeni" açılır listesinden değiştirilir; kod değişikli�
 | `duzen` | Ne yapar | Örnek |
 | --- | --- | --- |
 | _(boş)_ | Normal makale akışı — markdown gövdesi | `hakkimizda`, `medyalar` |
-| `logo-izgara` | Art arda gelen görselleri yan yana dizer | `referanslar` |
+| `logo-izgara` | Art arda gelen görselleri yan yana dizer | _(kullanan sayfa yok)_ |
+| `referanslar` | Kayan logo şeridi + markdown gövdesi | `referanslar` |
 | `urun` | Ürün/teknoloji şablonu | `delgi-tijleri` + 13 teknoloji/hizmet sayfası |
 | `iletisim` | İletişim şablonu (form yok) | `iletisim` |
 | `hizmet` | Hizmetlerimiz şablonu (kart ızgaraları) | `hizmetlerimiz` |
@@ -322,7 +341,10 @@ grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (12)
 `medyalar` kurumsal sayfalar; `yatay-delgi-nedir`, `yatay-sondaj`,
 `yonlendirilebilir-yatay-delgi`, `yonlendirilebilir-yatay-sondaj` ise **hiç
 görseli olmayan**, başlık/liste yapılı uzun makaleler — ürün şablonuna
-sokulursa boş görsel kutuları çıkardı.
+sokulursa boş görsel kutuları çıkardı. Bu üç "rehber" sayfası
+(`TEK_REHBERLER`, `teknoloji.ts`) eskiden **yetimdi**; artık `yanMenu: true`
+ile bölümün yan menüsünü alır, bölüm haritasında "Konu rehberleri" grubunda ve
+ana sayfadaki "Rehber" bölümünde listelenir.
 (`yatay-sondaj-kazisiz-yatay-delgi`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`,
 `boru-surme-boru-cakma-auger-boring`, `auger-boring-nedir-…` ve
 `mikrotunel-nedir` de bu gruptaydı, sonradan kaldırıldılar.)
@@ -426,17 +448,45 @@ fareyle üzerine gelince durur, `prefers-reduced-motion`'da hiç oynamaz.
 * **Dosyası olmayan logo hiç basılmaz** — `gorselOlcu()` null dönerse kayıt
   atlanır. Böylece henüz eklenmemiş bir logo kırık ikon olarak çıkmaz;
   dosya konulduğu anda kendiliğinden görünür.
-* Logo yüksekliği **144px** — eski statik ızgaranın (72px) iki katı.
-  620px altında 96px.
+* **Her logo aynı ALANI kaplar (~10.500 px²), aynı kutuyu değil.** Ölçü
+  `LogoSerit.astro`'da derleme sırasında hesaplanır ve `--en`/`--boy` olarak
+  hücreye yazılır; `HEDEF_ALAN`, `AZAMI_EN` (240px) ve `AZAMI_BOY` (110px)
+  sabitleri orada. 620px altında hepsi `--lserit-olcek: .62` ile küçülür.
+
+  Önce sabit bir kutuya (`240×96`) `object-fit: contain` denendi ve
+  **yanlıştı**: contain kutunun KENARINA hizalar, yani geniş logo genişliği,
+  uzun logo yüksekliği doldurur. Ölçüldüğünde Kolin 22.936 px², Saipem
+  7.088 px² kaplıyordu — **3,2 kat fark**, gözle bariz. Alan normalizasyonuyla
+  yayılım **1,15**'e indi (ölçüldü). Azami sınıra dayanan iki logo (Siemens
+  6,36 oran; en uzunlar) hedef alana ulaşamıyor, sapmaları %13'ü geçmiyor.
+* Logolar **renkli** akar; üzerine gelince **%20 büyür** (`scale(1.2)`) ve
+  şerit durur, böylece büyüyen logo kaçmaz. Şeridin dolgusu bu büyümeye yetiyor
+  (en uzun logo 110→132px, şeridin iç yüksekliği 164px), yani `overflow: hidden`
+  kırpmıyor — ölçüldü.
 * Şerit `width: 100vw; margin-inline: calc(50% - 50vw)` ile makale
   sütununun dışına, sayfanın tamamına taşar. `body { overflow-x: hidden }`
   global.css'te tanımlı olduğu için yatay taşma yaratmaz.
 * Şeridin zemini **beyaz** olmalı: logolar beyaz kareli JPEG, `--kagit`
   zeminde her biri ayrı bir kare leke gibi görünüyordu.
 
-> **Saipem ve Aramco logoları henüz yok.** Dosyalar
-> `public/images/referans/saipem.png` ve `.../aramco.png` olarak konulduğunda
-> şeritte kendiliğinden belirirler; kod hazır.
+* **Şeritteki dosyalar KIRPILMIŞ kopyalardır.** `scripts/referans-logo-kirp.mjs`
+  kaynaklardaki boş payı atar ve `public/images/referans/` altına yazar; kaynaklar
+  `public/images/uploads/2015/08/` (canlı siteden gelen yedi logo) ve
+  `public/images/referans/kaynak/` (Saipem, Aramco) altında durur.
+
+  Gerekli, çünkü kaynaklar çok farklı çerçevelenmiş: yedi logo 400×400 JPEG ve
+  logo bu karenin içinde küçük duruyor, Saipem/Aramco ise saydam PNG ve görseli
+  dolduruyor. Kırpılmadan alan normalizasyonu da işe yaramaz — hesap görselin
+  oranına bakar, içindeki boş paya değil.
+
+  ```bash
+  node scripts/referans-logo-kirp.mjs
+  ```
+
+> **Şeritteki ilk kopya `loading="lazy"` yüzünden hiç yüklenmez** — ray sola
+> kaydığı için ilk kopya görüş alanının dışında kalır. Sorun değil (görünen
+> kopyalar yükleniyor) ama şeriti ölçerken `loading` değerini `eager` yapmadan
+> `naturalWidth` okursanız sıfır görürsünüz.
 
 ### Banner sembolleri
 
@@ -451,10 +501,10 @@ sayfanın **tek `<h1>`'i** olarak sembolün yanına, HTML metni olarak basılıy
 Bileşen: `src/components/SayfaBanner.astro`.
 
 ```yaml
-bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.jpg
+bannerSembol: yonlendirilebilir-yatay-sondaj-metodu   # src/assets/banner/<ad>.webp
 ```
 
-* Dosya `src/assets/banner/` altında; `astro:assets` ile içe aktarılır, böylece
+* Dosya `src/assets/banner/` altında (**WebP**); `astro:assets` ile içe aktarılır, böylece
   `width`/`height` derlemede bilinir (CLS yok) ve **dosya yoksa build durur**.
 * `bannerSembol` verilen sayfada ayrı bir `<h1>` satırı ve `UrunDuzen`'in düz
   `banner` görseli **basılmaz** — ikisi de aynı başlığı tekrar ederdi.
@@ -693,7 +743,7 @@ ihtiyaç olursa önce buraya eklenir.
 başlıklar bu rengi kullanmaya devam eder. `--beyaz` paletin parçası değil ama
 kaçınılmaz (sayfa zemini, mavi üstündeki yazı).
 
-`--banner-zemin` de paletten değil: `src/assets/banner/*.jpg` sembollerinin
+`--banner-zemin` de paletten değil: `src/assets/banner/*.webp` sembollerinin
 zemini tam bu nötr gri, banner kutusu onlarla dikişsiz birleşmek zorunda.
 **Yalnız `SayfaBanner.astro` kullanır**; başka yerde bu gri yazılmaz.
 
@@ -788,7 +838,7 @@ Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
 (`HERO_IZGARA`); bileşen container-query birimiyle (`--olcek`) orantılı ölçekler.
 **`.slider__ray` en-boy oranı `1920/500` olmak zorunda** — değişirse katmanlar kayar.
 
-3. slayttaki YouTube gömüsü tablet çerçevesinin (`video-screen.png`) koyu ekran
+3. slayttaki YouTube gömüsü tablet çerçevesinin (`kaya-delgi-video-tablet.webp`) koyu ekran
 dikdörtgenine birebir oturur: **474×351 @ (1110,104)**, PNG'nin `#222` ekran
 alanı ölçülerek bulundu. Canlı slider `486×356 @ (1109,99)` diyor ama o değer
 ekranı birkaç piksel taşırıyor. Video katmanı, görsellerden farklı olarak
@@ -821,6 +871,18 @@ basıldığı için ham HTML düz metin olarak görünür; `\n` bileşende gerç
 
 `konum`/`dikey` her slaytta o slayttaki katmanların kapladığı alana göre seçildi.
 
+> **Geçersiz değer sayfayı sessizce bozar — artık build'de yakalanıyor.**
+> Bu alanlar doğrudan CSS sınıfına çevriliyor (`yazi--${konum}` …). 2. slaytta
+> `konum: 'orta'` yazılmıştı; 'orta' `dikey`in değeri, yataydaki karşılığı
+> 'merkez'. Sonuç: `yazi--orta` iki kez basıldı, YATAY konum sınıfı
+> (`--sol/--merkez/--sag`) hiç basılmadı. `.yazi` mutlak konumlu ve yatay
+> yerini yalnız o sınıflardan aldığı için blok `left` almadan kaldı, slaytın
+> sol kenarından taşıp ekranın dışında kesildi. TypeScript bunu yakalar ama
+> **`astro build` tip denetimi yapmaz** (`@astrojs/check` kurulu değil), o
+> yüzden sessizce geçti. `HeroSlider.astro` artık `konum`, `dikey`, `tema` ve
+> `eylemKonum` değerlerini derlemede doğruluyor ve geçersiz değerde slayt
+> numarasını yazarak build'i durduruyor.
+
 ### Kritik: yazı kuşağı sabit, katmanlar orantılı
 
 Yazı kuşağı **sabit 1077 px**, katman koordinatları ise 1920×500 ızgarasına
@@ -847,15 +909,15 @@ Bu yöntemle bugünkü durum:
 
 | Sayfa | Slayt | Katman | Çakışan genişlik | Altındaki opak piksel |
 | --- | --- | --- | --- | --- |
-| `/` ve `/en/` | 4 | `bit.png` (gri gölge şeridi) | 100 px | %95 |
-| `/en/` | 5 | `machinery1.png` | 330 px | %86 |
+| `/` ve `/en/` | 4 | `yatay-sondaj-delgi-tiji-ve-bit.webp` (gri gölge şeridi) | 100 px | %95 |
+| `/en/` | 5 | `yonlendirilebilir-yatay-sondaj-makinesi.webp` | 330 px | %86 |
 
-**4. slayt kabul edilen durum.** `bit.png` iki ayrı opak banttan oluşuyor:
+**4. slayt kabul edilen durum.** `yatay-sondaj-delgi-tiji-ve-bit.webp` iki ayrı opak banttan oluşuyor:
 **mavi delgi borusu y334-376** ve altında **açık gri gölge şeridi y405-449**
 (`rgb(225,225,225)`). Buton akışta kalınca boruya biniyordu; `eylemKonum: 'dip'`
 ile slaytın dibine alındı (y411-474) ve **boru 35 px boşlukla tamamen kurtuldu**.
 Gölge şeridine değmesi kaçınılmaz: şeridin altında 50 px kalıyor, buton 63 px.
-Sıfırlamak isteyen butonu küçültmeli ya da `bit.png`'yi yukarı almalı — ikisi de
+Sıfırlamak isteyen butonu küçültmeli ya da `yatay-sondaj-delgi-tiji-ve-bit.webp`'yi yukarı almalı — ikisi de
 görsel bir bedel.
 
 **5. slayt yalnızca `/en/`'de bozuk.** `Horizontal drilling specialists` başlığı
@@ -864,12 +926,12 @@ görselinin bandına (y76-308) giriyor. Başlık tek satıra inmeden çözülmü
 
 Giderilenler:
 
-- **8. slayt** (`button-hand.png`): `dikey: orta` iken başlığın ilk satırı elin
+- **8. slayt** (`deltek-cozum-dugmesi-el.webp`): `dikey: orta` iken başlığın ilk satırı elin
   tuttuğu düğmeye biniyordu → `dikey: ust`.
   > **`HERO_TR` ve `EN_YAZI` ayrı dizilerdir.** Bir slaydın `yazi` alanını
   > değiştirirken ikisini birden güncelleyin; bu düzeltme önce yalnızca TR'ye
   > uygulanmış, `/en/` bozuk kalmıştı.
-- **6. slayt** (`yatay-sondaj-pipe-analysis.png`): görselin alt kenarı başlığa
+- **6. slayt** (`yatay-sondaj-pipe-analysis.webp`): görselin alt kenarı başlığa
   biniyordu → %30 küçültülüp (437→306) 150 px sola alındı (x 1094→944).
   Görselin `h` alanı yalnızca belgeleme amaçlı; **görsel katmanların yüksekliği
   veriden değil, `w` ve doğal en-boy oranından gelir** (yalnızca video katmanı
@@ -901,36 +963,35 @@ CSS rengi yok — ve katmanlar da arka plan da aynı container-query ölçeğiyl
 (`--olcek`, `object-fit: cover`) birlikte büyüyüp küçülüyor.
 
 Yine de katmanlar siyah zemine bindirilince birkaçında **kırpılmamış beyaz
-kalıntı** çıktı: `bit.png` (borunun altında geniş bir beyaz bant),
-`machinery1.png` (makinenin altında beyaz altlık), `toprak.png`,
-`button-hand.png` ve `deltek-robot-engineer.png` (küçük beyaz lekeler).
+kalıntı** çıktı: `yatay-sondaj-delgi-tiji-ve-bit.webp` (borunun altında geniş bir beyaz bant),
+`yonlendirilebilir-yatay-sondaj-makinesi.webp` (makinenin altında beyaz altlık), `yatay-sondaj-toprak-kesiti.webp`,
+`deltek-cozum-dugmesi-el.webp` ve `deltek-robot-engineer.webp` (küçük beyaz lekeler).
 
 Bunlar yerinde **görünmüyor**, çünkü oturdukları alanda arka planın ortalama
 parlaklığı 239-255 (neredeyse beyaz):
 
 | Katman | Slayt | Arka plan parlaklığı (ort / en koyu) |
 | --- | --- | --- |
-| `bit.png` | 4 | 254 / 220 |
-| `toprak.png` | 4 | 251 / 202 |
-| `machinery1.png` | 5 | 246 / 223 |
-| `button-hand.png` | 8 | 239 / 198 |
-| `deltek-robot-engineer.png` | 6 | 250 / 193 |
+| `yatay-sondaj-delgi-tiji-ve-bit.webp` | 4 | 254 / 220 |
+| `yatay-sondaj-toprak-kesiti.webp` | 4 | 251 / 202 |
+| `yonlendirilebilir-yatay-sondaj-makinesi.webp` | 5 | 246 / 223 |
+| `deltek-cozum-dugmesi-el.webp` | 8 | 239 / 198 |
+| `deltek-robot-engineer.webp` | 6 | 250 / 193 |
 
 **Risk:** bu slaytlardan birinin arka planı KOYU bir fotoğrafla değiştirilirse
 kalıntılar anında görünür hâle gelir. Arka plan değiştirilecekse katmanı önce
 siyah zemine bindirip bak (`scripts/` altında betik yok, tek seferlik yapıldı).
-Koyu zeminli tek katman `video-screen.png` (slayt 3, arka plan ort 128) ve onda
+Koyu zeminli tek katman `kaya-delgi-video-tablet.webp` (slayt 3, arka plan ort 128) ve onda
 matlaşma yok — zaten opak bir tablet.
 
-Ayrıca: slayt 6'daki `yatay-sondaj-pipe-analysis.png` beyaz zeminde **gri bir
+Ayrıca: slayt 6'daki `yatay-sondaj-pipe-analysis.webp` beyaz zeminde **gri bir
 dikdörtgen** olarak duruyor. Bu kesim artığı değil, grafiğin kendi 3B çizim
 zemini — yani görselin tasarımı. Değiştirilecekse yeni bir grafik gerekir.
 
 ### Slayt butonları
 
 `eylem` yazılan slaytta gerçek bir `<a>` basılır; hedef `eylemHref`, verilmezse
-`/iletisim/`. **EN slaytlar da `/iletisim/`'e gider** — `/en/iletisim/` sayfası
-henüz yok; çeviri eklenince `EN_YAZI`'da `eylemHref` yazılmalı.
+`/iletisim/`. EN slaytlarda `eylemHref: '/en/iletisim/'` açıkça yazılı.
 
 Görünüm `global.css`'teki `.btn--dolu` ile aynı: hover'da koyulaşır, 1 px
 yükselir, gölge derinleşir; `:focus-visible`'da sarı çerçeve.
@@ -959,7 +1020,7 @@ Otomatik geçiş 8 sn — en geç görsel katman 4000 ms gecikmeli.
 **Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif katmanlar gizlenir, perde
 alttan yukarı koyulaşır ve yazı tam genişlikte ortalanıp beyaza döner.
 
-> Canlı sitedeki 7. slaydın `1woman.png` katmanı sunucuda **404** veriyor —
+> Canlı sitedeki 7. slaydın `deltek-proje-danismani.webp` katmanı sunucuda **404** veriyor —
 > orijinali (309×451, saydam PNG) web arşivinin 2025-04-01 anlık görüntüsünden
 > alınıp depoya kondu.
 > `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.
@@ -969,6 +1030,165 @@ alttan yukarı koyulaşır ve yazı tam genişlikte ortalanıp beyaza döner.
 
 Canlı siteden bilinçli olarak sapılanlar: gövde metni 13px yerine ~15px
 (okunabilirlik), kart/gölge dili 2015 temasından daha modern bırakıldı.
+
+## SEO
+
+Site içi SEO 2026-09-06'da baştan sona elden geçirildi; `npm run seo` iki dilde
+72 sayfada **100/100** veriyor (denetim ölçütleri betiğin başında). Sıralama
+tarafında kalan işler (Search Console, Business Profile, backlink, içerik
+takvimi) `SEO-REHBER.md`'de.
+
+### Frontmatter alanları (her iki koleksiyon, CMS'te de var)
+
+| Alan | Ne yapar | Kural |
+| --- | --- | --- |
+| `seoBaslik` | `<title>`, og:title, JSON-LD adı; `<h1>` kısa/uzun/büyük harfli olduğunda | ≤56 karakter (sonuna " — Deltek" ekleniyor, toplam ≤65) |
+| `ozet` | `<meta description>`, og:description, kart özetleri, WebPage/BlogPosting açıklaması | **70–160 karakter**, anahtar kelimeyle başlasın |
+| `anahtarKelimeler` | `<meta keywords>` + BlogPosting.keywords; boşsa `CEVIRI[dil].seo.anahtar` | virgülle |
+| `kapakAlt` | kapak görselinin alt'ı (blog kartları, sayfa kapağı, og:image:alt) | boşsa başlık |
+| `bannerAlt` | `SayfaBanner` sembolü ya da düz `banner` görseli alt'ı | boşsa "<başlık> — Deltek … illüstrasyonu" |
+| `bloklar[].alt` | blok görselinin alt'ı | boşsa blok başlığı, o da yoksa sayfa başlığı |
+| `gorselAlt`, `neden.gorselAlt`, `galeri[].alt` | iletişim görseli, hizmet görseli, galeri | |
+| `ilgili` | sayfa altında "İlgili sayfalar" bloğu (`IlgiliSayfalar.astro`) | slug listesi; olmayan slug atlanır |
+| `guncelleme` | BlogPosting/WebPage `dateModified` | boşsa `tarih` |
+| `video` | YouTube **veya Vimeo** bağlantısı → gömü + `VideoObject` şeması | |
+
+**Hiçbir `<img>` alt'sız çıkmaz**: dekoratif olanlar (hero katmanları, tecrübe
+bandı logosu, logo şeridinin 2-4. kopyaları) `alt="" aria-hidden="true"`; geri
+kalanı yukarıdaki zincirden bir metin alır. Denetim betiği dekoratif işaretsiz
+boş alt'ı hata sayar.
+
+### Yapısal veri (JSON-LD)
+
+`Layout.astro` her sayfada **Organization** (`@id …/#organization`: iki ofis
+adresi, contactPoint, areaServed, knowsAbout, `SITE.sosyal` → sameAs) basar;
+ana sayfalarda ek **WebSite**. `[slug].astro` sayfaya göre **WebPage** ya da
+**BlogPosting** (author/publisher → Organization), her sayfada
+**BreadcrumbList** (Ana sayfa › Teknoloji › [üst dal] › sayfa / Ana sayfa ›
+Blog › yazı), video varsa **VideoObject**. Ana sayfa `ItemList` içinde dört
+**Service**; blog listesi **Blog**. `sema` prop'u nesne dizisi alabilir.
+Doğrulama: `dist/` içindeki tüm `ld+json` blokları build sonrası JSON.parse ile
+kontrol edildi (144 blok, 0 hata); Google Rich Results Test'te de bakılmalı.
+
+### Görsel dosya adları
+
+Hero görselleri anlamlı adlara taşındı (`git mv`): `zzz.jpg` →
+`deltek-yatay-sondaj-makine-parki.webp`, `bit.png` →
+`yatay-sondaj-delgi-tiji-ve-bit.webp` vb. `public/images/uploads/…` altındaki
+WordPress dosyaları **bilerek yeniden adlandırılmadı** (eski medya URL'leri
+korunuyor); onlara alt metni verildi.
+
+### Görseller WebP (2026-09-07)
+
+Sitedeki **tüm kullanılan görseller** WebP'ye çevrildi. Betik:
+`scripts/gorsel-webp.mjs` (`npm run webp`).
+
+| Küme | Önce | Sonra | Kazanç |
+| --- | --- | --- | --- |
+| `public/images/hero/` (8 arka plan + 9 katman) | 2710 KB | 978 KB | %64 |
+| `public/images/uploads/` (48 dosya) | 9050 KB | 2815 KB | %69 |
+| `src/assets/banner/` (13 sembol) | 309 KB | 171 KB | %45 |
+
+Sayfa başına indirilen görsel ağırlığı:
+
+| Sayfa | Önce | Sonra |
+| --- | --- | --- |
+| `/yatay-sondaj-camuru/` | 760 KB | 174 KB |
+| `/boru-surmecakma/` | 1081 KB | 216 KB |
+| `/delgi-tijleri/` | 738 KB | 159 KB |
+| `/hizmetlerimiz/` | 714 KB | 333 KB |
+
+Hero, ana sayfanın ilk ekranı olduğu için LCP'yi doğrudan etkiliyor; teknoloji
+sayfalarında ise LCP öğesi **banner sembolü** (`fetchpriority="high"`), o da
+artık WebP.
+
+* **Ölçü değişmedi, yalnız biçim.** Arka planlar `object-fit: cover` ile
+  basılıyor ve slider dar ekranda `4/3` oranına geçiyor; kaynağı 1920×500'e
+  kırpmak masaüstünde işe yarar, mobilde görselin yanlarını kırpardı.
+* **Kalite fotoğraflarda q78, saydam katmanlarda q86 + `alphaQuality: 100`.**
+  Katmanlar fotoğraf üstüne binen kesim görselleri; alfa kenarı bozulursa hale
+  yapar. Kazanç %10'un altında kalırsa betik q72'yi dener, o da yetmezse dosyayı
+  atlar — hiçbir görsel dönüşümle ağırlaşmaz.
+* **Ölçülen görünen fark** (kaynak ile çıktı aynı gri zemine düzleştirilip
+  karşılaştırılır) her dosyada ortalama **≤3.3/255**, yani ayırt edilemez.
+  Düzleştirmeden ölçmek saydam bölgedeki görünmez RGB farkları yüzünden 255'e
+  varan sahte değerler veriyordu — ölçüm bu yüzden düzleştirerek yapılıyor.
+* JPEG yedeği (`<picture>`) konulmadı — WebP desteği %97'nin üzerinde ve
+  sitede zaten yedeksiz WebP kullanılıyordu (`deltek_hdd_1.webp`).
+* **hero ve banner** kaynakları silindi (git geçmişinde duruyorlar).
+  **`uploads/` kaynakları YERİNDE BIRAKILDI** — nedeni aşağıda.
+* Hiç kullanılmayan iki dosya çevrilmedi: `deltek-yatay-sondaj-marka.jpg`,
+  `katman/machinery1_org.png` (betikteki `ATLA` listesi).
+* **İki dosya bilerek JPEG kaldı:** `uploads/2015/08/6.jpg` ve
+  `uploads/2015/08/kazisiz-boru-yenileme-3.jpg`. Zaten iyi sıkıştırılmışlar;
+  WebP hiçbir kalitede %10 kazanç veremiyor, q78'de büyüyorlar bile. Betik
+  bunları kendiliğinden atlıyor, referansları `.jpg` kaldı. Karışık
+  `.webp`/`.jpg` bir sitede sorun değil.
+
+### uploads: kaynaklar neden silinmedi, `/wp-content/` yönlendirmesi
+
+`public/images/uploads/` altındaki adresler **hiç yayında olmadı**. Taşıma
+betiği (`scripts/wp-tasi.mjs`) canlı sitedeki `wp-content/uploads/<yol>`
+görsellerini `/images/uploads/<yol>` altına indiriyor — yani indekslenmiş
+gerçek adres `/wp-content/...`, sitedeki adres `/images/uploads/...`.
+Yönlendirme olmadığı için o adresler **404 veriyordu**.
+
+Bu yüzden iki iş birlikte yapıldı:
+
+1. `public/_redirects` içine `/wp-content/uploads/* → /images/uploads/:splat 301`
+   eklendi. Google Görseller'de duran eski adresler yeniden çalışıyor.
+2. Kaynak JPEG/PNG'ler **silinmedi**: yönlendirmenin hedefi onlar. Ziyaretçi
+   yalnız `.webp` indiriyor (sayfalar ona bağlanıyor), `.jpg` yalnız eski
+   adresten gelen isteği karşılıyor. Yayına giden çıktı ~9 MB büyüyor,
+   ziyaretçiye maliyeti sıfır.
+
+> `--kullanilan` bayrağı **tek seferliktir**: referanslar `.webp`'ye
+> çevrildikten sonra kaynak `.jpg`'ler artık "bağlı" görünmez ve bayrak her
+> şeyi eler. Sonradan tek dosya çevirmek gerekirse `--klasor` ile o klasörü
+> verin.
+
+### GIF: karar biçime göre değil içeriğe göre
+
+`uploads/2015/09/Kazisiz_Teknoloji_Resim8_Auger_Boring.gif` önce "GIF =
+çizim" varsayılıp kayıpsız çevrildi (175 KB, %17). Ölçünce yanlış çıktı:
+168 renk ama komşu piksel farkı **16.92** — yani GIF'e kaydedilmiş, dithering
+ile renk indirgenmiş bir **saha fotoğrafı**. Kayıpsız, dithering gürültüsünü
+de kodlamak zorunda kaldığı için şişiyordu. Kayıplı q78 88 KB veriyor ve iki
+sürüm yan yana konup bakıldığında ayırt edilemiyor.
+
+Betikteki kural bu yüzden `dokuOlcusu()` ile içeriğe bakıyor: doku < 8 ise
+düz alanlı çizimdir (kayıpsız kazanır), değilse fotoğraf gibi işlenir.
+
+> **`gorselOlcu.ts` artık WebP okuyor.** Okumasaydı hero `<img>`lerine
+> width/height basılmaz, sayfa yüklenirken oynardı. Aynı sebeple ana sayfadaki
+> tecrübe bandının ölçüsü de artık dosyadan geliyor (önceden elle yazılan
+> 1920×790 yedeğine düşüyordu).
+
+### width/height (CLS)
+
+Frontmatter'dan basılan görseller `gorselOznitelik()` ile, markdown
+gövdesindekiler ve gözden kaçanlar build sonrası
+`scripts/gorsel-olcu-integration.mjs` ile `width`/`height` alır. Remark
+eklentisi kullanılamadı: Astro 7'nin varsayılan Markdown işlemcisi
+`markdown.remarkPlugins`'i `@astrojs/markdown-remark` kurulmadan kabul etmiyor.
+Aynı entegrasyon `dist/en/404/index.html`'i Cloudflare'in beklediği
+`dist/en/404.html`'e taşır.
+
+### Head
+
+`robots: index, follow, max-image-preview:large…`; `og:image:alt`,
+`og:image:width/height` (yalnız varsayılan 1200×630 görselde), `og:locale:alternate`,
+`twitter:image:alt`, `geo.*`. Google Fonts CSS'i `preload` + `media="print"
+onload` ile render'ı bloklamadan yükleniyor (`<noscript>` yedeği var).
+
+### Denetim betiği
+
+`scripts/seo-denetim.mjs` `dist/` HTML'lerini tarar; title (30–65),
+description (70–160), tek h1, canonical, hreflang, lang, alt, width/height,
+kelime (≥300), JSON-LD, OG, iç bağlantı (≥3), mükerrer title/description,
+**yetim sayfa** (hiçbir sayfadan bağlantı yok) ve sitemap'te bulunmayı puanlar.
+Bir sayfa düşük çıkarsa `--ayrinti` bulguları listeler. Harici servislere
+(PageSpeed, Search Console) bakmaz; onlar SEO-REHBER.md'de.
 
 ## Deploy hedefi: Cloudflare Pages
 
@@ -1019,8 +1239,8 @@ Dar ekran doğrulaması için **Browser panelini** kullan (gerçek viewport
 ## Yapılacaklar
 
 - [x] 10 blog yazısı canlı siteden taşındı (içerik + 9 görsel, slug'lar birebir)
-- [ ] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — şu an hiç yok,
-      bu yüzden `/en/blog/` boş ve yazılar EN hreflang basmıyor
+- [x] Blog yazılarının İngilizce çevirileri (`src/content/blog/en/<slug>.md`) — 11 yazı
+      (çeviri; Deltek onayı bekliyor)
 - [x] Boremak ürün sayfası şablonu geri alındı → `src/components/UrunDuzen.astro`
 - [x] Görsel akışlı 14 teknoloji/hizmet sayfası ürün şablonuna geçirildi
 - [x] Statik + teknoloji/hizmet sayfaları taşındı (28 sayfa)
@@ -1028,8 +1248,13 @@ Dar ekran doğrulaması için **Browser panelini** kullan (gerçek viewport
       telefon/e-posta kartları, ofis kartları, harita, kapanış çağrısı
 - [ ] İletişim formu istenirse: statik sitede arka uç servisi gerekir
       (Cloudflare Pages Functions, Formspree vb.) — ayrı karar
-- [ ] Sayfaların İngilizce çevirileri — şu an hiç yok, bu yüzden EN menüsünde
-      yalnızca Blog görünüyor
+- [x] Sayfaların İngilizce çevirileri — 22 sayfa (çeviri; Deltek onayı bekliyor).
+      EN menüsü, Teknoloji açılır menüsü, yan menü ve harita TR ile aynı.
+- [ ] **EN metinlerin Deltek tarafından doğrulanması** (sayfalar, yazılar, hero, ana sayfa)
+- [x] SEO: title/description/keywords, alt metinleri, JSON-LD, breadcrumb, iç bağlantı,
+      404 sayfaları, CLS için width/height — bkz. "SEO" bölümü. `npm run seo` → 100/100.
+- [ ] `src/data/site.ts` → `sosyal` (LinkedIn/YouTube/Instagram adresleri) — JSON-LD sameAs
+- [ ] Google Search Console + Business Profile — bkz. SEO-REHBER.md
 - [x] Görsel tasarım canlı siteye yaklaştırıldı (palet, tipografi, header, logo)
 - [ ] `src/data/site.ts` — WhatsApp numarası (diğer iletişim bilgileri canlı siteden alındı)
 - [ ] Hero slaytlarının **İngilizce başlıkları çeviri**, Deltek onayından geçmedi
@@ -1082,3 +1307,6 @@ node scripts/wp-sayfa-tasi.mjs . --liste
 | `npm run preview` | Build çıktısını yerelde sunar |
 | `npm run cms` | Sveltia/Decap yerel backend (panel `/admin/`) |
 | `npm run og` | `public/og-image.jpg`'yi yeniden üretir (bkz. aşağı) |
+| `npm run seo` | Build + `scripts/seo-denetim.mjs` — sayfa başına SEO puanı (bkz. "SEO") |
+| `npm run webp` | Görselleri WebP'ye çevirir; `--kuru` yazmadan raporlar, `--klasor` hedefi seçer |
+| `npm run seo:ayrinti` | Son build üzerinde her sayfanın tüm bulgularını listeler |

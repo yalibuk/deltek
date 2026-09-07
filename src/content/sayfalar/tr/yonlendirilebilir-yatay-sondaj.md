@@ -1,6 +1,15 @@
 ---
 baslik: "Yönlendirilebilir Yatay Sondaj"
-ozet: "Yönlendirilebilir yatay sondaj (YYS/HDD) nedir, nasıl uygulanır: pilot delgi, genişletme ve boru çekme aşamaları, makine sınıfları, uygulama alanları ve proje planlaması."
+seoBaslik: "Yönlendirilebilir Yatay Sondaj (HDD) Rehberi"
+ozet: "Yönlendirilebilir yatay sondaj (YYS/HDD) nedir, nasıl uygulanır: pilot delgi, genişletme, boru çekme; makine sınıfları, uygulama alanları, yöntem seçimi."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj-nedir"
+  - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+  - "yatay-sondaj"
+  - "yatay-delgi-nedir"
+  - "yonlendirilebilir-yatay-delgi"
+anahtarKelimeler: "yönlendirilebilir yatay sondaj, HDD, YYS, horizontal directional drilling, pilot delgi, reaming, boru çekme, yatay sondaj makinesi, kazısız geçiş"
 ---
 
 Yönlendirilebilir Yatay Sondaj (YYS), klasik anlamdaki açık kazı yöntemiyle karşılaştırıldığında sayısız avantajı beraberinde getiren bir kazısız geçiş alternatifidir. Bu yöntem, yüzey aktivitelerini aksatmadan yeraltında çalışabilmeyi mümkün kılmaktadır. Bu sayade kurum ve kuruluşlardan alınacak çalışma izinleri konusunda büyük kolaylık sağlamaktadır.

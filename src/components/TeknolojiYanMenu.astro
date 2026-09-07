@@ -17,14 +17,18 @@
  */
 import type { TekKart } from '../data/icerik';
 import { TEKNOLOJI_KOK } from '../data/teknoloji';
+import { CEVIRI, type Dil } from '../data/i18n';
 
 interface Props {
   agac: TekKart[];
   /** Şu an açık olan sayfanın slug'ı — vurgulanır, dalı açılır. */
   aktif: string;
   baslik?: string;
+  dil?: Dil;
 }
-const { agac, aktif, baslik = 'Deltek Kazısız Teknolojiler' } = Astro.props;
+const { agac, aktif, dil = 'tr', baslik = CEVIRI[dil].tek.yanMenuBaslik } = Astro.props;
+const t = CEVIRI[dil].tek;
+const yol = (p: string) => dil === 'en' ? '/en' + p : p;
 
 /** Bir dalın altında (herhangi bir derinlikte) aktif sayfa var mı? */
 const dalAktif = (d: TekKart): boolean =>
@@ -36,7 +40,7 @@ const dalAktif = (d: TekKart): boolean =>
 const koktenBakiliyor = aktif === TEKNOLOJI_KOK;
 const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliyor && ustSeviye);
 ---
-<nav class="yanm" aria-label="Teknoloji bölümü">
+<nav class="yanm" aria-label={t.yanMenuAria}>
   <p class="yanm__bas">{baslik}</p>
 
   <ul class="yanm__l">
@@ -46,11 +50,11 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
           <>
             <div class="yanm__satir">
               <a class:list={['yanm__s', dalAktif(d) && 'yanm__s--dalAktif', d.slug === aktif && 'yanm__s--aktif']}
-                 href={`/${d.slug}/`}
+                 href={yol(`/${d.slug}/`)}
                  aria-current={d.slug === aktif ? 'page' : undefined}>{d.tamAd}</a>
               <button class="yanm__ok" type="button"
                       aria-expanded={acikMi(d, true) ? 'true' : 'false'}
-                      aria-label={`${d.tamAd} alt sayfaları`}>
+                      aria-label={`${d.tamAd} ${t.altSayfalariAria}`}>
                 <svg viewBox="0 0 10 10" width="11" height="11" aria-hidden="true">
                   <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6"
                         stroke-linecap="round" stroke-linejoin="round"/>
@@ -66,11 +70,11 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
                         <>
                           <div class="yanm__satir">
                             <a class:list={['yanm__s', dalAktif(k) && 'yanm__s--dalAktif', k.slug === aktif && 'yanm__s--aktif']}
-                               href={`/${k.slug}/`}
+                               href={yol(`/${k.slug}/`)}
                                aria-current={k.slug === aktif ? 'page' : undefined}>{k.tamAd}</a>
                             <button class="yanm__ok" type="button"
                                     aria-expanded={acikMi(k, false) ? 'true' : 'false'}
-                                    aria-label={`${k.tamAd} alt sayfaları`}>
+                                    aria-label={`${k.tamAd} ${t.altSayfalariAria}`}>
                               <svg viewBox="0 0 10 10" width="11" height="11" aria-hidden="true">
                                 <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.6"
                                       stroke-linecap="round" stroke-linejoin="round"/>
@@ -83,7 +87,7 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
                                 {k.alt.map(a => (
                                   <li>
                                     <a class:list={['yanm__s', a.slug === aktif && 'yanm__s--aktif']}
-                                       href={`/${a.slug}/`}
+                                       href={yol(`/${a.slug}/`)}
                                        aria-current={a.slug === aktif ? 'page' : undefined}>{a.tamAd}</a>
                                   </li>
                                 ))}
@@ -93,7 +97,7 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
                         </>
                       ) : (
                         <a class:list={['yanm__s', k.slug === aktif && 'yanm__s--aktif']}
-                           href={`/${k.slug}/`}
+                           href={yol(`/${k.slug}/`)}
                            aria-current={k.slug === aktif ? 'page' : undefined}>{k.tamAd}</a>
                       )}
                     </li>
@@ -104,7 +108,7 @@ const acikMi = (d: TekKart, ustSeviye: boolean) => dalAktif(d) || (koktenBakiliy
           </>
         ) : (
           <a class:list={['yanm__s', d.slug === aktif && 'yanm__s--aktif']}
-             href={`/${d.slug}/`}
+             href={yol(`/${d.slug}/`)}
              aria-current={d.slug === aktif ? 'page' : undefined}>{d.tamAd}</a>
         )}
       </li>

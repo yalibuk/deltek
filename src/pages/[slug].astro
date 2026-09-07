@@ -1,7 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE } from '../data/site';
-import { kokIcerik, cevirisiVarMi } from '../data/icerik';
+import { CEVIRI } from '../data/i18n';
+import { kokIcerik, cevirisiVarMi, ilgiliSayfalar } from '../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
 import LogoSerit from '../components/LogoSerit.astro';
@@ -12,6 +13,9 @@ import { teknolojiAgaci, teknolojiKomsulari } from '../data/icerik';
 import TeknolojiGezinme from '../components/TeknolojiGezinme.astro';
 import TeknolojiYanMenu from '../components/TeknolojiYanMenu.astro';
 import SayfaBanner from '../components/SayfaBanner.astro';
+import IlgiliSayfalar from '../components/IlgiliSayfalar.astro';
+import { gorselOznitelik } from '../data/gorselOlcu';
+import { TEKNOLOJI_KOK } from '../data/teknoloji';
 
 /**
  * Kök dizindeki her şey buradan üretilir: /<slug>/
@@ -20,27 +24,33 @@ import SayfaBanner from '../components/SayfaBanner.astro';
  *
  * Canlı deltek.com.tr'de de ikisi de kök dizinde; /blog/ yalnızca liste sayfası.
  * İki koleksiyon aynı slug'ı kullanırsa kokIcerik() build'i hatayla durdurur.
+ *
+ * EN karşılığı `en/[slug].astro` — aynı akış, `dil` ve yol öneki farklı.
+ * Buradaki bir değişiklik oraya da işlenmeli.
  */
 export async function getStaticPaths() {
   const kayitlar = await kokIcerik('tr');
   return kayitlar.map(k => ({ params: { slug: k.slug }, props: k }));
 }
 
+const dil = 'tr' as const;
+const t = CEVIRI[dil];
+const yol = (p: string) => p;                       // TR kök dizinde; EN'de '/en' + p
 const { tur, entry, slug } = Astro.props;
 const p = entry.data as any;
 const { Content } = await render(entry as any);
 const cevirisiVar = await cevirisiVarMi(slug, 'en');
 // Bölüm haritası yalnızca istendiğinde hesaplanır (ağaç build'de doğrulanır).
-const tekAgac = p.bolumHaritasi ? await teknolojiAgaci('tr') : null;
-// Teknoloji ağacındaki sayfalar sayfa altı bölüm gezinmesi alır; kök sayfa
-// almaz, orada zaten haritanın tamamı var.
+const tekAgac = p.bolumHaritasi ? await teknolojiAgaci(dil) : null;
 // Sayfa teknoloji ağacında mı? Yan menü ve sayfa altı gezinme buna bağlı.
-const agacta = tur === 'sayfa' ? await teknolojiKomsulari('tr', slug) : null;
+const agacta = tur === 'sayfa' ? await teknolojiKomsulari(dil, slug) : null;
 // Yan menü canlı sitedeki gibi bölümün TÜM sayfalarında görünür; kök sayfa
 // ağaçta olmadığı için `yanMenu: true` ile ayrıca işaretlenir.
-const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci('tr')) : null;
+const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci(dil)) : null;
 // Kök sayfada altta gezinme yok — orada zaten haritanın tamamı var.
 const tekKomsu = p.bolumHaritasi ? null : agacta;
+// "İlgili sayfalar" — frontmatter'daki slug listesi (iç bağlantı).
+const ilgili = p.ilgili?.length ? await ilgiliSayfalar(dil, p.ilgili) : [];
 
 // Başlık banner'ı: başlık görselin içine gömülü değil, gerçek <h1> olarak
 // sembolün yanında durur. Varsa sayfanın ayrı <h1>'i ve UrunDuzen'in düz
@@ -50,63 +60,119 @@ const bannerSembol: string | undefined = p.bannerSembol;
 // Başlık zaten üst dalın adıyla başlıyorsa (ör. üst dal "Yönlendirilebilir
 // Yatay Sondaj", başlık "Yönlendirilebilir Yatay Sondaj Yapım Metodu")
 // etiket basılmaz — giderdiğimiz tekrarın aynısı olurdu.
-const tr = (m: string) => m.toLocaleLowerCase('tr-TR');
-const ustAd = bannerSembol && agacta ? (agacta.ust?.ad ?? 'Teknoloji') : undefined;
-const bannerEtiket = ustAd && !tr(p.baslik).includes(tr(ustAd)) ? ustAd : undefined;
+const kucuk = (m: string) => m.toLocaleLowerCase('tr-TR');
+const ustAd = bannerSembol && agacta ? (agacta.ust?.ad ?? t.tek.kunye) : undefined;
+const bannerEtiket = ustAd && !kucuk(p.baslik).includes(kucuk(ustAd)) ? ustAd : undefined;
 
 const tarihFmt = (d: any) =>
   d ? new Date(d).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
+const isoTarih = (d: any) => d ? new Date(d).toISOString().slice(0, 10) : undefined;
 
-function ytEmbed(url: string | undefined) {
+/** YouTube ya da Vimeo bağlantısından gömme adresi. */
+function videoEmbed(url: string | undefined) {
   if (!url) return null;
-  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
-  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+  const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
+  if (yt) return { src: `https://www.youtube.com/embed/${yt[1]}`, sayfa: `https://www.youtube.com/watch?v=${yt[1]}`, kucuk: `https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg` };
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return { src: `https://player.vimeo.com/video/${vm[1]}`, sayfa: `https://vimeo.com/${vm[1]}`, kucuk: undefined };
+  return null;
 }
-const embed = ytEmbed(p.video);
+const embed = videoEmbed(p.video);
+const kapakOlcu = p.kapak ? await gorselOznitelik(p.kapak) : {};
+const galeriOlcu = await Promise.all(((p.galeri ?? []) as any[]).map((g: any) => g.foto ? gorselOznitelik(g.foto) : Promise.resolve({})));
 
 // <title>/OG başlığı: <h1> kısaltılan sayfalarda (ör. "HDD Nedir?") uzun,
 // anahtar kelimeli başlık `seoBaslik`te durur; diğerlerinde ikisi aynı.
 const belgeBaslik = p.seoBaslik || p.baslik;
+const sayfaUrl = `${SITE.kanonikal}${yol(`/${slug}/`)}`;
+const orgId = SITE.kanonikal + '/#organization';
+const yayinci = { '@type': 'Organization', '@id': orgId, name: SITE.isim,
+  logo: { '@type': 'ImageObject', url: SITE.kanonikal + '/deltek-logo.png' } };
 
-const sema = tur === 'yazi'
+/**
+ * Ekmek kırıntısı — Google sonuçlarda yol olarak gösterir.
+ *   yazı:            Ana sayfa › Blog › Yazı
+ *   teknoloji sayfası: Ana sayfa › Teknoloji › [üst dal] › Sayfa
+ *   diğer sayfa:     Ana sayfa › Sayfa
+ */
+const kirinti: { ad: string; url: string }[] = [{ ad: t.seo.breadcrumbAna, url: SITE.kanonikal + yol('/') }];
+if (tur === 'yazi') kirinti.push({ ad: t.nav.blog[0], url: SITE.kanonikal + yol('/blog/') });
+else if (agacta || p.bolumHaritasi || p.yanMenu) {
+  if (slug !== TEKNOLOJI_KOK) kirinti.push({ ad: t.tek.kunye, url: SITE.kanonikal + yol(`/${TEKNOLOJI_KOK}/`) });
+  if (agacta?.ust) kirinti.push({ ad: agacta.ust.ad, url: SITE.kanonikal + yol(`/${agacta.ust.slug}/`) });
+}
+kirinti.push({ ad: p.baslik, url: sayfaUrl });
+const kirintiSema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: kirinti.map((k, i) => ({ '@type': 'ListItem', position: i + 1, name: k.ad, item: k.url })),
+};
+
+const sayfaSema = tur === 'yazi'
   ? {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
+      '@id': sayfaUrl + '#article',
       headline: p.baslik,
       ...(p.ozet ? { description: p.ozet } : {}),
-      ...(p.tarih ? { datePublished: new Date(p.tarih).toISOString().slice(0, 10) } : {}),
+      ...(p.tarih ? { datePublished: isoTarih(p.tarih) } : {}),
+      ...(p.guncelleme || p.tarih ? { dateModified: isoTarih(p.guncelleme || p.tarih) } : {}),
       ...(p.kapak ? { image: SITE.kanonikal + p.kapak } : {}),
-      mainEntityOfPage: `${SITE.kanonikal}/${slug}/`,
-      publisher: { '@type': 'Organization', name: SITE.isim },
-      inLanguage: 'tr',
+      ...(p.anahtarKelimeler ? { keywords: p.anahtarKelimeler } : {}),
+      mainEntityOfPage: { '@type': 'WebPage', '@id': sayfaUrl },
+      author: { '@type': 'Organization', '@id': orgId, name: SITE.isim },
+      publisher: yayinci,
+      inLanguage: dil,
+      isPartOf: { '@type': 'Blog', '@id': SITE.kanonikal + yol('/blog/') + '#blog', name: `${SITE.isim} Blog` },
     }
   : {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
+      '@id': sayfaUrl,
       name: belgeBaslik,
       ...(p.ozet ? { description: p.ozet } : {}),
-      url: `${SITE.kanonikal}/${slug}/`,
-      inLanguage: 'tr',
+      url: sayfaUrl,
+      inLanguage: dil,
+      ...(p.kapak || p.banner ? { primaryImageOfPage: { '@type': 'ImageObject', url: SITE.kanonikal + (p.kapak || p.banner) } } : {}),
+      ...(p.guncelleme ? { dateModified: isoTarih(p.guncelleme) } : {}),
+      isPartOf: { '@type': 'WebSite', '@id': SITE.kanonikal + '/#website' },
+      about: { '@id': orgId },
+      breadcrumb: { '@id': sayfaUrl + '#breadcrumb' },
     };
+// Video gömülü yazı: VideoObject — Google video sonuçları için.
+const videoSema = embed ? {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: p.baslik,
+  description: p.ozet || p.baslik,
+  ...(p.tarih ? { uploadDate: isoTarih(p.tarih) } : {}),
+  thumbnailUrl: p.kapak ? SITE.kanonikal + p.kapak : (embed.kucuk || SITE.kanonikal + '/og-image.jpg'),
+  embedUrl: embed.src,
+  contentUrl: embed.sayfa,
+  publisher: yayinci,
+  inLanguage: dil,
+} : null;
+const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ...(videoSema ? [videoSema] : [])];
 ---
 <Layout title={`${belgeBaslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
-        image={p.kapak} sema={sema} cevirisiVar={cevirisiVar}>
+        image={p.kapak} imageAlt={p.kapakAlt || p.baslik} keywords={p.anahtarKelimeler}
+        sema={sema} cevirisiVar={cevirisiVar}>
 {p.duzen === 'iletisim' ? (
-  <IletisimDuzen dil="tr" baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel}>
+  <IletisimDuzen dil={dil} baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel} gorselAlt={p.gorselAlt}>
     <Content />
   </IletisimDuzen>
 ) : (
 <article class:list={['kap', 'yazi', yanAgac && 'yazi--yan', p.duzen === 'hizmet' && 'yazi--genis']}>
   {yanAgac && (
     <aside class="yazi__yan">
-      <TeknolojiYanMenu agac={yanAgac} aktif={slug} />
+      <TeknolojiYanMenu agac={yanAgac} aktif={slug} dil={dil} />
     </aside>
   )}
   <div class="yazi__ana">
-  {tur === 'yazi' && <a class="yazi__geri" href="/blog/">← Blog</a>}
+  {tur === 'yazi' && <a class="yazi__geri" href={yol('/blog/')}>{t.sayfa.blogGeri}</a>}
 
   {bannerSembol ? (
-    <SayfaBanner baslik={p.baslik} sembol={bannerSembol} etiket={bannerEtiket} />
+    <SayfaBanner baslik={p.baslik} sembol={bannerSembol} etiket={bannerEtiket} alt={p.bannerAlt} />
   ) : (
     <header class="yazi__bas">
       {tur === 'yazi' && p.tarih && <span class="yazi__tarih">{tarihFmt(p.tarih)}</span>}
@@ -115,12 +181,12 @@ const sema = tur === 'yazi'
   )}
 
   {p.kapak && (
-    <figure class="yazi__kapak"><img src={p.kapak} alt={p.baslik} /></figure>
+    <figure class="yazi__kapak"><img src={p.kapak} alt={p.kapakAlt || p.baslik} {...kapakOlcu} fetchpriority="high" decoding="async" /></figure>
   )}
 
   {embed && (
     <div class="yazi__video">
-      <iframe src={embed} title={p.baslik} loading="lazy"
+      <iframe src={embed.src} title={p.baslik} loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen></iframe>
     </div>
@@ -133,12 +199,12 @@ const sema = tur === 'yazi'
       <div class="yazi__icerik yazi__icerik--referanslar"><Content /></div>
     </>
   ) : p.duzen === 'hizmet' ? (
-    <HizmetDuzen hizmetler={p.hizmetler} neden={p.neden} projeler={p.projeler} alanlar={p.alanlar}>
+    <HizmetDuzen dil={dil} hizmetler={p.hizmetler} neden={p.neden} projeler={p.projeler} alanlar={p.alanlar}>
       <div class="yazi__icerik"><Content /></div>
     </HizmetDuzen>
   ) : p.duzen === 'urun' ? (
-    <UrunDuzen banner={bannerSembol ? undefined : p.banner} bannerAlt={p.baslik} bloklar={p.bloklar}
-               tablolar={p.tablolar} galeri={p.galeri}>
+    <UrunDuzen banner={bannerSembol ? undefined : p.banner} bannerAlt={p.bannerAlt || p.baslik} sayfaBaslik={p.baslik}
+               bloklar={p.bloklar} tablolar={p.tablolar} galeri={p.galeri}>
       <div class="yazi__icerik"><Content /></div>
     </UrunDuzen>
   ) : (
@@ -147,20 +213,21 @@ const sema = tur === 'yazi'
     </div>
   )}
 
-  {p.galeri && p.galeri.length > 0 && (
+  {p.galeri && p.galeri.length > 0 && p.duzen !== 'urun' && (
     <div class="yazi__galeri">
-      {p.galeri.map((g: any) => g.foto && (
-        <figure><img src={g.foto} alt={p.baslik} loading="lazy" /></figure>
+      {p.galeri.map((g: any, i: number) => g.foto && (
+        <figure><img src={g.foto} alt={g.alt || p.baslik} {...galeriOlcu[i]} loading="lazy" decoding="async" /></figure>
       ))}
     </div>
   )}
 
-  {tekAgac && <TeknolojiHaritasi agac={tekAgac} />}
-  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} />}
+  {tekAgac && <TeknolojiHaritasi agac={tekAgac} dil={dil} />}
+  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} dil={dil} />}
+  {ilgili.length > 0 && <IlgiliSayfalar sayfalar={ilgili} dil={dil} />}
   </div>
 
   <div class="yazi__cta">
-    <p>{tur === 'yazi' ? 'Projeniz için bize ulaşın.' : 'Bu konuda bize danışın.'}</p>
+    <p>{tur === 'yazi' ? t.sayfa.ctaYazi : t.sayfa.ctaSayfa}</p>
     <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>{SITE.telefon}</a>
   </div>
 </article>

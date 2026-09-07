@@ -1,8 +1,16 @@
 ---
 baslik: "Hizmetlerimiz"
+seoBaslik: "Hizmetlerimiz: HDD, Boru Sürme, Kazısız Boru Yenileme"
 menuSira: 3
 menuAd: "Hizmetlerimiz"
-ozet: "Yönlendirilebilir yatay sondaj, boru sürme/çakma, kazısız boru yenileme ve akıllı altyapı danışmanlığı — dört ana hizmet, uygulama alanları ve tamamlanmış projelerden kesitler."
+ozet: "Yönlendirilebilir yatay sondaj (HDD), boru sürme/çakma, kazısız boru yenileme ve akıllı altyapı danışmanlığı; kablo, basınçlı hat ve nehir geçişleri."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj"
+  - "boru-surmecakma"
+  - "boru-yenileme"
+  - "akilli-altyapi"
+  - "referanslar"
+anahtarKelimeler: "yatay sondaj hizmeti, HDD hizmeti, boru sürme, auger boring, kazısız boru yenileme, pipe bursting, akıllı altyapı danışmanlığı, nehir geçişi, kablo geçişi"
 duzen: hizmet
 
 hizmetler:
@@ -39,15 +47,16 @@ neden:
     - "Kendimizi ve makine parkımızı sürekli yeniliyoruz."
     - "Zamanında iş teslim ediyor; iş ortaklarımıza zaman avantajı sunuyoruz."
     - "İş-Ekip-Makine optimizasyonu yapıyor, beklenmedik maliyetler yaratmıyoruz."
-  gorsel: "/images/uploads/2014/12/devices.png"
+  gorsel: "/images/uploads/2014/12/devices.webp"
+  gorselAlt: "Deltek yatay sondaj yer belirleme ve yönlendirme cihazları — HDD ekipman parkı"
 
 projeler:
   baslik: "Son Projeler"
   metin: "Bitirdiğimiz son projelerden kesitleri buradan takip edebilir; kullandığımız ekipman ve yüksek teknolojinin iş ortaklarımıza nasıl katma değer yarattığı hakkında fikir edinebilirsiniz. Hedefimiz: SIFIR HATA, %100 MEMNUNİYET!"
   galeri:
-    - { foto: "/images/uploads/2015/07/3.jpg", alt: "Kazısız geçiş sahasında çalışma" }
-    - { foto: "/images/uploads/2015/09/Kazisiz_Teknoloji_Resim8_Auger_Boring.gif", alt: "Auger boring uygulaması" }
-    - { foto: "/images/uploads/2015/08/6.jpg", alt: "Yatay sondaj sahası" }
+    - { foto: "/images/uploads/2015/07/3.webp", alt: "Deltek kazısız geçiş sahasında yatay sondaj makinesi ile çalışma" }
+    - { foto: "/images/uploads/2015/09/Kazisiz_Teknoloji_Resim8_Auger_Boring.webp", alt: "Auger boring (boru sürme) şeması — helezonlu delgi kafası ile çelik borunun yer altına sürülmesi" }
+    - { foto: "/images/uploads/2015/08/6.jpg", alt: "Yönlendirilebilir yatay sondaj sahası — HDD makinesi ve delgi tijleri" }
 
 alanlar:
   baslik: "Uygulama Alanlarımız"
@@ -69,3 +78,11 @@ alanlar:
       href: "/iletisim/"
       metin: "Nehir-akarsu-dere geçişleri, karayolu ve otoyol geçişleri, köprü ve viyadük altı geçişler, endüstriyel tesis altı geçişler, kazı izni verilmeyen tarihi eser geçişleri, deniz ve boğaz geçişleri, kavşak geçişleri."
 ---
+
+Deltek, 20 yılı aşkın saha tecrübesiyle İstanbul ve İzmir ofislerinden Türkiye
+genelinde **yatay sondaj**, **boru sürme/çakma** ve **kazısız boru yenileme**
+hizmeti veren bir kazısız geçiş yüklenicisidir. Yönlendirilebilir yatay sondajda
+250 tona, boru sürmede 800 tona varan makine parkımızla 2 mm'den 2000 mm'ye
+kadar her çapta boru ve kablo hattını nehir, otoyol, demiryolu ve şehir içi
+geçişlerde açık kazı yapmadan yer altına alıyoruz. Aşağıdaki dört ana hizmet
+için ücretsiz fizibilite ve keşif çalışması yapıyoruz.

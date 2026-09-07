@@ -11,7 +11,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "cms": "decap-server",
-    "og": "node scripts/og-gorsel-uret.mjs"
+    "og": "node scripts/og-gorsel-uret.mjs",
+    "seo": "astro build && node scripts/seo-denetim.mjs",
+    "seo:ayrinti": "node scripts/seo-denetim.mjs --ayrinti",
+    "webp": "node scripts/gorsel-webp.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

@@ -8,7 +8,7 @@
  * yani aynı başlık sayfada iki kez görünüyordu — biri de arama motorlarının
  * okuyamadığı piksel hâlinde.
  *
- * Burada başlık metni görselden çıkarıldı (`src/assets/banner/*.jpg` yalnız
+ * Burada başlık metni görselden çıkarıldı (`src/assets/banner/*.webp` yalnız
  * sembolü taşır, bkz. CLAUDE.md → "Banner sembolleri") ve yerine sayfanın
  * TEK <h1>'i konuldu. Böylece tekrar kalktı, başlık metin tabanlı kaldı.
  *
@@ -25,19 +25,26 @@ import type { ImageMetadata } from 'astro';
 
 interface Props {
   baslik: string;
-  /** src/assets/banner/<sembol>.jpg — uzantısız dosya adı. */
+  /** src/assets/banner/<sembol>.webp — uzantısız dosya adı. */
   sembol: string;
   /** Başlığın üstündeki küçük bölüm etiketi (ör. üst dal adı). */
   etiket?: string;
+  /**
+   * Sembolün alt metni. Sembol konuyu anlatan bir illüstrasyon (dekoratif
+   * değil): görsel aramada yakalansın diye başlıktan türetilir, sayfa
+   * isterse frontmatter'dan (`bannerAlt`) kendi metnini verir.
+   */
+  alt?: string;
 }
-const { baslik, sembol, etiket } = Astro.props;
+const { baslik, sembol, etiket, alt } = Astro.props;
+const sembolAlt = alt || `${baslik} — Deltek kazısız geçiş teknolojisi illüstrasyonu`;
 
 const gorseller = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/banner/*.jpg', { eager: true });
-const kayit = gorseller[`/src/assets/banner/${sembol}.jpg`];
+  '/src/assets/banner/*.webp', { eager: true });
+const kayit = gorseller[`/src/assets/banner/${sembol}.webp`];
 if (!kayit) {
   throw new Error(
-    `Banner sembolü yok: src/assets/banner/${sembol}.jpg — ` +
+    `Banner sembolü yok: src/assets/banner/${sembol}.webp — ` +
     `frontmatter'daki "bannerSembol" değeri dosya adıyla eşleşmeli.`);
 }
 const g = kayit.default;
@@ -48,9 +55,9 @@ const oran = (g.width / g.height).toFixed(4);
     {etiket && <span class="sbn__etiket">{etiket}</span>}
     <h1 class="sbn__baslik">{baslik}</h1>
   </div>
-  {/* Başlık artık gerçek metin olduğu için sembol dekoratif: alt="" */}
+  {/* Başlık gerçek metin; sembol konuyu anlatan illüstrasyon, alt metni başlıktan türer */}
   <img class="sbn__g" src={g.src} width={g.width} height={g.height}
-       alt="" fetchpriority="high" decoding="async" />
+       alt={sembolAlt} fetchpriority="high" decoding="async" />
 </div>
 
 <style>

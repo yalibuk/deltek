@@ -1,0 +1,52 @@
+---
+/**
+ * "İlgili sayfalar" — sayfanın altında, frontmatter'daki `ilgili` slug
+ * listesinden basılan iç bağlantı bloğu.
+ *
+ * Amaç SEO: konu kümeleri (yatay sondaj rehberleri ↔ teknoloji sayfaları ↔
+ * blog yazıları) birbirine bağlansın, hiçbir sayfa yetim kalmasın. Başlık ve
+ * özet sayfanın kendi frontmatter'ından gelir (`ilgiliSayfalar()`), listede
+ * olmayan slug sessizce atlanır.
+ */
+import { CEVIRI, type Dil } from '../data/i18n';
+
+interface Props {
+  sayfalar: { slug: string; baslik: string; ozet?: string }[];
+  dil?: Dil;
+  baslik?: string;
+}
+const { sayfalar, dil = 'tr', baslik } = Astro.props;
+const yol = (p: string) => dil === 'en' ? '/en' + p : p;
+const bas = baslik || CEVIRI[dil].sayfa.ilgili;
+---
+{sayfalar.length > 0 && (
+  <nav class="ilgili" aria-label={bas}>
+    <h2 class="ilgili__bas">{bas}</h2>
+    <ul class="ilgili__l">
+      {sayfalar.map(s => (
+        <li>
+          <a href={yol(`/${s.slug}/`)}>
+            <span class="ilgili__ad">{s.baslik}</span>
+            {s.ozet && <span class="ilgili__oz">{s.ozet}</span>}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+.ilgili { margin-top: clamp(2rem, 4vw, 3rem); padding-top: 1.4rem; border-top: 1px solid var(--cizgi); }
+.ilgili__bas { font-family: var(--f-dis); font-weight: 800; font-size: 1.05rem; letter-spacing: .02em;
+  text-transform: uppercase; color: var(--mavi); margin-bottom: .8rem; }
+.ilgili__l { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+@media (min-width: 700px) { .ilgili__l { grid-template-columns: 1fr 1fr; } }
+.ilgili__l a { display: block; padding: .9rem 1rem; background: var(--beyaz); border: 1px solid var(--cizgi);
+  border-left: 3px solid var(--sari); border-radius: 6px; color: var(--metin);
+  transition: border-color .15s, transform .15s; }
+.ilgili__l a:hover { border-color: var(--mavi); transform: translateY(-1px); }
+.ilgili__ad { display: block; font-family: var(--f-dis); font-weight: 700; color: var(--mavi-900); }
+.ilgili__l a:hover .ilgili__ad { color: var(--mavi); }
+.ilgili__oz { display: block; margin-top: .3rem; font-size: .85rem; line-height: 1.5; color: var(--mute);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+</style>

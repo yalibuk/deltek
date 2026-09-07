@@ -1,6 +1,15 @@
 ---
 baslik: "Yatay Sondaj"
-ozet: "Modern şehircilik anlayışında yatay sondaj teknolojisi, altyapı sektörünün en önemli yeniliklerinden biri haline gelmiştir. Bu özel yöntem sayesinde yeraltı hizmet hatları döşenirken şehrin günlük…"
+seoBaslik: "Yatay Sondaj Nedir? Teknoloji, Makineler ve Uygulama"
+ozet: "Yatay sondaj nedir, nasıl uygulanır? Yatay sondaj makinelerinin anatomisi, uygulama alanları, planlama, avantajları, zorlukları ve Deltek'in tecrübesi."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj"
+  - "yatay-delgi-nedir"
+  - "yonlendirilebilir-yatay-delgi"
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+  - "yatay-sondaj-camuru"
+yanMenu: true
+anahtarKelimeler: "yatay sondaj, yatay sondaj nedir, yatay sondaj makinesi, yatay sondaj firması, yatay sondaj fiyatları, yatay sondaj İstanbul, yatay sondaj İzmir, kazısız yatay sondaj"
 ---
 
 ## Yatay Sondaj

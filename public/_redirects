@@ -27,3 +27,10 @@
 # WordPress artıkları
 /feed/          /blog/   301
 /wp-login.php   /        301
+
+# Eski WordPress medya adresleri. Taşıma betiği görselleri
+# wp-content/uploads/<yol> -> /images/uploads/<yol> olarak indirdi
+# (scripts/wp-tasi.mjs), yani canlı sitede indekslenmiş görsel adresleri
+# yönlendirme olmadan 404 veriyordu. Kaynak JPEG/PNG'ler bu yüzden WebP'ye
+# çevrildikten sonra da yerinde bırakıldı; hedef dosya var.
+/wp-content/uploads/*   /images/uploads/:splat   301

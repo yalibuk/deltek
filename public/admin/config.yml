@@ -42,18 +42,24 @@ collections:
     sortable_fields: [tarih, baslik]
     fields:
       - { name: baslik, label: Başlık, widget: string, i18n: true }
-      - { name: ozet,   label: Kısa özet (liste ve önizlemede görünür), widget: text, required: false, i18n: true }
+      - { name: seoBaslik, label: "Arama motoru başlığı (boşsa Başlık; 30–65 karakter)", widget: string, required: false, i18n: true }
+      - { name: ozet,   label: "Kısa özet — arama sonuçlarındaki açıklama (70–160 karakter)", widget: text, required: false, i18n: true }
+      - { name: anahtarKelimeler, label: "Anahtar kelimeler (virgülle)", widget: string, required: false, i18n: true }
       - { name: tarih,  label: Tarih, widget: datetime, format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, required: false, i18n: duplicate }
+      - { name: guncelleme, label: "Son güncelleme (isteğe bağlı)", widget: datetime, format: "YYYY-MM-DD", date_format: "DD.MM.YYYY", time_format: false, required: false, i18n: duplicate }
       - { name: kapak,  label: Kapak görseli, widget: image, required: false, i18n: duplicate }
-      - { name: video,  label: "YouTube video linki (isteğe bağlı)", widget: string, required: false, i18n: duplicate }
+      - { name: kapakAlt, label: "Kapak görseli alt metni (görsel arama için)", widget: string, required: false, i18n: true }
+      - { name: video,  label: "YouTube / Vimeo video linki (isteğe bağlı)", widget: string, required: false, i18n: duplicate }
       - name: galeri
         label: Foto galerisi
         widget: list
         required: false
-        i18n: duplicate
+        i18n: true
         label_singular: Fotoğraf
         fields:
           - { name: foto, label: Fotoğraf, widget: image }
+          - { name: alt, label: "Alternatif metin", widget: string, required: false }
+      - { name: ilgili, label: "İlgili sayfalar (slug listesi)", widget: list, required: false, i18n: duplicate, field: { name: slug, label: Slug, widget: string } }
       - { name: body, label: Yazı içeriği, widget: markdown, required: false, i18n: true }
 
   - name: sayfalar
@@ -72,10 +78,12 @@ collections:
     sortable_fields: [menuSira, baslik]
     fields:
       - { name: baslik, label: Başlık, widget: string, i18n: true }
-      - { name: ozet, label: Kısa açıklama (arama sonuçlarında görünür), widget: text, required: false, i18n: true }
+      - { name: ozet, label: "Kısa açıklama — arama sonuçlarındaki açıklama (70–160 karakter)", widget: text, required: false, i18n: true }
+      - { name: anahtarKelimeler, label: "Anahtar kelimeler (virgülle)", widget: string, required: false, i18n: true }
       - { name: menuSira, label: "Menü sırası (boş bırakılırsa menüde görünmez)", widget: number, required: false, value_type: int, i18n: duplicate }
       - { name: menuAd, label: "Menüde görünecek ad (boşsa başlık kullanılır)", widget: string, required: false, i18n: true }
       - { name: kapak, label: Kapak görseli, widget: image, required: false, i18n: duplicate }
+      - { name: kapakAlt, label: "Kapak görseli alt metni", widget: string, required: false, i18n: true }
       - name: duzen
         label: "İçerik düzeni"
         widget: select
@@ -86,12 +94,17 @@ collections:
           - { label: "Logo ızgarası (referans logoları yan yana)", value: "logo-izgara" }
           - { label: "Ürün / teknoloji şablonu", value: "urun" }
           - { label: "İletişim şablonu (ofisler + görsel, form yok)", value: "iletisim" }
+          - { label: "Hizmetlerimiz şablonu (kart ızgaraları)", value: "hizmet" }
+          - { label: "Referanslar (kayan logo şeridi + metin)", value: "referanslar" }
+      - { name: yanMenu, label: "Teknoloji yan menüsünü göster", widget: boolean, required: false, i18n: duplicate }
+      - { name: ilgili, label: "İlgili sayfalar (slug listesi)", widget: list, required: false, i18n: duplicate, field: { name: slug, label: Slug, widget: string } }
       - { name: body, label: Sayfa içeriği, widget: markdown, required: false, i18n: true }
 
       # ── Yalnızca "İletişim şablonu" seçiliyken kullanılır ──
       # Ofis adresleri koddadır (src/data/site.ts OFISLER); buradan yalnızca
       # sayfanın altındaki tanıtım görseli seçilir.
       - { name: gorsel, label: "Sayfa altı tanıtım görseli", widget: image, required: false, i18n: duplicate }
+      - { name: gorselAlt, label: "Tanıtım görseli alt metni", widget: string, required: false, i18n: true }
 
       # ── Aşağıdakiler yalnızca "Ürün / teknoloji şablonu" seçiliyken kullanılır ──
       # <title> ve OG başlığı. Sayfanın görünen başlığı (<h1>) kısaltıldığında
@@ -124,6 +137,7 @@ collections:
           - "yonlendirilebilir-yatay-sondaj-yer-belirleme-sistemleri"
           - "yonlendirilebilir-yatay-sondaj-yonlendirme-basligi"
       - { name: banner, label: "Üst banner görseli", widget: image, required: false, i18n: duplicate }
+      - { name: bannerAlt, label: "Banner / sembol alt metni", widget: string, required: false, i18n: true }
       - name: bloklar
         label: "Görsel + metin blokları"
         label_singular: Blok
@@ -136,6 +150,7 @@ collections:
           - { name: baslik, label: Başlık, widget: string, required: false }
           - { name: metin, label: Metin, widget: text, required: false }
           - { name: gorsel, label: Görsel, widget: image, required: false }
+          - { name: alt, label: "Görsel alt metni (boşsa blok başlığı, o da yoksa sayfa başlığı)", widget: string, required: false }
           - { name: ters, label: "Görsel sağda dursun", widget: boolean, required: false, default: false }
           - name: boyut
             label: "Görsel boyutu (boşsa tam genişlik)"

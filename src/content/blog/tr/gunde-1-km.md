@@ -1,8 +1,15 @@
 ---
 baslik: "Günde 1 km"
-ozet: "Her inşaat projesinde olduğu gibi Yönlendirilebilir Yatay Sondaj imalatlarında da verimlilik zaman ile ters orantılıdır. Uzun bir hat yapmak önemlidir. Ancak ne kadar zaman içerisinde yaptığınız iş…"
+seoBaslik: "Günde 1 km HDD: Verimlilik ve Doğru Makine Seçimi"
+ozet: "ABD'de Anderson Underground bir günde 1030 metre yatay delgi yaparak rekor kırdı, üstelik 12 tonluk bir HDD makinesiyle. Makine büyüklüğü ve verimlilik üzerine."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj-makinesi"
+  - "yatay-delgi-dizel-elektrik-karsilastirma"
+  - "hizmetlerimiz"
+anahtarKelimeler: "yatay sondaj verimlilik, HDD günlük ilerleme, Ditch Witch JT25, yatay delgi rekor, yatay sondaj makine seçimi, Anderson Underground"
 tarih: 2017-11-15
-kapak: "/images/uploads/2017/11/haberler1.jpg"
+kapak: "/images/uploads/2017/11/haberler1.webp"
+kapakAlt: "Bir günde 1030 metre yatay delgi yapan HDD makinesi — Anderson Underground rekoru"
 ---
 
 Her inşaat projesinde olduğu gibi Yönlendirilebilir Yatay Sondaj imalatlarında da verimlilik zaman ile ters orantılıdır. Uzun bir hat yapmak önemlidir. Ancak ne kadar zaman içerisinde yaptığınız işin değerini tayin eder.

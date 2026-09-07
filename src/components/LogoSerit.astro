@@ -18,21 +18,51 @@ import { gorselOlcu } from '../data/gorselOlcu';
 interface Props {
   /** Tam turun süresi; uzatmak yavaşlatır. */
   sure?: string;
+  /** Alt metin kalıbı: "{ad}" logonun adıyla değiştirilir. */
+  altKalip?: string;
 }
-const { sure = '34s' } = Astro.props;
+const { sure = '34s', altKalip = '{ad} logosu — Deltek yatay sondaj referansı' } = Astro.props;
+const altMetin = (ad: string) => altKalip.replace('{ad}', ad);
+
+/**
+ * OPTİK DENGE: her logo aynı ALANI kaplayacak şekilde ölçeklenir.
+ *
+ * Sabit bir kutuya `object-fit: contain` ile oturtmak yetmiyordu: kutu
+ * 240×96 iken Kolin (oran 2,51) 22.936 px², Saipem (0,77) 7.088 px² alan
+ * kaplıyordu — 3,2 kat fark, gözle bariz. Bunun sebebi contain'in kutunun
+ * KENARINA hizalaması: geniş logo genişliği, uzun logo yüksekliği doldurur,
+ * ikisi aynı büyüklükte görünmez.
+ *
+ * Burada her logoya kendi en/boy oranından hesaplanmış bir ölçü verilir:
+ * alan = HEDEF_ALAN. Aşırı geniş (Siemens 6,36) ya da aşırı uzun logolar
+ * kutuyu taşırmasın diye AZAMI_EN/AZAMI_BOY ile kırpılır — bu ikisinde
+ * hedef alana ulaşılamaz ama sapma %13'ü geçmez.
+ */
+const HEDEF_ALAN = 10500;   // px² — logonun kapladığı alan
+const AZAMI_EN   = 240;     // px — bundan geniş logo küçültülür
+const AZAMI_BOY  = 110;     // px — bundan uzun logo küçültülür
 
 const olculu = await Promise.all(
   REFERANS_LOGOLARI.map(async l => ({ ...l, olcu: await gorselOlcu(l.src) })),
 );
-const logolar = olculu.filter(l => l.olcu);
+const logolar = olculu
+  .filter(l => l.olcu)                        // dosyası olmayan basılmaz
+  .map(l => {
+    const oran = l.olcu!.en / l.olcu!.boy;
+    let en = Math.sqrt(HEDEF_ALAN * oran);
+    let boy = Math.sqrt(HEDEF_ALAN / oran);
+    if (en > AZAMI_EN)  { const k = AZAMI_EN / en;  en *= k; boy *= k; }
+    if (boy > AZAMI_BOY) { const k = AZAMI_BOY / boy; en *= k; boy *= k; }
+    return { ...l, en: Math.round(en), boy: Math.round(boy) };
+  });
 ---
 {logolar.length > 0 && (
   <div class="lserit" style={`--lserit-sure:${sure}`}>
     <div class="lserit__ray">
       {[0, 1, 2, 3].map(kopya =>
         logolar.map(l => (
-          <div class="lserit__k">
-            <img src={l.src} alt={kopya === 0 ? l.ad : ''}
+          <div class="lserit__k" style={`--en:${l.en}px;--boy:${l.boy}px`}>
+            <img src={l.src} alt={kopya === 0 ? altMetin(l.ad) : ''}
                  aria-hidden={kopya === 0 ? undefined : 'true'}
                  width={l.olcu!.en} height={l.olcu!.boy} loading="lazy" decoding="async" />
           </div>
@@ -50,19 +80,26 @@ const logolar = olculu.filter(l => l.olcu);
   overflow: hidden; border-block: 1px solid var(--cizgi);
   /* Zemin BEYAZ olmalı: logolar beyaz kareli JPEG, açık mavi (--kagit)
      zeminde her biri ayrı bir kare leke gibi görünüyordu. */
-  background: var(--beyaz); padding-block: clamp(1rem, 2.4vw, 1.6rem);
+  background: var(--beyaz); padding-block: clamp(1.1rem, 2.4vw, 1.7rem);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
-.lserit__ray { display: flex; width: max-content;
+.lserit__ray { display: flex; width: max-content; align-items: center;
   animation: lserit-kay var(--lserit-sure, 34s) linear infinite; }
 .lserit:hover .lserit__ray { animation-play-state: paused; }
-/* Yükseklik 144px — sayfadaki eski ızgara boyutunun (72px) iki katı. */
-.lserit__k { flex: 0 0 auto; height: 144px; padding-inline: clamp(1.4rem, 3vw, 2.6rem);
+/* Hücre logonun kendi ölçüsü kadar; aradaki boşluk dolguyla veriliyor.
+   `gap` KULLANILMAZ: dört kopyanın arasına da boşluk katıp -25%'lik
+   döngüyü kaydırırdı. */
+.lserit__k { flex: 0 0 auto; padding-inline: clamp(1.4rem, 3vw, 2.6rem);
   display: flex; align-items: center; justify-content: center; }
-.lserit__k img { height: 100%; width: auto; object-fit: contain; display: block;
-  filter: grayscale(1); opacity: .72; transition: filter .2s, opacity .2s; }
-.lserit__k img:hover { filter: none; opacity: 1; }
-@media (max-width: 620px) { .lserit__k { height: 96px; } }
+/* Ölçü derlemede hesaplanıyor (yukarı bak): her logo aynı alanı kaplar.
+   Logolar RENKLİ akar (önce gri + %72 saydamdı). Üzerine gelince %20 büyür;
+   şerit de duruyor (.lserit:hover) böylece büyüyen logo kaçmıyor. */
+.lserit__k img { width: calc(var(--en) * var(--lserit-olcek, 1));
+  height: calc(var(--boy) * var(--lserit-olcek, 1));
+  object-fit: contain; display: block; transition: transform .2s ease; }
+.lserit__k img:hover { transform: scale(1.2); }
+@media (prefers-reduced-motion: reduce) { .lserit__k img { transition: none; } }
+@media (max-width: 620px) { .lserit { --lserit-olcek: .62; } }
 /* Dört kopyanın biri kadar kayınca desen başa döner. */
 @keyframes lserit-kay { from { transform: translateX(0); } to { transform: translateX(-25%); } }
 @media (prefers-reduced-motion: reduce) { .lserit__ray { animation: none; } }

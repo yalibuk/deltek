@@ -1,8 +1,15 @@
 ---
 baslik: "NATIONAL GRID, TEMZE NEHRİ’NİN ALTINDA 271 TONLUK DEV MAKİNEYİ HAREKETE GEÇİRDİ"
-ozet: "İngiltere’de ulusal elektrik şebekesinin modernizasyonu kapsamında hayata geçirilen Grain to Tilbury projesinde kritik bir dönüm noktasına ulaşıldı. 271,5 tonluk dev tünel açma makinesi (TBM), Tham…"
+seoBaslik: "National Grid Temze Altı Tünel: 271 Tonluk TBM"
+ozet: "National Grid'in Grain to Tilbury projesinde 271,5 tonluk tünel açma makinesi Caroline, Thames altında 2,2 km'lik elektrik kablo tüneli için yola çıktı."
+ilgili:
+  - "boru-surmecakma"
+  - "ssen-96-milyon-sterlinlik-m27-projesinde-hdd-yontemine-guveniyor"
+  - "yonlendirilebilir-yatay-sondaj"
+anahtarKelimeler: "Thames altı tünel, National Grid Grain to Tilbury, tünel açma makinesi TBM, kablo tüneli, elektrik şebekesi modernizasyon, nehir altı geçiş"
 tarih: 2026-05-07
-kapak: "/images/uploads/national-grid-temze-alti-271-tonluk-dev-makine.jpeg"
+kapak: "/images/uploads/national-grid-temze-alti-271-tonluk-dev-makine.webp"
+kapakAlt: "Thames Nehri altında 2,2 km kablo tüneli açacak 271,5 tonluk tünel açma makinesi Caroline"
 ---
 
 İngiltere’de ulusal elektrik şebekesinin modernizasyonu kapsamında hayata geçirilen **Grain to Tilbury projesi**nde kritik bir dönüm noktasına ulaşıldı. **271,5 tonluk** dev tünel açma makinesi (TBM), **Thames Nehri’nin altında 2,2 km’lik tünel** inşa etmek üzere yolculuğuna başladı.

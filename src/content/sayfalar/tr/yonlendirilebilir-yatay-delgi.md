@@ -1,6 +1,15 @@
 ---
 baslik: "Yönlendirilebilir Yatay Delgi"
-ozet: "Modern mühendislik dünyasında yönlendirilebilir yatay delgi teknolojisi, altyapı sektörünün en sofistike ve etkili yöntemlerinden biri olarak öne çıkıyor. Bu ileri teknoloji sayesinde yeraltı hizme…"
+seoBaslik: "Yönlendirilebilir Yatay Delgi: Teknoloji ve Uygulama"
+ozet: "Yönlendirilebilir yatay delgi (YYD) nasıl çalışır? Navigasyon ve güç sistemleri, uygulama alanları, planlama, avantajları ve geleceğin teknolojileri."
+ilgili:
+  - "yonlendirilebilir-yatay-sondaj"
+  - "yonlendirilebilir-yatay-sondaj-nedir"
+  - "yatay-sondaj"
+  - "yatay-delgi-nedir"
+  - "yer-belirleme"
+yanMenu: true
+anahtarKelimeler: "yönlendirilebilir yatay delgi, YYD, yönlendirilebilir yatay delgi makinesi, HDD, kazısız delgi, yatay delgi navigasyon, fiber optik yatay delgi"
 ---
 
 ## Yönlendirilebilir Yatay Delgi
@@ -56,7 +65,7 @@ Hidrolik sistemlerde biyolojik olarak parçalanabilir yağlar kullanılır. Böy
 
 Belediye altyapı projelerinde yönlendirilebilir yatay delgi teknolojisi sıklıkla kullanılır. İçme suyu dağıtım hatları, atıksu toplama sistemleri ve yağmur suyu drenajında ideal çözüm sunar.
 
-Miami’deki kanalizasyon projemizde de bu teknolojiyi başarıyla uyguladık. Mevcut yol ağına zarar vermeden kaliteli altyapı kurulumu gerçekleştirdik. Proje süresi planlanan zamanda tamamlandı.
+Miami’deki [kanalizasyon projesinde](/miamide-kanalizasyon-yapimi/) de bu teknoloji başarıyla uygulandı. Mevcut yol ağına zarar vermeden kaliteli altyapı kurulumu gerçekleştirdik. Proje süresi planlanan zamanda tamamlandı.
 
 ### Enerji ve Gaz Hatları
 

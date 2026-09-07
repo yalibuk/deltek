@@ -1,8 +1,15 @@
 ---
 baslik: "SSEN, 9,6 MİLYON STERLİNLİK M27 PROJESİNDE HDD YÖNTEMİNE GÜVENİYOR"
-ozet: "Yönlendirilebilir Yatay Delgi (YYD/HDD) yöntemi kullanılarak, İngiltere’nin güneyindeki yoğun trafiğe sahip M27 otoyolunun altına hayati öneme sahip yeni bir kablo döşendi. Çalışmalar, Scottish & S…"
+seoBaslik: "SSEN M27 Otoyolu Altı HDD Kablo Geçişi"
+ozet: "SSEN, 9,6 milyon sterlinlik yatırımla M27 otoyolunun 15,8 metre altından yönlendirilebilir yatay delgi (HDD) ile 260 metrelik elektrik kablosu geçişi yaptı."
+ilgili:
+  - "national-grid-temze-nehrinin-altinda-271-tonluk-dev-makineyi-harekete-gecirdi"
+  - "yatay-sondaj-camuru"
+  - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
+anahtarKelimeler: "otoyol altı HDD geçişi, M27 HDD, SSEN, elektrik kablosu yatay delgi, karayolu altı yatay sondaj, bentonit sondaj çamuru, National Highways"
 tarih: 2026-05-21
-kapak: "/images/uploads/m27-projesi-hdd-altyapi-calismasi.jpg"
+kapak: "/images/uploads/m27-projesi-hdd-altyapi-calismasi.webp"
+kapakAlt: "M27 otoyolu altında HDD ile elektrik kablosu geçişi — SSEN Rownhams sahası"
 ---
 
 Yönlendirilebilir Yatay Delgi (YYD/HDD) yöntemi kullanılarak, İngiltere’nin güneyindeki yoğun trafiğe sahip **M27 otoyolunun altına** hayati öneme sahip yeni bir kablo döşendi.

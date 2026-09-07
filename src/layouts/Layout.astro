@@ -10,7 +10,12 @@ interface Props {
   description?: string;
   image?: string;
   keywords?: string;
+  /** Sayfaya özel JSON-LD (nesne ya da nesne dizisi). Organization her sayfada ayrıca basılır. */
   sema?: any;
+  /** og:image alt metni; boşsa dile göre marka açıklaması. */
+  imageAlt?: string;
+  /** Arama motorlarından gizle (404, admin). */
+  noindex?: boolean;
   /**
    * Bu sayfanın diğer dilde bir karşılığı var mı?
    * false ise hreflang alternatifi basılmaz ve dil düğmesi o dilin
@@ -18,7 +23,7 @@ interface Props {
    */
   cevirisiVar?: boolean;
 }
-const { title = SITE.isim, description = '', image, keywords, sema, cevirisiVar = true } = Astro.props;
+const { title = SITE.isim, description = '', image, imageAlt, keywords, sema, noindex = false, cevirisiVar = true } = Astro.props;
 // trailingSlash: 'always' — tüm iç yollar eğik çizgiyle biter.
 const pathname = Astro.url.pathname;
 const dil = pathname.startsWith('/en/') ? 'en' : 'tr';
@@ -40,36 +45,83 @@ const enDugme = (dil === 'en' || cevirisiVar) ? enYol : '/en/';
 // EN tarafında çevirisi girilmemiş sayfa menüde çıkmaz.
 const menu = await menuSayfalari(dil);
 
-// Teknoloji bölümü açılır menüsü. Yalnızca TR'de: EN sayfaları henüz yok,
-// teknolojiAgaci('en') sayfa bulamayıp build'i durdururdu.
-const tekAgac = dil === 'tr' ? await teknolojiAgaci('tr') : null;
+// Teknoloji bölümü açılır menüsü. EN'de çevirisi olmayan düğüm sessizce
+// düşer (teknolojiAgaci zorunlu=false); TR'de eksik sayfa build'i durdurur.
+const tekAgacHam = await teknolojiAgaci(dil);
+const tekAgac = tekAgacHam.length > 0 ? tekAgacHam : null;
 const tekYys = tekAgac?.find(d => d.alt.length > 0) ?? null;   // Yönlendirilebilir Yatay Sondaj
 const tekDiger = tekAgac?.filter(d => d.alt.length === 0) ?? [];
 
 const kanonik = SITE.kanonikal + pathname;
 const ogGorsel = SITE.kanonikal + (image || '/og-image.jpg');
-const anahtarKelimeler = keywords || 'Deltek';
+// Varsayılan OG görseli 1200×630; sayfa kendi görselini verirse ölçü basılmaz.
+const ogVarsayilan = !image;
+const ogAlt = imageAlt || (image ? title : t.seo.ogGorselAlt);
+const anahtarKelimeler = keywords || t.seo.anahtar;
 
+// Şirket kaydı — her sayfada aynı @id ile basılır; sayfa şemaları
+// (WebPage/BlogPosting) publisher/isPartOf ile buna bağlanır.
+const orgId = SITE.kanonikal + '/#organization';
+const siteId = SITE.kanonikal + '/#website';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': orgId,
   name: SITE.isim,
-  description,
+  legalName: SITE.unvan,
+  alternateName: 'Deltek Kazısız Geçiş Teknolojileri',
+  description: dil === 'en'
+    ? 'Horizontal directional drilling (HDD), auger boring, microtunnelling and pipe bursting contractor based in Istanbul and Izmir, Türkiye.'
+    : 'İstanbul ve İzmir merkezli yönlendirilebilir yatay sondaj (HDD), boru sürme/çakma, mikrotünel ve kazısız boru yenileme yüklenicisi.',
   url: SITE.kanonikal,
   ...(SITE.telefonHam ? { telephone: SITE.telefonHam } : {}),
   ...(SITE.eposta ? { email: SITE.eposta } : {}),
   // JSON-LD'de bilerek PNG: yapısal veri görselleri için raster bekleniyor,
   // SVG'nin doğal piksel ölçüsü yok. Görünen logolar SVG (deltek_logo.svg).
-  logo: SITE.kanonikal + '/deltek-logo.png',
-  image: ogGorsel,
-  ...(SITE.adres1 ? {
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: SITE.adres1,
-      addressCountry: 'TR',
-    },
-  } : {}),
+  logo: { '@type': 'ImageObject', url: SITE.kanonikal + '/deltek-logo.png', width: 200, height: 46 },
+  image: SITE.kanonikal + '/og-image.jpg',
+  ...(SITE.kurulus ? { foundingDate: SITE.kurulus } : {}),
+  ...(SITE.sosyal.length ? { sameAs: SITE.sosyal } : {}),
+  areaServed: { '@type': 'Country', name: SITE.hizmetBolgesi },
+  // Tüm ofisler — merkez başta. Google çoklu adresi kabul eder.
+  address: OFISLER.map(o => ({
+    '@type': 'PostalAddress',
+    streetAddress: o.adres,
+    addressLocality: o.sehir,
+    postalCode: (o.adres2.match(/\d{5}/) || [''])[0],
+    addressCountry: 'TR',
+  })),
+  contactPoint: [{
+    '@type': 'ContactPoint',
+    telephone: SITE.telefonHam,
+    email: SITE.eposta,
+    contactType: 'sales',
+    availableLanguage: ['Turkish', 'English'],
+    areaServed: 'TR',
+  }],
+  // Uzmanlık alanları — Wikidata kavramlarıyla eşlenmiş
+  knowsAbout: [
+    { '@type': 'Thing', name: 'Horizontal directional drilling', sameAs: 'https://www.wikidata.org/wiki/Q1626102' },
+    { '@type': 'Thing', name: 'Trenchless technology', sameAs: 'https://www.wikidata.org/wiki/Q7837309' },
+    { '@type': 'Thing', name: 'Pipe jacking', sameAs: 'https://www.wikidata.org/wiki/Q3902965' },
+    { '@type': 'Thing', name: 'Microtunneling', sameAs: 'https://www.wikidata.org/wiki/Q1932359' },
+    { '@type': 'Thing', name: 'Pipe bursting', sameAs: 'https://www.wikidata.org/wiki/Q7196019' },
+  ],
 };
+// WebSite kaydı (site adı + dil) — yalnızca ana sayfalarda; Google "site name"
+// için bunu okur.
+const webSite = anasayfaMi ? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': siteId,
+  url: SITE.kanonikal + (dil === 'en' ? '/en/' : '/'),
+  name: SITE.isim,
+  alternateName: dil === 'en'
+    ? 'Deltek Horizontal Directional Drilling'
+    : 'Deltek Yatay Sondaj',
+  inLanguage: dil,
+  publisher: { '@id': orgId },
+} : null;
 ---
 <!doctype html>
 <html lang={t.htmlLang}>
@@ -79,7 +131,10 @@ const jsonLd = {
   <title>{title}</title>
   <meta name="description" content={description} />
   <meta name="keywords" content={anahtarKelimeler} />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+  <meta name="author" content={SITE.isim} />
+  <meta name="geo.region" content="TR" />
+  <meta name="geo.placename" content="İzmir, İstanbul" />
   {/* --marka-mavi ile aynı kalmalı; meta içeriği CSS değişkeni kabul etmiyor. */}
   <meta name="theme-color" content="#185AD6" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -90,7 +145,11 @@ const jsonLd = {
       Genişlik ekseni banner başlıkları için gerekli (font-stretch: 75%,
       bkz. SayfaBanner.astro). Ayrık ağırlıkları tek tek istemekten daha
       ucuz: latin+latin-ext için 4 dosya / 192KB, önceki 10 dosya / 359KB. */}
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
+  {/* Font CSS'i render'ı bloklamasın: önce preload, yüklenince media=all.
+      JS kapalıysa <noscript> aynı bağlantıyı normal yoldan verir. */}
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" /></noscript>
   <link rel="canonical" href={kanonik} />
   {trAlt && <link rel="alternate" hreflang="tr" href={trAlt} />}
   {enAlt && <link rel="alternate" hreflang="en" href={enAlt} />}
@@ -102,11 +161,17 @@ const jsonLd = {
   <meta property="og:description" content={description} />
   <meta property="og:url" content={kanonik} />
   <meta property="og:image" content={ogGorsel} />
+  <meta property="og:image:alt" content={ogAlt} />
+  {ogVarsayilan && <meta property="og:image:width" content="1200" />}
+  {ogVarsayilan && <meta property="og:image:height" content="630" />}
+  {dil === 'tr' ? <meta property="og:locale:alternate" content="en_US" /> : <meta property="og:locale:alternate" content="tr_TR" />}
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={ogGorsel} />
+  <meta name="twitter:image:alt" content={ogAlt} />
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  {webSite && <script type="application/ld+json" set:html={JSON.stringify(webSite)} />}
   {sema && <script type="application/ld+json" set:html={JSON.stringify(sema)} />}
 </head>
 <body class={anasayfaMi ? "anasayfa" : ""}>
@@ -134,7 +199,7 @@ const jsonLd = {
   </div>
   <div class="kap ust__ic">
     <a class="logo" href={yol('/')} aria-label={t.aria.home}>
-      <img src="/deltek_logo.svg" width="200" height="49" alt={SITE.isim} />
+      <img src="/deltek_logo.svg" width="200" height="49" alt={t.logoAlt} />
     </a>
     <button class="ham" id="ham" aria-label={t.aria.menu} aria-expanded="false">
       <span></span><span></span><span></span>
@@ -177,10 +242,12 @@ const jsonLd = {
                   ))}
                 </div>
               )}
-              <div class="tekdd__s">
-                <span class="tekdd__b">Diğer kazısız yöntemler</span>
-                {tekDiger.map(k => <a href={yol(`/${k.slug}/`)}>{k.ad}</a>)}
-              </div>
+              {tekDiger.length > 0 && (
+                <div class="tekdd__s">
+                  <span class="tekdd__b">{t.tek.diger}</span>
+                  {tekDiger.map(k => <a href={yol(`/${k.slug}/`)}>{k.ad}</a>)}
+                </div>
+              )}
             </div>
           </span>
         ) : (
@@ -219,7 +286,7 @@ const jsonLd = {
   <div class="kap">
     <div class="alt__ic">
       <div>
-        <div class="alt__logo"><img src="/deltek_logo.svg" width="200" height="49" alt={SITE.isim}></div>
+        <div class="alt__logo"><img src="/deltek_logo.svg" width="200" height="49" alt={t.logoAlt}></div>
         {t.footer.slogan && <small>{t.footer.slogan}</small>}
       </div>
       <div>

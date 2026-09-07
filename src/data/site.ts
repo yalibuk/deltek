@@ -13,6 +13,13 @@ export const SITE = {
   adres1: "Maltepe Mah. 66. Sok. No: 35",
   adres2: "35310 Güzelbahçe - İzmir",
   kanonikal: "https://www.deltek.com.tr",
+  // Sosyal/dizin profilleri — JSON-LD `sameAs`. Doldurulduğunda Google'a
+  // marka doğrulaması için sinyal verir (LinkedIn, YouTube, Instagram...).
+  sosyal: [] as string[],
+  // JSON-LD `areaServed` — hizmet verilen bölge.
+  hizmetBolgesi: "Türkiye",
+  // Kuruluş yılı — JSON-LD `foundingDate`. Bilinmiyorsa boş bırakılır.
+  kurulus: "",
 };
 
 // Tüm ofisler — /iletisim/ sayfasında (duzen: iletisim) kart olarak ve

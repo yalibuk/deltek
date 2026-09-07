@@ -1,9 +1,16 @@
 ---
 baslik: "Referanslar"
+seoBaslik: "Referanslar: Yatay Sondaj Projelerimiz ve İş Ortakları"
 duzen: referanslar
 menuSira: 4
 menuAd: "Referanslar"
-ozet: "Yurt içinde ve yurt dışında; kamu kurumlarından enerji, telekomünikasyon ve altyapı devlerine kadar geniş bir yelpazede iş ortaklarıyla tamamlanmış kazısız geçiş projeleri."
+ozet: "Deltek yatay sondaj referansları: BOTAŞ, İSKİ, TCDD, TEİAŞ, Siemens, Ericsson, Kolin, Saipem ve Aramco ile tamamlanan kazısız geçiş projeleri."
+ilgili:
+  - "hizmetlerimiz"
+  - "hakkimizda"
+  - "yonlendirilebilir-yatay-sondaj"
+  - "boru-surmecakma"
+anahtarKelimeler: "yatay sondaj referansları, HDD projeleri, kazısız geçiş referans, BOTAŞ, İSKİ, TCDD, TEİAŞ, Siemens, Ericsson, Kolin, Saipem, Aramco"
 ---
 
 ## Birlikte çalıştığımız kurumlar
@@ -36,3 +43,22 @@ anlatıyoruz.
 
 Yeni bir projede aynı masaya oturmak için [bize ulaşın](/iletisim/) —
 fizibilite ve keşif çalışmamız ücretsizdir.
+
+## Hangi sektörlerde çalışıyoruz?
+
+- **Doğalgaz ve petrol boru hatları** — BOTAŞ ve uluslararası boru hattı
+  yüklenicileri için nehir, otoyol ve demiryolu altı yatay sondaj geçişleri.
+- **İçme suyu ve kanalizasyon** — İSKİ ve belediye su idareleri için isale hattı,
+  kolektör ve cazibeli hat geçişleri; kılavuzlu boru sürme ve mikrotünel.
+- **Enerji iletim ve dağıtım** — TEİAŞ ve elektrik dağıtım şirketleri için yüksek
+  ve orta gerilim kablo koruma borularının kazısız döşenmesi.
+- **Telekomünikasyon** — Ericsson, Siemens ve fiber altyapı operatörleri için
+  şehir içi fiber optik kanal geçişleri.
+- **Demiryolu ve karayolu** — TCDD hatları ile karayolu ve otoyol altlarından
+  kazı izni gerektirmeyen HDD ve auger boring geçişleri.
+- **Uluslararası projeler** — Saipem ve Aramco projelerinde onshore/offshore
+  boru hattı karaya çıkış geçişleri.
+
+Projelerimizden örnekler için [Hizmetlerimiz](/hizmetlerimiz/) sayfasındaki
+galeriye, uygulanan yöntemlerin teknik ayrıntıları için
+[Teknoloji](/yatay-sondaj-teknoloji/) bölümüne bakabilirsiniz.
