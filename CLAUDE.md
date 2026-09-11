@@ -1794,6 +1794,7 @@ Bir sayfa düşük çıkarsa `--ayrinti` bulguları listeler. Harici servislere
   ayrı bir karar.
 - 301'ler `public/_redirects`, özel başlıklar `public/_headers`.
 - Depo: `github.com/yalibuk/deltek`, dal `main`.
+- **Canlıya alma adımları: `YAYIN.md`** (10 adım, geri dönüş planı dahil).
 
 ### Cloudflare Pages'in SHALLOW KLONU (2026-09-11)
 
