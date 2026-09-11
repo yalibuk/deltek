@@ -256,6 +256,46 @@ Aynısını `/en/xyz/` için de yapın.
 
 # ADIM 4 — Mevcut DNS kaydını NOT ALIN (2 dakika, atlamayın)
 
+> ## ⛔ ÖNCE ERİŞİM: BÖLGE BİZİM HESABIMIZDA DEĞİL (2026-09-12)
+>
+> `deltek.com.tr` nameserver'ları Cloudflare (`harley` / `rosalyn.ns.cloudflare.com`)
+> ama bölge `Yalibuk@gmail.com` hesabında **görünmüyor**; o hesapta yalnız
+> `boremak.com`, `boremak.com.tr`, `yataysondaj.org` var. Bölge **başka bir
+> Cloudflare hesabında**.
+>
+> **Bu adımdan sonraki her şey o bölgeye erişim istiyor:** DNS yedeği (4),
+> Search Console TXT kaydı (5), DNS'in Pages'e çevrilmesi (6), apex→www
+> Redirect Rule (7). Test alt alan adı `yeni.deltek.com.tr` de aynı sebeple
+> eklenemedi.
+>
+> Mevcut kayıtların dışarıdan okunabilen envanteri: **`DNS-ENVANTER.md`**.
+> **E-posta Google Workspace üzerinde** — beş MX kaydı ve SPF kaybolursa
+> şirketin e-postası durur. Bölgeye dokunan her işlemde önce bunlar
+> doğrulanmalı.
+>
+> ### İki yol var
+>
+> **A — Mevcut hesaba erişim alın (tercih edilen).** Bölgeyi tutan hesap
+> büyük olasılıkla eski siteyi işleten firmada: kaynak sunucu Plesk + PHP 5.6
+> ve apex→www yönlendirmesini o sunucu yapıyor. Onlardan istenecek:
+> Cloudflare hesabına **Member** olarak eklenmek, ya da bölgeyi
+> **Yalibuk@gmail.com** hesabına devretmeleri (Cloudflare'de hesaplar arası
+> bölge taşıma var, kayıtlar ve ayarlar korunur).
+>
+> **B — Bölgeyi sıfırdan bu hesaba kurun.** `Add domain` ile `deltek.com.tr`
+> eklenir, Cloudflare yeni bir nameserver çifti verir ve bu çift **alan adı
+> kayıt kuruluşunda (registrar)** değiştirilir. Registrar erişimi gerekir.
+>
+> > **B yolunun riski:** vekillenmiş (turuncu bulut) bir bölge dışarıdan tam
+> > olarak okunamaz. Cloudflare'in tarayıcısı bazı kayıtları kaçırır ve
+> > eksik kalanı kimse fark etmez — en tehlikelisi MX/SPF, yani e-posta.
+> > `DNS-ENVANTER.md` dışarıdan görünen her şeyi tutuyor ama **gerçek kaynak
+> > sunucu IP'si dışarıdan görünmüyor**; o olmadan eski siteye geri dönüş
+> > planı da çalışmaz. A yolu bu yüzden tercih edilir.
+>
+> Erişim çözülene kadar aşağıdaki adımlar yapılamaz. Site tarafında
+> yapılabilecek her şey bitti: `deltek.pages.dev` yayında ve doğrulandı.
+
 Bu, geçiş sorun çıkarırsa geri dönüş planınız.
 
 **4.1** Cloudflare panelinde sol üstten hesabınıza, oradan **`deltek.com.tr`**
