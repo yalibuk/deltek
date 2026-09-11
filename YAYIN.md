@@ -136,10 +136,24 @@ llms.txt yazıldı
 
 # ADIM 3 — `pages.dev` adresinde test edin (15 dakika, canlı site etkilenmez)
 
-Pages size `deltek-xxxx.pages.dev` gibi bir adres verdi. **Hata bulmanın ucuz
-olduğu son an burasıdır.**
+Pages size `deltek.pages.dev` adresini verdi. **Hata bulmanın ucuz olduğu son
+an burasıdır.**
 
-**3.1** Bu sayfaları tek tek açın ve gözle kontrol edin:
+**3.0 — Önce otomatik denetim.** Tek komut 60'tan fazla şeyi kontrol eder:
+sayfa durum kodları (TR + EN), 301 yönlendirmeleri ve hedefleri, teknik
+dosyalar, güvenlik ve önbellek başlıkları, 404 sayfaları, canonical + hreflang
+eşleşmesi, sitemap'te lastmod/hreflang/noindex, eski `uploads/` ve Google Fonts
+kalıntıları.
+
+```bash
+npm run yayin -- https://deltek.pages.dev
+```
+
+Hepsi `✓` olmalı. Bir şey `✗` çıkarsa özet listesinde nedeniyle görünür.
+
+Sonra gözle bakın — betik düzeni ve görünümü göremez:
+
+**3.1** Bu sayfaları tek tek açın:
 
 - [ ] `/` — hero slider dönüyor mu, menü, footer
 - [ ] `/hizmetlerimiz/` — kart ızgaraları
@@ -319,61 +333,23 @@ eksiktir — 7.3'e dönün.
 
 # ADIM 8 — Geçiş sonrası doğrulama (10 dakika)
 
-**8.1** Ana adresler 200 dönüyor mu:
+**8.1** Aynı betiği bu kez canlı adrese karşı çalıştırın:
 
 ```bash
-for u in / /iletisim/ /hizmetlerimiz/ /blog/ /yatay-sondaj-teknoloji/ /en/ /en/contact/ /en/services/; do
-  printf "%-26s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "https://www.deltek.com.tr$u"
-done
+npm run yayin -- https://www.deltek.com.tr
 ```
 
-Hepsi `200` olmalı.
+Bu sefer **hepsi geçmeli** — adım 3'te yalnız Cloudflare'de çalışan
+yönlendirme ve başlık testleri de dahil. `ÖZET  geçen: 72 · kalan: 0` görün.
 
-**8.2** Kaldırılan sayfaların 301'leri çalışıyor mu:
+**8.2** apex yönlendirmesini ayrıca doğrulayın (betik yalnız verilen adresi
+denetler):
 
 ```bash
-curl -sI https://www.deltek.com.tr/mikrotunel-nedir/ | grep -i "^location"
-curl -sI https://www.deltek.com.tr/medyalar/ | grep -i "^location"
-curl -sI https://www.deltek.com.tr/feed/ | grep -i "^location"
+curl -sI https://deltek.com.tr/iletisim/ | grep -iE "^HTTP|^location"
 ```
 
-Sırasıyla `/boru-surmecakma/`, `/deltek-yatay-sondaj-kaya-delgi-rock-drilling/`,
-`/blog/` göstermeli.
-
-**8.3** Eski WordPress görsel adresleri:
-
-```bash
-curl -sI https://www.deltek.com.tr/wp-content/uploads/2015/08/018.jpg | grep -iE "^HTTP|^location"
-```
-
-`301` ve `/images/uploads/2015/08/018.jpg` göstermeli.
-
-**8.4** Teknik dosyalar:
-
-```bash
-for u in /sitemap-index.xml /robots.txt /rss.xml /llms.txt; do
-  printf "%-22s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "https://www.deltek.com.tr$u"
-done
-```
-
-**8.5** Güvenlik ve önbellek başlıkları uygulanmış mı:
-
-```bash
-curl -sI https://www.deltek.com.tr/ | grep -iE "strict-transport|x-content-type|referrer-policy"
-```
-
-Üçü de görünmeli. (`_headers` dosyasının kendisi sunulmaz — Cloudflare onu
-yapılandırma olarak okur.)
-
-**8.6** Sitemap'te İngilizce adresler doğru mu:
-
-```bash
-curl -s https://www.deltek.com.tr/sitemap-0.xml | grep -o "en/contact/" | head -1
-```
-
-Çıktı vermeli.
-
-**8.7** Tarayıcıda son bir tur: ana sayfa, bir teknoloji sayfası, iletişim,
+**8.3** Tarayıcıda son bir tur: ana sayfa, bir teknoloji sayfası, iletişim,
 telefondan ana sayfa.
 
 ---

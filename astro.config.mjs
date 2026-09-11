@@ -15,8 +15,13 @@ export default defineConfig({
     // Build sonrası dist HTML'lerinde width/height'sız <img>'lere ölçü ekler (CLS)
     gorselOlcu(),
     sitemap({
-      // CMS paneli ve içeriksiz sayfaları sitemap dışında bırak
-      filter: (page) => !page.includes('/admin'),
+      // CMS paneli ve noindex sayfaları sitemap dışında bırak.
+      // 404: TR'yi Astro zaten özel sayfa sayıp eklemiyor, ama `en/404.astro`
+      // trailingSlash yüzünden `/en/404/` olarak normal sayfa gibi görünüyordu
+      // ve sitemap'e giriyordu — hem noindex hem de build sonrası
+      // `en/404.html`e taşındığı için var olmayan bir adres (bkz.
+      // gorsel-olcu-integration.mjs). Search Console'da tarama hatası olurdu.
+      filter: (page) => !page.includes('/admin') && !page.includes('/404'),
       // hreflang eşlemesi BURADA DEĞİL: eklentinin i18n seçeneği yolları
       // önekle eşliyor (/x/ ↔ /en/x/), oysa EN adresler İngilizce. Eşleme
       // dosya adı üzerinden scripts/seo-integration.mjs'de yapılıyor.

@@ -2041,5 +2041,6 @@ footer telif satırı, açılır menü başlığı).
 | `npm run hero` | Hero slaytlarında metin–katman çakışması denetimi |
 | `npm run duzen` | Bütün sayfalarda düzen/hizalama denetimi |
 | `npm run seo` | Build + `scripts/seo-denetim.mjs` — sayfa başına SEO puanı (bkz. "SEO") |
+| `npm run yayin -- <adres>` | Canlı/önizleme adresini baştan sona denetler: durum kodları, 301'ler, başlıklar, canonical+hreflang, sitemap (bkz. `YAYIN.md`) |
 | `npm run webp` | Görselleri WebP'ye çevirir; `--kuru` yazmadan raporlar, `--klasor` hedefi seçer |
 | `npm run seo:ayrinti` | Son build üzerinde her sayfanın tüm bulgularını listeler |

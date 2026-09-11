@@ -19,7 +19,8 @@
     "duzen": "node scripts/duzen-denetim.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "fontlar": "node scripts/font-indir.mjs",
-    "ikonlar": "node scripts/ikon-uret.mjs"
+    "ikonlar": "node scripts/ikon-uret.mjs",
+    "yayin": "node scripts/yayin-testi.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
