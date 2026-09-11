@@ -4,8 +4,8 @@ Yeni site GitHub'da hazır: `github.com/yalibuk/deltek`, dal `main`.
 Canlı `deltek.com.tr` bugün **WordPress/Plesk** üzerinde çalışıyor ve
 `deltek.com.tr` → `www.deltek.com.tr` yönlendirmesini **o sunucu** yapıyor.
 
-Bu kılavuz sırayla takip edilir. **1-5. adımlar canlı siteye hiç dokunmaz**;
-site ancak 6. adımda değişir.
+Adımlar sırayla takip edilir. **1-5 canlı siteye hiç dokunmaz**; site
+ancak **6. adımda** değişir.
 
 ---
 
@@ -18,228 +18,426 @@ site ancak 6. adımda değişir.
 | Eski sunucu | Geri dönüş için **kapatılmamalı** (en az 1 hafta) |
 | Slug'lar | Canlı sitedeki Türkçe adreslerin hepsi birebir korundu; kaldırılan sayfalar için `public/_redirects`'te 301 var |
 | Eski görsel adresleri | `/wp-content/uploads/*` → `/images/uploads/:splat` 301'i var, hedef dosyalar depoda |
+| Tahmini süre | 45-60 dakika (DNS yayılması dahil) |
 
 ---
 
-## 1. Son kontrol (yerelde, 2 dakika)
+# ADIM 1 — Son kontrol (yerelde, 3 dakika)
+
+**1.1** Terminali `deltek-site` klasöründe açın.
+
+**1.2** Derleyin ve denetleyin:
 
 ```bash
-cd deltek-site
 npm run seo
 ```
 
-Beklenen: `GENEL PUAN: 100/100`, 73 sayfa, `Alt eksik görsel: 0 · width/height eksik: 0 · Yetim sayfa: 0`.
+**1.3** Çıktının son üç satırını okuyun. Beklenen:
 
-`git status` temiz olmalı. Kirliyse commit'leyip push edin — Cloudflare
-GitHub'daki hâli derler, yereldekini değil.
+```
+GENEL PUAN: 100/100
+Sayfa ortalaması: 100/100 · En düşük: 89% (/404.html)
+Alt eksik görsel: 0 · width/height eksik: 0 · Yetim sayfa: 0
+```
+
+100/100 değilse **durun** — `npm run seo:ayrinti` hangi sayfada ne olduğunu yazar.
+
+**1.4** Çalışma alanının temiz olduğunu doğrulayın:
+
+```bash
+git status --short
+```
+
+Boş çıkmalı. Çıkmıyorsa commit'leyip push edin — **Cloudflare GitHub'daki hâli
+derler, sizin bilgisayarınızdakini değil.**
+
+```bash
+git add -A
+git commit -m "Yayin oncesi son degisiklikler"
+git push origin main
+```
 
 ---
 
-## 2. Cloudflare Pages projesini oluşturun
+# ADIM 2 — Cloudflare Pages projesini oluşturun (5 dakika)
 
-Cloudflare paneli → **Workers & Pages** → **Create** → **Pages** →
-**Connect to Git** → `yalibuk/deltek` deposunu seçin.
+**2.1** [dash.cloudflare.com](https://dash.cloudflare.com) adresine girin.
 
-Build ayarları:
+**2.2** Sol menüden **Workers & Pages** → **Create application** düğmesi.
+
+**2.3** **Pages** sekmesine geçin → **Connect to Git**.
+
+**2.4** GitHub hesabınızla oturum açın. İlk kez bağlıyorsanız
+**Install & Authorize** deyin; depo listesinde `yalibuk/deltek` görünmüyorsa
+GitHub izin ekranında "All repositories" ya da en az `deltek` seçili olmalı.
+
+**2.5** `yalibuk/deltek` deposunu seçin → **Begin setup**.
+
+**2.6** "Set up builds and deployments" ekranını şöyle doldurun:
 
 | Alan | Değer |
 | --- | --- |
-| Framework preset | Astro (ya da None) |
+| Project name | `deltek` |
+| Production branch | `main` |
+| Framework preset | `Astro` (yoksa `None`) |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
-| Root directory | *(boş — depo kökü)* |
-| Production branch | `main` |
+| Root directory (advanced) | *boş bırakın* |
 
-Node sürümü **ayrıca girilmesine gerek yok**: depodaki `.node-version`
-dosyası 22.12.0 diyor, Pages onu okuyor.
+**2.7** Environment variables bölümüne **hiçbir şey eklemeyin.** Node sürümü
+depodaki `.node-version` dosyasından (22.12.0) geliyor.
 
-**Save and Deploy** deyin. İlk derleme 1-3 dakika sürer.
+**2.8** **Save and Deploy** deyin. Derleme 1-3 dakika sürer.
 
-> Derleme günlüğünde şunlar görünmeli:
-> `sitemap: 70 URL'ye lastmod, 70 URL'ye hreflang eklendi`,
-> `rss: /rss.xml`, `llms.txt yazıldı`, `73 page(s) built`.
-> "git geçmişi yok ve icerik-tarihleri.json bulunamadı" uyarısı **çıkmamalı**.
+**2.9** Derleme günlüğünü açın ve şu satırları arayın:
 
----
-
-## 3. `*.pages.dev` adresinde test edin (DNS'e dokunmadan)
-
-Pages size `deltek-xxxx.pages.dev` gibi bir adres verir. **Burada test edin**,
-çünkü 6. adımdan sonra hata bulmak pahalı olur.
-
-Bakılacaklar:
-
-- [ ] Ana sayfa, hero slider, menü, footer
-- [ ] `/iletisim/`, `/hizmetlerimiz/`, `/yatay-sondaj-teknoloji/`
-- [ ] Bir blog yazısı ve `/blog/`
-- [ ] **İngilizce taraf**: `/en/`, `/en/contact/`, `/en/horizontal-directional-drilling/`
-- [ ] Dil değiştirici iki yönde de doğru sayfaya gidiyor mu
-- [ ] Telefonda: hero, menü, iletişim sayfası
-- [ ] `/sitemap-index.xml`, `/rss.xml`, `/robots.txt`, `/llms.txt` açılıyor mu
-- [ ] Olmayan bir adres (`/xyz/`) 404 sayfasını veriyor mu
-
-> `*.pages.dev` adresi Google tarafından indekslenebilir. Kalıcı olarak
-> tutacaksanız Pages ayarlarından erişimi kısıtlayın; geçici test için sorun değil.
-
----
-
-## 4. Mevcut DNS kaydını NOT ALIN (geri dönüş için)
-
-Cloudflare paneli → `deltek.com.tr` → **DNS** → **Records**.
-
-`www` kaydının **tipini ve değerini** bir yere yazın ya da ekran görüntüsünü
-alın (muhtemelen Plesk sunucusunun IP'sini gösteren bir `A` kaydı). Geçiş
-sorun çıkarırsa geri dönüş bu kayıttır.
-
-Aynı şekilde apex (`deltek.com.tr`) kaydını da not alın.
-
----
-
-## 5. Google Search Console'u hazırlayın
-
-Henüz yoksa **şimdi** kurun; eski siteden veri toplamaya başlasın ve geçişin
-etkisini görebilesiniz. Domain doğrulaması Cloudflare DNS üzerinden tek tıkla
-yapılıyor.
-
-Geçişten önce mevcut **indekslenmiş sayfa sayısını** not alın
-(Sayfalar → Dizine eklendi). Geçişten sonra bu sayının korunması gerekir.
-
----
-
-## 6. Özel alan adını bağlayın — **SİTE BU ADIMDA DEĞİŞİR**
-
-Pages projesi → **Custom domains** → **Set up a custom domain** →
-`www.deltek.com.tr`.
-
-Cloudflare DNS kaydını kendisi günceller (eski `A` kaydını Pages'e bakan bir
-kayıtla değiştirir). Sertifika birkaç dakikada hazır olur.
-
-Hemen kontrol edin:
-
-```bash
-curl -sI https://www.deltek.com.tr/ | head -3
-curl -s https://www.deltek.com.tr/ | grep -c "Deltek"
+```
+sitemap: 70 URL'ye lastmod, 70 URL'ye hreflang eklendi
+rss: /rss.xml (11 yazı)
+llms.txt yazıldı
+73 page(s) built
 ```
 
-Yanıtta `server: cloudflare` olmalı ve `x-powered-by: PHP` **olmamalı** —
-PHP başlığı hâlâ eski sunucuya gittiğinizi gösterir.
+**2.10** Günlükte şu uyarı **ÇIKMAMALI**:
+`git geçmişi yok ve src/data/icerik-tarihleri.json bulunamadı`.
+Çıkarsa tarih dosyası commit'lenmemiş demektir; adım 1.4'e dönün.
+
+**2.11** Derleme başarısızsa en sık iki sebep: Node sürümü (günlükte
+`engine` hatası) ya da eksik commit. Günlüğün son 20 satırını okuyun.
 
 ---
 
-## 7. apex → www yönlendirmesini kurun — **ATLAMAYIN**
+# ADIM 3 — `pages.dev` adresinde test edin (15 dakika, canlı site etkilenmez)
 
-Bu adım yapılmazsa `deltek.com.tr` (www'suz) ya çalışmaz ya da www ile
-**ikiz içerik** üretir; ikisi de SEO kaybı.
+Pages size `deltek-xxxx.pages.dev` gibi bir adres verdi. **Hata bulmanın ucuz
+olduğu son an burasıdır.**
 
-Cloudflare paneli → `deltek.com.tr` → **Rules** → **Redirect Rules** →
-**Create rule**:
+**3.1** Bu sayfaları tek tek açın ve gözle kontrol edin:
+
+- [ ] `/` — hero slider dönüyor mu, menü, footer
+- [ ] `/hizmetlerimiz/` — kart ızgaraları
+- [ ] `/yatay-sondaj-teknoloji/` — bölüm haritası
+- [ ] `/yonlendirilebilir-yatay-sondaj/` — yan menü, sayfa altı gezinme
+- [ ] `/iletisim/` — telefon/e-posta kartları, ofis kartları
+- [ ] `/blog/` ve bir blog yazısı
+- [ ] `/referanslar/` — logo şeridi kayıyor mu
+
+**3.2** İngilizce tarafı:
+
+- [ ] `/en/`
+- [ ] `/en/contact/`
+- [ ] `/en/horizontal-directional-drilling/`
+- [ ] `/en/services/`
+
+**3.3** Dil değiştiriciyi **iki yönde de** deneyin: `/iletisim/` sayfasında
+EN'e basın → `/en/contact/` açılmalı. Oradan TR'ye basın → `/iletisim/`e
+dönmeli.
+
+**3.4** Telefonunuzdan (ya da tarayıcı geliştirici araçlarında mobil görünümde)
+bakın:
+
+- [ ] Ana sayfa hero'su — yazı üstte, fotoğraf kuşağı altta
+- [ ] Menü açılıyor mu
+- [ ] `/iletisim/` — telefon butonuna basılıyor mu
+
+**3.5** Teknik dosyalar açılıyor mu:
+
+- [ ] `/sitemap-index.xml`
+- [ ] `/robots.txt`
+- [ ] `/rss.xml` ve `/en/rss.xml`
+- [ ] `/llms.txt`
+
+**3.6** Olmayan bir adres deneyin (`/xyz/`) — 404 sayfası çıkmalı, boş sayfa değil.
+Aynısını `/en/xyz/` için de yapın.
+
+**3.7** CMS panelini açın: `/admin/`. Giriş ekranı gelmeli.
+
+> **`pages.dev` adresi hakkında.** Cloudflare önizleme dağıtımlarına
+> kendiliğinden `noindex` ekliyor ama **üretim** `pages.dev` adresine
+> eklemiyor. Bizde sorun değil: her sayfa `<link rel="canonical">` ile
+> `www.deltek.com.tr`yi gösteriyor, Google onu tercih eder. Yine de
+> `pages.dev` adresini kimseyle paylaşmayın.
+
+---
+
+# ADIM 4 — Mevcut DNS kaydını NOT ALIN (2 dakika, atlamayın)
+
+Bu, geçiş sorun çıkarırsa geri dönüş planınız.
+
+**4.1** Cloudflare panelinde sol üstten hesabınıza, oradan **`deltek.com.tr`**
+alan adına girin.
+
+**4.2** **DNS** → **Records** sekmesini açın.
+
+**4.3** Şu iki kaydın **ekran görüntüsünü alın** ya da bir yere yazın:
+
+| Ne | Not alınacaklar |
+| --- | --- |
+| `www` kaydı | Type (A / CNAME), Content (IP ya da hedef), Proxy durumu (turuncu bulut açık mı) |
+| Kök kayıt (`deltek.com.tr` ya da `@`) | Aynı bilgiler |
+
+**4.4** Diğer kayıtlara **dokunmayın** — özellikle `MX` (e-posta) kayıtları.
+Bu geçiş e-postayı etkilemez, ama yanlışlıkla silinmesin.
+
+---
+
+# ADIM 5 — Google Search Console'u hazırlayın (10 dakika)
+
+Henüz kurulu değilse **şimdi** kurun: geçişin etkisini ölçebilmek için
+öncesine ait veriye ihtiyacınız var.
+
+**5.1** [search.google.com/search-console](https://search.google.com/search-console)
+adresine girin.
+
+**5.2** **Mülk ekle** → **Alan adı** (Domain) türünü seçin → `deltek.com.tr` yazın.
+
+**5.3** Doğrulama için bir TXT kaydı isteyecek. Cloudflare DNS → **Records** →
+**Add record** → Type `TXT`, Name `@`, Content olarak Google'ın verdiği değeri
+yapıştırın → **Save**.
+
+**5.4** Search Console'a dönüp **Doğrula** deyin. Cloudflare'de kayıt anında
+yayıldığı için genelde ilk denemede geçer.
+
+**5.5** Sol menüden **Sayfalar** raporunu açın. **Dizine eklendi** sayısını
+bir yere yazın — geçişten sonra bu sayının korunması gerekiyor.
+
+**5.6** **Performans** raporunda son 3 ayın toplam tıklama sayısını da not alın.
+
+---
+
+# ADIM 6 — Özel alan adını bağlayın (5 dakika) — **SİTE BU ADIMDA DEĞİŞİR**
+
+**6.1** Cloudflare → **Workers & Pages** → `deltek` projesine girin.
+
+**6.2** **Custom domains** sekmesi → **Set up a domain**.
+
+**6.3** `www.deltek.com.tr` yazın → **Continue**.
+
+**6.4** Cloudflare size oluşturacağı DNS kaydını gösterir (mevcut kaydın
+yerine geçecek bir `CNAME`). Onaylayın.
+
+**6.5** Durum `Active` olana kadar bekleyin — genelde 1-3 dakika, sertifika
+için bazen 10 dakikaya kadar çıkabilir.
+
+**6.6** Tarayıcıda `https://www.deltek.com.tr/` açın. **Yeni site gelmeli.**
+
+**6.7** Terminalden doğrulayın:
+
+```bash
+curl -sI https://www.deltek.com.tr/ | grep -iE "^HTTP|^server|^x-powered"
+```
+
+Beklenen: `HTTP/2 200` ve `server: cloudflare`.
+**`x-powered-by: PHP` satırı ÇIKMAMALI** — çıkıyorsa hâlâ eski sunucuya
+gidiyorsunuz, birkaç dakika daha bekleyin.
+
+---
+
+# ADIM 7 — apex → www yönlendirmesini kurun (5 dakika) — **ATLAMAYIN**
+
+Bu yapılmazsa `deltek.com.tr` (www'suz) ya çalışmaz ya da www ile **ikiz
+içerik** üretir. İkisi de SEO kaybı.
+
+**7.1** Önce apex için proxy'li bir DNS kaydı olduğundan emin olun.
+Cloudflare → `deltek.com.tr` → **DNS** → **Records**.
+
+Kök kayıt (`@` ya da `deltek.com.tr`) varsa **turuncu bulut açık** (Proxied)
+olmalı. Yoksa ekleyin:
+
+| Alan | Değer |
+| --- | --- |
+| Type | `AAAA` |
+| Name | `@` |
+| IPv6 address | `100::` |
+| Proxy status | **Proxied** (turuncu) |
+
+> `100::` kara delik adresidir; trafik oraya hiç gitmez, Cloudflare isteği
+> proxy katmanında yakalayıp yönlendirme kuralını uygular. Yönlendirme
+> kuralları yalnızca **proxy'li** trafikte çalışır.
+
+**7.2** Sol menüden **Rules** → **Overview** → **Create rule** →
+**Redirect Rule**.
+
+**7.3** Kuralı şöyle doldurun:
 
 | Alan | Değer |
 | --- | --- |
 | Rule name | `apex → www` |
-| If: Custom filter expression | Hostname **equals** `deltek.com.tr` |
-| Then: Type | **Dynamic** |
-| Expression | `concat("https://www.deltek.com.tr", http.request.uri.path)` |
+| When incoming requests match | **Wildcard pattern** |
+| Request URL | `http*://deltek.com.tr/*` |
+| Then / Type | **Dynamic** ya da **Wildcard** |
+| Target URL | `https://www.deltek.com.tr/${1}` |
 | Status code | **301** |
-| Preserve query string | ✅ |
+| Preserve query string | ✅ açık |
 
-Kural kaydedildikten sonra apex için bir DNS kaydı gerekir (yoksa kural hiç
-çalışmaz). Cloudflare'de apex'e **proxy'li (turuncu bulut)** bir `AAAA` kaydı
-`100::` ya da mevcut kaydı proxy'li bırakmak yeterli.
+**7.4** **Deploy** deyin.
 
-Doğrulayın:
+**7.5** Doğrulayın — yalnız ana sayfa değil, **yol da korunmalı**:
 
 ```bash
-curl -sI https://deltek.com.tr/iletisim/ | grep -i "^location\|^HTTP"
+curl -sI https://deltek.com.tr/iletisim/ | grep -iE "^HTTP|^location"
 ```
 
-Beklenen: `HTTP/2 301` ve `location: https://www.deltek.com.tr/iletisim/` —
-yalnız ana sayfaya değil, **yoluyla birlikte** gitmeli.
+Beklenen:
+
+```
+HTTP/2 301
+location: https://www.deltek.com.tr/iletisim/
+```
+
+`location: https://www.deltek.com.tr/` (yolsuz) gelirse kuralda `${1}`
+eksiktir — 7.3'e dönün.
 
 ---
 
-## 8. Geçiş sonrası doğrulama (ilk saat)
+# ADIM 8 — Geçiş sonrası doğrulama (10 dakika)
+
+**8.1** Ana adresler 200 dönüyor mu:
 
 ```bash
-# Ana adresler
-for u in / /iletisim/ /hizmetlerimiz/ /blog/ /en/ /en/contact/; do
-  printf "%-22s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "https://www.deltek.com.tr$u"
+for u in / /iletisim/ /hizmetlerimiz/ /blog/ /yatay-sondaj-teknoloji/ /en/ /en/contact/ /en/services/; do
+  printf "%-26s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "https://www.deltek.com.tr$u"
 done
+```
 
-# 301'ler çalışıyor mu
+Hepsi `200` olmalı.
+
+**8.2** Kaldırılan sayfaların 301'leri çalışıyor mu:
+
+```bash
 curl -sI https://www.deltek.com.tr/mikrotunel-nedir/ | grep -i "^location"
-curl -sI https://www.deltek.com.tr/wp-content/uploads/2015/08/018.jpg | grep -i "^location"
+curl -sI https://www.deltek.com.tr/medyalar/ | grep -i "^location"
+curl -sI https://www.deltek.com.tr/feed/ | grep -i "^location"
+```
 
-# Dosyalar
-for u in /sitemap-index.xml /robots.txt /rss.xml /llms.txt /_headers; do
+Sırasıyla `/boru-surmecakma/`, `/deltek-yatay-sondaj-kaya-delgi-rock-drilling/`,
+`/blog/` göstermeli.
+
+**8.3** Eski WordPress görsel adresleri:
+
+```bash
+curl -sI https://www.deltek.com.tr/wp-content/uploads/2015/08/018.jpg | grep -iE "^HTTP|^location"
+```
+
+`301` ve `/images/uploads/2015/08/018.jpg` göstermeli.
+
+**8.4** Teknik dosyalar:
+
+```bash
+for u in /sitemap-index.xml /robots.txt /rss.xml /llms.txt; do
   printf "%-22s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "https://www.deltek.com.tr$u"
 done
 ```
 
-`_headers` **404 vermeli** (Cloudflare onu yapılandırma olarak okur, dosya
-olarak sunmaz). Başlıkların uygulandığını şöyle doğrulayın:
+**8.5** Güvenlik ve önbellek başlıkları uygulanmış mı:
 
 ```bash
 curl -sI https://www.deltek.com.tr/ | grep -iE "strict-transport|x-content-type|referrer-policy"
 ```
 
-Ayrıca tarayıcıda:
+Üçü de görünmeli. (`_headers` dosyasının kendisi sunulmaz — Cloudflare onu
+yapılandırma olarak okur.)
 
-- [ ] Ana sayfa ve birkaç iç sayfa gözle
-- [ ] Telefonda ana sayfa
-- [ ] `/admin/` paneli açılıyor mu (CMS)
+**8.6** Sitemap'te İngilizce adresler doğru mu:
+
+```bash
+curl -s https://www.deltek.com.tr/sitemap-0.xml | grep -o "en/contact/" | head -1
+```
+
+Çıktı vermeli.
+
+**8.7** Tarayıcıda son bir tur: ana sayfa, bir teknoloji sayfası, iletişim,
+telefondan ana sayfa.
 
 ---
 
-## 9. Arama motorlarına haber verin (ilk gün)
+# ADIM 9 — Arama motorlarına haber verin (10 dakika)
 
-1. **Search Console** → Sitemaps → `sitemap-index.xml` gönderin.
-2. **URL Denetimi** ile ana sayfa ve 3-4 önemli sayfa için "Dizine eklenmeyi
-   iste" deyin.
-3. **Bing Webmaster Tools** → siteyi ekleyin (Search Console'dan içe aktarma
-   seçeneği var, 2 dakika) → sitemap gönderin.
-4. **IndexNow** — her deploy'dan sonra:
+**9.1** Search Console → **Site haritaları** → `sitemap-index.xml` yazıp
+**Gönder**.
+
+**9.2** Search Console → üstteki arama kutusuna `https://www.deltek.com.tr/`
+yazıp **URL Denetimi** → **Dizine eklenmeyi iste**.
+
+**9.3** Aynısını şu 4 sayfa için tekrarlayın:
+
+- `/hizmetlerimiz/`
+- `/yonlendirilebilir-yatay-sondaj/`
+- `/iletisim/`
+- `/en/`
+
+**9.4** [bing.com/webmasters](https://www.bing.com/webmasters) → siteyi ekleyin.
+**Import from Google Search Console** seçeneği iki dakikada halleder.
+
+**9.5** Bing'de de sitemap gönderin.
+
+**9.6** IndexNow ile anında bildirin:
 
 ```bash
 npm run build && npm run indexnow
 ```
 
-> Bing dizinini ChatGPT ve Copilot da kullanıyor; bu adım yapay zekâ
+Beklenen: `70 URL gönderildi → HTTP 200 OK` (ya da `202`).
+
+> Bing dizinini ChatGPT ve Copilot da kullanıyor. Bu adım yapay zekâ
 > aramalarında görünürlük için Google kadar önemli.
+
+**9.7** Bundan sonra **her içerik güncellemesinden sonra** 9.6'yı tekrarlayın.
 
 ---
 
-## 10. İlk hafta izleme
+# ADIM 10 — İlk hafta izleme
 
-| Ne | Nerede | Ne beklenir |
-| --- | --- | --- |
-| Tarama hataları | Search Console → Sayfalar | 404 artışı olmamalı |
-| İndekslenen sayfa | Search Console | Geçiş öncesi sayıya yaklaşmalı |
-| Core Web Vitals | PageSpeed Insights (mobil) | LCP < 2,5 s · CLS < 0,1 · INP < 200 ms |
-| Zengin sonuçlar | Rich Results Test | `/` , `/iletisim/` (LocalBusiness + FAQPage), bir blog yazısı (Article), `/yonlendirilebilir-yatay-sondaj/` (Service) |
-| Sıralama | Search Console → Performans | İlk 2-4 hafta dalgalanma normaldir |
+| Ne zaman | Ne | Nerede | Beklenen |
+| --- | --- | --- | --- |
+| 1. gün | Tarama hataları | Search Console → Sayfalar | 404 artışı yok |
+| 1. gün | Core Web Vitals | PageSpeed Insights (mobil) | LCP < 2,5 s · CLS < 0,1 · INP < 200 ms |
+| 1. gün | Zengin sonuçlar | Rich Results Test | aşağıdaki 4 adres |
+| 3. gün | İndekslenen sayfa | Search Console | artmaya başlamalı |
+| 7. gün | İndekslenen sayfa | Search Console | adım 5.5'teki sayıya yaklaşmalı |
+| 7. gün | Eski sunucu | — | **artık kapatılabilir** |
+| 14-28. gün | Sıralama | Search Console → Performans | dalgalanma normaldir |
 
-**Eski sunucuyu en erken bir hafta sonra kapatın.** Geri dönüş gerekirse
-4. adımdaki DNS kaydını geri yazmak yeterli.
+**10.1** Rich Results Test ([search.google.com/test/rich-results](https://search.google.com/test/rich-results))
+ile şu dört adresi ayrı ayrı deneyin:
+
+| Adres | Beklenen şema |
+| --- | --- |
+| `https://www.deltek.com.tr/` | Organization, WebSite, ItemList |
+| `https://www.deltek.com.tr/iletisim/` | LocalBusiness (2 adet), FAQPage |
+| `https://www.deltek.com.tr/gunde-1-km/` | Article (şemada `BlogPosting`), BreadcrumbList |
+| `https://www.deltek.com.tr/yonlendirilebilir-yatay-sondaj/` | Service, WebPage |
+
+"Uyarı" (warning) çoğunlukla isteğe bağlı alanlar içindir, sorun değil.
+**"Hata" (error) varsa** bana bildirin.
+
+**10.2** PageSpeed Insights'ta mobil puanı ölçün. Üçüncü taraf istek olarak
+Google Fonts **görünmemeli** — yazı tipleri artık kendi sunucumuzdan geliyor.
+
+**10.3** Search Console'da **Sayfalar → Dizine eklenmedi** listesine bakın.
+Orada yalnız `/404.html`, `/en/404.html` ve `/admin/` olmalı.
 
 ---
 
 ## Geri dönüş planı
 
-Bir sorun çıkarsa: Cloudflare → DNS → `www` kaydını 4. adımda not aldığınız
-eski değere geri çevirin. Yayılma birkaç dakika. Pages projesi ve
-yönlendirme kuralı dursun, zarar vermez.
+Ciddi bir sorun çıkarsa:
+
+1. Cloudflare → `deltek.com.tr` → **DNS** → **Records**
+2. `www` kaydını **adım 4.3'te not aldığınız** eski değere geri çevirin
+3. Yayılma birkaç dakika
+
+Pages projesi ve yönlendirme kuralı dursun, zarar vermezler.
 
 ---
 
-## Sonrası: benim (Deltek'in) yapacakları
+## Sonrası: Deltek'in yapacakları
 
-Bunlar yayına engel değil ama SEO'yu tamamlar — ayrıntısı `SEO-REHBER.md`:
+Yayına engel değil, SEO'yu tamamlar. Ayrıntısı `SEO-REHBER.md`:
 
 1. **Ofis koordinatları ve çalışma saatleri** → `src/data/site.ts` → `OFISLER`
-   (LocalBusiness şeması yerel aramada konum eşleşmesi için kullanıyor)
 2. **Sosyal profiller + kuruluş yılı** → `SITE.sosyal`, `SITE.kurulus`
-3. **Google Business Profile** — iki ofis için ayrı kayıt
+3. **Google Business Profile** — İzmir ve İstanbul için ayrı kayıt
 4. **İngilizce metinlerin Deltek onayı** — şu an çeviri, doğrulanmadı
 5. **Hizmet sayfalarına SSS** — "Sık sorulan sorular" başlığı + `**Soru?** Cevap`
    biçimi yeter, FAQPage şeması kendiliğinden üretilir
