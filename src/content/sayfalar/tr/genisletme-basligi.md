@@ -15,15 +15,15 @@ bloklar:
   - metin: |-
       Pilot deliğin tamamlanmasının ardından yönlendirilebilir uç çıkarılır ve yerine kılavuzlanmış deliği borunun geçebileceği çapa kadar büyütecek olan genişletme başlığı (reamer) takılır.
       Genişletme başlığının bir başka işlevi de oluşan hafriyat ve çamurun karışmasını sağlayarak düzenli bir boşaltım sağlamaktır.
-    gorsel: "/images/uploads/2015/08/017.webp"
+    gorsel: "/images/icerik/pilot-delgi-sonrasi-yonlendirme-ucunun-yerine.webp"
     alt: "Pilot delgi sonrası yönlendirme ucunun yerine takılan genişletme başlığı (reamer)"
   - metin: |-
       Genişletme başlığının bir başka işlevi de oluşan hafriyat ve çamurun karışmasını sağlayarak düzenli bir boşaltım sağlamaktır.
-    gorsel: "/images/uploads/2015/08/018.webp"
+    gorsel: "/images/icerik/genisletme-basliginin-hafriyati-sondaj-camuruyla.webp"
     alt: "Genişletme başlığının hafriyatı sondaj çamuruyla karıştırıp dışarı taşıması"
   - metin: |-
       Genişletme işlemi çoğu kez kademeli olarak yapılır. Örneğin killi bir zeminde 600mm’lik bir delik açabilmek için pilot deliğin açılmasının ardından sırasıyla 300 mm , 450 mm ve 600 mm’lik genişletmeler ayrı ayrı yapılır.
-    gorsel: "/images/uploads/2015/08/019.webp"
+    gorsel: "/images/icerik/killi-zeminde-300-450-ve-600.webp"
     alt: "Killi zeminde 300, 450 ve 600 mm kademeli genişletme — reamer kademeleri"
   - metin: |-
       Çok değişik çaplara ve dizaynlara sahip genişletme başlıkları (flycutter, barrel, hole opener…vb.) bulunmaktadır. Herbirinin farklı işlevleri bulunan bu ekipmalar zemin yapısına göre seçilir.

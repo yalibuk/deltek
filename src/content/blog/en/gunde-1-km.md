@@ -1,10 +1,11 @@
 ---
 baslik: "One Kilometre a Day"
+adres: "1-km-hdd-a-day"
 seoBaslik: "1 km of HDD a Day: Productivity and Rig Selection"
 ozet: "Anderson Underground in the USA set a record by drilling 1,030 metres in a single day — with a 12-tonne HDD rig. On rig size and productivity in Türkiye."
 anahtarKelimeler: "HDD productivity, HDD daily footage, Ditch Witch JT25, directional drilling record, HDD rig selection, Anderson Underground"
 tarih: 2017-11-15
-kapak: "/images/uploads/2017/11/haberler1.webp"
+kapak: "/images/blog/bir-gunde-1030-metre-yatay-delgi.webp"
 kapakAlt: "HDD rig that drilled 1,030 metres in one day — the Anderson Underground record"
 ilgili:
   - "yonlendirilebilir-yatay-sondaj-makinesi"

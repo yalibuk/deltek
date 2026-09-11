@@ -15,11 +15,11 @@ bloklar:
       YYS’de en çok kullanılan yer bulma sistemidir.
       İsminden de anlaşılacağı gibi topograf yeraltından giden delici ucu yüzeyden yürüyerek takip eder.
       Yönlendirme başlığının içerisindeki sonda (transmitter) ve topografın elinde taşıdığı alıcı (receiver) her 0,001 saniyelik zaman dilimlerinde birbiriyle sinyal alışverişinde bulunur ve konum saptaması yapar.
-    gorsel: "/images/uploads/2015/08/021.webp"
+    gorsel: "/images/icerik/uzerinden-takip-topografin-yuzeyde-alici-receiver.webp"
     alt: "Üzerinden takip: topografın yüzeyde alıcı (receiver) ile yer altındaki sondayı izlemesi"
   - metin: |-
       Dolayısıyla topograf delici bitin yüzeyden derinliğini, yatayla yaptığı açıyı, ördek ağzının(duckbill) veya eğik kolun (bend sub) ne yöne baktığını ve ortam sıcaklığını her an kontrol edebilir. Bu sistemle inilebilecek maksimum derinlik sonda’nın sinyal gücüyle sınırlıdır.
-    gorsel: "/images/uploads/2015/08/yonlendirilebilir-yatay-sondaj-uzerinden-takip-3.webp"
+    gorsel: "/images/icerik/alici-ekraninda-derinlik-egim.webp"
     alt: "Alıcı ekranında derinlik, eğim (pitch) ve ördek ağzının dönüş açısı (roll) bilgisi"
   - baslik: "Sistemin bileşenleri, sınırları ve sahada kullanımı"
     metin: |-

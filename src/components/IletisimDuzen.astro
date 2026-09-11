@@ -125,6 +125,21 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 
 <style>
 .ilet { padding-block: clamp(1.6rem,4vw,2.6rem) clamp(3rem,6vw,5rem); }
+/* SAYFANIN GENİŞLİĞİ — TEK AYAR. Aşağıdaki `--ilet-en` değerini değiştirin,
+   sayfadaki her şey ona uyar: başlık, tanıtım görseli, telefon/e-posta
+   kartları, gövde metni, ofis kartları, kapanış çağrısı. Her bölüm `.kap`
+   kullandığı için sınırı oraya vermek hepsini birden kapsıyor; bölüm bölüm
+   `max-width` yazmak yeni bir bölüm eklendiğinde unutulurdu.
+
+   ÜST SINIR 1280 px: `.kap`ın kendi genişliği o. Daha büyük bir değer
+   yazmak bir şey değiştirmez.
+   GÖRSEL 1200 px geniş (`deltek_iletisim_banner.jpg`, 1200x337); bundan
+   büyük bir değerde görsel büyütülür ve bulanıklaşır.
+
+   `.kap` border-box olduğu için paylar bu değerin ÜSTÜNE ekleniyor —
+   yani içerik tam `--ilet-en` kadar, sarmalayıcı o kadar + 2 pay. */
+.ilet { --ilet-en: 1100px; }
+.ilet .kap { max-width: calc(var(--ilet-en) + 2 * var(--kap-pad)); }
 .ilet__bolum { margin-top: clamp(2.4rem,5vw,3.6rem); }
 
 /* ─── Başlık ──────────────────────────────────────────── */
@@ -169,7 +184,9 @@ const govde = Astro.slots.has('default') ? (await Astro.slots.render('default'))
 .hkart:hover .hkart__eylem i { transform: translateX(4px); }
 
 /* ─── Markdown gövdesi ────────────────────────────────── */
-.ilet__govde { margin-top: clamp(2.2rem,4vw,3rem); max-width: 760px; color: var(--metin);
+/* `max-width` yok: kapsayıcı `.kap` zaten `--ilet-en`e sınırlı. İkinci bir
+   sınır, biri değiştiğinde sessizce farklı genişlikler üretirdi. */
+.ilet__govde { margin-top: clamp(2.2rem,4vw,3rem); color: var(--metin);
   font-size: 1.02rem; line-height: 1.75; }
 .ilet__govde :global(p) { margin-bottom: 1rem; }
 .ilet__govde :global(a) { color: var(--mavi); text-decoration: underline; }

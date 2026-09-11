@@ -1,5 +1,6 @@
 ---
 baslik: "Our Services"
+adres: "services"
 seoBaslik: "Services: HDD, Pipe Jacking, Trenchless Pipe Bursting"
 menuSira: 3
 menuAd: "Services"
@@ -17,22 +18,22 @@ hizmetler:
   - baslik: "Horizontal Directional Drilling"
     kisaltma: "HDD"
     ikon: sondaj
-    href: "/en/yonlendirilebilir-yatay-sondaj-nedir/"
+    href: "/en/what-is-hdd/"
     metin: "Thanks to a mechanism that can be steered in three dimensions underground, we now install your infrastructure more easily and with less effort. We take cable and pipe lines underground without damaging existing lines and without disrupting surface activity or traffic. Less excavation, more technology. Give us the entry and exit points and leave the rest to us!"
   - baslik: "Pipe Jacking, Pipe Ramming / Pushing"
     kisaltma: "Auger Boring"
     ikon: boru
-    href: "/en/boru-surmecakma/"
+    href: "/en/pipe-jacking-auger-boring/"
     metin: "We install your steel pipes of up to 2000 mm diameter underground without endangering human life, in a short time and at fair cost. Adjustable shaft dimensions and high machine capacity let us deliver precise, effective solutions even over long distances without intermediate stations."
   - baslik: "Trenchless Pipe Bursting"
     kisaltma: "Pipe Bursting"
     ikon: yenileme
-    href: "/en/boru-yenileme/"
+    href: "/en/pipe-bursting/"
     metin: "Ever-growing infrastructure demand is one of the hardest problems to solve in city centres, where daily activity often does not allow roads and areas to be closed for long. With our pipe bursting and renewal systems we install new pipes in place of the old line without excavation — and, if you wish, in larger diameters!"
   - baslik: "Smart Undergrounding Consultancy"
     kisaltma: "Smart Undergrounding"
     ikon: akilli
-    href: "/en/akilli-altyapi/"
+    href: "/en/smart-undergrounding/"
     metin: "We look at today's infrastructure problems through tomorrow's window and produce effective solutions. We put the well-earned pride and experience we have gained in the trenchless sector, at home and abroad, at the service of your projects. Take a look through our eyes!"
 
 neden:
@@ -44,35 +45,35 @@ neden:
     - "We continuously renew ourselves and our machine fleet."
     - "We deliver on time and give our partners a time advantage."
     - "We optimise job, crew and machine, and we do not create unexpected costs."
-  gorsel: "/images/uploads/2014/12/devices.webp"
+  gorsel: "/images/icerik/deltek-yatay-sondaj-yer-belirleme.webp"
   gorselAlt: "Deltek HDD locating and steering equipment — horizontal directional drilling fleet"
 
 projeler:
   baslik: "Recent Projects"
   metin: "Here you can follow glimpses of our most recently completed projects and get an idea of how the equipment and high technology we use create added value for our partners. Our target: ZERO ERRORS, 100% SATISFACTION!"
   galeri:
-    - { foto: "/images/uploads/2015/07/3.webp", alt: "Deltek horizontal directional drilling rig working on a trenchless crossing site" }
-    - { foto: "/images/uploads/2015/09/Kazisiz_Teknoloji_Resim8_Auger_Boring.webp", alt: "Auger boring (pipe jacking) diagram — helical auger head pushing a steel pipe underground" }
-    - { foto: "/images/uploads/2015/08/6.jpg", alt: "Horizontal directional drilling site — HDD rig and drill rods" }
+    - { foto: "/images/icerik/deltek-kazisiz-gecis-sahasinda-yatay-sondaj.webp", alt: "Deltek horizontal directional drilling rig working on a trenchless crossing site" }
+    - { foto: "/images/icerik/auger-boring-boru-surme-semasi.webp", alt: "Auger boring (pipe jacking) diagram — helical auger head pushing a steel pipe underground" }
+    - { foto: "/images/icerik/yonlendirilebilir-yatay-sondaj-sahasi-hdd-makinesi.jpg", alt: "Horizontal directional drilling site — HDD rig and drill rods" }
 
 alanlar:
   baslik: "Our Fields of Application"
   ogeler:
     - baslik: "Cable Crossings"
       ikon: kablo
-      href: "/en/iletisim/"
+      href: "/en/contact/"
       metin: "Power lines, low/medium/high-voltage energy lines, telecommunication cables (fibre optic, coaxial, etc.), video and data cables, signalling cables."
     - baslik: "Pressure Line Crossings"
       ikon: basinc
-      href: "/en/iletisim/"
+      href: "/en/contact/"
       metin: "Oil and natural gas pipelines, potable water mains, industrial chemical transmission lines, geothermal lines, pressure sewer lines, fuel lines, fire hydrant lines."
     - baslik: "Gravity Line Crossings"
       ikon: cazibe
-      href: "/en/iletisim/"
+      href: "/en/contact/"
       metin: "Sewer lines, stormwater lines, water channels, naturally flowing gravity lines, drainage and discharge lines with natural gradient, collector lines, agricultural irrigation lines."
     - baslik: "River Crossings"
       ikon: nehir
-      href: "/en/iletisim/"
+      href: "/en/contact/"
       metin: "River, stream and creek crossings; road and motorway crossings; crossings under bridges and viaducts; crossings under industrial plants; crossings at heritage sites where excavation is not permitted; sea and strait crossings; junction crossings."
 ---
 

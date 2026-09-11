@@ -8,7 +8,7 @@ ilgili:
   - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
 anahtarKelimeler: "yönlendirilebilir yatay delgi, YYD, HDD aşamaları, pilot delik, genişletme, boru çekme, kazısız geçiş avantajları"
 tarih: 2017-11-17
-kapak: "/images/uploads/2015/09/haberler2.webp"
+kapak: "/images/blog/miami-de-yonlendirilebilir-yatay-delgi.webp"
 kapakAlt: "Yönlendirilebilir yatay delgi uygulaması — şehir içi kazısız altyapı geçişi"
 ---
 

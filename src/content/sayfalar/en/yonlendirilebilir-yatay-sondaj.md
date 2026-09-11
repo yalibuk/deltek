@@ -1,5 +1,6 @@
 ---
 baslik: "Horizontal Directional Drilling"
+adres: "horizontal-directional-drilling"
 seoBaslik: "Horizontal Directional Drilling (HDD) Guide"
 ozet: "What is horizontal directional drilling (HDD) and how is it done: pilot bore, reaming and pullback; rig classes, applications and choosing the right method."
 anahtarKelimeler: "horizontal directional drilling, HDD, directional boring, pilot bore, reaming, pullback, HDD rig, trenchless crossing, HDD contractor"
@@ -86,7 +87,7 @@ Since cost rises faster as diameter grows, alternative trenchless boring methods
 should also be evaluated for large-diameter projects.
 
 For a step-by-step account of the stages with site photographs, see the
-[HDD Construction Method](/en/yonlendirilebilir-yatay-sondaj-yapim-metodu/) page.
+[HDD Construction Method](/en/hdd-construction-method/) page.
 
 ## Technical Specifications of the Rigs
 
@@ -113,7 +114,7 @@ too.
 
 Thrust, pullback and rotation functions, the site organisation of small and
 large rigs and correct rig selection are covered in detail on the
-[HDD Drilling Rig](/en/yonlendirilebilir-yatay-sondaj-makinesi/) page.
+[HDD Drilling Rig](/en/hdd-rig/) page.
 
 ## Fields of Application
 
@@ -167,8 +168,8 @@ In trenchless infrastructure, different methods are applied depending on the
 ground conditions, pipe diameter, route length and environmental constraints.
 The main alternatives to horizontal directional drilling are the pipe pushing,
 auger boring and microtunnelling methods covered under three separate headings
-on the [Pipe Jacking / Auger Boring](/en/boru-surmecakma/) page, and the
-[trenchless pipe bursting](/en/boru-yenileme/) system in which old lines are
+on the [Pipe Jacking / Auger Boring](/en/pipe-jacking-auger-boring/) page, and the
+[trenchless pipe bursting](/en/pipe-bursting/) system in which old lines are
 replaced without excavation.
 
 ## How Do You Choose the Right Trenchless Method?

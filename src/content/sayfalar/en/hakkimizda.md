@@ -1,5 +1,6 @@
 ---
 baslik: "About Us"
+adres: "about"
 seoBaslik: "About Us: Trenchless Infrastructure and HDD Contractor"
 menuSira: 1
 menuAd: "About"
@@ -12,9 +13,9 @@ ilgili:
   - "iletisim"
 ---
 
-### Who We Are
+## Who We Are
 
-<span class="saga-kayan">![Deltek trenchless infrastructure and horizontal directional drilling team on an HDD project site](/images/uploads/2014/12/deltek-hk.webp)</span>Deltek is a team whose values, principles and operations are aimed at becoming the best in "trenchless infrastructure management" in Türkiye first, and then across the wider Eurasian region. Thanks to the extensive construction and infrastructure experience of its founders and staff, Deltek is one of the rare companies with the ability to anticipate needs and take action in time — a "multidisciplinary" family that has brought engineering disciplines usually scattered across the sector together under one roof.
+<span class="saga-kayan">![Deltek trenchless infrastructure and horizontal directional drilling team on an HDD project site](/images/icerik/deltek-kazisiz-altyapi-ve-yatay-sondaj.webp)</span>Deltek is a team whose values, principles and operations are aimed at becoming the best in "trenchless infrastructure management" in Türkiye first, and then across the wider Eurasian region. Thanks to the extensive construction and infrastructure experience of its founders and staff, Deltek is one of the rare companies with the ability to anticipate needs and take action in time — a "multidisciplinary" family that has brought engineering disciplines usually scattered across the sector together under one roof.
 
 We are a team that puts reason first, removes unnecessary capacity and extra cost, and aims to offer our partners a sustainable "win-win" relationship at the end of the day. Our engineers — people who have given years to the industry, hold academic training and also carry real field experience — introduced the concept of **"smart undergrounding"** to the literature and work tirelessly to produce scientific, measurable solutions that deliver each infrastructure project in the most reasonable and most economical way.
 
@@ -22,13 +23,13 @@ In every project we design, we take the engineering rule of "4E" (Safety, Econom
 
 …as the saying goes, ***"We are happy to reinvent things."***
 
-### What Services Do We Offer?
+## What Services Do We Offer?
 
 With the different methods and techniques we offer, we provide innovative solutions for installing pipe and cable lines underground without open-cut excavation. Using horizontal directional drilling and pipe jacking / pipe ramming, we have taken kilometres of lines underground — and we continue to do so.
 
 With machine capacities of up to 660 tonnes in horizontal directional drilling and 2,200 tonnes in pipe jacking, we are structured to deliver projects of every scale. Our trenchless solutions have brought countless projects to life: power and energy lines, fibre-optic cable ducts, potable water mains, natural gas pipelines, fuel pipelines, sewer and stormwater lines, drainage lines and industrial fluid transmission lines.
 
-For the most suitable machine and crew selection and a free feasibility report, you can [contact](/en/iletisim/) our project department.
+For the most suitable machine and crew selection and a free feasibility report, you can [contact](/en/contact/) our project department.
 
 Cities that grow denser every day need more civilised and more technological infrastructure techniques. With the trenchless pipe bursting methods Deltek offers, we provide "miraculous" solutions to these problems.
 

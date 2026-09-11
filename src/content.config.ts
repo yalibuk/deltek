@@ -12,6 +12,11 @@ const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
   schema: z.object({
     baslik: z.string(),
+    // URL slug'ı — YALNIZ İngilizce içerikte. Boşsa dosya adı. Dosya adı iki
+    // dilde aynı kalır (CMS i18n ve TR/EN eşleşmesi buna dayanır); İngilizce
+    // sayfa İngilizce adresle yayınlanır: en/iletisim.md → /en/contact/.
+    // Türkçe'de doldurulursa build durur (canlı adresler dosya adıdır).
+    adres: z.string().optional(),
     // <title>/OG başlığı. Uzun ya da BÜYÜK HARFLİ yazı başlıklarında arama
     // sonuçları için kısa, anahtar kelimeli başlık buraya yazılır; boşsa `baslik`.
     seoBaslik: z.string().optional(),
@@ -37,6 +42,11 @@ const sayfalar = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/sayfalar' }),
   schema: z.object({
     baslik: z.string(),
+    // URL slug'ı — YALNIZ İngilizce içerikte. Boşsa dosya adı. Dosya adı iki
+    // dilde aynı kalır (CMS i18n ve TR/EN eşleşmesi buna dayanır); İngilizce
+    // sayfa İngilizce adresle yayınlanır: en/iletisim.md → /en/contact/.
+    // Türkçe'de doldurulursa build durur (canlı adresler dosya adıdır).
+    adres: z.string().optional(),
     ozet: z.string().optional(),
     kapak: z.string().optional(),
     // Header menüsünde görünsün mü ve hangi sırada (boşsa menüde çıkmaz)
@@ -128,6 +138,12 @@ const sayfalar = defineCollection({
       // başlığı, o da yoksa sayfa başlığı kullanılır.
       alt: z.string().optional(),
       ters: z.boolean().optional(),
+      // Bloğu ELLE tam genişliğe alır: görsel içerik sütununun tamamını
+      // kaplar, metin altına aynı genişlikte tek sütun olarak yazılır.
+      // Normalde bu düzene yalnız oranı >= 2 olan görseller giriyor
+      // (bkz. UrunDuzen.astro GENIS_ESIK); `genis: true` o eşiği ezer,
+      // `genis: false` ise geniş bir görseli iki sütunlu düzende tutar.
+      genis: z.boolean().optional(),
       boyut: z.enum(['ceyrek', 'otuz', 'kirk', 'elli', 'yari', 'kucuk']).optional(),
     })).optional(),
     tablolar: z.array(z.object({

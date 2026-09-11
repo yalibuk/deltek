@@ -16,7 +16,7 @@ bloklar:
       Boru sürme/çakma, kazısız geçiş alternatiflerinin en eskilerinden biridir. Temel olarak giriş ve çıkış noktalarına açılan şaftların birinden diğerine yatay olarak açılan tünelin içine boru itilmesiyle uygulanır. Bu yöntemle genellikle çelik ve beton borular kullanılsa da beton borular kullanımını her geçen gün yitirmekte ve yerini çelik borulara bırakmaktadır.
 
       Üç uygulamanın da iskeleti aynıdır: giriş şaftına kurulan bir itme düzeneği boruyu zemine doğru iter, boru ilerledikçe önündeki zemin kazılır ve hafriyat boru içinden şafta geri taşınır. Yöntemleri birbirinden ayıran iki şey var — **kazının nasıl yapıldığı** ve **tünel aynasının nasıl desteklendiği**. Aşağıda en basitten en gelişmişe doğru üçünü de ele alıyoruz.
-    gorsel: "/images/uploads/2015/08/029.webp"
+    gorsel: "/images/icerik/boru-surme-cakma.webp"
     alt: "Boru sürme/çakma: giriş şaftından çıkış şaftına yatay olarak itilen çelik boru"
     ters: false
 
@@ -25,7 +25,7 @@ bloklar:
       Bu yöntemde bir giriş şaftı açılarak boru ayna önünde konumlandırılır. Kazı ekibi borunun içinde çalışır ve borunun önündeki zemini kazar. Genellikle el ya da mini iş makinesi marifetiyle olur. Zeminin kendini tutabilme kabiliyetine göre belli bir mesafedeki hafriyat boşaltılır ve boru bu boşluğa itilir.
 
       Şaftın boyu tesadüfi değildir: içine hem itilecek boru parçası, hem itme çerçevesi, hem de arkadaki dayanma duvarı sığmalıdır. İtme kuvvetinin tamamı bu dayanma duvarı üzerinden zemine aktarılır; duvar yetersizse makine boruyu ileri itmek yerine kendini geri iter.
-    gorsel: "/images/uploads/2015/08/030.webp"
+    gorsel: "/images/icerik/boru-itme-yonteminde-giris-safti-itme.webp"
     alt: "Boru itme yönteminde giriş şaftı, itme çerçevesi ve dayanma duvarı düzeni"
     ters: true
 
@@ -46,7 +46,7 @@ bloklar:
       Boru itme ile aynı yapıdadır. Tek farkı ise kazıyı el gücü ile değil, borunun 40–50 cm önünde giden bir delgi kafası ile yapılır. Bu delgi başlığı helezon şeklinde bir mil ile giriş şaftındaki makineye bağlıdır. Makine helezonu ve dolayısıyla en önde bağlı olduğu delgi başlığını çevirdiğinde bir yandan zemini kazarken bir yandan da kazılan toprağı helezonlar sayesinde boru içinde şafta aktarır. Boru önünde yeterli boşluk oluştuğunda boru zemine itilir ve işlemler tekrar edilir.
 
       Kazıyı makine yaptığı için insanın boru içine girmesi gerekmez. Bu, hem güvenlik hem de çap açısından yöntemi boru itmenin önüne geçirir — auger boring çok daha küçük çaplarda uygulanabilir ve bugün boru sürme imalatlarının büyük çoğunluğu bu şekilde yapılır.
-    gorsel: "/images/uploads/2015/08/031.webp"
+    gorsel: "/images/icerik/auger-boring-helezonlu-mil-ve-delgi.webp"
     alt: "Auger boring: helezonlu mil ve delgi kafasıyla makineli boru sürme"
     ters: false
 
@@ -77,7 +77,7 @@ bloklar:
       Bu sistem boru itme imalatlarının en komplike ve maliyetli olanıdır. Bunun yanında kilometrelerce hattı yüksek hassasiyette döşemeye olanak verir.
 
       Farkı tek bir cümleyle özetlemek mümkün: mikrotünelde **tünele hiç kimse girmez.** Kazıyı, şafttan uzaktan kumanda edilen kapalı yüzlü bir tünel açma makinesi (MTBM) yapar. Ayna sürekli basınç altında desteklendiği için yöntem, diğer ikisinin çalışamadığı koşullarda — yeraltı su seviyesinin altında, akıcı kumda, oturmaya duyarlı yapı altlarında — güvenle uygulanabilir.
-    gorsel: "/images/uploads/2015/08/033.webp"
+    gorsel: "/images/icerik/mikrotunel-uzaktan-kumandali-kapali-yuzlu-tunel.webp"
     alt: "Mikrotünel: uzaktan kumandalı kapalı yüzlü tünel açma makinesi (MTBM) ile boru itme"
     ters: true
 

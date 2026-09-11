@@ -16,16 +16,16 @@ import { gorselOznitelik } from '../../data/gorselOlcu';
  */
 const HIZMETLER = [
   { ikon: 'sondaj', ad: 'Horizontal Directional Drilling', kisa: 'HDD',
-    href: '/en/yonlendirilebilir-yatay-sondaj/',
+    href: '/en/horizontal-directional-drilling/',
     metin: 'We install natural gas, potable water, sewer, power and fibre-optic lines underground. GPS guidance and electronic targeting track the bore path with millimetre precision.' },
   { ikon: 'boru', ad: 'Pipe Jacking / Auger Boring', kisa: 'Auger Boring',
-    href: '/en/boru-surmecakma/',
+    href: '/en/pipe-jacking-auger-boring/',
     metin: 'The method for installing large-diameter steel pipes underground. Pipe jacking, auger boring and microtunnelling save both cost and time.' },
   { ikon: 'yenileme', ad: 'Trenchless Pipe Bursting', kisa: 'Pipe Bursting',
-    href: '/en/boru-yenileme/',
+    href: '/en/pipe-bursting/',
     metin: 'We replace old lines with new pipes without excavation — and, if you wish, in larger diameters.' },
   { ikon: 'akilli', ad: 'Smart Undergrounding Consultancy', kisa: 'Smart Undergrounding',
-    href: '/en/akilli-altyapi/',
+    href: '/en/smart-undergrounding/',
     metin: 'More than 20 years of experience in infrastructure planning. Innovative underground solutions bring projects to life that once seemed impossible.' },
 ];
 
@@ -43,7 +43,7 @@ const projeTarih = (d: any) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) : '';
 
 const rehberler = await teknolojiRehberleri('en');
-const tecrubeOlcu = await gorselOznitelik('/images/uploads/deltek_hdd_1.webp');
+const tecrubeOlcu = await gorselOznitelik('/images/icerik/deltek-hdd-sahasi-tecrube.webp');
 
 const hizmetSema = {
   '@context': 'https://schema.org',
@@ -109,7 +109,7 @@ const hizmetSema = {
       <span class="kunye">Services</span>
       <h2>Four methods, one team.</h2>
     </div>
-    <a class="sahadan__tum" href="/en/hizmetlerimiz/">All services →</a>
+    <a class="sahadan__tum" href="/en/services/">All services →</a>
   </div>
   <div class="hkart__izgara">
     {HIZMETLER.map(h => (
@@ -130,7 +130,7 @@ const hizmetSema = {
 
 <!-- ── EXPERIENCE BAND ──────────────────────────── -->
 <section class="tecrube" aria-label="Field experience">
-  <img class="tecrube__g" src="/images/uploads/deltek_hdd_1.webp"
+  <img class="tecrube__g" src="/images/icerik/deltek-hdd-sahasi-tecrube.webp"
        alt="Deltek horizontal directional drilling (HDD) site — more than 20 years of international field experience"
        width={tecrubeOlcu.width ?? 1920} height={tecrubeOlcu.height ?? 790} loading="lazy" decoding="async" />
   <img class="tecrube__logo" src="/deltek_logo_single_line_white.svg" alt="" aria-hidden="true"
@@ -153,22 +153,22 @@ const hizmetSema = {
       <span class="kanit__etiket">About us</span>
       <h2>A multidisciplinary team <em>in trenchless infrastructure.</em></h2>
       <p>We bring different engineering disciplines together under one roof, drawing on years of construction and infrastructure experience — and we remove unnecessary capacity and extra cost to build partnerships that last.</p>
-      <p>Deltek is a trenchless contractor providing <a href="/en/yatay-sondaj/">horizontal drilling</a>, <a href="/en/yonlendirilebilir-yatay-sondaj-nedir/">horizontal directional drilling (HDD)</a>, <a href="/en/boru-surmecakma/">pipe jacking, auger boring and microtunnelling</a> and <a href="/en/boru-yenileme/">trenchless pipe bursting</a> across Türkiye from its Istanbul and Izmir offices. We install natural gas, water, sewer, power and fibre-optic lines under rivers, motorways, railways and city streets without open-cut excavation.</p>
+      <p>Deltek is a trenchless contractor providing <a href="/en/horizontal-drilling/">horizontal drilling</a>, <a href="/en/what-is-hdd/">horizontal directional drilling (HDD)</a>, <a href="/en/pipe-jacking-auger-boring/">pipe jacking, auger boring and microtunnelling</a> and <a href="/en/pipe-bursting/">trenchless pipe bursting</a> across Türkiye from its Istanbul and Izmir offices. We install natural gas, water, sewer, power and fibre-optic lines under rivers, motorways, railways and city streets without open-cut excavation.</p>
     </div>
     <div class="kanit__ic">
       <article class="kanit__h">
         <span class="kanit__no">01</span>
-        <h4>The 4E rule of engineering</h4>
+        <h3>The 4E rule of engineering</h3>
         <p>Every project we design follows Safety, Economy, Aesthetics and Universality, in that order — a measurable roadmap instead of routine practice.</p>
       </article>
       <article class="kanit__h">
         <span class="kanit__no">02</span>
-        <h4>A smart undergrounding approach</h4>
+        <h3>A smart undergrounding approach</h3>
         <p>Our engineers introduced “smart undergrounding” to the literature. For every line they work out the most reasonable, most economical solution before the work begins.</p>
       </article>
       <article class="kanit__h">
         <span class="kanit__no">03</span>
-        <h4>A fleet for every scale</h4>
+        <h3>A fleet for every scale</h3>
         <p>Up to 250 tonnes in horizontal directional drilling and 800 tonnes in auger boring. We prepare the feasibility report for machine and crew selection free of charge.</p>
       </article>
     </div>
@@ -182,16 +182,16 @@ const hizmetSema = {
       <span class="kunye">Guides</span>
       <h2>What is horizontal drilling and how is it done?</h2>
     </div>
-    <a class="sahadan__tum" href="/en/yatay-sondaj-teknoloji/">Technology section →</a>
+    <a class="sahadan__tum" href="/en/trenchless-technologies/">Technology section →</a>
   </div>
   <p class="rehber__giris">Our technical pages explain horizontal drilling, trenchless boring and horizontal directional drilling; HDD rigs, drill rods, steering heads and reamers, locating systems and drilling fluid. We recommend reading them before choosing a trenchless method.</p>
   <ul class="rehber__l">
     {rehberler.map(r => (
       <li><a href={`/en/${r.slug}/`}><strong>{r.baslik}</strong>{r.ozet && <span>{r.ozet}</span>}</a></li>
     ))}
-    <li><a href="/en/yonlendirilebilir-yatay-sondaj-yapim-metodu/"><strong>HDD Construction Method</strong><span>Pilot bore, reaming and pullback explained step by step with site photographs.</span></a></li>
-    <li><a href="/en/yonlendirilebilir-yatay-sondaj-makinesi/"><strong>HDD Drilling Rig</strong><span>Rig classes by thrust, pullback and torque, and how to choose the right machine.</span></a></li>
-    <li><a href="/en/yatay-sondaj-camuru/"><strong>Drilling Fluid</strong><span>The six functions of bentonite-based drilling mud and how it is prepared for each soil type.</span></a></li>
+    <li><a href="/en/hdd-construction-method/"><strong>HDD Construction Method</strong><span>Pilot bore, reaming and pullback explained step by step with site photographs.</span></a></li>
+    <li><a href="/en/hdd-rig/"><strong>HDD Drilling Rig</strong><span>Rig classes by thrust, pullback and torque, and how to choose the right machine.</span></a></li>
+    <li><a href="/en/hdd-drilling-fluid/"><strong>Drilling Fluid</strong><span>The six functions of bentonite-based drilling mud and how it is prepared for each soil type.</span></a></li>
   </ul>
 </section>
 )}

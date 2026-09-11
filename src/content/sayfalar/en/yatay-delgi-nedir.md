@@ -1,5 +1,6 @@
 ---
 baslik: "What Is Trenchless Boring?"
+adres: "trenchless-boring"
 seoBaslik: "What Is Trenchless Boring? Methods, Rigs, Benefits"
 ozet: "What is trenchless horizontal boring and how does it work? Types of boring, fields of application, rig features, planning, advantages and the sector in Türkiye."
 anahtarKelimeler: "trenchless boring, horizontal boring, what is horizontal boring, directional boring, horizontal boring contractor, horizontal boring cost, Istanbul, Izmir"
@@ -26,7 +27,7 @@ Horizontal boring is preferred especially in large cities, because with dense tr
 
 ### Water and Sewer Lines
 
-Horizontal boring is frequently used in urban water distribution systems. It offers the ideal solution for sewer installations on main streets and in busy areas. The technique was also applied successfully on the [sewer project in Miami](/en/miamide-kanalizasyon-yapimi/).
+Horizontal boring is frequently used in urban water distribution systems. It offers the ideal solution for sewer installations on main streets and in busy areas. The technique was also applied successfully on the [sewer project in Miami](/en/hdd-sewer-miami-54-inch-hdpe/).
 
 ### Natural Gas and Power Lines
 

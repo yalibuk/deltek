@@ -34,6 +34,45 @@ Bunun mimariye yansıması:
 6. **Emniyet:** kök seviyeye statik sayfa eklerken (ör. `src/pages/hakkimizda.astro`)
    aynı adda bir yazı varsa Astro çakışma hatası verir. Bu kasıtlı.
 
+### İngilizce adresler: dosya adı anahtar, `adres` URL (2026-09-11)
+
+EN sayfalar **İngilizce URL** ile yayınlanır (`/en/contact/`,
+`/en/horizontal-directional-drilling/`), dosya adı ise Türkçe kalır
+(`content/sayfalar/en/iletisim.md`). Frontmatter `adres` alanı URL'yi verir;
+boşsa dosya adı. Neden dosya adı değişmedi: CMS'in i18n yapısı
+(`multiple_folders`) her dilde **aynı dosya adını** şart koşuyor ve TR/EN
+eşleşmesi (hreflang, dil düğmesi, teknoloji ağacı, `ilgili`, `TEK_REHBERLER`)
+buna dayanıyor.
+
+Kod tarafında kural tek cümle: **bir kaydı BULMAK için `anahtar` (dosya adı),
+ona BAĞLANMAK için `slug` (URL)** — `src/data/icerik.ts` `Kayit` tipi. Ağaç
+düğümleri, `ilgili` listeleri, `TEK_REHBERLER`, `HIZMET_SAYFALARI` hep anahtar
+taşır; bileşenler `k.slug` ile bağlanır. Diğer dilin adresi `karsiSlug()` ile
+bulunur; `[slug].astro` bunu Layout'a `karsiYol` olarak verir (hreflang + dil
+düğmesi). Sitemap eklentisinin `i18n` seçeneği **kapatıldı** — yolları önekle
+eşliyordu (`/x/` ↔ `/en/x/`); hreflang çiftleri artık
+`scripts/seo-integration.mjs`'de anahtar üzerinden yazılıyor.
+
+Üç koruma derlemede:
+
+* TR dosyada `adres` verilirse build durur — canlı deltek.com.tr adresleri
+  dosya adının kendisidir, değişemez.
+* `adres` yalnız küçük harf/rakam/tire olabilir.
+* Denetim betiği her sayfadaki hreflang hedefinin **gerçekten derlendiğini**
+  kontrol eder (yanlış eşleşme 100/100'ü düşürür).
+
+> **Alan adı `slug` OLAMAZ.** İlk denemede öyleydi ve EN sayfaların tamamı
+> sessizce kayboldu (73 → 40 sayfa, hata yok): Astro'nun `glob` yükleyicisi
+> frontmatter'daki `slug`ı **kayıt kimliği** yapıyor, `en/iletisim` yerine
+> `contact` olunca dil süzgeci (`id.startsWith('en/')`) hepsini düşürdü.
+> `adres` bu yüzden.
+
+EN adresler hiç yayında olmadığı için eski `/en/<türkçe-slug>/` için 301
+eklenmedi. Sabit `/en/…` bağlantıları (hero, ana sayfa, 404, EN markdown
+gövdeleri — 54 adet) yeni adreslere çevrildi; denetim betiği 404'e giden iç
+bağlantıyı yakalamıyor, ama derleme yetim/eksik hedefleri hreflang üzerinden
+yakalar.
+
 ### 301 redirect listesi
 
 `public/_redirects` dosyasıyla senkron tutulacak.
@@ -136,6 +175,38 @@ kullanılıyor. `width`/`height` **elle yazılmaz**, `gorselOlcu()` ile dosyadan
 okunur — elle yazılan 1920×935 dosya 1920×539 çıkınca yanlış oranda yer
 ayrılıyordu. Görsel dosyası:
 `public/images/iletisim/deltek_iletisim_banner.jpg`.
+
+#### Sayfa genişliği — TEK AYAR
+
+`/iletisim/` sayfasının genişliği `IletisimDuzen.astro`'daki tek bir
+değişkenden geliyor; şu an **1100 px**:
+
+```css
+.ilet { --ilet-en: 1100px; }
+.ilet .kap { max-width: calc(var(--ilet-en) + 2 * var(--kap-pad)); }
+```
+
+Bu değer başlığı, tanıtım görselini, telefon/e-posta kartlarını, gövde
+metnini, ofis kartlarını ve kapanış çağrısını birden kapsıyor — her bölüm
+`.kap` kullandığı için. Bölüm bölüm `max-width` yazmak yeni bir bölüm
+eklendiğinde unutulurdu.
+
+**İki tavan var:**
+
+- **1280 px** — `.kap`ın kendi `max-width`i. Daha büyük yazmak bir şey
+  değiştirmez.
+- **1200 px** — tanıtım görselinin doğal genişliği
+  (`deltek_iletisim_banner.jpg`, 1200×337). Bundan büyük bir değerde görsel
+  büyütülür ve bulanıklaşır.
+
+`.kap` border-box olduğu için paylar `--ilet-en`in ÜSTÜNE ekleniyor: içerik
+tam `--ilet-en` kadar, sarmalayıcı o kadar + 2 pay (ölçüldü, 1100'de içerik
+1100 / sarmalayıcı 1188).
+
+> `--kap-pad` global.css'te `:root`ta tanımlı ve konteyner payının TEK
+> kaynağı. Önce `clamp(1.15rem, 4vw, 2.75rem)` ifadesi elle kopyalanıyordu
+> (HeroSlider'daki metin kuşağı da kullanıyor); biri değişince diğeri
+> sessizce kayardı.
 
 #### Görselin boyutunu değiştirme
 
@@ -382,6 +453,7 @@ bloklar:                  # görsel + metin, dönüşümlü hizalanır
       İkinci paragraf.
     gorsel: /images/uploads/x.jpg
     ters: true            # görsel sağda
+    genis: true           # tam genişlik (görsel üstte, metin altında aynı genişlikte)
     boyut: elli           # ceyrek|otuz|kirk|elli|yari|kucuk — görseli küçültür
 tablolar:                 # teknik veri tabloları (yatay kaydırmalı)
   - baslik: "Vermeer Uyumlu Tijler"
@@ -396,6 +468,19 @@ galeri:
 **Çok geniş görseller tam genişliğe yayılır.** Bir bloğun görselinin en/boy
 oranı **>= 2** ise iki sütunlu düzen kullanılmaz: görsel içerik sütununun
 tamamını kaplar, metin altına tek sütun olarak (`max-width: 70ch`) yazılır.
+
+**`genis: true` ile ELLE de seçilebilir** — eşik iyi bir varsayılan ama her
+zaman doğru karar değil. `/akilli-altyapi/` sayfasının açılış görseli
+(`kazisiz-akilli-altyapi-2.webp`, 1170×667, oran 1,75) eşiğin altında kaldığı
+için yarım sütuna oturuyordu; `genis: true` ile tam genişliğe alındı.
+`genis: false` ise tersini yapar: oranı 2'yi geçen bir görseli iki sütunlu
+düzende tutar.
+
+> Elle seçilen blokta **metin görselle aynı genişlikte** olur
+> (`.hsg-yatay--tam` 70ch sınırını kaldırır); kendiliğinden bu düzene giren
+> bloklarda 70ch sınırı durur. Ayrım kasıtlı: `genis: true` yazan biri
+> genişliği bilerek istiyordur, oranından ötürü giren blokta ise satır
+> uzunluğunu korumak daha doğru.
 Teknoloji sayfalarındaki 35 görselin 30'u 1170x350 (oran 3,34); yarım
 genişlikte 270x81'lik bir şeride dönüşüyor, etrafı bomboş kalıyordu.
 Oran derlemede dosya başlığından okunur (`src/data/gorselOlcu.ts` — JPEG/PNG/
@@ -617,11 +702,20 @@ Dört yerden görünür:
    bağlantı çapası; uzun anahtar kelime "Yönlendirilebilir Yatay Sondaj" üst
    dal etiketinde ve kart ızgarasında hâlâ duruyor.
 
-   > **İki tuzak:** (a) `<details>` kullanılmadı — kapanırken içerik anında
+   > **Üç tuzak:** (a) `<details>` kullanılmadı — kapanırken içerik anında
    > kaybolduğu için geçiş oynamıyor; onun yerine `grid-template-rows: 0fr→1fr`.
    > (b) Kapalı dalın `visibility: hidden` kuralı `>` ile yazılmalı: torun
    > seçici olursa açık bir dalın içindeki kapalı alt dal görünür sayılır ve
    > oradaki bağlantılar Tab sırasında kalır.
+   > (c) **`<article class="yazi--yan">`in doğrudan çocuğu SADECE İKİ TANE
+   > olmalı** — yan menü ve `.yazi__ana`. Izgara iki sütunlu
+   > (`268px minmax(0,1fr)`), yani üçüncü bir çocuk otomatik yerleşimle
+   > 1. sütun / 2. satıra, yani **yan menünün altına** düşer. Yaşandı: sayfa
+   > sonundaki telefon CTA'sı `.yazi__ana`nın dışındaydı; 268 px'lik dar bir
+   > şeride dönüşüyor ve sayfanın dibine inildiğinde yapışkan menü hâlâ orada
+   > durduğu için onun altında kalıyordu (ölçüldü: buton x387-655, menü
+   > kutusunun tam içinde). Sayfa sonuna bir blok eklerken `.yazi__ana`nın
+   > İÇİNE koyun.
 
 Gezinmedeki liste **düğümün alt sayfası varsa onları**, yoksa kardeşlerini
 gösterir: bir grup sayfasında (ör. `/yer-belirleme/`) okuyucu zaten o başlığın
@@ -833,7 +927,7 @@ OG görseli **raster olmak zorunda**: Facebook/X/LinkedIn/WhatsApp SVG render et
 
 **Görsel katmanlar** canlı deltek.com.tr'deki Revolution Slider'dan birebir alındı:
 8 slayt (canlı slider'ın 9.'su kaldırıldı), 8 görsel + 1 YouTube katmanı; konum, geçiş
-tipi, gecikme ve süre orijinaliyle aynı (2. slaytta sondaj biti soldan gelip toprak
+tipi, gecikme ve süre orijinaliyle aynı (6. slaytta sondaj biti soldan gelip toprak
 adasına giriyor). **Slayt sırası canlı siteninkinden farklı** (bkz. "Slaytların
 sırasını değiştirmek"), o yüzden canlı slider'a bakarken numaralar tutmaz.
 Koordinatlar canlı slider'ın **1920×500 tasarım ızgarasındaki** pikseller
@@ -853,7 +947,8 @@ düşen puntolar). İçerik korundu, tek bir tipografik blokta toplandı:
 ```yaml
 yazi:
   ustlik: 'Teknoloji'            # küçük, aralıklı, altın/amber üst satır
-  baslik: '...'                  # 52/1920 punto, 800 ağırlık
+  baslik: '...'                  # 800 ağırlık, puntosu aşağıdaki `punto`
+  punto: 42                      # başlık puntosu (1920 ızgarasında); varsayılan 52
   satirlar: ['...']              # gövde satırları
   eylem: 'Bize ulaşın'           # buton (isteğe bağlı)
   eylemKonum: akis | dip         # 'dip': buton slaytın en altına sabitlenir
@@ -864,9 +959,21 @@ yazi:
   tema:  koyu | acik             # arka plan koyu mu açık mı
 ```
 
-`tema` yazı ve perde rengini belirler: **4, 5 ve 7. slaytlar koyu fotoğraf** (beyaz
+`tema` yazı ve perde rengini belirler: **2, 4 ve 7. slaytlar koyu fotoğraf** (beyaz
 yazı, koyu perde), **kalan beşi çok açık zemin** (lacivert yazı, açık perde). Perde
 fotoğrafın tamamını değil yalnızca yazının olduğu yanı yumuşatır.
+
+**Açık slaytlarda başlık ve gövde `--blue-800`** (#002966, lacivert).
+Tek yer: `HeroSlider.astro` → `.yazi--acik .yazi__baslik`. İki ton denendi
+ve elendi: `--mavi-900` (#003D99) beyaza yakın slayt zemininde lacivert
+değil **canlı mavi** okunuyor, `--metin` (#000E24) ise **siyaha** düşüyor.
+Başlık ile gövdenin aynı tonda olması kasıtlı — hiyerarşi renkten değil
+puntodan geliyor (52 px / 800 ağırlık ile 21 px / 400).
+
+Koyu slaytlarda beyaz yazının fotoğraf üzerindeki kontrastı ölçüldü
+(2026-09-10, harf maskesi ±6 px genişletilerek): ortalama **6.1-9.8**,
+zeminin yalnız %1-4'ünde 2.6'nın altına düşüyor (fotoğraftaki tekil parlama
+lekeleri). Kabul edilen durum.
 
 **Satır kırmak için `\n` kullanılır**, `<br />` değil. Metinler kaçışlanarak
 basıldığı için ham HTML düz metin olarak görünür; `\n` bileşende gerçek `<br>`'ye
@@ -926,22 +1033,24 @@ ilk açılış hızına yazılır.
 
 | Slayt | Arka plan | Katman | İlk ekranda inen |
 | --- | --- | --- | --- |
-| 1 `kazisiz-altyapi-projesi` | 23 KB | 1 | **59 KB** |
-| 2 `yatay-delgi-sondaj-teknolojileri` | 12 KB | 2 | 71 KB |
-| 3 `yatay-sondaj-proje-modelleme` | 36 KB | 2 | 123 KB |
+| 1 `deltek-yatay-sondaj-makine-parki` | 2 KB | 2 | **97 KB** |
+| 2 `deltek-onshore-hdd-yatay-sondaj-sahasi` | 289 KB | — | 289 KB |
+| 3 `kazisiz-altyapi-projesi` | 23 KB | 1 | 59 KB |
 | 4 `boru-hatti-yatay-sondaj-santiyesi` | 262 KB | — | 262 KB |
-| 5 `deltek-onshore-hdd-yatay-sondaj-sahasi` | 289 KB | — | 289 KB |
-| 6 `deltek-yatay-sondaj-makine-parki` | 2 KB | 2 | 97 KB |
+| 5 `yatay-sondaj-proje-modelleme` | 36 KB | 2 | 123 KB |
+| 6 `yatay-delgi-sondaj-teknolojileri` | 12 KB | 2 | 71 KB |
 | 7 `kaya-delgi-yatay-sondaj-arkaplan` | 56 KB | 1 | 58 KB |
 | 8 `kazisiz-altyapi-cozumleri` | 3 KB | 1 | 17 KB |
 
-İki ağır fotoğraf (4 ve 5) bilerek başta değil: 2026-09-07 sıralamasından önce
-289 KB'lık slayt birinci sıradaydı, şimdi ilk indirme **59 KB**.
+İki ağır fotoğraf (2 ve 4) bilerek başta değil. 1. slaydın 97 KB'ının 53'ü
+`deltek-saha-iscisi.webp`, ve o katman **1450 px altında `darGizle` ile
+gizleniyor** — yani telefonda ve dar masaüstünde indirilip hiç gösterilmiyor.
+Başa daha hafif bir slayt aranırsa 7 (58 KB) ya da 8 (17 KB) var.
 
 Sıra değişirse bu belgedeki ve `hero.ts` yorumlarındaki **slayt numarası
-atıfları bayatlar** (7. slayttaki video, 2. slayttaki tij/buton, 8. slayttaki
-el gibi) — birlikte güncelleyin. En son 2026-09-07'de sıralandı:
-eski 7·4·6·2·1·5·3·8 → yeni 1·2·3·4·5·6·7·8. Derleme hata mesajlarındaki numaralar çalışma
+atıfları bayatlar** (7. slayttaki video, 6. slayttaki tij/buton, 8. slayttaki
+el gibi) — birlikte güncelleyin. İki kez sıralandı; en sonu **2026-09-08**:
+o günkü 5·1·3·4·7·2·6·8 → yeni 1·2·3·4·5·6·7·8. Derleme hata mesajlarındaki numaralar çalışma
 anında hesaplandığı için kendiliğinden doğru kalır.
 
 ### `kaydir` — dokuz hazır yerin üstüne ince ayar
@@ -963,13 +1072,24 @@ götürür, yön ters dönmez.
 
 İki sınırı var, ikisi de bilinçli:
 
-* **Dar ekranda (≤820px) yok sayılır** (`translate: none !important`). Orada
-  katmanlar gizlenip yazı tam genişlikte ortalanıyor; masaüstü için verilmiş
-  bir kaydırma o düzeni merkezden kaçırırdı.
+* **Dar ekranda (≤820px) yok sayılır.** Orada slayt akış düzenine geçip yazı
+  tam genişlikte ortalanıyor; masaüstü için verilmiş bir kaydırma o düzeni
+  merkezden kaçırırdı.
+  > **`translate` ÖZELLİĞİNİ sıfırlamayın, `--kx`/`--ky` DEĞİŞKENLERİNİ
+  > sıfırlayın.** Mobil blokta uzun süre `transform: none !important` ile
+  > `translate: none !important` yan yana duruyordu. Lightning CSS (Astro'nun
+  > küçültücüsü) ikisini tek `transform: translate(0,0) !important` içinde
+  > birleştirip `translate` bildirimini **düşürüyor** — oysa ikisi ayrı
+  > özellik ve birbirinin üstüne biniyor. Sonuç: kural dev sunucusunda
+  > çalışıyor, **üretim derlemesinde sessizce kayboluyordu**; `kaydir` verilen
+  > beş slaytta yazı mobilde 60,5 px kayıp kutudan taşıyordu (2026-09-08'de
+  > ölçülüp düzeltildi). Artık `--kx: 0 !important; --ky: 0 !important`
+  > yazılıyor; özel değişkenlere küçültücü dokunmuyor. Inline stil `--kx`i
+  > elementin üstüne yazdığı için `!important` şart.
 * **`eylemKonum: 'dip'` butonuna yalnız `x` uygulanır.** Buton bilerek slaytın
   dibine sabit; `y`'yi ona da uygulamak o sabitlemeyi anlamsız kılardı. `x`
   uygulanır ki buton yazıyla hizalı kalsın. (Ölçüldü: `kaydir: { x: 80, y: 30 }`
-  verilen 2. slaytta buton 59 px sağa gitti, dikeyde 1 px oynamadı.)
+  verilen 6. slaytta buton 59 px sağa gitti, dikeyde 1 px oynamadı.)
 
 > **`transform` DEĞİL `translate` üretiliyor.** `.yazi--orta` dikey ortalama
 > için zaten `transform: translateY(-50%)` kullanıyor; aynı özelliği ikinci
@@ -991,6 +1111,52 @@ Değer sayı olmak zorunda; `'40px'` gibi bir metin CSS `calc()`'ini sessizce
 > yüzden sessizce geçti. `HeroSlider.astro` artık `konum`, `dikey`, `tema` ve
 > `eylemKonum` değerlerini derlemede doğruluyor ve geçersiz değerde slayt
 > numarasını yazarak build'i durduruyor.
+
+### Başlık puntosu ve 821-1190 px bandındaki okunurluk (AÇIK KONU)
+
+Slayt yazılarının tamamı `--olcek` ile, yani slider genişliğiyle **doğrusal**
+ölçekleniyor (`--olcek: 100cqw / 1920`). Başlık her slaytta aynı: tasarım
+ızgarasında 52 px, yani slider genişliğinin **%2,71'i**.
+
+| Slider | Başlık | Gövde | Üstlik |
+| --- | --- | --- | --- |
+| 1920 px | 52 px | 21 px | 17 px |
+| 1440 px | 39 px | 16 px | 13 px |
+| 1280 px | 35 px | 14 px | 11 px |
+| 1024 px | 28 px | 11 px | 9 px |
+| 900 px | 24 px | 10 px | 8 px |
+
+İlk iki satır iyi. **821-1190 px bandı sorunlu**: masaüstü düzeni 821 px'e
+kadar sürüyor (akış düzenine geçiş `@media (max-width: 820px)`), orada gövde
+metni 10-13 px'e, üstlik 8-10 px'e iniyor. Küçük dizüstü ve yatay tablet bu
+banda düşer.
+
+**Denendi ve geri alındı:** yazıya kendi ölçeği verilip taban konuldu
+(`--olcek-y: max(var(--olcek), .62px)`). Okunurluk düzeliyor ama metin bloğu
+büyüdüğü için 900-1100 px arasında 5. ve 6. slaytta katman çakışması geri
+geliyor (ölçüldü). Doğru çözüm tek satırlık değil: ya akış düzeninin eşiği
+~1100 px'e çekilmeli (o zaman bu bant zaten stacked düzene düşer), ya da
+çakışan slaytların `kaydir` değerleri yeni ölçeğe göre yeniden ayarlanmalı.
+İkisi de ayrı bir karar; şimdilik punto olduğu gibi.
+
+**Puntoyu değiştirmenin iki kolu var:**
+
+| İstenen | Yer |
+| --- | --- |
+| TEK bir slaydın başlığı | `hero.ts` → o slaydın `yazi.punto` alanı (ör. `punto: 42`) |
+| TÜM slaytların başlığı | `HeroSlider.astro` → `.yazi__baslik { font-size: calc(var(--punto, 52) * var(--olcek)) }` içindeki **52** |
+
+`punto` da 1920×500 ızgarasının pikselidir, yani ekranla orantılı ölçeklenir:
+`punto: 42` her genişlikte "varsayılanın %81'i" demektir. Dar ekran düzeni de
+aynı değeri kullanır, oradaki oran sabit (%75'i). Sayı olmayan bir değer
+verilirse build durur — yoksa CSS sessizce 52'ye düşerdi.
+
+Bugün yalnız **8. slayt** ezme kullanıyor (`punto: 42`); sitenin en uzun
+başlığı, 52'de üç-dört satıra sarıyordu.
+
+> **Punto değiştikten sonra `npm run hero` yeniden çalıştırılmalı.** Punto
+> yalnız harf boyunu değil metin bloğunun YÜKSEKLİĞİNİ de değiştirir; blok
+> uzayınca alttaki katmanlara girer, kısalınca üsttekilerden uzaklaşır.
 
 ### Kritik: yazı kuşağı sabit, katmanlar orantılı
 
@@ -1014,23 +1180,91 @@ için katmanlara `darGizle: true` eklenir, katman 1450 px altında gizlenir
 olduğu için sınır kutusu kesişmesi tek başına bir şey söylemiyor; katman
 canvas'a çizilip metin satırlarının altına düşen piksellerin alfası sayılmalı
 (satır kutuları satır-aralığını da içerdiği için dikeyde ~%16 daraltılarak).
-Bu yöntemle bugünkü durum:
 
-| Sayfa | Slayt | Katman | Çakışan genişlik | Altındaki opak piksel |
-| --- | --- | --- | --- | --- |
-| `/` ve `/en/` | 2 | `yatay-sondaj-delgi-tiji-ve-bit.webp` (gri gölge şeridi) | 100 px | %95 |
+### `npm run hero` — çakışma denetimi
 
-**2. slayt kabul edilen durum.** `yatay-sondaj-delgi-tiji-ve-bit.webp` iki ayrı opak banttan oluşuyor:
-**mavi delgi borusu y334-376** ve altında **açık gri gölge şeridi y405-449**
-(`rgb(225,225,225)`). Buton akışta kalınca boruya biniyordu; `eylemKonum: 'dip'`
-ile slaytın dibine alındı (y411-474) ve **boru 35 px boşlukla tamamen kurtuldu**.
-Gölge şeridine değmesi kaçınılmaz: şeridin altında 50 px kalıyor, buton 63 px.
-Sıfırlamak isteyen butonu küçültmeli ya da `yatay-sondaj-delgi-tiji-ve-bit.webp`'yi yukarı almalı — ikisi de
-görsel bir bedel.
+Yöntem betiğe alındı: `scripts/hero-cakisma.mjs` sayfayı Playwright ile açar,
+verilen aralıktaki her genişlikte yukarıdaki ölçümü yapar ve hangi slaydın
+hangi genişlik bandında çakıştığını yazar. Çakışma varsa çıkış kodu 1.
 
-Giderilenler:
+```bash
+npm run build && npm run preview -- --port 4325     # ayrı bir kabukta
+npm run hero -- http://localhost:4325/     900 1920 20
+npm run hero -- http://localhost:4325/en/  900 1920 20
+```
 
-- **6. slayt, yalnızca `/en/`'de** (giderildi 2026-09-07): `Horizontal drilling
+**İki dilde de çalıştırın.** Düzen ortak ama satırlar farklı sarıyor: 8. slaydın
+İngilizce başlığı 1720-1920 px arasında el görseline biniyordu, Türkçesi aynı
+yerde tertemizdi.
+
+**Dev sunucusunda ölçmeyin.** Astro'nun geliştirme sunucusu bileşen `<style>`
+değişikliklerini güvenilir tazelemiyor (bkz. "Bilinen tuzak"); ölçüm eski CSS
+üzerinden yapılır ve yanlış sonuç verir. `dist`i sunun.
+
+**KABUL listesi.** Betiğin başındaki `KABUL` dizisi, bilerek bırakılmış
+çakışmaları tutar: raporda görünürler ama hata saymazlar (çıkış kodu 0
+kalır), böylece her koşuda aynı bilinen durumu bağırıp gerçek yeni
+çakışmaları gölgelemezler. Bugün tek kayıt var: 6. slaydın butonu (aşağı
+bakın). Listeye eklemeden önce iki soruyu cevaplayın — örtüşen şey NESNE mi
+yoksa gölge/dolgu mu, ve başka türlü çözülebiliyor mu.
+
+**Bugünkü durum: 900-1920 px arası, 20 px adımla, iki dilde de KABUL
+listesindeki dışında çakışma yok** (ölçüldü 2026-09-10).
+
+### 2026-09-10'da giderilenler
+
+- **1. slayt — makine görseli başlığın altına giriyordu** (1880-1920 px, %28).
+  Kök sebep boyut değil VERİ: makine katmanı yeni bir dosyayla değiştirilmiş
+  (eski 799×232, yeni 590×318) ama `w: 600, h: 232` olduğu gibi bırakılmıştı.
+  Katman yüksekliği CSS'te `height: auto` ile DOSYANIN oranından geldiği için
+  görsel 174 px yerine 323 px çıkıyordu — yani "büyümüş" görünmesinin sebebi.
+  Düzeltme: `h` gerçek orana çekildi (323), makine ve işçi 160 tasarım px sola
+  alındı (x 630→470 ve 480→320). İşçinin `darGizle`si kaldırıldı: artık grubun
+  sol ucunda, hiçbir genişlikte yazıya değmiyor.
+
+  > **Aynı hata bir daha sessizce geçmesin diye HeroSlider derlemede
+  > doğruluyor:** katmanın `w/h` oranı dosyanın oranından %2'den fazla
+  > sapıyorsa build durur ve doğru `h` değerini yazar. Video katmanı hariç —
+  > onun yüksekliği bilerek veriden gelir (tabletin ekranına oturmalı).
+
+- **6. slayt — buton delgi tijinin ALTINDA olmalı** (`eylemKonum: 'dip'`,
+  y~411-474). Bir ara akışa alınmıştı; orada y~282-340'a düşüp borunun
+  ÜSTÜNE çıkıyor, istenen görüntü bozuluyordu.
+
+  Butonun arkasında kalan şey boru değil, borunun **açık gri gölgesi**
+  (y405-449). Kurtulmak mümkün değil: boru (y334-376) ile gölge arasında
+  29 px var, buton 63 px. Bu yüzden denetim betiğinin KABUL listesinde.
+
+  Butonun yüksekliğini değiştirmek için: `HeroSlider.astro` →
+  `.yazi--dip { bottom: calc(26 * var(--olcek)) }`. Büyütmek butonu yukarı,
+  küçültmek aşağı taşır. `kaydir.y` bu bloğa UYGULANMAZ (yalnız x) — buton
+  bilerek dibe sabit, y'yi ona da uygulamak sabitlemeyi anlamsız kılardı.
+
+- **7. slayt — başlık tabletin üstüne biniyordu** (1480-1640 px, %100).
+  1920'de temizdi, o yüzden gözden kaçmıştı. Yazı 60 sola (`kaydir.x` 120→60),
+  tablet ve video katmanı 60 sağa (x 1060→1120, 1110→1170) alındı.
+
+- **8. slayt — İngilizce başlık el görseline biniyordu** (1720-1920 px, %98)
+  ve Türkçe başlık dört satıra sarıyordu. `punto: 42` (varsayılan 52): başlık
+  iki satıra iniyor, blok da yukarıda kalıp el görselinin bandına hiç girmiyor.
+
+  > **El katmanının x/y'si KİLİTLİ, çakışma oradan çözülmez.** Arka planda 14
+  > anahtardan oluşan bir sıra var (tasarım y285-343, adım 70 px) ve sırada
+  > **bir anahtar eksik: x941-964**. Katmanın mavi düğmesi tam o boşluğa
+  > oturuyor (`x: 940` + dosyadaki 4 px = 944) ve sıranın hemen üstünde
+  > duruyor — "yukarı kaldırılmış anahtar". Çakışmayı çözmek için katman bir
+  > ara x:1140'a alınmıştı; düğme boşluktan çıkıp diğer anahtarların üstüne
+  > oturdu ve kompozisyon anlamını yitirdi. Ölçüm dosyadan yapıldı
+  > (`kazisiz-altyapi-cozumleri-arkaplan.webp`, arka plan 1920×510 → `cover`
+  > ile tasarım y = dosya y − 5).
+
+- **5. slayt — analiz grafiği "MÜHENDİSLİK" üstlüğüne değiyordu.** Piksel
+  ölçümü çakışma vermiyordu (aralarında ~10 px vardı) ama gözle bitişik
+  duruyordu; grafik y 36→10'a alındı.
+
+Daha önce giderilenler:
+
+- **1. slayt, yalnızca `/en/`'de** (giderildi 2026-09-07): `Horizontal drilling
   specialists` başlığı İngilizcede sarıp makine görselinin bandına giriyordu.
   Sebebi çeviri değil düzen ayrışmasıydı: EN slayt `dikey: 'alt'`, TR aynı
   slayt `dikey: 'orta'` idi. İngilizce metin slaydın içine taşınıp düzen TR'den
@@ -1043,7 +1277,7 @@ Giderilenler:
   > İngilizce metinler o zaman ayrı bir `EN_YAZI` dizisindeydi ve düzeni de
   > ayrı taşıyordu. Artık düzen tek yerde (aşağıya bakın), bu ayrışma
   > yapısal olarak mümkün değil.
-- **3. slayt** (`yatay-sondaj-pipe-analysis.webp`): görselin alt kenarı başlığa
+- **5. slayt** (`yatay-sondaj-pipe-analysis.webp`): görselin alt kenarı başlığa
   biniyordu → %30 küçültülüp (437→306) 150 px sola alındı (x 1094→944).
   Görselin `h` alanı yalnızca belgeleme amaçlı; **görsel katmanların yüksekliği
   veriden değil, `w` ve doğal en-boy oranından gelir** (yalnızca video katmanı
@@ -1096,7 +1330,7 @@ siyah zemine bindirip bak (`scripts/` altında betik yok, tek seferlik yapıldı
 Koyu zeminli tek katman `kaya-delgi-video-tablet.webp` (slayt 7, arka plan ort 128) ve onda
 matlaşma yok — zaten opak bir tablet.
 
-Ayrıca: slayt 3'teki `yatay-sondaj-pipe-analysis.webp` beyaz zeminde **gri bir
+Ayrıca: slayt 5'teki `yatay-sondaj-pipe-analysis.webp` beyaz zeminde **gri bir
 dikdörtgen** olarak duruyor. Bu kesim artığı değil, grafiğin kendi 3B çizim
 zemini — yani görselin tasarımı. Değiştirilecekse yeni bir grafik gerekir.
 
@@ -1107,6 +1341,21 @@ zemini — yani görselin tasarımı. Değiştirilecekse yeni bir grafik gerekir
 
 Görünüm `global.css`'teki `.btn--dolu` ile aynı: hover'da koyulaşır, 1 px
 yükselir, gölge derinleşir; `:focus-visible`'da sarı çerçeve.
+
+**Gölge İKİ KATMANLI** (`HeroSlider.astro` → `.yazi__eylem`): kısa ve sıkı
+bir katman butonun kenarını zeminden ayırıyor, geniş ve yumuşak bir katman
+yüksekliği veriyor. Tek katmanla ikisi birden olmuyor — geniş bulanıklık
+kenarı tanımlamıyor, dar olan yükseklik hissi vermiyor.
+
+```css
+box-shadow: 0  2px  5px -1px rgb(var(--blue-800-rgb) / .30),   /* kenar */
+            0 13px 28px -8px rgb(var(--blue-800-rgb) / .60);   /* yükseklik */
+```
+
+Üç yerde tanımlı ve üçü de birlikte değişmeli: normal hâl, `:hover`
+(daha derin) ve `@media (max-width: 820px)` (daha sığ). Mobil ayrı yazılmak
+zorunda çünkü **gölge sabit px, buton ise `--olcek` ile ölçekleniyor**;
+aynı gölge küçülen butonun altında orantısız kalıyordu.
 
 Bu buton üç ayrı tuzağın kesiştiği yer — üçü de yaşandı:
 
@@ -1129,10 +1378,186 @@ yukarı yumuşakça belirir. Animasyon yalnızca aktif slaytta çalışır
 (`.slide[data-aktif="true"]`), böylece slayt her göründüğünde baştan oynar.
 Otomatik geçiş 8 sn — en geç görsel katman 4000 ms gecikmeli.
 
-**Dar ekran (≤820px):** oran `4/3`'e çıkar, dekoratif katmanlar gizlenir, perde
-alttan yukarı koyulaşır ve yazı tam genişlikte ortalanıp beyaza döner.
+### Dar ekran (≤820px): akış düzeni
 
-> Canlı sitedeki 7. slaydın (bizde 1. slayt) `deltek-proje-danismani.webp` katmanı sunucuda **404** veriyor —
+Slayt mutlak konumu bırakıp **akış düzenine** geçer: yazı üstte, katman
+kuşağı altta. Kutunun yüksekliği içerikten gelir (`aspect-ratio: auto`) ve
+slaytlar yan yana durduğu için ray'in boyunu **en uzun slayt** belirler,
+geçişlerde zıplama olmaz.
+
+> **`.yazi` `relative` ama `inset: auto !important`.** Akış düzeninde `.yazi`
+> normalde `static` olurdu; halenin (aşağıda) dayanağı olsun diye `relative`
+> yapıldı. Bunun bedeli var: `static` iken yok sayılan masaüstü konum
+> kuralları (`.yazi--orta { top: 50% }`, `--ust`, `--alt`, `--dip`) yeniden
+> devreye giriyor ve yazıyı akıştaki yerinden kaydırıyor. Ölçüldü: `dikey:
+> orta` olan 1 ve 3. slaytta yazı, altındaki makine/danışman görselinin
+> üzerine düşüyordu. `inset: auto !important` bunu kesiyor.
+
+**Mobilde slaydı kaplayan perde YOKTUR.** Fotoğraf olduğu gibi görünür;
+karartma yalnızca yazının arkasındaki yumuşak kenarlı bir haledir
+(`.yazi::before`, eliptik `radial-gradient`, kenarlarda saydama iner).
+
+**Hale slaydın TEMASINA uyar, mobilde metin rengi EZİLMEZ.** Uzun süre mobilde
+her slayt beyaz metne zorlanıyordu; sekiz slaydın **beşi açık zeminli** olduğu
+için bu, açık fotoğrafların üstüne gereksiz bir koyu blok koymak demekti ve
+göz yoruyordu. Artık masaüstündeki tema kuralları (`.yazi--koyu` /
+`.yazi--acik`) mobilde de geçerli:
+
+| Tema | Slaytlar | Metin | Hale |
+| --- | --- | --- | --- |
+| `acik` | 1, 3, 5, 6, 8 | lacivert (masaüstüyle aynı) | **beyaz**, tepe `.86` |
+| `koyu` | 2, 4, 7 | beyaz | lacivert, tepe `.72` |
+
+Ölçülen kontrast (metin rengi, halenin alfası kompozit edilerek):
+
+| | En kötü slaytta ort / min |
+| --- | --- |
+| `acik` slaytlar | 9.39:1 / 4.44:1 |
+| `koyu` slaytlar | 5.17:1 / 2.72:1 |
+
+Koyu temada eşik `.72`'de: `.62` iken en kötü slayt (2 — kıyı fotoğrafı, gökyüzü
+parlak) **3.75:1** ile AA'nın altına düşüyordu. Açık temada koyu blok tamamen
+ortadan kalktığı için hem daha hafif hem daha yüksek kontrast elde edildi.
+
+**Buton gölgesi mobilde küçültülüyor.** `.yazi__eylem`in gölgesi sabit px
+(`0 10px 22px`); masaüstünde butona göre ölçülü ama mobilde buton küçüldüğü
+için orantısız büyük kalıyor, bu yüzden dar ekranda `0 3px 9px`e iniyor.
+
+Buraya iki denemeden sonra gelindi:
+
+Buraya birkaç denemeden sonra gelindi; hepsi beyaz metin varsayıyordu:
+
+| Yaklaşım | En kötü slaytta min / ort | Fotoğrafın karartılması |
+| --- | --- | --- |
+| Slaydı kaplayan perde | 3.14:1 / 6.04:1 | kutunun %52'si |
+| Yüzdeye bağlı, altta açılan perde | 1.22:1 / 3.58:1 | %37-46 |
+| Yazıya bağlı hale, tepe `.84` | 3.85:1 / 7.69:1 | yalnız yazının arkası |
+| Yazıya bağlı hale, tepe `.60` | 1.92:1 / 3.40:1 | çok hafif, **AA'nın altı** |
+
+Hepsinin ortak kusuru **beyaz metin dayatmasıydı**: açık fotoğrafın üstünde
+beyaz yazıyı okutmak için koyu bir blok şarttı. Temaya uyunca sorun kökten
+gitti (yukarı bakın).
+
+Ayrıca **elipsin boyu tepe opaklığı kadar belirleyici**: `.84` sürümünde elips
+120%×104%'tü, yazının epeyce ötesine taşıp slaydın üstünde bir **bant** gibi
+okunuyordu. Bugün 108%×96%, hale metne yakın duruyor.
+
+Ortadaki yaklaşım hem fotoğrafı hem kontrastı bozdu, çünkü karartmayı kutunun
+yüzdesine bağlıyordu; oysa **yazı yüksekliği slayta göre 96-262 px arası
+değişiyor** (kutu 376 px), yani "yazı bandı" diye sabit bir yüzde yok — uzun
+yazılı slaytta metin solma noktasının altına taşıyordu. Hale yazıyla birlikte
+büyüyüp küçüldüğü için bu sorun yapısal olarak ortadan kalkıyor.
+
+Kontrast, arka plan görselinin pikselleri örneklenip halenin alfası
+kompozit edilerek ölçüldü (sekiz slayt, beyaz metin). Metnin ayrıca dar bir
+gölgesi var (`text-shadow`); WCAG bunu saymadığı için yukarıdaki sayılara
+dahil değil, gerçek okunurluğa katkısı sayıların üstünde.
+
+**Neden 1920×500 kompozisyonu telefona taşınamıyor** (ölçüldü, 375 px):
+katman koordinatları o ızgaraya bağlı ve ekranla orantılı ölçekleniyor, 375
+px'de ölçek **0.195**'e düşüyor. Gizleme kuralı kaldırılıp katmanlar olduğu
+gibi bırakıldığında sonuç şu:
+
+| Katman | Mobilde | Sonuç |
+| --- | --- | --- |
+| proje danışmanı | 60×88 | tanınmaz |
+| robot mühendis | 96×99 @ **y823** | 281 px'lik kutunun dışında |
+| boru analizi | 60×36 @ **x586** | 375 px'lik kutunun dışında |
+| sondaj makinesi | 117×63 | yazının altına biniyor |
+
+Üstelik 1920/500 oranı korunsaydı slider 375×98 px olurdu; oysa yalnız yazı
+bloğu 193 px. Yani yazı ile katmanlar aynı kutuya sığmıyor — mesele eksik bir
+kural değil, geometri.
+
+### Katman kuşağı: arka plan ve katmanlar TEK ızgarada
+
+Mobilde fotoğraf slaydın tamamını kaplamaz. Slayt ikiye ayrılır: **yazı** düz
+bir zeminde üstte, **kompozisyon kuşağı** altta. Kuşağın içinde arka plan ve
+katmanlar **aynı 1920×500 ızgarada** durur (`.mkat__ic`), dolayısıyla tek
+ölçekle büyüyüp küçülürler — masaüstündeki geometri birebir korunur. `.mkat`
+o ızgaraya açılmış penceredir; ızgara telefondan geniş kalır, kenarları
+kırpılır.
+
+**Kusur buradaydı ve iki turda ortaya çıktı:**
+
+1. Önce her slayttan bir "ana nesne" seçilip büyütülüyordu, sonra ikincisi de
+   eklenip yan yana diziliyordu. Katmanlar **tek tek** ölçeklendiği için
+   birbirlerine göre oranları bozuluyordu: delgi tiji masaüstünde toprak
+   adasından ~5 kat uzun, ikisi de "bir nesne" boyuna indirilince tij ada
+   kadar kısa bir çubuğa dönüyordu.
+2. Sonra katmanlar tek parça ölçeklendi, ama **arka plan hâlâ slaydın
+   tamamını `cover` ile kaplıyordu**. Ölçüldü: arka plan her slaytta 0.857
+   px/tasarım px iken katmanlar 0.23–0.62 arasındaydı, yani katmanlar arka
+   plana göre **0.26x–0.73x** kalıyordu. Proje danışmanı slaydında kadın
+   figürü arkasındaki ofis fotoğrafına göre iki kat büyük duruyordu.
+
+Arka plan da ızgaranın içine alınınca oran **sekiz slaytta da 1.00x** oldu
+(ölçüldü). Bunun bedeli: fotoğraf artık yazının arkasında değil, yalnız
+kuşakta.
+
+**Ölçek ve odak `mkatStil`de hesaplanır, elle verilmez.** Ölçek, kuşak
+yüksekliği tavanına (`min(56cqw, 250px) / 500`) takılana kadar katman
+grubunun tamamı pencereye sığacak şekilde seçilir (`94cqw / grup genişliği`).
+Yatay odak, grubun orta noktasıdır. Arka plan ve katmanlar aynı ızgarada
+olduğu için ölçeği slayda göre seçmek aralarındaki ilişkiyi bozmaz — yalnızca
+kompozisyona ne kadar yakından bakıldığını değiştirir.
+
+| Slayt | Kuşak (375 px) | Katman |
+| --- | --- | --- |
+| 1 | 210 px | işçi + makine |
+| 2, 4 | 210 px | — |
+| 3 | 210 px | proje danışmanı |
+| 5 | 179 px | robot mühendis + boru analizi |
+| 6 | 120 px | delgi tiji + toprak adası |
+| 7 | 210 px | tablet + video |
+| 8 | 210 px | çözüm düğmesi el |
+
+6. slayt daha kısa, çünkü delgi tiji 1530 px geniş: grubun tamamı sığsın diye
+ölçek küçülüyor.
+
+**Yazı kartı olabildiğince kısa.** Hero telefonda ekranın yarısını geçmesin,
+fotoğraf kuşağına yer kalsın diye mobilde tipografi ayrıca sıkıştırılıyor:
+başlık 52 → **39** tasarım px (`line-height` 1.06), üstlük 17 → 14, buton
+küçültüldü, yatay iç pay %6 → **%4**, üst dolgu 34 → 16, boşluk 18 → 8.
+En uzun başlık (4. slayt) böylece 4 satırdan 3 satıra iniyor. Kutu **504 →
+393 px**, en uzun yazı kartı **293 → 168 px** (375 px'te ölçüldü).
+
+> **Gövde metni 21 tasarım px'te bırakıldı** (375 px'te 12,7 px). Ortak
+> `--olcek`i küçültmek başlıkla birlikte gövdeyi de küçültüyordu; onun yerine
+> yalnız başlık ve boşluklar kısıldı. 12 px'in altına inmek okunurluğu bozar.
+
+**Yazı düz zeminde, perde/hale YOK.** Fotoğraf yazının arkasında olmadığı için
+karartmaya gerek kalmıyor — kontrast tam, `text-shadow` da gereksiz. Zemin
+slaydın temasından geliyor (`.slide--acik` / `.slide--koyu`), metin renkleri
+masaüstündekiyle aynı. Bu, "üstteki koyu bant göz yoruyor" şikâyetini kökten
+bitirdi; daha önce hale opaklığıyla oynanmış ama sorun oydu değil, fotoğrafın
+metnin arkasında olmasıydı.
+
+**`darGizle` katmanları mobilde görünür** (saha işçisi böyle geri geldi). O
+gizleme, sabit genişlikteki yazı kuşağının katmanlara binmesine karşıydı;
+akış düzeninde yazı ayrı bir alanda olduğu için gerekçesi kalmıyor.
+
+**Video mobilde de açık.** Geometri birebir olduğu için iframe tam tabletin
+ekranına oturuyor. Kapatılırsa tabletin ekranı boş koyu bir dikdörtgen kalır.
+**Bedeli:** hero'ya her telefon ziyaretinde YouTube oynatıcısı iner; kapatmak
+gerekirse mobil bloktaki `.kat__video`ya `display: none` yeter.
+
+> **Sarmallar masaüstünde kutu üretmez.** `.mkat` ve `.mkat__ic` orada
+> `display: contents`; arka plan ve katmanlar eskisi gibi doğrudan `.slide`e
+> göre yerleşir. Doğrulandı (1280 px): ikisinin de hesaplanan `display`
+> değeri `contents`, arka plan slaydı tam kaplıyor, oran hâlâ 3.84.
+
+**Mobil ölçek 520 px'te tavan yapar** (`--olcek-m: calc(min(100cqw, 520px) /
+620)`). Tavansızken 820 px'lik tablette yazı 1,3 kat büyüyüp kutuyu
+**805×866**'ya çıkarıyordu — ekranın dörtte üçü. Tavanla 805×508. Telefonları
+etkilemez: 375 px'de ölçek yine 0,605.
+
+Doğrulandı (360 / 375 / 820 px, iki dilde, sekiz slayt): taşma yok, yazı ile
+katman kuşağı çakışmıyor, kuşak slaytın dışına sarkmıyor. Masaüstü değişmedi —
+1280 px'te oran hâlâ 3.84, tek metin-katman çakışması aşağıda "kabul edilen
+durum" diye kayıtlı tij gölge şeridi.
+
+> Canlı sitedeki 7. slaydın (bizde 3. slayt) `deltek-proje-danismani.webp` katmanı sunucuda **404** veriyor —
 > orijinali (309×451, saydam PNG) web arşivinin 2025-04-01 anlık görüntüsünden
 > alınıp depoya kondu.
 > `HERO_EN` metinleri Türkçe orijinallerin çevirisidir, Deltek onayından geçmedi.
@@ -1149,6 +1574,46 @@ Site içi SEO 2026-09-06'da baştan sona elden geçirildi; `npm run seo` iki dil
 72 sayfada **100/100** veriyor (denetim ölçütleri betiğin başında). Sıralama
 tarafında kalan işler (Search Console, Business Profile, backlink, içerik
 takvimi) `SEO-REHBER.md`'de.
+
+### 2026-09-11 turu: teknik katman
+
+İlk tur (2026-09-06) sayfa içi SEO'ydu; bu tur denetimin ölçmediği teknik
+katman. Hepsi `npm run build` ile kendiliğinden üretilir, elle bakım gerekmez.
+
+| Ne | Nerede | Not |
+| --- | --- | --- |
+| Sitemap `lastmod` | `scripts/seo-integration.mjs` | Kaynak markdown'ın **son git commit tarihi**; blog'da `guncelleme` daha yeniyse o. Liste sayfaları altındaki en yeniyi alır. **Cloudflare shallow klonladığı için tarihler yerelde hesaplanıp `src/data/icerik-tarihleri.json`a yazılır ve commit'lenir** — aşağıya bakın. |
+| RSS | aynı | `/rss.xml`, `/en/rss.xml` — `<link rel="alternate">` head'de. `@astrojs/rss` kurulmadan üretiliyor. |
+| `llms.txt` | aynı | Sayfa+özet dizini. Google "gerekmiyor" diyor; maliyeti sıfır, diğer yapay zekâ tarayıcıları için. |
+| Dış bağlantı `rel="noopener noreferrer" target="_blank"` | aynı | Markdown'dan gelen `<a>`ler bunları taşımıyordu. |
+| Yazı tipleri kendi sunucudan | `scripts/font-indir.mjs` → `public/fonts/`, `src/styles/fonts.css` | Google Fonts'un iki üçüncü taraf bağlantısı ve CSS isteği kalktı; gövde fontu `preload`. 6 dosya / 243 KB (latin + latin-ext). Font değişecekse betikteki URL'yi değiştirip `npm run fontlar`. |
+| `_headers` | `public/_headers` | nosniff, SAMEORIGIN, Referrer-Policy, Permissions-Policy, HSTS `max-age=31536000; includeSubDomains` (eski WordPress sunucusu da gönderiyordu, düşürmek gerileme olurdu; `preload` yok — alan adı listede değil). `/_astro/*` ve `/fonts/*` `immutable`, `/images/*` 30 gün, `/admin/*` `X-Robots-Tag: noindex`. |
+| IndexNow | `scripts/indexnow.mjs`, `public/<anahtar>.txt` | `npm run indexnow` sitemap'teki tüm URL'leri Bing/Yandex'e (ve Bing dizinini kullanan ChatGPT/Copilot'a) bildirir. Google katılmıyor. Yayına aldıktan sonra ve her içerik değişikliğinde çalıştırılır. |
+| apple-touch-icon + manifest | `scripts/ikon-uret.mjs` → `public/apple-touch-icon.png`, `icon-192/512.png`, `manifest.webmanifest` | Logo beyaz kare zemine ortalanır. favicon.svg'nin "D"si kullanılmadı: librsvg Windows'ta Open Sans'ı bulamıyor. |
+| Skip link, `<main id="icerik">`, `<nav aria-label>` | `Layout.astro` | Erişilebilirlik; Lighthouse'a girer. |
+
+**Yapısal veri eklenenler** (`[slug].astro`, TR ve EN aynı):
+
+* **Service** — dört ana hizmet sayfası + `/hizmetlerimiz/` (`HIZMET_SAYFALARI`). Teknik açıklama sayfaları (tij, çamur, yer belirleme…) hizmet değil, onlara basılmaz.
+* **LocalBusiness** (+`GeneralContractor`) — `/iletisim/`de ofis başına, `parentOrganization` → Organization. Google'ın çok şubeli önerisi: Organization site geneli, şube kendi sayfasında. `OFISLER`de `enlem/boylam` ve `calismaSaatleri` dolarsa `geo` ve `openingHoursSpecification` de basılır (şu an boş — kullanıcı dolduracak).
+* **FAQPage** — gövdede "Sık sorulan sorular" / "Frequently asked questions" başlığı altındaki `**Soru?** Cevap` paragraflarından `sssCikar()` üretir. Başka yerde soru aramaz. Şu an yalnız `/iletisim/`de içerik var; **başka sayfaya SSS eklemek için aynı biçimde yazmak yeter**, şema kendiliğinden gelir. Google FAQ zengin sonucunu 2023'ten beri yalnız resmi/sağlık sitelerine gösteriyor; şema yine de soru-cevap yapısını yapay zekâ özetlerine açıkça anlatıyor.
+* **og:type=article** + `article:published_time/modified_time/section` blog yazılarında (Layout `tur`, `yayin`, `guncelleme` prop'ları). Önceden 24 yazının hepsi `website`ti.
+* Organization `logo` ölçüsü 200×46 → **300×73** (dosyanın gerçek ölçüsü; yanlıştı).
+
+**Başlık hiyerarşisi** — her sayfada seviye atlaması vardı, denetim ölçmüyordu:
+
+* Footer sütun etiketleri `<h5>` idi → `<p class="alt__bas">` (her sayfada h2→h5).
+* `UrunDuzen` blok başlıkları h3/h4 → **h2/h3** (ürün sayfalarında h1→h3). Bileşenin kendi yorumu "h1 > h3 > h4 korunur" diyordu; yanlıştı.
+* Ana sayfa kanıt kartları h4 → h3; blog listesi kart başlıkları h3 → h2; `hakkimizda.md` üst bölümleri `###` → `##`.
+* Denetim betiği artık **başlık atlamasını, blog yazısında og:type'ı ve sitemap lastmod'u** puanlıyor.
+
+**Bilerek yapılmayanlar:**
+
+* ~~İngilizce URL'ler~~ — **aynı gün yapıldı**, bkz. "URL / slug kuralı → İngilizce adresler".
+* **CSP başlığı** — YouTube/Vimeo gömüleri ve inline script'ler yüzünden dar bir politika siteyi kırar; `_headers`e konmadı.
+* **HSTS preload** — alan adı hstspreload.org listesinde değil ("unknown"); listeye girmek geri dönüşü aylar süren bir taahhüt, ayrıca karar verilir.
+* `andersonug.com` bağlantısı **http kaldı**: https 525 (TLS el sıkışması) veriyor. Miami bağlantısı https'e çevrildi (200, ama hedef sayfa genel bir partner sayfasına yönlendiriyor; içerik yok olmuş, bağlantı yine de kırık değil).
+* Kaya delgi video yazısı tarihsizdi (aslı "Medyalar" sayfasıydı); Vimeo oEmbed `upload_date` ile **2015-12-17** verildi — VideoObject `uploadDate` ve RSS için gerekiyordu.
 
 ### Frontmatter alanları (her iki koleksiyon, CMS'te de var)
 
@@ -1182,13 +1647,32 @@ Blog › yazı), video varsa **VideoObject**. Ana sayfa `ItemList` içinde dört
 Doğrulama: `dist/` içindeki tüm `ld+json` blokları build sonrası JSON.parse ile
 kontrol edildi (144 blok, 0 hata); Google Rich Results Test'te de bakılmalı.
 
-### Görsel dosya adları
+### Görsel klasörleri ve adları (2026-09-11)
 
-Hero görselleri anlamlı adlara taşındı (`git mv`): `zzz.jpg` →
-`deltek-yatay-sondaj-makine-parki.webp`, `bit.png` →
-`yatay-sondaj-delgi-tiji-ve-bit.webp` vb. `public/images/uploads/…` altındaki
-WordPress dosyaları **bilerek yeniden adlandırılmadı** (eski medya URL'leri
-korunuyor); onlara alt metni verildi.
+| Klasör | Ne var | Kim yazar |
+| --- | --- | --- |
+| `images/icerik/` | sayfa görselleri (42), **alt metninden türetilmiş açıklayıcı adlar** | CMS `media_folder` (sayfalar) |
+| `images/blog/` | blog görselleri (9) | CMS blog koleksiyonu `media_folder` |
+| `images/hero/`, `banner/`, `referans/`, `iletisim/` | önceden düzenliydi | elle |
+| `images/uploads/YYYY/MM/` | **yalnız eski WordPress orijinalleri** (74 JPEG/PNG/GIF) — `/wp-content/uploads/*` 301'inin hedefi; site hiçbir sayfada buraya bağlanmaz | dokunulmaz |
+
+`uploads/` altındaki `018.webp`, `haberler3.webp` gibi anlamsız adlı WebP'ler
+`icerik/`/`blog/` altına **alt metinlerinden üretilen** adlarla taşındı
+(`018.webp` → `genisletme-basliginin-hafriyati-sondaj-camuruyla.webp`). Ad
+kuralı: alt'ın ana ifadesi (" — " / ": " öncesi), en çok 6 kelime / 50
+karakter, sondaki bağlaçlar atılır; 3 kelimeden kısa kalırsa alt'ın tamamı.
+Google görsel araması dosya adını da okur; alt zaten vardı, ad artık onunla
+tutarlı.
+
+**Orijinaller silinmedi ve taşınmadı.** Canlı sitede indekslenmiş
+`/wp-content/uploads/2015/08/018.jpg` adresi 301 ile `/images/uploads/2015/08/018.jpg`'ye
+gidiyor; o dosya yerinde. Yalnız `.webp` kopyalar taşındı (hiç yayında
+olmadılar). Bilerek JPEG bırakılan iki dosya (`6.jpg`,
+`kazisiz-boru-yenileme-3.jpg`) hem yönlendirme hedefi hem sayfada kullanılıyor
+diye **kopyalandı**, taşınmadı.
+
+`scripts/referans-logo-kirp.mjs` ve `banner-sembol-kes.mjs` hâlâ
+`uploads/` orijinallerini okur (kaynak olarak) — doğru, onlar orada.
 
 ### Görseller WebP (2026-09-07)
 
@@ -1290,8 +1774,9 @@ Aynı entegrasyon `dist/en/404/index.html`'i Cloudflare'in beklediği
 
 `robots: index, follow, max-image-preview:large…`; `og:image:alt`,
 `og:image:width/height` (yalnız varsayılan 1200×630 görselde), `og:locale:alternate`,
-`twitter:image:alt`, `geo.*`. Google Fonts CSS'i `preload` + `media="print"
-onload` ile render'ı bloklamadan yükleniyor (`<noscript>` yedeği var).
+`twitter:image:alt`, `geo.*`, `apple-touch-icon`, `manifest`, RSS `alternate`.
+Yazı tipleri 2026-09-11'den beri **kendi sunucudan** (`/fonts/`, gövde fontu
+`preload`); Google Fonts bağlantısı yok.
 
 ### Denetim betiği
 
@@ -1304,11 +1789,50 @@ Bir sayfa düşük çıkarsa `--ayrinti` bulguları listeler. Harici servislere
 
 ## Deploy hedefi: Cloudflare Pages
 
-- Build: `npm run build` · Çıktı: `dist` · Node 22
+- Build: `npm run build` · Çıktı: `dist` · Node **`.node-version` dosyasından** (22.12.0)
 - Statik çıktı; adapter/SSR **yok**. SSR gerekirse `@astrojs/cloudflare` adapter'ı
   ayrı bir karar.
 - 301'ler `public/_redirects`, özel başlıklar `public/_headers`.
-- Apex → www yönlendirmesi Cloudflare tarafında kurulmalı.
+- Depo: `github.com/yalibuk/deltek`, dal `main`.
+
+### Cloudflare Pages'in SHALLOW KLONU (2026-09-11)
+
+Pages depoyu **shallow** klonluyor (`git rev-parse --is-shallow-repository` →
+`true`, ölçüldü). Orada `git log -1 -- <dosya>`, dosya o commit'te
+değişmemiş olsa bile **HEAD commit'inin** tarihini döndürüyor. Yani sitemap'teki
+bütün `lastmod` değerleri son deploy tarihi olur; Google tutarsız lastmod'u yok
+sayar ve özellik işe yaramaz hâle gelir.
+
+> Bugün fark görünmüyor: tüm içerik tek commit'te (`dbb0ac3`) değiştiği için
+> tam klon da tek tarih veriyor. Kusur **ilk içerik güncellemesinde** ortaya
+> çıkardı — o yüzden şimdi kapatıldı.
+
+Çözüm `scripts/seo-integration.mjs` içinde:
+
+* Tam geçmiş varsa (yerel build) tarihler git'ten hesaplanır **ve**
+  `src/data/icerik-tarihleri.json`a yazılır. Dosya değişmişse build günlüğü
+  "COMMIT EDİN" der.
+* Shallow ise (Cloudflare) o dosya okunur.
+* İkisi de yoksa dosya mtime'ına düşer ve build günlüğüne uyarı basar.
+
+> **Yani `icerik-tarihleri.json` depoya commit'lenmek ZORUNDA.**
+
+**CMS'ten yapılan değişiklikler bu dosyayı güncellemez** — Sveltia doğrudan
+GitHub'a commit atıyor, yerel build çalışmıyor. O yüzden CMS'te içerik
+düzenleyen kişi **"Son güncelleme" alanını** (`guncelleme`) doldurmalı: kod
+onu git/JSON tarihinden daha yeniyse tercih ediyor, yani lastmod doğru kalıyor.
+Aynı alan JSON-LD `dateModified`'a da gidiyor.
+
+### Apex → www: YÖNLENDİRMEYİ CLOUDFLARE'DE KURUN
+
+`deltek.com.tr` → `www.deltek.com.tr` 301'ini bugün **eski Plesk sunucusu**
+yapıyor (301 yanıtında `x-powered-by: PHP/5.6.40, PleskLin` başlıkları var).
+DNS Pages'e çevrildiğinde o sunucu devreden çıkar ve **yönlendirme kaybolur**.
+Cloudflare'de bir Redirect Rule kurulmadan geçiş yapılmamalı: apex adresi
+ya çalışmaz ya da www ile ikiz içerik üretir.
+
+Alan adı zaten Cloudflare'de (NS: `harley`/`rosalyn.ns.cloudflare.com`), yani
+nameserver değişikliği gerekmiyor — yalnız DNS kaydı ve kural.
 
 ## Bilinen tuzak
 
@@ -1381,6 +1905,8 @@ Dar ekran doğrulaması için **Browser panelini** kullan (gerçek viewport
 - [x] Ana sayfa `<title>` marka + slogan oldu (TR 52 / EN 54 karakter). Diğer
       sayfalar `${baslik} — ${SITE.isim}` kalıbını kullanıyor; `<title>` aynı
       zamanda `og:title` ve `twitter:title` olarak da basılıyor.
+- [ ] Hero: 821-1190 px arasında gövde/üstlik puntosu 8-13 px'e iniyor
+      (bkz. "Başlık puntosu ve 821-1190 px bandındaki okunurluk")
 - [ ] `public/admin/config.yml` — `backend.repo` gerçek GitHub deposuyla değiştirilmeli
 
 ## Taşıma betiği
@@ -1409,6 +1935,90 @@ node scripts/banner-sembol-kes.mjs
 node scripts/wp-sayfa-tasi.mjs . --liste
 ```
 
+## `npm run duzen` — sayfa düzeni denetimi
+
+`scripts/duzen-denetim.mjs` **bütün sayfaları** (dist altındaki her
+`index.html`) birkaç ekran genişliğinde açar ve üç şeye bakar:
+
+1. **Yatay taşma** — `scrollWidth > innerWidth` ve taşmaya sebep olan en
+   içteki öğe. `body { overflow-x: hidden }` bunu gizler ama düzeltmez;
+   ölçüm gizlenmeden önceki gerçeği söyler.
+2. **Yapışkan/sabit öğe çakışması** — `position: sticky|fixed` bir kutunun,
+   akrabası olmayan bir metin/görsel öğesinin üstüne binmesi. Sayfanın ÜÇ
+   yerinde bakılır (tepe, orta, dip): yapışkan menü ancak belirli kaydırma
+   noktalarında komşusunun üstüne çıkıyor, tek noktada bakmak yetmiyor.
+3. **Izgarada yanlış sütun** — `.yazi--yan` düzeninde doğrudan çocuk sayısı
+   ikiden fazlaysa uyarır (aşağıdaki tuzak).
+
+**768 px altında üç şey daha** — ve o genişlikler GERÇEK cihaz öykünmesiyle
+açılır (dokunma, mobil kullanıcı aracısı, `deviceScaleFactor: 2`). Masaüstü
+kullanıcı aracısıyla 390 px ölçmek `hover`a bağlı kuralları ve yükleme anında
+cihaza bakan kodu yanlış çalıştırır; bu yüzden betik İKİ ayrı bağlam açıyor
+(bu ayarlar bağlam seviyesinde, `setViewportSize` ile değişmiyor).
+
+4. **Dokunma hedefi, iki kademe.** 24 px WCAG 2.5.8'in (AA) normatif alt
+   sınırı → `IHLAL`. 40 px Apple/Google tavsiyesi → `dar`, hata değil.
+   Tek eşik işe yaramıyordu: 36-38 px'lik onlarca öğe, 14×11 px'lik gerçek
+   ihlali gömüyordu.
+5. **Okunmayacak punto** — 12 px altı metin.
+6. **Kabına sığmayan öğe** — `scrollWidth > clientWidth`.
+
+**Üç yanlış pozitif bilerek eleniyor** (hepsi bu sitede gerçekten var):
+
+| Desen | Neden yanlış pozitif | Nasıl eleniyor |
+| --- | --- | --- |
+| Karusel rayı | `.slider__ray` 8 slayt kadar geniş, kırpan atası var | üst soyda `overflow-x != visible` aranıyor |
+| Tam genişlik şerit | `width: 100vw; margin-inline: calc(50% - 50vw)` kabından kasıtlı taşar | çocukta negatif yatay kenar boşluğu aranıyor |
+| Gerilmiş bağlantı | kartlarda hedef metin değil, `::after` ile kaplanan kartın tamamı | `::after` mutlak konumluysa atlanıyor |
+
+```bash
+npm run build && npm run preview -- --port 4324    # ayrı bir kabukta
+npm run duzen -- http://localhost:4324/ 1880,1280,900,390,360
+```
+
+70 sayfa × 4 genişlik ~10 dakika sürüyor; daha hızlısı için genişlik
+listesini kısaltın.
+
+**BEKLENEN listesi.** Betiğin başındaki `BEKLENEN` dizisi, tasarım gereği
+olan çakışmaları tutar; raporda görünür ama hata saymazlar. Bugün tek kayıt:
+`.mobil-tel` — 980 px altında sayfanın dibine yapışan telefon çubuğu.
+Kaydırırken paragrafların üstünden geçiyor ama hiçbir şey KALICI olarak
+gizli kalmıyor: `body { padding-bottom: 70px }` yer ayırıyor ve sayfanın en
+dibinde son metin çubuğun 18 px üstünde bitiyor (390 / 900 / 979 px'te
+ölçüldü).
+
+**Bugünkü durum (2026-09-11, 70 sayfa × 1880/1280/900/390/360 px):** yatay
+taşma yok, ızgara yerleşim hatası yok, dokunma hedefi ihlali yok, kabına
+sığmayan öğe yok, `.mobil-tel` dışında çakışma yok.
+
+Geriye yalnız bilgi amaçlı iki kalem kalıyor, ikisi de ihlal değil:
+`dokunma-hedefi-dar` (üst şerit 24 px, logo 38 px, footer bağlantıları 33 px
+— hepsi WCAG sınırının üstünde, tavsiye edilen 40'ın altında) ve
+`kucuk-punto` (10,9-11,8 px'lik ikincil etiketler: tarihler, künye rozeti,
+footer telif satırı, açılır menü başlığı).
+
+### Mobilde giderilenler (2026-09-11)
+
+- **Hero üstlüğü 8,8 px'ti.** Tasarım ızgarasında 14 px ve `--olcek-m`
+  390 px'lik telefonda 0,63'e iniyor. Büyük harf + `.16em` harf aralığıyla
+  okunmuyordu. `max(calc(14 * var(--olcek)), 12px)` ile tabanlandı; 820 px'te
+  bile 11,7 px kalıyordu, yani taban bütün dar ekran bandında iş görüyor.
+  Başlık (24,5 px) ve gövde (13,2 px) zaten 12'nin üstünde, dokunulmadı.
+- **Dil değiştiricinin hedefi 14×11 px'ti** — WCAG'in 24×24 sınırının bile
+  altında. Bağlantılar artık hapın yarısını kaplıyor ve hapın dışına biraz
+  taşıyor (37×34, mobilde); zemini olmadığı için taşma görünmüyor.
+
+  > **Özgüllük tuzağı** (`a.btn[href^="tel:"]` ile aynı aile): `.ust-serit a`
+  > (0,1,1) sade `.dil-sec__b`yi (0,1,0) YENİYOR. `min-height: 26px` yazılmışken
+  > 24 px uygulanıyordu, sessizce. Seçici `.dil-sec .dil-sec__b` (0,2,0)
+  > yapıldı — sınıf sayısı 2 > 1 olduğu için kazanıyor.
+- **Slider noktaları 9×9 px'ti.** Görünen nokta `::before`e alındı, buton
+  26×26 px'lik saydam bir hedef oldu. Saydam bir `::after` uzantısı da işe
+  yarardı ama o zaman ölçüm araçları hedefi hâlâ 9 px görür.
+- **Üst şerit bağlantıları ve blog "geri" bağlantısı 22 px'ti** (24'ün
+  altında). `min-height` ile 24-26 px'e çıkarıldı; şerit zaten 34 px yüksek,
+  satır düzeni değişmedi.
+
 ## Komutlar
 
 | Komut | Ne yapar |
@@ -1419,6 +2029,8 @@ node scripts/wp-sayfa-tasi.mjs . --liste
 | `npm run preview` | Build çıktısını yerelde sunar |
 | `npm run cms` | Sveltia/Decap yerel backend (panel `/admin/`) |
 | `npm run og` | `public/og-image.jpg`'yi yeniden üretir (bkz. aşağı) |
+| `npm run hero` | Hero slaytlarında metin–katman çakışması denetimi |
+| `npm run duzen` | Bütün sayfalarda düzen/hizalama denetimi |
 | `npm run seo` | Build + `scripts/seo-denetim.mjs` — sayfa başına SEO puanı (bkz. "SEO") |
 | `npm run webp` | Görselleri WebP'ye çevirir; `--kuru` yazmadan raporlar, `--klasor` hedefi seçer |
 | `npm run seo:ayrinti` | Son build üzerinde her sayfanın tüm bulgularını listeler |

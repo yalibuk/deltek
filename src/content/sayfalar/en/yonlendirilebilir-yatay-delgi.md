@@ -1,5 +1,6 @@
 ---
 baslik: "Directional Boring"
+adres: "directional-boring"
 seoBaslik: "Directional Boring: Technology and Applications"
 ozet: "How does directional boring (HDD) work? Navigation and power systems, fields of application, planning, advantages, challenges and future technologies."
 anahtarKelimeler: "directional boring, directional drilling, directional boring rig, HDD, trenchless boring, directional boring navigation, fibre optic directional boring"
@@ -54,7 +55,7 @@ Directional boring is preferred especially for building-to-building connections 
 
 Directional boring is frequently used in municipal infrastructure projects. It offers the ideal solution for potable water distribution lines, wastewater collection systems and stormwater drainage.
 
-The technology was also applied successfully on the [sewer project in Miami](/en/miamide-kanalizasyon-yapimi/), where quality infrastructure was built without damaging the existing road network and the project was completed on schedule.
+The technology was also applied successfully on the [sewer project in Miami](/en/hdd-sewer-miami-54-inch-hdpe/), where quality infrastructure was built without damaging the existing road network and the project was completed on schedule.
 
 ### Power and Gas Lines
 

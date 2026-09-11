@@ -1,10 +1,11 @@
 ---
 baslik: "The Crossing Group Completes Record-Breaking HDD Intersect in Freezing Cold"
+adres: "crossing-group-intersect-hdd-record"
 seoBaslik: "The Crossing Group: 2,955 m Intersect HDD Record"
 ozet: "The Crossing Group completed a 2,955-metre intersect HDD crossing beneath the Athabasca River in Canada in freezing conditions. Casings and technical details."
 anahtarKelimeler: "intersect HDD, Athabasca River HDD, long distance directional drilling, casing pipe, The Crossing Group, maxi HDD rig"
 tarih: 2026-05-21
-kapak: "/images/uploads/the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimi.webp"
+kapak: "/images/blog/athabasca-nehri-altinda-2-955-metrelik-kesisim.webp"
 kapakAlt: "2,955-metre intersect HDD crossing beneath the Athabasca River — The Crossing Group site"
 ilgili:
   - "4058-metre-dunya-rekoru"

@@ -8,7 +8,7 @@ ilgili:
   - "hizmetlerimiz"
 anahtarKelimeler: "yatay sondaj verimlilik, HDD günlük ilerleme, Ditch Witch JT25, yatay delgi rekor, yatay sondaj makine seçimi, Anderson Underground"
 tarih: 2017-11-15
-kapak: "/images/uploads/2017/11/haberler1.webp"
+kapak: "/images/blog/bir-gunde-1030-metre-yatay-delgi.webp"
 kapakAlt: "Bir günde 1030 metre yatay delgi yapan HDD makinesi — Anderson Underground rekoru"
 ---
 

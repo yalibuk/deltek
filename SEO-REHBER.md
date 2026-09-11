@@ -5,6 +5,34 @@ hız) kodda tamamlandı; `npm run seo` iki dilde 72 sayfada 100/100 veriyor.
 Aşağıdakiler kodla yapılamayan, **sizin** tarafınızdan yapılacak işlerdir.
 Sıra önem sırasıdır; ilk 5 madde yayın haftasında bitmeli.
 
+## 0. 2026-09-11 turu — sizin yapacaklarınız (öncelik sırasıyla)
+
+Sitenin kendi içinde yapılabilecek her şey yapıldı (`npm run seo` 72 sayfa
+100/100; teknik katmanın dökümü CLAUDE.md → SEO → "2026-09-11 turu"). Aşağıdakiler
+yalnız sizin yapabileceğiniz, hesap/erişim ya da gerçek veri gerektiren işler.
+
+| # | İş | Neden | Nerede |
+| --- | --- | --- | --- |
+| 1 | **Ofis koordinatları** — Google Haritalar'da adrese sağ tık → ondalık koordinatı kopyala | LocalBusiness şeması `geo` alır; yerel aramada ("yatay sondaj İzmir") konum eşleşmesi | `src/data/site.ts` → `OFISLER[].enlem/boylam` |
+| 2 | **Çalışma saatleri** | LocalBusiness `openingHoursSpecification`; Business Profile'la tutarlı olmalı | `OFISLER[].calismaSaatleri` (örnek yorumda) |
+| 3 | **Sosyal/dizin profilleri** (LinkedIn, YouTube, Vimeo, Instagram) | Organization `sameAs` → marka doğrulaması, Knowledge Panel | `SITE.sosyal` |
+| 4 | **Kuruluş yılı** | Organization `foundingDate` — E-E-A-T sinyali | `SITE.kurulus` |
+| 5 | **Bing Webmaster Tools** kaydı + sitemap | ChatGPT, Copilot ve Perplexity'nin bir kısmı Bing dizininden okuyor; Google'a kayıt Bing'e sayılmıyor. GSC'den içe aktarma seçeneği var, 2 dakika | bing.com/webmasters |
+| 6 | **IndexNow'u yayında çalıştırın**: her deploy'dan sonra `npm run indexnow` | Bing/Yandex'e anında bildirim (anahtar dosyası zaten sitede) | terminal |
+| 7 | **Twitter/X hesabı varsa** `twitter:site` için handle | Kart kaynağı; yoksa gerek yok | Layout.astro'ya bir satır (bana söyleyin) |
+| 8 | ~~İngilizce URL kararı~~ **Yapıldı (2026-09-11):** EN adresler İngilizce (`/en/contact/`), dosya adları Türkçe; CMS'te İngilizce sekmede "URL" alanı. Yeni EN içerikte o alanı doldurun, Türkçe'de boş bırakın | — |
+| 9 | **SSS ekleyin** (ana hizmet sayfalarına 3–5 soru) | FAQPage şeması kendiliğinden üretilir; "Sık sorulan sorular" başlığı + `**Soru?** Cevap` biçimi yeter. Uzun kuyruklu aramalar + yapay zekâ özetleri | `src/content/sayfalar/{tr,en}/*.md` |
+| 10 | **Yazar/ekip** sayfası ya da hakkımızda'ya isim-unvan | E-E-A-T: kim yazıyor, kim yapıyor. Şu an her şey "Organization" adına | içerik |
+| 11 | **`_headers`'daki HSTS'i genişletmek** isterseniz tüm alt alanların HTTPS olduğunu doğrulayın, sonra `includeSubDomains; preload` ekleyin | Tarayıcı ön yükleme listesi | `public/_headers` |
+
+Yayın **sonrası** doğrulama (canlıda çalışan araçlar):
+
+1. Rich Results Test → `/`, `/iletisim/` (LocalBusiness + FAQPage), bir blog yazısı (BlogPosting + article), `/yonlendirilebilir-yatay-sondaj/` (Service). Hata değil "uyarı" çıkarsa çoğu isteğe bağlı alan.
+2. PageSpeed Insights mobil → LCP < 2,5 s, CLS < 0,1, INP < 200 ms. Yazı tipleri artık kendi sunucudan; "üçüncü taraf" satırı görünmemeli.
+3. `https://www.deltek.com.tr/sitemap-index.xml` → her URL'de `lastmod` var mı.
+4. `https://www.deltek.com.tr/rss.xml` ve `/en/rss.xml` açılıyor mu.
+5. Search Console → Sayfalar raporu: "noindex ile hariç tutuldu" yalnız 404 ve admin olmalı.
+
 ## 1. Yayına alırken (ilk gün)
 
 1. **Cloudflare Pages'te alan adları:** `www.deltek.com.tr` ana alan adı; apex

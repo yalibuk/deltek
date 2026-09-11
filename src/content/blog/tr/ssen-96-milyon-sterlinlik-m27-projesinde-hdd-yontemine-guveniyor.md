@@ -8,7 +8,7 @@ ilgili:
   - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
 anahtarKelimeler: "otoyol altı HDD geçişi, M27 HDD, SSEN, elektrik kablosu yatay delgi, karayolu altı yatay sondaj, bentonit sondaj çamuru, National Highways"
 tarih: 2026-05-21
-kapak: "/images/uploads/m27-projesi-hdd-altyapi-calismasi.webp"
+kapak: "/images/blog/m27-otoyolu-altinda-hdd-ile-elektrik.webp"
 kapakAlt: "M27 otoyolu altında HDD ile elektrik kablosu geçişi — SSEN Rownhams sahası"
 ---
 

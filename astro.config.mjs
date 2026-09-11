@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import gorselOlcu from './scripts/gorsel-olcu-integration.mjs';
+import seoEk from './scripts/seo-integration.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,14 +17,11 @@ export default defineConfig({
     sitemap({
       // CMS paneli ve içeriksiz sayfaları sitemap dışında bırak
       filter: (page) => !page.includes('/admin'),
-      // TR (kök) ↔ EN (/en/) sayfalarını hreflang ile eşle
-      i18n: {
-        defaultLocale: 'tr',
-        locales: {
-          tr: 'tr',
-          en: 'en',
-        },
-      },
+      // hreflang eşlemesi BURADA DEĞİL: eklentinin i18n seçeneği yolları
+      // önekle eşliyor (/x/ ↔ /en/x/), oysa EN adresler İngilizce. Eşleme
+      // dosya adı üzerinden scripts/seo-integration.mjs'de yapılıyor.
     }),
+    // sitemap'ten SONRA: lastmod'u onun yazdığı dosyaya ekler; ayrıca RSS, llms.txt, dış bağlantı rel
+    seoEk(),
   ],
 });

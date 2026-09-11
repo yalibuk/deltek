@@ -13,7 +13,7 @@ bannerSembol: "yonlendirilebilir-yatay-sondaj-yer-belirleme-sistemleri"
 bloklar:
   - metin: |-
       Yeraltında pilot deliği açacak olan uca yön vermek ve dizayn edilen delik profilini oluşturabilmek YYS’nin en kritik aşamasıdır. Lokasyon sistemi projeye özel olarak seçilmelidir. Başarılı bir geçiş projesi için seçilebilecek en iyi yol benzer geçişlerde kanıtlanabilir tecrübeye sahip bir ekiple çalışmaktır.
-    gorsel: "/images/uploads/2015/08/020.webp"
+    gorsel: "/images/icerik/yatay-sondajda-yer-belirleme.webp"
     alt: "Yatay sondajda yer belirleme: pilot delgide delici ucun yüzeyden izlenmesi"
   - metin: |-
       İyi bir YYS firması geçiş öncesinde gerekli verileri toplayarak planlanan geçiş profilini işverene gerekçeleriyle sunabilmelidir. Profesyonel anlayış öngörüş gerektirir. Yapılan öngörü işverenle tartışılmalı ve uygulama projesi iştişare sonunda oluşturulmalıdır.

@@ -14,7 +14,12 @@
     "og": "node scripts/og-gorsel-uret.mjs",
     "seo": "astro build && node scripts/seo-denetim.mjs",
     "seo:ayrinti": "node scripts/seo-denetim.mjs --ayrinti",
-    "webp": "node scripts/gorsel-webp.mjs"
+    "webp": "node scripts/gorsel-webp.mjs",
+    "hero": "node scripts/hero-cakisma.mjs",
+    "duzen": "node scripts/duzen-denetim.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "fontlar": "node scripts/font-indir.mjs",
+    "ikonlar": "node scripts/ikon-uret.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

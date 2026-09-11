@@ -1,10 +1,11 @@
 ---
 baslik: "A Giant Floating Solar Plant Comes Online in Europe"
+adres: "hdd-cable-crossing-floating-solar-plant"
 seoBaslik: "700-Metre HDD Cable Crossing at a Floating Solar Plant"
 ozet: "Power from the 31 MW floating solar plant in Obourg, Belgium was brought ashore by 700+ metres of horizontal directional drilling without harming the lake."
 anahtarKelimeler: "floating solar plant, HDD cable crossing, renewable energy directional drilling, TotalEnergies, Holcim, Obourg, horizontal directional drilling"
 tarih: 2026-05-07
-kapak: "/images/uploads/avrupa-yuzen-gunes-enerji-santrali.webp"
+kapak: "/images/blog/belcika-obourg-daki-yuzer-gunes-enerji.webp"
 kapakAlt: "Floating solar plant in Obourg, Belgium — cable route connected to shore by HDD"
 ilgili:
   - "iskandinavya-ai-super-otoyolunu-guclendirmek-icin-yonlendirilebilir-yatay-delgi-yyd-hdd"

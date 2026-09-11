@@ -47,16 +47,16 @@ neden:
     - "Kendimizi ve makine parkımızı sürekli yeniliyoruz."
     - "Zamanında iş teslim ediyor; iş ortaklarımıza zaman avantajı sunuyoruz."
     - "İş-Ekip-Makine optimizasyonu yapıyor, beklenmedik maliyetler yaratmıyoruz."
-  gorsel: "/images/uploads/2014/12/devices.webp"
+  gorsel: "/images/icerik/deltek-yatay-sondaj-yer-belirleme.webp"
   gorselAlt: "Deltek yatay sondaj yer belirleme ve yönlendirme cihazları — HDD ekipman parkı"
 
 projeler:
   baslik: "Son Projeler"
   metin: "Bitirdiğimiz son projelerden kesitleri buradan takip edebilir; kullandığımız ekipman ve yüksek teknolojinin iş ortaklarımıza nasıl katma değer yarattığı hakkında fikir edinebilirsiniz. Hedefimiz: SIFIR HATA, %100 MEMNUNİYET!"
   galeri:
-    - { foto: "/images/uploads/2015/07/3.webp", alt: "Deltek kazısız geçiş sahasında yatay sondaj makinesi ile çalışma" }
-    - { foto: "/images/uploads/2015/09/Kazisiz_Teknoloji_Resim8_Auger_Boring.webp", alt: "Auger boring (boru sürme) şeması — helezonlu delgi kafası ile çelik borunun yer altına sürülmesi" }
-    - { foto: "/images/uploads/2015/08/6.jpg", alt: "Yönlendirilebilir yatay sondaj sahası — HDD makinesi ve delgi tijleri" }
+    - { foto: "/images/icerik/deltek-kazisiz-gecis-sahasinda-yatay-sondaj.webp", alt: "Deltek kazısız geçiş sahasında yatay sondaj makinesi ile çalışma" }
+    - { foto: "/images/icerik/auger-boring-boru-surme-semasi.webp", alt: "Auger boring (boru sürme) şeması — helezonlu delgi kafası ile çelik borunun yer altına sürülmesi" }
+    - { foto: "/images/icerik/yonlendirilebilir-yatay-sondaj-sahasi-hdd-makinesi.jpg", alt: "Yönlendirilebilir yatay sondaj sahası — HDD makinesi ve delgi tijleri" }
 
 alanlar:
   baslik: "Uygulama Alanlarımız"
@@ -82,7 +82,7 @@ alanlar:
 Deltek, 20 yılı aşkın saha tecrübesiyle İstanbul ve İzmir ofislerinden Türkiye
 genelinde **yatay sondaj**, **boru sürme/çakma** ve **kazısız boru yenileme**
 hizmeti veren bir kazısız geçiş yüklenicisidir. Yönlendirilebilir yatay sondajda
-250 tona, boru sürmede 800 tona varan makine parkımızla 2 mm'den 2000 mm'ye
+660 tona, boru sürmede 1.800 tona varan makine parkımızla 2 mm'den 2000 mm'ye
 kadar her çapta boru ve kablo hattını nehir, otoyol, demiryolu ve şehir içi
 geçişlerde açık kazı yapmadan yer altına alıyoruz. Aşağıdaki dört ana hizmet
 için ücretsiz fizibilite ve keşif çalışması yapıyoruz.

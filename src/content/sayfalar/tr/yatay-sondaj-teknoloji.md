@@ -8,7 +8,7 @@ anahtarKelimeler: "kazısız yatay sondaj teknolojileri, HDD teknolojisi, kazıs
 duzen: urun
 bolumHaritasi: true
 yanMenu: true
-banner: "/images/uploads/2015/08/kazisiz-yatay-sondaj-teknolojileri.webp"
+banner: "/images/icerik/kazisiz-yatay-sondaj-teknolojileri.webp"
 ---
 
 Kazısız yatay sondaj teknolojileri, boru ve kablo hatlarını yüzeyde tranşe

@@ -1,5 +1,6 @@
 ---
-baslik: "Pipe Jacking / Auger Boring"
+baslik: "Pipe Jacking"
+adres: "pipe-jacking-auger-boring"
 seoBaslik: "Pipe Jacking, Auger Boring and Microtunnelling"
 ozet: "Pipe jacking methods: pipe pushing, auger boring and microtunnelling. Excavation type, face support, ground conditions, diameter limits and choosing the method."
 anahtarKelimeler: "pipe jacking, auger boring, microtunnelling, pipe ramming, pipe pushing, guided auger boring, slurry MTBM, EPB, steel casing crossing"
@@ -16,7 +17,7 @@ bloklar:
       Pipe jacking is one of the oldest trenchless crossing alternatives. Essentially, a pipe is pushed into a tunnel driven horizontally from one of two shafts opened at the entry and exit points to the other. Steel and concrete pipes are both used, although concrete is losing ground to steel every day.
 
       All three applications share the same skeleton: a jacking frame set up in the entry shaft pushes the pipe into the ground, the ground ahead of the pipe is excavated as it advances, and the spoil is carried back through the pipe to the shaft. Two things distinguish the methods — **how the excavation is done** and **how the tunnel face is supported**. Below we cover all three, from the simplest to the most advanced.
-    gorsel: "/images/uploads/2015/08/029.webp"
+    gorsel: "/images/icerik/boru-surme-cakma.webp"
     alt: "Pipe jacking: steel pipe pushed horizontally from the entry shaft to the exit shaft"
     ters: false
 
@@ -25,7 +26,7 @@ bloklar:
       In this method an entry shaft is opened and the pipe is positioned in front of the face. The excavation crew works inside the pipe and digs the ground ahead of it, usually by hand or with a mini excavator. Depending on how well the ground stands, the spoil is removed over a certain distance and the pipe is pushed into the void.
 
       The length of the shaft is no accident: it must hold the pipe section to be pushed, the jacking frame and the thrust wall behind it. All of the jacking force is transferred to the ground through this thrust wall; if the wall is inadequate, the rig pushes itself backwards instead of pushing the pipe forward.
-    gorsel: "/images/uploads/2015/08/030.webp"
+    gorsel: "/images/icerik/boru-itme-yonteminde-giris-safti-itme.webp"
     alt: "Entry shaft, jacking frame and thrust wall arrangement in pipe pushing"
     ters: true
 
@@ -46,7 +47,7 @@ bloklar:
       Auger boring has the same structure as pipe pushing, with one difference: the excavation is done not by hand but by a cutting head travelling 40–50 cm ahead of the pipe. This head is connected to the machine in the entry shaft by a helical auger. When the machine turns the auger, and with it the head at the front, the ground is cut and the spoil is carried back through the pipe to the shaft by the flights. When enough void has formed ahead of the pipe, the pipe is pushed in and the cycle repeats.
 
       Because the machine does the digging, nobody has to enter the pipe. This puts auger boring ahead of pipe pushing in both safety and diameter — it can be applied in much smaller diameters, and most pipe jacking today is done this way.
-    gorsel: "/images/uploads/2015/08/031.webp"
+    gorsel: "/images/icerik/auger-boring-helezonlu-mil-ve-delgi.webp"
     alt: "Auger boring: machine-driven pipe jacking with a helical auger and cutting head"
     ters: false
 
@@ -77,7 +78,7 @@ bloklar:
       This is the most complex and expensive of the pipe jacking methods. In return it makes it possible to lay kilometres of line with high precision.
 
       The difference can be summed up in one sentence: in microtunnelling **nobody enters the tunnel.** The excavation is done by a closed-face microtunnel boring machine (MTBM) remotely controlled from the shaft. Because the face is continuously supported under pressure, the method can be used safely where the other two cannot work — below the water table, in flowing sand, beneath settlement-sensitive structures.
-    gorsel: "/images/uploads/2015/08/033.webp"
+    gorsel: "/images/icerik/mikrotunel-uzaktan-kumandali-kapali-yuzlu-tunel.webp"
     alt: "Microtunnelling: pipe jacking with a remotely controlled closed-face microtunnel boring machine (MTBM)"
     ters: true
 

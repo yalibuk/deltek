@@ -22,8 +22,21 @@ interface Props {
    * ana sayfasına gider. Çevirisi olmayan blog yazıları için kullanılır.
    */
   cevirisiVar?: boolean;
+  /**
+   * Bu sayfanın DİĞER dildeki adresi (`/en/contact/` ya da `/iletisim/`).
+   * Verilmezse yol öneki ekleyip/çıkararak türetilir — ana sayfa ve blog
+   * listesi gibi iki dilde aynı yolu taşıyan sayfalar için yeterli. İçerik
+   * sayfaları vermek ZORUNDA: EN URL'leri İngilizce, TR'den türetilemez.
+   */
+  karsiYol?: string;
+  /** og:type — blog yazılarında 'article' (article:published_time ile birlikte). */
+  tur?: 'website' | 'article';
+  /** ISO tarih; yalnız tur='article' iken basılır. */
+  yayin?: string;
+  guncelleme?: string;
 }
-const { title = SITE.isim, description = '', image, imageAlt, keywords, sema, noindex = false, cevirisiVar = true } = Astro.props;
+const { title = SITE.isim, description = '', image, imageAlt, keywords, sema, noindex = false, cevirisiVar = true,
+        tur = 'website', yayin, guncelleme, karsiYol } = Astro.props;
 // trailingSlash: 'always' — tüm iç yollar eğik çizgiyle biter.
 const pathname = Astro.url.pathname;
 const dil = pathname.startsWith('/en/') ? 'en' : 'tr';
@@ -31,15 +44,18 @@ const t = CEVIRI[dil];
 const yol = (p: string) => dil === 'en' ? ('/en' + (p === '/' ? '/' : p)) : p;
 const kategoriAdi = (k: any) => dil === 'en' ? (KATEGORI_EN[k.slug] || k.ad) : k.ad;
 const kbarAd = (k: any) => dil === 'en' ? (KATEGORI_EN[k.anahtar] || k.ad) : k.ad;
-const trYol = dil === 'en' ? (pathname.replace(/^\/en/, '') || '/') : pathname;
-const enYol = dil === 'en' ? pathname : ('/en' + (pathname === '/' ? '/' : pathname));
 const anasayfaMi = pathname === '/' || pathname === '/en/';
+// Karşı dilin yolu: sayfa verdiyse o; vermediyse önek ekleyip/çıkararak türet.
+const turetilen = dil === 'en' ? (pathname.replace(/^\/en/, '') || '/') : ('/en' + (pathname === '/' ? '/' : pathname));
+const karsi = karsiYol ?? (cevirisiVar ? turetilen : null);
+const trYol = dil === 'tr' ? pathname : karsi;
+const enYol = dil === 'en' ? pathname : karsi;
 
 // Çevirisi olmayan sayfada karşı dilin hreflang'i basılmaz; düğme o dilin köküne gider.
-const trAlt = (dil === 'tr' || cevirisiVar) ? SITE.kanonikal + trYol : null;
-const enAlt = (dil === 'en' || cevirisiVar) ? SITE.kanonikal + enYol : null;
-const trDugme = (dil === 'tr' || cevirisiVar) ? trYol : '/';
-const enDugme = (dil === 'en' || cevirisiVar) ? enYol : '/en/';
+const trAlt = trYol ? SITE.kanonikal + trYol : null;
+const enAlt = enYol ? SITE.kanonikal + enYol : null;
+const trDugme = trYol ?? '/';
+const enDugme = enYol ?? '/en/';
 
 // Header menüsü içerikten sürülür: menuSira alanı dolu olan sayfalar.
 // EN tarafında çevirisi girilmemiş sayfa menüde çıkmaz.
@@ -78,7 +94,7 @@ const jsonLd = {
   ...(SITE.eposta ? { email: SITE.eposta } : {}),
   // JSON-LD'de bilerek PNG: yapısal veri görselleri için raster bekleniyor,
   // SVG'nin doğal piksel ölçüsü yok. Görünen logolar SVG (deltek_logo.svg).
-  logo: { '@type': 'ImageObject', url: SITE.kanonikal + '/deltek-logo.png', width: 200, height: 46 },
+  logo: { '@type': 'ImageObject', url: SITE.kanonikal + '/deltek-logo.png', width: 300, height: 73 },
   image: SITE.kanonikal + '/og-image.jpg',
   ...(SITE.kurulus ? { foundingDate: SITE.kurulus } : {}),
   ...(SITE.sosyal.length ? { sameAs: SITE.sosyal } : {}),
@@ -139,22 +155,24 @@ const webSite = anasayfaMi ? {
   <meta name="theme-color" content="#185AD6" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  {/* Open Sans DEĞİŞKEN sürüm: ağırlık 400-800 + GENİŞLİK ekseni 75-100.
-      Genişlik ekseni banner başlıkları için gerekli (font-stretch: 75%,
-      bkz. SayfaBanner.astro). Ayrık ağırlıkları tek tek istemekten daha
-      ucuz: latin+latin-ext için 4 dosya / 192KB, önceki 10 dosya / 359KB. */}
-  {/* Font CSS'i render'ı bloklamasın: önce preload, yüklenince media=all.
-      JS kapalıysa <noscript> aynı bağlantıyı normal yoldan verir. */}
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" media="print" onload="this.media='all'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Open+Sans:ital,wdth,wght@0,75..100,400..800;1,75..100,700&display=swap" /></noscript>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title={`${SITE.isim} Blog`} href={dil === 'en' ? '/en/rss.xml' : '/rss.xml'} />
+  {/* Yazı tipleri KENDİ sunucumuzdan (src/styles/fonts.css → /fonts/*.woff2;
+      üretim: node scripts/font-indir.mjs). Google Fonts'un iki üçüncü taraf
+      bağlantısı (DNS+TLS) ve CSS isteği ortadan kalktı. Gövde metninin
+      latin dosyası preload: ilk boyamada yazı tipi hazır, FOUT/FOIT yok.
+      Open Sans DEĞİŞKEN: ağırlık 400-800 + genişlik ekseni 75-100
+      (banner başlıkları font-stretch: 75% kullanıyor, bkz. SayfaBanner). */}
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/open-sans-normal-400-800-latin.woff2" crossorigin />
   <link rel="canonical" href={kanonik} />
   {trAlt && <link rel="alternate" hreflang="tr" href={trAlt} />}
   {enAlt && <link rel="alternate" hreflang="en" href={enAlt} />}
   <link rel="alternate" hreflang="x-default" href={trAlt || enAlt} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={tur} />
+  {tur === 'article' && yayin && <meta property="article:published_time" content={yayin} />}
+  {tur === 'article' && guncelleme && <meta property="article:modified_time" content={guncelleme} />}
+  {tur === 'article' && <meta property="article:section" content="Blog" />}
   <meta property="og:site_name" content={SITE.isim} />
   <meta property="og:locale" content={t.ogLocale} />
   <meta property="og:title" content={title} />
@@ -175,6 +193,7 @@ const webSite = anasayfaMi ? {
   {sema && <script type="application/ld+json" set:html={JSON.stringify(sema)} />}
 </head>
 <body class={anasayfaMi ? "anasayfa" : ""}>
+<a class="atla" href="#icerik">{t.aria.atla}</a>
 
 <header class="ust" id="ust">
   <!-- üst iletişim şeridi — canlı sitedeki gibi e-posta + telefon + dil -->
@@ -204,7 +223,7 @@ const webSite = anasayfaMi ? {
     <button class="ham" id="ham" aria-label={t.aria.menu} aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
-    <nav class="ust__gez" id="gez">
+    <nav class="ust__gez" id="gez" aria-label={t.aria.gez}>
       {KATEGORILER.length > 0 && (
         <span class="dd">
           <a href={yol('/#urunler')} class="dd__t gez2">
@@ -278,7 +297,7 @@ const webSite = anasayfaMi ? {
   )}
 </header>
 
-<main class="icerik">
+<main class="icerik" id="icerik" tabindex="-1">
   <slot />
 </main>
 
@@ -290,7 +309,7 @@ const webSite = anasayfaMi ? {
         {t.footer.slogan && <small>{t.footer.slogan}</small>}
       </div>
       <div>
-        <h5>{t.footer.site}</h5>
+        <p class="alt__bas">{t.footer.site}</p>
         <a href={yol('/')}>{t.footer.anasayfa}</a>
         {menu.map(({ entry, slug }) => (
           <a href={yol(`/${slug}/`)}>{(entry.data as any).menuAd || (entry.data as any).baslik}</a>
@@ -298,7 +317,7 @@ const webSite = anasayfaMi ? {
         <a href={yol('/blog/')}>{t.footer.blog}</a>
       </div>
       <div>
-        <h5>{t.footer.iletisim}</h5>
+        <p class="alt__bas">{t.footer.iletisim}</p>
         <a class="veri" href={`tel:${SITE.telefonHam}`}>{SITE.telefon}</a>
         <a href={`mailto:${SITE.eposta}`}>{SITE.eposta}</a>
         {OFISLER.map(o => (
@@ -342,7 +361,11 @@ body.anasayfa .icerik { padding-top: 0; }
 .ust-serit { background: var(--kagit); border-bottom: 1px solid var(--cizgi); font-size: .78rem; }
 .ust-serit__ic { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 34px; }
 .ust-serit__sol { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
-.ust-serit a { display: inline-flex; align-items: center; gap: .45rem; color: var(--mute); }
+/* `min-height: 24px` — WCAG 2.5.8'in dokunma hedefi alt sınırı. Metin
+   .78rem olduğu için kutu kendiliğinden 22 px kalıyordu. Şerit zaten 34 px
+   yüksek, yani büyütmek satırı bozmuyor. */
+.ust-serit a { display: inline-flex; align-items: center; gap: .45rem; color: var(--mute);
+  min-height: 24px; }
 .ust-serit a:hover { color: var(--mavi); }
 .ust-serit svg { color: var(--mavi); flex: none; }
 @media (max-width: 600px) { .ust-serit__sol a:first-child { display: none; } }
@@ -355,8 +378,26 @@ body.anasayfa .icerik { padding-top: 0; }
 .dil-sec[data-aktif="en"] .dil-sec__knob { transform: translateX(36px); }
 .dil-sec__b { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1;
   font-family: var(--f-dis); font-weight: 700; font-size: .7rem; color: var(--mute); line-height: 1; transition: color .2s ease; }
-.dil-sec__b[data-dil="tr"] { left: 11px; }
-.dil-sec__b[data-dil="en"] { right: 12px; }
+/* DOKUNMA HEDEFİ: bağlantılar eskiden yalnız "TR"/"EN" metni kadardı —
+   14x11 px, WCAG'in 24x24 alt sınırının bile altında. Artık her biri
+   hapın YARISINI kaplıyor (37x23) ve metin ortalanıyor; görünüm aynı,
+   çünkü hareketli mavi topuz (`__knob`) zaten ayrı bir katman. */
+/* Hap 23 px yüksek, bağlantı ondan BİRAZ TAŞIYOR (26 px) — zemini yok,
+   yalnız metin, o yüzden taşma görünmüyor ama dokunma hedefi WCAG'in
+   24 px sınırını geçiyor. Sözde öğeyle (`::after`) büyütmek de olurdu,
+   ama o zaman ölçüm araçları hedefi 21 px görüp ihlal bildirir. */
+/* ÖZGÜLLÜK: seçici `.dil-sec .dil-sec__b` olmak ZORUNDA. Yukarıdaki
+   `.ust-serit a` (0,1,1) sade bir `.dil-sec__b`yi (0,1,0) yeniyor ve
+   `min-height: 24px`ini dayatıyor; buradaki değer sessizce yok sayılıyordu
+   (ölçüldü: 26 yazılmışken 24 uygulanıyordu). İki sınıflı seçici (0,2,0)
+   sınıf sayısından kazanıyor. Aynı tuzağın bir örneği daha var:
+   `a.btn[href^="tel:"]` — bkz. CLAUDE.md. */
+.dil-sec .dil-sec__b { display: grid; place-items: center; width: 37px; min-height: 26px;
+  top: 50%; transform: translateY(-50%); }
+.dil-sec__b[data-dil="tr"] { left: 0; }
+.dil-sec__b[data-dil="en"] { right: 0; }
+/* Dar ekranda hedef biraz daha büyür (34 px); hapın kendisi 23 px kalır. */
+@media (max-width: 820px) { .dil-sec .dil-sec__b { min-height: 34px; } }
 .dil-sec[data-aktif="tr"] .dil-sec__b[data-dil="tr"], .dil-sec[data-aktif="en"] .dil-sec__b[data-dil="en"] { color: var(--beyaz); }
 
 /* logo + gezinme */
@@ -476,7 +517,13 @@ a.tekdd__b:hover { background: var(--mavi-050); }
 @media (min-width: 700px) { .alt__ic { grid-template-columns: 1.5fr 1fr 1fr; } }
 .alt__logo img { height: 46px; width: auto; margin-bottom: .9rem; }
 .alt small { color: var(--mute); font-size: .8rem; display: block; max-width: 34ch; }
-.alt h5 { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--mavi-700); margin-bottom: .8rem; }
+/* Footer sütun etiketleri BAŞLIK DEĞİL: eskiden <h5> idi ve her sayfada
+   h2→h5 seviye atlaması yaratıyordu (denetim: başlık hiyerarşisi). */
+.alt .alt__bas { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--mavi-700); margin: 0 0 .8rem; }
+/* "İçeriğe atla" — klavye kullanıcısı için; odaklanınca görünür. */
+.atla { position: absolute; left: 0; top: 0; z-index: 100; padding: .6rem 1rem; background: var(--mavi); color: var(--beyaz);
+  font-weight: 700; transform: translateY(-120%); transition: transform .15s; }
+.atla:focus { transform: none; outline: 3px solid var(--sari); outline-offset: 2px; }
 .alt a { color: var(--mavi-700); font-size: .88rem; display: block; padding: .25rem 0; }
 .alt a:hover { color: var(--mavi); }
 .alt__ofis { display: block; }

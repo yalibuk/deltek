@@ -8,7 +8,7 @@ ilgili:
   - "yonlendirilebilir-yatay-sondaj"
 anahtarKelimeler: "Thames altı tünel, National Grid Grain to Tilbury, tünel açma makinesi TBM, kablo tüneli, elektrik şebekesi modernizasyon, nehir altı geçiş"
 tarih: 2026-05-07
-kapak: "/images/uploads/national-grid-temze-alti-271-tonluk-dev-makine.webp"
+kapak: "/images/blog/thames-nehri-altinda-2-2-km-kablo.webp"
 kapakAlt: "Thames Nehri altında 2,2 km kablo tüneli açacak 271,5 tonluk tünel açma makinesi Caroline"
 ---
 

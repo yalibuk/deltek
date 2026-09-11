@@ -8,6 +8,8 @@ ilgili:
   - "yatay-sondaj-camuru"
   - "miamide-kanalizasyon-yapimi"
 anahtarKelimeler: "kaya delgi, rock drilling, yatay sondaj kaya, mud motor, rock reamer, sert zemin HDD, Deltek video"
+# Vimeo yükleme tarihi (oEmbed upload_date) — yazının aslı tarihsiz "Medyalar" sayfasıydı
+tarih: 2015-12-17
 video: "https://vimeo.com/149268675"
 ---
 

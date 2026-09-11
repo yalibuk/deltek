@@ -60,7 +60,20 @@ const olculer = new Map<string, { en: number; boy: number } | null>();
 for (const src of [banner, ...bloklar.map((b: any) => b.gorsel), ...galeri.map((g: any) => g.foto)]) {
   if (src && !olculer.has(src)) olculer.set(src, await gorselOlcu(src));
 }
-const genisMi = (src: string) => { const o = olculer.get(src); return !!o && o.en / o.boy >= GENIS_ESIK; };
+/**
+ * Blok tam genişlik mi?
+ *
+ * Önce ELLE verilen `genis` alanına bakılır (`true` zorlar, `false` engeller),
+ * yoksa görselin oranına. Eşik iyi bir varsayılan ama her zaman doğru karar
+ * değil: `kazisiz-akilli-altyapi-2.webp` 1170×667, yani oran 1,75 — eşiğin
+ * altında kaldığı için yarım sütuna oturuyordu, oysa sayfanın açılış görseli
+ * olarak tam genişlikte durması isteniyordu.
+ */
+const genisMi = (b: any) => {
+  if (typeof b.genis === 'boolean') return b.genis;
+  const o = olculer.get(b.gorsel);
+  return !!o && o.en / o.boy >= GENIS_ESIK;
+};
 /** width/height öznitelikleri — yüklenmeden önce yer ayrılsın (CLS yok). */
 const olcu = (src: string) => { const o = olculer.get(src); return o ? { width: o.en, height: o.boy } : {}; };
 
@@ -70,8 +83,9 @@ const zengin = (s: string) => s
   .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 const paragraflar = (s: string) => s.split(/\n{2,}/).map(p => p.trim()).filter(Boolean);
 /**
- * Tek basina `### ` ile baslayan bir paragraf ALT BASLIK olur (<h4>).
- * Blok basligi zaten <h3>; baslik hiyerarsisi h1 > h3 > h4 olarak korunur.
+ * Tek basina `### ` ile baslayan bir paragraf ALT BASLIK olur (<h3>).
+ * Blok basligi <h2>; hiyerarsi h1 > h2 > h3. (Eskiden h3/h4 idi ve her urun
+ * sayfasinda h1→h3 atlamasi vardi; denetim betigi artik bunu puanliyor.)
  * (Boru Surme/Cakma sayfasinda mikrotunel makine tipleri icin eklendi.)
  */
 const ALT_BASLIK = "### ";
@@ -86,17 +100,17 @@ const ALT_BASLIK = "### ";
   <slot />
 
   {bloklar.map((b: any, i: number) => (
-    b.gorsel && b.metin && genisMi(b.gorsel) ? (
+    b.gorsel && b.metin && genisMi(b) ? (
       /* çok geniş görsel: tam genişlik, metin altında tek sütun */
-      <div class="hsg-yatay">
-        {b.baslik && <h3>{b.baslik}</h3>}
+      <div class={`hsg-yatay${b.genis ? ' hsg-yatay--tam' : ''}`}>
+        {b.baslik && <h2>{b.baslik}</h2>}
         <div class="hsg-yatay__g">
           <img src={b.gorsel} alt={altMetin(b)} {...olcu(b.gorsel)} loading="lazy" decoding="async" />
         </div>
         <div class="hsg-yatay__t">
           {paragraflar(b.metin).map((par: string) => (
             par.startsWith(ALT_BASLIK)
-              ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+              ? <h3 set:html={zengin(par.slice(ALT_BASLIK.length))} />
               : <p set:html={zengin(par)} />
           ))}
         </div>
@@ -108,10 +122,10 @@ const ALT_BASLIK = "### ";
           <img src={b.gorsel} alt={altMetin(b)} {...olcu(b.gorsel)} class={b.boyut ? `hsg-${b.boyut}` : ''} loading="lazy" decoding="async" />
         </div>
         <div class="hsg-ikili__t">
-          {b.baslik && <h3>{b.baslik}</h3>}
+          {b.baslik && <h2>{b.baslik}</h2>}
           {paragraflar(b.metin).map((par: string) => (
             par.startsWith(ALT_BASLIK)
-              ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+              ? <h3 set:html={zengin(par.slice(ALT_BASLIK.length))} />
               : <p set:html={zengin(par)} />
           ))}
         </div>
@@ -124,10 +138,10 @@ const ALT_BASLIK = "### ";
     ) : b.metin ? (
       /* yalnız metin: tam genişlik — boş görsel kutusu bırakmaz */
       <div class="hsg-metin">
-        {b.baslik && <h3>{b.baslik}</h3>}
+        {b.baslik && <h2>{b.baslik}</h2>}
         {paragraflar(b.metin).map((par: string) => (
           par.startsWith(ALT_BASLIK)
-            ? <h4 set:html={zengin(par.slice(ALT_BASLIK.length))} />
+            ? <h3 set:html={zengin(par.slice(ALT_BASLIK.length))} />
             : <p set:html={zengin(par)} />
         ))}
       </div>
@@ -138,7 +152,7 @@ const ALT_BASLIK = "### ";
     <div class="urun-tablolar">
       {tablolar.map((t: any) => (
         <div class="urun-blok">
-          {t.baslik && <h3>{t.baslik}</h3>}
+          {t.baslik && <h2>{t.baslik}</h2>}
           {t.aciklama && <p class="urun-alt">{t.aciklama}</p>}
           <div class="urun-kaydir">
             <table class="urun-tablo">
@@ -185,19 +199,24 @@ const ALT_BASLIK = "### ";
 }
 .hsg-ikili__g { border-radius: 10px; overflow: hidden; border: 1px solid var(--cizgi); background: var(--kagit-2); box-shadow: 0 20px 44px -30px rgb(var(--blue-800-rgb) / .5); display: flex; align-items: center; justify-content: center; padding-block: clamp(1rem,6%,2.5rem); }
 .hsg-ikili__g img { width: 100%; height: auto; display: block; }
-.hsg-ikili__t h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.hsg-ikili__t h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-ikili__t p { margin-top: .9rem; color: var(--mute); font-size: .98rem; line-height: 1.7; }
 .hsg-ikili__t :global(strong), .hsg-metin :global(strong) { color: var(--mavi-900); font-weight: 700; }
 .hsg-ikili__t :global(a), .hsg-metin :global(a) { color: var(--mavi); text-decoration: underline; }
 
 /* çok geniş görsel bloğu: görsel tam genişlik, metin altında tek sütun */
 .hsg-yatay { display: flex; flex-direction: column; gap: 1.3rem; }
-.hsg-yatay h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem);
+.hsg-yatay h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem);
   letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-yatay__g { border-radius: 10px; overflow: hidden; border: 1px solid var(--cizgi);
   background: var(--kagit-2); box-shadow: 0 20px 44px -30px rgb(var(--blue-800-rgb) / .5); }
 .hsg-yatay__g img { width: 100%; height: auto; display: block; }
+/* 70ch satır uzunluğu sınırı: oranından ötürü KENDİLİĞİNDEN bu düzene giren
+   bloklarda metin okunabilir kalsın diye. */
 .hsg-yatay__t { max-width: 70ch; }
+/* `genis: true` ile ELLE seçilen blokta metin görselle aynı genişlikte —
+   istenen bu. Satır 70ch'i aşabilir; bilinçli bir tercih. */
+.hsg-yatay--tam .hsg-yatay__t { max-width: none; }
 .hsg-yatay__t p { color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
 .hsg-yatay__t p + p { margin-top: .9rem; }
 .hsg-yatay__t :global(strong) { color: var(--mavi-900); font-weight: 700; }
@@ -205,12 +224,12 @@ const ALT_BASLIK = "### ";
 
 /* yalnız metin bloğu — tam genişlik, boş görsel kutusu bırakmaz */
 .hsg-metin { max-width: 70ch; }
-.hsg-metin h3 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.hsg-metin h2 { font-family: var(--f-dis); font-weight: 800; font-size: clamp(1.3rem,2.8vw,1.7rem); letter-spacing: -.02em; color: var(--mavi); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .hsg-metin p { margin-top: .9rem; color: var(--mute); font-size: 1.02rem; line-height: 1.75; }
 /* `### ` ile yazilan alt basliklar */
-.hsg-ikili__t h4, .hsg-metin h4, .hsg-yatay__t h4 { font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem;
+.hsg-ikili__t h3, .hsg-metin h3, .hsg-yatay__t h3 { font-family: var(--f-dis); font-weight: 700; font-size: 1.05rem;
   letter-spacing: -.01em; color: var(--mavi-900); margin-top: 1.7rem; }
-.hsg-ikili__t h4 + p, .hsg-metin h4 + p, .hsg-yatay__t h4 + p { margin-top: .45rem; }
+.hsg-ikili__t h3 + p, .hsg-metin h3 + p, .hsg-yatay__t h3 + p { margin-top: .45rem; }
 
 /* görsel boyut yardımcıları */
 .hsg-ceyrek { width: 25% !important; margin: 0 auto; }
@@ -222,7 +241,7 @@ const ALT_BASLIK = "### ";
 
 /* teknik veri tabloları */
 .urun-blok + .urun-blok { margin-top: 2.4rem; }
-.urun-blok h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.25rem; color: var(--mavi-900); border-left: 4px solid var(--sari); padding-left: .7rem; }
+.urun-blok h2 { font-family: var(--f-dis); font-weight: 800; font-size: 1.25rem; color: var(--mavi-900); border-left: 4px solid var(--sari); padding-left: .7rem; }
 .urun-alt { margin-top: .4rem; margin-bottom: 1rem; color: var(--mute); font-size: .88rem; }
 .urun-kaydir { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--cizgi); border-radius: 6px; }
 .urun-tablo { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 640px; }

@@ -1,5 +1,6 @@
 ---
 baslik: "4,058-Metre HDD World Record"
+adres: "4058-m-hdd-world-record-brahmaputra"
 seoBaslik: "4,058 m HDD World Record — Brahmaputra Crossing"
 ozet: "Engineers India Limited set a new HDD world record with a 4,058-metre, 26-inch horizontal directional drilling crossing beneath the Brahmaputra River."
 anahtarKelimeler: "HDD world record, 4058 metre HDD, Brahmaputra HDD crossing, longest horizontal directional drilling, Engineers India Limited, PNCPL, river crossing pipeline"
@@ -35,6 +36,6 @@ EIL told PSU Watch that the completion of the Brahmaputra River crossing is an i
 
 ## What the record means technically
 
-A **horizontal directional drilling** crossing of more than 4 kilometres shows where the limits of the method lie. At this length the pull force, the friction on the outside of the pipe and the circulation of the drilling fluid become decisive; the pullback of a 26-inch steel pipeline has to be completed in a single, uninterrupted operation. On crossings like this, [magnetic guidance](/en/manyetik-alan/) systems are used for locating, and very often the intersect technique, in which two rigs meet underground.
+A **horizontal directional drilling** crossing of more than 4 kilometres shows where the limits of the method lie. At this length the pull force, the friction on the outside of the pipe and the circulation of the drilling fluid become decisive; the pullback of a 26-inch steel pipeline has to be completed in a single, uninterrupted operation. On crossings like this, [magnetic guidance](/en/magnetic-guidance/) systems are used for locating, and very often the intersect technique, in which two rigs meet underground.
 
-In Türkiye, river, strait and motorway crossings usually range from a few hundred metres to 1–2 km; but rig capacity, the drill rod set, reaming stages and mud management are planned on the same principles. At Deltek we carry out this planning together with the client on long-distance HDD crossings with our Istanbul and Izmir crews; for your project, see the [HDD rig selection](/en/yonlendirilebilir-yatay-sondaj-makinesi/) page or contact us.
+In Türkiye, river, strait and motorway crossings usually range from a few hundred metres to 1–2 km; but rig capacity, the drill rod set, reaming stages and mud management are planned on the same principles. At Deltek we carry out this planning together with the client on long-distance HDD crossings with our Istanbul and Izmir crews; for your project, see the [HDD rig selection](/en/hdd-rig/) page or contact us.

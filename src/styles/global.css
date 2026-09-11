@@ -1,3 +1,5 @@
+@import './fonts.css';
+
 /* ═══════════════════════════════════════
    DELTEK — Global CSS
 
@@ -88,9 +90,21 @@ html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body { font-family: var(--f-metin); background: var(--beyaz); color: var(--mute); line-height: 1.75; font-size: .95rem; overflow-x: hidden; -webkit-font-smoothing: antialiased; padding-bottom: 70px; }
 @media (min-width: 980px) { body { padding-bottom: 0; } }
 img { display: block; max-width: 100%; }
+/* Sığmayan kelime kutuyu YARMASIN, kırılsın. Tek tetikleyicisi içerikteki
+   çıplak URL'ler: Miami yazısındaki
+   `http://partners.miamiandbeaches.com/tools-and-resources/research-and-statistics`
+   360 px'lik telefonda paragrafı 29 px taşırıyordu (ölçüldü). `body`deki
+   `overflow-x: hidden` bunu gizliyor ama metnin sağ ucu kırpılıyordu.
+   `break-word` yalnız SIĞMAYAN kelimeyi böler, normal metne dokunmaz. */
+p, li, h1, h2, h3, h4, dd, dt, figcaption, td, th { overflow-wrap: break-word; }
 a { color: inherit; text-decoration: none; }
 :focus-visible { outline: 2px solid var(--mavi); outline-offset: 3px; }
-.kap { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: clamp(1.15rem, 4vw, 2.75rem); }
+/* `--kap-pad` TEK KAYNAK: konteyner payına bağlı hesap yapan her yer bunu
+   okur (bkz. HeroSlider'daki metin kuşağı, IletisimDuzen'deki 770 px sınırı).
+   Eskiden `clamp(...)` ifadesi elle kopyalanıyordu; biri değişince
+   diğerleri sessizce kayardı. */
+:root { --kap-pad: clamp(1.15rem, 4vw, 2.75rem); }
+.kap { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: var(--kap-pad); }
 .veri { font-family: var(--f-veri); font-variant-numeric: tabular-nums; }
 .kunye { display: inline-flex; align-items: center; gap: .6rem; font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--mavi); font-weight: 700; }
 .kunye::before { content: ""; width: 22px; height: 2px; background: var(--sari); }
@@ -163,7 +177,7 @@ a { color: inherit; text-decoration: none; }
 .kanit__h { position: relative; overflow: hidden; background: var(--beyaz); border: 1px solid var(--cizgi); border-top: 3px solid var(--mavi); border-radius: 14px; padding: 1.9rem 1.7rem 1.7rem; box-shadow: 0 22px 44px -32px rgb(var(--blue-800-rgb) / .45); transition: transform .2s ease, box-shadow .2s ease; }
 .kanit__h:hover { transform: translateY(-4px); box-shadow: 0 30px 54px -28px rgb(var(--blue-800-rgb) / .55); }
 .kanit__no { position: absolute; top: .55rem; right: 1.1rem; font-family: var(--f-dis); font-weight: 800; font-size: 2.6rem; line-height: 1; color: var(--mavi); opacity: .09; pointer-events: none; }
-.kanit__h h4 { position: relative; font-family: var(--f-dis); font-weight: 800; font-size: 1.22rem; letter-spacing: -.01em; color: var(--mavi-900); }
+.kanit__h h3 { position: relative; font-family: var(--f-dis); font-weight: 800; font-size: 1.22rem; letter-spacing: -.01em; color: var(--mavi-900); }
 .kanit__h p { margin-top: .75rem; color: var(--mute); font-size: .96rem; line-height: 1.65; }
 
 /* ─── ÇAĞRI / İLETİŞİM ────────────────────────── */

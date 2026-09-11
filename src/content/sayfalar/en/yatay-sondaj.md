@@ -1,5 +1,6 @@
 ---
 baslik: "Horizontal Drilling"
+adres: "horizontal-drilling"
 seoBaslik: "Horizontal Drilling: Technology, Rigs, Applications"
 ozet: "What is horizontal drilling and how is it applied? Rig anatomy, fields of application, planning, advantages, challenges and Deltek's 20 years of experience."
 anahtarKelimeler: "horizontal drilling, what is horizontal drilling, horizontal drilling rig, horizontal drilling contractor, horizontal drilling cost, trenchless horizontal drilling, Istanbul, Izmir"

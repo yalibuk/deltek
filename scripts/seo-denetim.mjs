@@ -11,7 +11,8 @@
  *   hreflang, html lang, görsellerde alt, görsellerde width/height (CLS),
  *   kelime sayısı (≥300), JSON-LD, Open Graph, iç bağlantı sayısı (≥3),
  *   site genelinde mükerrer title/description, yetim sayfa (iç bağlantısı yok),
- *   sitemap'te bulunma.
+ *   sitemap'te bulunma, başlık hiyerarşisi (h2→h4 gibi seviye atlaması yok),
+ *   blog yazısında og:type=article, sitemap'te lastmod.
  */
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -70,8 +71,17 @@ function sayfayiIncele(html, url) {
   const kelime = govde ? govde.split(' ').length : 0;
   const icBag = new Set((html.match(/<a\b[^>]*href="(\/[^"#]*)"/gi) || []).map(a => attr(a, 'href')).filter(h => h && !h.startsWith('/admin')));
   const noindex = /name="robots"[^>]*noindex/i.test(html);
+  // Başlık hiyerarşisi: gövdedeki h1..h6 sırasında bir seviyeden fazla atlama
+  // (h2→h4) tarayıcı için "bölüm yapısı belirsiz" demek. Footer/nav dahil —
+  // orada başlık kullanılmamalı zaten.
+  const seviyeler = [...html.replace(/<head[\s\S]*?<\/head>/i, '').matchAll(/<h([1-6])[\s>]/gi)].map(m => +m[1]);
+  const atlama = seviyeler.flatMap((v, i) => (i > 0 && v > seviyeler[i - 1] + 1) ? [`h${seviyeler[i - 1]}→h${v}`] : []);
+  const blogYazisi = /"@type":"BlogPosting"/.test(html);
+  const ogType = metaIcerik(html, 'property="og:type"') ?? '';
 
   b.title = title; b.desc = desc; b.kelime = kelime; b.icBag = icBag; b.noindex = noindex;
+  // hreflang hedefleri (x-default hariç) — site düzeyinde "gerçekten derlenmiş mi" diye bakılır
+  b.hreflangHedef = [...html.matchAll(/<link[^>]+hreflang="(?:tr|en)"[^>]+href="https?:\/\/[^/]+(\/[^"]*)"/g)].map(m => m[1]);
   b.imgToplam = imgler.length; b.altsiz = altsiz.length; b.bosAlt = bosAlt.length; b.olcusuz = olcusuz.length;
 
   ekle(10, title.length >= 30 && title.length <= 65, `title ${title.length} karakter (30–65 olmalı): "${title}"`);
@@ -86,6 +96,8 @@ function sayfayiIncele(html, url) {
   ekle(7, jsonld >= 1, 'JSON-LD yok');
   ekle(5, og.length === 4, `Open Graph eksik: ${4 - og.length} alan`);
   ekle(5, icBag.size >= 3, `${icBag.size} iç bağlantı (≥3 hedef)`);
+  ekle(4, atlama.length === 0, `başlık seviyesi atlıyor: ${[...new Set(atlama)].join(', ')}`);
+  if (blogYazisi) ekle(2, ogType === 'article', `blog yazısında og:type "${ogType}" (article olmalı)`);
   return b;
 }
 
@@ -110,6 +122,7 @@ const descSay = say(sayfalar.map(s => s.desc));
 const gelen = new Map();
 for (const s of sayfalar) for (const h of s.icBag) gelen.set(h, (gelen.get(h) || 0) + (h === s.url ? 0 : 1));
 
+const derlenen = new Set(sayfalar.map(s => s.url));
 let toplam = 0, azami = 0;
 for (const s of sayfalar) {
   const ek = (agirlik, ok, mesaj) => { s.azami += agirlik; if (ok) s.puan += agirlik; else s.bulgular.push(mesaj); };
@@ -118,6 +131,9 @@ for (const s of sayfalar) {
     ek(5, descSay.get(s.desc) === 1, 'description başka sayfayla aynı');
     ek(5, (gelen.get(s.url) || 0) >= 1 || s.url === '/' || s.url === '/en/', 'YETİM: hiçbir sayfadan bağlantı yok');
     ek(3, sitemapXml.includes(`${s.url}</loc>`) || sitemapXml.includes(`${s.url.replace(/\/$/, '')}</loc>`), 'sitemap\'te yok');
+    ek(2, sitemapXml.includes(`${s.url}</loc><lastmod>`), 'sitemap\'te lastmod yok');
+    const kirik = s.hreflangHedef.filter(h => !derlenen.has(h));
+    ek(5, kirik.length === 0, `hreflang hedefi derlenmemiş: ${kirik.join(', ')}`);
   }
   toplam += s.puan; azami += s.azami;
 }

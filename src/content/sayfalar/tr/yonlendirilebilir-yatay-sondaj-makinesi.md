@@ -18,16 +18,16 @@ bloklar:
       – Çekme (Pull)
       – Döndürme (Rotation)
       Her ne kadar makina endüstrisi bu ekipmanları çekme güçlerine göre sınıflandırsa da asıl önemli olan tork gücü, yani döndürme kapasitesidir. Zira çoğu başarılı projede ihtiyaç duyulan çekme kuvveti makina kapasitesinin en fazla %30’u düzeyindedir. Oysa ihtiyaç duyulan tork gücü için aynısını söylemek mümkün değildir.
-    gorsel: "/images/uploads/2015/08/008.webp"
+    gorsel: "/images/icerik/yonlendirilebilir-yatay-sondaj-makinesinin-uc.webp"
     alt: "Yönlendirilebilir yatay sondaj makinesinin üç temel fonksiyonu: itme, çekme ve döndürme (tork)"
   - metin: |-
       Küçük ve orta ölçekli makinaların hem lojistiği hem de kurulumu ve kullanımı oldukça pratiktir. Motorunu, hidrolik pomplarını ve delici borularını (tijlerini) kendi üzerinde taşır. Bu tijleri bir şarjör yardımıyla otomatik olarak yükler ve boşaltır. Paletli yürüme aksamına sahiptir ve çok çeşitli arazi koşullarında ilerleyebilir. Ayrıca genellikle sondaj çamurunu deliğe basacak olan pompa makinaya monte edilmiştir. Bu nedenle en çok tercih edilen makinalar bu sınıftadır.
-    gorsel: "/images/uploads/2015/08/009.webp"
+    gorsel: "/images/icerik/kucuk-ve-orta-olcekli-paletli-hdd.webp"
     alt: "Küçük ve orta ölçekli paletli HDD makinesi — otomatik tij şarjörü ve makine üstü çamur pompası"
   - metin: |-
       Büyük ölçekli makinaların kullanımı daha ciddi bir organizasyon gerektirir. Sadece lojistiği en az 3 tır ile sağlanabilmektedir. Uygulanacak projenin kapsamına göre bu sayı 7-8’e çıkabilir. Sistemin itme, çekme ve dönme hareketlerini sağlayacak hidrolik pompalar ve bunları tahrik eden dizel motorlar makinanın üzerinde taşınamayacak kadar büyüktür. Bu nedenle bu elemanlar ayrı konteynırlar içerisinde taşınır ve hidrolik hortumlar ile makina aksamına sonradan bağlanır.
       Küçük ve orta ölçekli makinalarda kullanılan tij yükleme boşaltma mekanizması büyük makinalarda ancak vinçler ile sağlanabilmektedir. Paletli yürüyüş aksamına sahip olan modeller olsa da çoğu model kullanım kolaylığı sağlaması bakımından bir tır dorsesi şeklinde tasarlanmıştır. Hazırlanan sondaj çamurunu deliğe basacak olan pompa (high pressure pump) da ayrı konteynırlar ile makinadan bağımsız hareket eder.
-    gorsel: "/images/uploads/2015/08/010.webp"
+    gorsel: "/images/icerik/buyuk-olcekli-yatay-sondaj-makinesi-tir.webp"
     alt: "Büyük ölçekli yatay sondaj makinesi — tır dorsesi üzerinde kurulum, ayrı konteynerde güç ünitesi"
   - metin: |-
       Doğru **yatay sondaj** makinesinin seçimi, projenin başarısını doğrudan belirleyen en kritik kararlardan biridir. Bir proje planlanırken sadece geçilecek mesafe ve boru çapı değil, aynı zamanda zemin cinsi, yeraltı su seviyesi ve güzergah üzerindeki olası engeller de dikkate alınarak uygun kapasitede bir **yatay sondaj** makinesi belirlenir. Küçük ve orta ölçekli makinelerin şehir içi, kısa ve orta mesafeli projelerde tercih edilmesinin temel nedeni, hem lojistik kolaylığı hem de dar alanlarda manevra kabiliyetleridir. Buna karşın uzun mesafeli, büyük çaplı boru hatlarının geçtiği nehir altı veya otoyol altı **yatay sondaj** projelerinde, yüksek tork ve çekme kapasitesine sahip büyük ölçekli makineler devreye girer.

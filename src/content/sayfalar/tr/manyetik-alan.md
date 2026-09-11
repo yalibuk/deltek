@@ -18,11 +18,11 @@ bloklar:
       Giriş ve çıkış noktalarında oluşturulan yapay manyetik alanlar yeraltında ilerleyen sonda için referans düzlemi oluşturur. Yani, sonda koordinatları bilinen bu yüzey manyetik alanını kerteriz alarak konumunu bildirir. Bu sayede bitin yüzeyden ne kadar derinde ve hangi açıyla ilerlediği takip edilir.
 
       Alınan bu sürekli sinyaller bilgisayar tarafından yorumlanır ve bir yüzey profili olarak ekrana yansır.
-    gorsel: "/images/uploads/2015/08/023.webp"
+    gorsel: "/images/icerik/manyetik-alan-yonteminde-tij-icinden-gecen.webp"
     alt: "Manyetik alan yönteminde tij içinden geçen kabloyla beslenen sonda ve yüzeydeki yapay manyetik alan referansı"
   - metin: |-
       Manyetik takip yöntemi, üzerinden takip yöntemine göre çok daha hassas ölçüm yapabilen bir sistemdir. Bu nedenle çok uzun ya da derin YYS çalışmalarında alternatifsizdir. Bu yöntemin tek dezavantajı maliyeti ve eğitimli personel gereksinimidir. Bu konuda dünya çapında bir marka olan DELTEK®, Trutracker® ve Paratrack® sistemlerini kullanarak 2000 metre uzaktaki bir kola kutusunun altından çıkabilecek tecrübe ve ekipmana sahiptir.
-    gorsel: "/images/uploads/2015/08/024.webp"
+    gorsel: "/images/icerik/bilgisayarda-yorumlanan-manyetik-takip-sinyalleri.webp"
     alt: "Bilgisayarda yorumlanan manyetik takip sinyalleri — delgi profilinin ekrandaki görünümü"
   - baslik: "Sistemin bileşenleri ve uygulama alanları"
     metin: |-

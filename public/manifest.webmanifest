@@ -1,0 +1,14 @@
+{
+  "name": "Deltek — Yatay Sondaj ve Kazısız Geçiş Teknolojileri",
+  "short_name": "Deltek",
+  "description": "Yönlendirilebilir yatay sondaj (HDD), boru sürme/çakma ve kazısız boru yenileme yüklenicisi. İstanbul ve İzmir.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#185AD6",
+  "lang": "tr",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

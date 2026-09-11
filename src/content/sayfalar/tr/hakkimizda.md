@@ -12,9 +12,9 @@ ilgili:
 anahtarKelimeler: "Deltek hakkında, yatay sondaj firması, kazısız altyapı, akıllı altyapı, smart undergrounding, HDD müteahhidi, İstanbul, İzmir"
 ---
 
-### Genel Bilgi
+## Genel Bilgi
 
-<span class="saga-kayan">![Deltek kazısız altyapı ve yatay sondaj ekibi — sahada HDD projesi](/images/uploads/2014/12/deltek-hk.webp)</span>Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
+<span class="saga-kayan">![Deltek kazısız altyapı ve yatay sondaj ekibi — sahada HDD projesi](/images/icerik/deltek-kazisiz-altyapi-ve-yatay-sondaj.webp)</span>Deltek sahip olduğu değerleri, ilkeleri ve operasyonları ile kısa vadede “Kazısız Altyapı Yönetimi” alanında başta Türkiye olmak üzere Avrasya bölgesinin en iyisi olmayı hedef edinmiş bir ekiptir. Kurucu ve çalışanlarının inşaat ve altyapı sektöründeki engin tecrübeleri sayesinde ihtiyacı önceden sezme ve vaktinde önlem alma mekanizmasına sahip ender firmalardan biri olarak sektörden ayrışmış farklı mühendislik kollarını bir çatı altında birleştirebilmiş “multidisiplinel” bir ailedir.
 
 Aklı öncelleyip gereksiz kapasite kullanımını ve ek maliyetleri ortadan kaldırarak günün sonunda iş ortaklarımıza sürdürülebilir bir “KAZAN-KAZAN” ilişkisi sunabilmeyi kendine ilke edinmiş bir ekibiz. Bu noktada sektöre yıllarını vermiş, teorik/akademik eğitim almış ve aynı zamanda saha tecrübesine de haiz mühendislerimiz “AKILLI ALTYAPI (SMART UNDERGROUNDING)” kavramını literatüre kazandırmış ve söz konusu altyapı projesini en makul ve en tasarruflu şekilde sunabilecek bilimsel, ölçülebilir çözümleri üretmek için durmadan, yorulmadan çalışmaktadır.
 
@@ -22,7 +22,7 @@ Tasarladığımız her projede mühendisliğin ”4E” kuralını (sırasıyla 
 
 …deyim yerindeyse ***“İcat Çıkarmaktan Mutlu Oluyoruz.”***
 
-### Hangi Hizmetleri Sunuyoruz?
+## Hangi Hizmetleri Sunuyoruz?
 
 Sunduğumuz farklı yöntem ve tekniklerle boru ve kablo hatlarının yer üstünden kazı yapılmadan yer altına alınması için inovatif çözümler sunuyoruz. Bu anlamda sunduğumuz yönlendirilebilir yatay sondaj ve boru sürme/çakma metotlarıyla kilometrelerce hattı yer altına aldık; devam ediyoruz.
 
@@ -42,7 +42,7 @@ Amerika’yı henüz keşfetmek sizi başarısız yapmaz. Sadece zamanlama konus
 
 Gelin Amerika’yı yeniden keşfetmeyin. Yurt içi ve yurt dışında gerçekleştirdiğimiz yüzlerce projede edindiğimiz tecrübe ve sahip olduğumuz yenilikçi bakış açımız ile gelin sorunlarınıza bir de bizim gözümüzden bakın.
 
-### Biz Kimiz?
+## Biz Kimiz?
 
 ### MİSYONUMUZ
 

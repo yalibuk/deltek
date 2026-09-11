@@ -1,8 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE } from '../data/site';
+import { SITE, OFISLER, yolTarifi } from '../data/site';
 import { CEVIRI } from '../data/i18n';
-import { kokIcerik, cevirisiVarMi, ilgiliSayfalar } from '../data/icerik';
+import { kokIcerik, karsiSlug, sayfaSlugu, ilgiliSayfalar } from '../data/icerik';
 import { render } from 'astro:content';
 import UrunDuzen from '../components/UrunDuzen.astro';
 import LogoSerit from '../components/LogoSerit.astro';
@@ -36,14 +36,19 @@ export async function getStaticPaths() {
 const dil = 'tr' as const;
 const t = CEVIRI[dil];
 const yol = (p: string) => p;                       // TR kök dizinde; EN'de '/en' + p
-const { tur, entry, slug } = Astro.props;
+const { tur, entry, slug, anahtar } = Astro.props;   // slug = URL, anahtar = dosya adı
 const p = entry.data as any;
 const { Content } = await render(entry as any);
-const cevirisiVar = await cevirisiVarMi(slug, 'en');
+// Diğer dildeki karşılık: URL slug'ı dilden dile değişir (EN adresler İngilizce),
+// eşleşme dosya adıyla (anahtar) yapılır. Yoksa hreflang basılmaz.
+const karsi = await karsiSlug(anahtar, 'en');
+const cevirisiVar = karsi !== null;
+const karsiYol = karsi ? `/en/${karsi}/` : undefined;
+const tekKok = await sayfaSlugu(dil, TEKNOLOJI_KOK);   // bölüm kökünün bu dildeki URL'si
 // Bölüm haritası yalnızca istendiğinde hesaplanır (ağaç build'de doğrulanır).
 const tekAgac = p.bolumHaritasi ? await teknolojiAgaci(dil) : null;
 // Sayfa teknoloji ağacında mı? Yan menü ve sayfa altı gezinme buna bağlı.
-const agacta = tur === 'sayfa' ? await teknolojiKomsulari(dil, slug) : null;
+const agacta = tur === 'sayfa' ? await teknolojiKomsulari(dil, anahtar) : null;
 // Yan menü canlı sitedeki gibi bölümün TÜM sayfalarında görünür; kök sayfa
 // ağaçta olmadığı için `yanMenu: true` ile ayrıca işaretlenir.
 const yanAgac = (p.yanMenu || agacta) ? (tekAgac ?? await teknolojiAgaci(dil)) : null;
@@ -98,7 +103,7 @@ const yayinci = { '@type': 'Organization', '@id': orgId, name: SITE.isim,
 const kirinti: { ad: string; url: string }[] = [{ ad: t.seo.breadcrumbAna, url: SITE.kanonikal + yol('/') }];
 if (tur === 'yazi') kirinti.push({ ad: t.nav.blog[0], url: SITE.kanonikal + yol('/blog/') });
 else if (agacta || p.bolumHaritasi || p.yanMenu) {
-  if (slug !== TEKNOLOJI_KOK) kirinti.push({ ad: t.tek.kunye, url: SITE.kanonikal + yol(`/${TEKNOLOJI_KOK}/`) });
+  if (anahtar !== TEKNOLOJI_KOK) kirinti.push({ ad: t.tek.kunye, url: SITE.kanonikal + yol(`/${tekKok}/`) });
   if (agacta?.ust) kirinti.push({ ad: agacta.ust.ad, url: SITE.kanonikal + yol(`/${agacta.ust.slug}/`) });
 }
 kirinti.push({ ad: p.baslik, url: sayfaUrl });
@@ -152,11 +157,81 @@ const videoSema = embed ? {
   publisher: yayinci,
   inLanguage: dil,
 } : null;
-const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ...(videoSema ? [videoSema] : [])];
+
+/**
+ * Hizmet şeması — ana sayfadaki ItemList'in sayfa düzeyindeki karşılığı.
+ * Dört ana hizmet + hizmetlerimiz; teknik açıklama sayfaları (tij, çamur,
+ * yer belirleme…) hizmet DEĞİL, onlara basılmaz.
+ */
+const HIZMET_SAYFALARI = ['yonlendirilebilir-yatay-sondaj', 'boru-surmecakma', 'boru-yenileme', 'akilli-altyapi', 'hizmetlerimiz'];   // anahtar (dosya adı)
+const hizmetSema = tur === 'sayfa' && HIZMET_SAYFALARI.includes(anahtar) ? {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': sayfaUrl + '#service',
+  name: belgeBaslik,
+  serviceType: p.baslik,
+  description: p.ozet || p.baslik,
+  url: sayfaUrl,
+  provider: { '@id': orgId },
+  areaServed: { '@type': 'Country', name: 'Türkiye' },
+  inLanguage: dil,
+} : null;
+
+/**
+ * İletişim sayfasında ofis başına LocalBusiness (alt tür GeneralContractor):
+ * Google'ın çok şubeli işletme önerisi — Organization site geneli, her şube
+ * kendi sayfasında LocalBusiness. Koordinat ve çalışma saati OFISLER'de
+ * doluysa basılır (src/data/site.ts).
+ */
+const ofisSema = p.duzen === 'iletisim' ? OFISLER.map((o, i) => ({
+  '@context': 'https://schema.org',
+  '@type': ['LocalBusiness', 'GeneralContractor'],
+  '@id': sayfaUrl + '#ofis-' + (i + 1),
+  name: `${SITE.isim} — ${o.sehir}`,
+  parentOrganization: { '@id': orgId },
+  url: sayfaUrl,
+  telephone: SITE.telefonHam,
+  email: SITE.eposta,
+  image: SITE.kanonikal + '/og-image.jpg',
+  address: { '@type': 'PostalAddress', streetAddress: o.adres, addressLocality: o.sehir,
+    postalCode: (o.adres2.match(/\d{5}/) || [''])[0], addressCountry: 'TR' },
+  hasMap: yolTarifi(o),
+  ...(o.enlem && o.boylam ? { geo: { '@type': 'GeoCoordinates', latitude: o.enlem, longitude: o.boylam } } : {}),
+  ...(o.calismaSaatleri?.length ? { openingHoursSpecification: o.calismaSaatleri } : {}),
+  areaServed: { '@type': 'Country', name: 'Türkiye' },
+})) : [];
+
+/**
+ * SSS şeması — gövdede "Sık sorulan sorular" / "Frequently asked questions"
+ * başlığı altındaki `**Soru?** Cevap` paragraflarından FAQPage üretir.
+ * Google FAQ zengin sonucunu 2023'ten beri yalnız resmi/sağlık sitelerine
+ * gösteriyor; şema yine de sayfanın soru-cevap yapısını arama motorlarına ve
+ * yapay zekâ özetlerine açıkça anlatıyor. İçerik markdown'da; buradaki
+ * çözümleyici yalnız o bölümü okur, başka yerde soru aramaz.
+ */
+function sssCikar(body: string | undefined) {
+  if (!body) return null;
+  const bas = body.match(/^##+\s*(?:s[ıi]k(?:[çc]a)?\s+sorulan\s+sorular|frequently\s+asked\s+questions|sss|faq)\s*$/im);
+  if (!bas || bas.index === undefined) return null;
+  const sonra = body.slice(bas.index + bas[0].length);
+  const bitis = sonra.search(/^##+\s/m);
+  const bolum = bitis === -1 ? sonra : sonra.slice(0, bitis);
+  const duz = (s: string) => s.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*?([^*]+)\*\*?/g, '$1').replace(/\s+/g, ' ').trim();
+  const sorular = bolum.split(/\n\s*\n/).map(par => par.match(/^\s*\*\*(.+?)\*\*\s*([\s\S]+)$/))
+    .filter((m): m is RegExpMatchArray => !!m)
+    .map(m => ({ '@type': 'Question', name: duz(m[1]), acceptedAnswer: { '@type': 'Answer', text: duz(m[2]) } }));
+  return sorular.length ? { '@context': 'https://schema.org', '@type': 'FAQPage', '@id': sayfaUrl + '#faq', mainEntity: sorular } : null;
+}
+const sssSema = sssCikar(entry.body);
+const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ...(videoSema ? [videoSema] : []),
+  ...(hizmetSema ? [hizmetSema] : []), ...ofisSema, ...(sssSema ? [sssSema] : [])];
 ---
 <Layout title={`${belgeBaslik} — ${SITE.isim}`} description={p.ozet || p.baslik}
         image={p.kapak} imageAlt={p.kapakAlt || p.baslik} keywords={p.anahtarKelimeler}
-        sema={sema} cevirisiVar={cevirisiVar}>
+        sema={sema} cevirisiVar={cevirisiVar} karsiYol={karsiYol}
+        tur={tur === 'yazi' ? 'article' : 'website'}
+        yayin={p.tarih ? isoTarih(p.tarih) : undefined}
+        guncelleme={(p.guncelleme || p.tarih) ? isoTarih(p.guncelleme || p.tarih) : undefined}>
 {p.duzen === 'iletisim' ? (
   <IletisimDuzen dil={dil} baslik={p.baslik} ozet={p.ozet} gorsel={p.gorsel} gorselAlt={p.gorselAlt}>
     <Content />
@@ -224,11 +299,17 @@ const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ..
   {tekAgac && <TeknolojiHaritasi agac={tekAgac} dil={dil} />}
   {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} dil={dil} />}
   {ilgili.length > 0 && <IlgiliSayfalar sayfalar={ilgili} dil={dil} />}
-  </div>
 
+  {/* CTA `.yazi__ana`nın İÇİNDE olmak zorunda. Dışarıda bırakılırsa yan
+      menülü sayfalarda ızgaranın ÜÇÜNCÜ öğesi olur ve otomatik yerleşim onu
+      1. sütun / 2. satıra, yani yan menünün altına atar: 268 px'lik dar bir
+      şerit hâline gelir, üstelik yapışkan (`sticky`) menü sayfanın dibinde
+      hâlâ orada durduğu için menünün altında kalır. Ölçüldü: buton
+      x387-655'te, menü kutusunun tam içinde. */}
   <div class="yazi__cta">
     <p>{tur === 'yazi' ? t.sayfa.ctaYazi : t.sayfa.ctaSayfa}</p>
     <a class="btn btn--dolu" href={`tel:${SITE.telefonHam}`}>{SITE.telefon}</a>
+  </div>
   </div>
 </article>
 )}
@@ -247,7 +328,11 @@ const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ..
   .yazi__yan { position: sticky; top: calc(var(--baslik-y, 210px) - 40px); }
 }
 @media (max-width: 899px) { .yazi__yan { margin-bottom: 1.8rem; } }
-.yazi__geri { display: inline-block; font-family: var(--f-veri); font-size: .8rem; color: var(--mavi); margin-bottom: 1.4rem; }
+/* `min-height` + dikey dolgu: kutu .8rem metinle 22 px kalıyordu, WCAG'in
+   24 px dokunma sınırının altında. Üstteki boşluk dolgu kadar azaltıldı ki
+   başlığın yeri değişmesin. */
+.yazi__geri { display: inline-flex; align-items: center; min-height: 26px; padding-block: 2px;
+  font-family: var(--f-veri); font-size: .8rem; color: var(--mavi); margin-bottom: 1.2rem; }
 .yazi__geri:hover { color: var(--mavi-900); }
 .yazi__bas { margin-bottom: 1.6rem; }
 .yazi__tarih { font-family: var(--f-veri); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--mavi); }

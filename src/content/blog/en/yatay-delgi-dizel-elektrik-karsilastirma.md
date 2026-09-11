@@ -1,5 +1,6 @@
 ---
 baslik: "Electric versus Diesel Directional Drilling Rigs"
+adres: "electric-vs-diesel-hdd-rigs"
 seoBaslik: "Electric or Diesel? Directional Drilling Rigs Compared"
 ozet: "Electric, hybrid and diesel HDD rigs compared: energy efficiency, emissions, noise, urban use and the fully electric directional drilling rigs available today."
 anahtarKelimeler: "electric HDD rig, electric directional drill, hybrid HDD rig, diesel HDD, drilling rig comparison, GRUNDODRILL, Goodeng, energy efficiency"

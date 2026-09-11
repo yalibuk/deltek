@@ -3,16 +3,45 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 export type Dil = 'tr' | 'en';
 export type Tur = 'yazi' | 'sayfa';
 
+/**
+ * Bir içerik kaydı.
+ *
+ * `anahtar` — DOSYA ADI (`content/<koleksiyon>/<dil>/<anahtar>.md`). İki dilde
+ *   AYNIDIR; TR/EN eşleşmesi (hreflang, dil düğmesi, teknoloji ağacı, `ilgili`
+ *   listeleri, `TEK_REHBERLER`) hep bununla yapılır. CMS'in i18n yapısı
+ *   (`multiple_folders`) da her dilde aynı dosya adını şart koşar.
+ * `slug` — URL. Frontmatter `adres` doluysa o, değilse anahtar. İngilizce
+ *   sayfalar İngilizce adreslerle yayınlanır (`/en/contact/`), dosya adı
+ *   Türkçe kalır (`en/iletisim.md`). TR'de `adres` verilmesi build'i
+ *   durdurur: canlı deltek.com.tr adresleri dosya adının kendisidir.
+ *
+ * Kural: bir kaydı BULMAK için anahtar, ona BAĞLANMAK için slug.
+ */
 export type Kayit = {
   tur: Tur;
   entry: CollectionEntry<'blog'> | CollectionEntry<'sayfalar'>;
+  anahtar: string;
   slug: string;
 };
 
 const ms = (d: unknown) => (d ? new Date(d as any).getTime() : 0);
+const SLUG_BICIMI = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const dilSuz = (hepsi: any[], dil: Dil, tur: Tur): Kayit[] =>
   hepsi.filter(e => e.id.startsWith(dil + '/'))
-       .map(e => ({ tur, entry: e, slug: e.id.slice(dil.length + 1) }));
+       .map(e => {
+         const anahtar = e.id.slice(dil.length + 1);
+         const ozel = (e.data as any).adres as string | undefined;   // alan adı `slug` olamaz: Astro glob yükleyicisi onu id yapar
+         if (ozel && dil === 'tr') {
+           throw new Error(
+             `${dil}/${anahtar}.md: Türkçe içerikte "adres" alanı KULLANILMAZ — canlı ` +
+             `deltek.com.tr adresi dosya adının kendisidir. Alanı silin.`);
+         }
+         if (ozel && !SLUG_BICIMI.test(ozel)) {
+           throw new Error(`${dil}/${anahtar}.md: adres "${ozel}" geçersiz — yalnız küçük harf, rakam ve tire.`);
+         }
+         return { tur, entry: e, anahtar, slug: ozel || anahtar };
+       });
 
 /** Bir dildeki blog yazıları, tarihe göre yeniden eskiye. */
 export async function yazilar(dil: Dil): Promise<Kayit[]> {
@@ -34,24 +63,37 @@ export async function sayfalar(dil: Dil): Promise<Kayit[]> {
  */
 export async function kokIcerik(dil: Dil): Promise<Kayit[]> {
   const hepsi = [...await yazilar(dil), ...await sayfalar(dil)];
-  const gorulen = new Map<string, Tur>();
+  const gorulen = new Map<string, Kayit>();
   for (const k of hepsi) {
     const onceki = gorulen.get(k.slug);
     if (onceki) {
       throw new Error(
-        `Slug çakışması: "${k.slug}" hem blog/${dil} hem sayfalar/${dil} altında var. ` +
-        `Kök dizinde iki içerik aynı adresi paylaşamaz — birini yeniden adlandırıp ` +
-        `public/_redirects'e 301 ekleyin (bkz. CLAUDE.md).`);
+        `URL çakışması (${dil}): "/${k.slug}/" hem ${onceki.tur}/${onceki.anahtar} hem ${k.tur}/${k.anahtar} ` +
+        `tarafından kullanılıyor. Kök dizinde iki içerik aynı adresi paylaşamaz — ` +
+        `birini yeniden adlandırın (TR'de public/_redirects'e 301 ekleyin, bkz. CLAUDE.md).`);
     }
-    gorulen.set(k.slug, k.tur);
+    gorulen.set(k.slug, k);
   }
   return hepsi;
 }
 
-/** Verilen slug'ın diğer dilde karşılığı var mı? hreflang için. */
-export async function cevirisiVarMi(slug: string, hedefDil: Dil): Promise<boolean> {
-  const [b, s] = [await getCollection('blog'), await getCollection('sayfalar')];
-  return [...b, ...s].some(e => e.id === `${hedefDil}/${slug}`);
+/** Verilen anahtarın diğer dilde karşılığı var mı? */
+export async function cevirisiVarMi(anahtar: string, hedefDil: Dil): Promise<boolean> {
+  return (await karsiSlug(anahtar, hedefDil)) !== null;
+}
+
+/**
+ * Bir kaydın diğer dildeki URL slug'ı — hreflang ve dil düğmesi için.
+ * Çevirisi yoksa null.
+ */
+export async function karsiSlug(anahtar: string, hedefDil: Dil): Promise<string | null> {
+  const k = [...await yazilar(hedefDil), ...await sayfalar(hedefDil)].find(k => k.anahtar === anahtar);
+  return k ? k.slug : null;
+}
+
+/** Bir anahtarın verilen dildeki URL slug'ı; sayfa yoksa anahtarın kendisi. */
+export async function sayfaSlugu(dil: Dil, anahtar: string): Promise<string> {
+  return (await karsiSlug(anahtar, dil)) ?? anahtar;
 }
 
 /** Header menüsünde gösterilecek sayfalar (menuSira dolu olanlar, sıralı). */
@@ -67,7 +109,9 @@ import { TEKNOLOJI, TEK_REHBERLER, type TekDugum } from './teknoloji';
 
 /** Ağaç düğümü + sayfanın kendi verisi (başlık, özet, banner). */
 export type TekKart = {
+  /** URL slug'ı (dile göre değişir); ağaçtaki kimlik `anahtar`. */
   slug: string;
+  anahtar: string;
   ad: string;
   /** Yan menüde kullanılan tam etiket (bkz. teknoloji.ts). */
   tamAd: string;
@@ -78,14 +122,14 @@ export type TekKart = {
 };
 
 /**
- * TEKNOLOJI ağacını içerik koleksiyonuyla birleştirir.
+ * TEKNOLOJI ağacını içerik koleksiyonuyla birleştirir. Ağaç düğümleri
+ * ANAHTARLA (dosya adıyla) tanımlı; her dilde o dilin URL slug'ı basılır.
  *
- * Ağaçtaki bir slug'ın sayfası yoksa build'i DURDURUR: menüde 404'e giden
- * bağlantı bırakmaktansa hatayı derlemede görmek daha iyi. Aynı şekilde bir
- * sayfa yeniden adlandırılırsa burada yakalanır.
+ * Ağaçtaki bir anahtarın sayfası yoksa build'i DURDURUR: menüde 404'e giden
+ * bağlantı bırakmaktansa hatayı derlemede görmek daha iyi.
  */
 export async function teknolojiAgaci(dil: Dil, zorunlu = dil === 'tr'): Promise<TekKart[]> {
-  const hepsi = new Map((await sayfalar(dil)).map(k => [k.slug, k]));
+  const hepsi = new Map((await sayfalar(dil)).map(k => [k.anahtar, k]));
   const donustur = (dugumler: TekDugum[]): TekKart[] =>
     dugumler.flatMap(d => {
       const k = hepsi.get(d.slug);
@@ -101,7 +145,8 @@ export async function teknolojiAgaci(dil: Dil, zorunlu = dil === 'tr'): Promise<
       const v = k.entry.data as any;
       const etiket = dil === 'en' ? d.en : undefined;
       return [{
-        slug: d.slug,
+        slug: k.slug,
+        anahtar: k.anahtar,
         ad: etiket?.ad || (dil === 'en' ? v.baslik : d.ad) || v.baslik,
         tamAd: etiket?.tamAd || etiket?.ad || (dil === 'en' ? v.baslik : (d.tamAd || d.ad)) || v.baslik,
         baslik: v.baslik,
@@ -113,14 +158,18 @@ export async function teknolojiAgaci(dil: Dil, zorunlu = dil === 'tr'): Promise<
   return donustur(TEKNOLOJI);
 }
 
-/** Verilen slug'ların sayfa kayıtları (başlık + özet) — "İlgili sayfalar" ve rehber listeleri için. */
-export async function ilgiliSayfalar(dil: Dil, sluglar: string[]): Promise<{ slug: string; baslik: string; ozet?: string }[]> {
-  const hepsi = new Map((await kokIcerik(dil)).map(k => [k.slug, k]));
-  return sluglar.flatMap(slug => {
-    const k = hepsi.get(slug);
+/**
+ * Verilen ANAHTARLARIN sayfa kayıtları (URL slug + başlık + özet) — "İlgili
+ * sayfalar" ve rehber listeleri için. Frontmatter `ilgili` listeleri ve
+ * `TEK_REHBERLER` anahtar (dosya adı) taşır; iki dilde aynıdır.
+ */
+export async function ilgiliSayfalar(dil: Dil, anahtarlar: string[]): Promise<{ slug: string; baslik: string; ozet?: string }[]> {
+  const hepsi = new Map((await kokIcerik(dil)).map(k => [k.anahtar, k]));
+  return anahtarlar.flatMap(anahtar => {
+    const k = hepsi.get(anahtar);
     if (!k) return [];
     const v = k.entry.data as any;
-    return [{ slug, baslik: v.baslik, ozet: v.ozet }];
+    return [{ slug: k.slug, baslik: v.baslik, ozet: v.ozet }];
   });
 }
 
@@ -143,10 +192,10 @@ export type TekKomsu = {
 };
 
 /**
- * Verilen slug teknoloji ağacında yoksa null döner — çağıran taraf böylece
+ * Verilen ANAHTAR teknoloji ağacında yoksa null döner — çağıran taraf böylece
  * "bu sayfa bölümün parçası mı" sorusunu ayrıca sormak zorunda kalmaz.
  */
-export async function teknolojiKomsulari(dil: Dil, slug: string): Promise<TekKomsu | null> {
+export async function teknolojiKomsulari(dil: Dil, anahtar: string): Promise<TekKomsu | null> {
   const agac = await teknolojiAgaci(dil);
 
   // Derinlik öncelikli düz liste + her düğümün üstü ve kardeş kümesi
@@ -156,20 +205,20 @@ export async function teknolojiKomsulari(dil: Dil, slug: string): Promise<TekKom
   const gez = (dugumler: TekKart[], ust: TekKart | null) => {
     for (const d of dugumler) {
       duz.push(d);
-      ustu.set(d.slug, ust);
-      kardesKume.set(d.slug, dugumler);
+      ustu.set(d.anahtar, ust);
+      kardesKume.set(d.anahtar, dugumler);
       if (d.alt.length) gez(d.alt, d);
     }
   };
   gez(agac, null);
 
-  const i = duz.findIndex(d => d.slug === slug);
+  const i = duz.findIndex(d => d.anahtar === anahtar);
   if (i < 0) return null;
   return {
     onceki: duz[i - 1] ?? null,
     sonraki: duz[i + 1] ?? null,
-    kardesler: (kardesKume.get(slug) ?? []).filter(d => d.slug !== slug),
-    ust: ustu.get(slug) ?? null,
+    kardesler: (kardesKume.get(anahtar) ?? []).filter(d => d.anahtar !== anahtar),
+    ust: ustu.get(anahtar) ?? null,
     kendi: duz[i],
   };
 }

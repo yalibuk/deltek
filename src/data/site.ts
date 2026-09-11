@@ -32,12 +32,23 @@ export const OFISLER = [
     merkez: true,
     adres: "Maltepe Mah. 66. Sok. No: 35",
     adres2: "35310 Güzelbahçe - İzmir",
+    // Google Haritalar'da adrese sağ tıklayıp kopyalanan ondalık koordinat.
+    // Dolduğunda /iletisim/ LocalBusiness şemasına GeoCoordinates olarak girer
+    // (yerel aramada konum eşleşmesi). Boşsa basılmaz.
+    enlem: undefined as number | undefined,
+    boylam: undefined as number | undefined,
+    // Çalışma saatleri (schema.org OpeningHoursSpecification). Örnek:
+    // [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '09:00', closes: '18:00' }]
+    calismaSaatleri: [] as Record<string, unknown>[],
   },
   {
     sehir: "İstanbul",
     merkez: false,
     adres: "Vişnezade Mah. Çekirdek Sok. No:8 Kat:1",
     adres2: "34357 Beşiktaş - İstanbul",
+    enlem: undefined as number | undefined,
+    boylam: undefined as number | undefined,
+    calismaSaatleri: [] as Record<string, unknown>[],
   },
 ];
 

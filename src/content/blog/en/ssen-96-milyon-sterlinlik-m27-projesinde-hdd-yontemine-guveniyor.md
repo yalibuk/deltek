@@ -1,10 +1,11 @@
 ---
 baslik: "SSEN Relies on HDD for £9.6 Million M27 Project"
+adres: "ssen-m27-motorway-hdd-crossing"
 seoBaslik: "SSEN M27 Motorway HDD Cable Crossing"
 ozet: "With a £9.6 million investment, SSEN installed a 260-metre power cable crossing 15.8 metres beneath the M27 motorway by horizontal directional drilling (HDD)."
 anahtarKelimeler: "motorway HDD crossing, M27 HDD, SSEN, power cable directional drilling, road crossing horizontal drilling, bentonite drilling fluid, National Highways"
 tarih: 2026-05-21
-kapak: "/images/uploads/m27-projesi-hdd-altyapi-calismasi.webp"
+kapak: "/images/blog/m27-otoyolu-altinda-hdd-ile-elektrik.webp"
 kapakAlt: "Power cable crossing beneath the M27 motorway by HDD — SSEN Rownhams site"
 ilgili:
   - "national-grid-temze-nehrinin-altinda-271-tonluk-dev-makineyi-harekete-gecirdi"

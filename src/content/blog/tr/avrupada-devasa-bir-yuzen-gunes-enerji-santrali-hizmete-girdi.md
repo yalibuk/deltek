@@ -8,7 +8,7 @@ ilgili:
   - "hizmetlerimiz"
 anahtarKelimeler: "yüzer güneş enerji santrali, HDD kablo geçişi, yenilenebilir enerji yatay delgi, TotalEnergies, Holcim, Obourg, yönlendirilebilir yatay delgi"
 tarih: 2026-05-07
-kapak: "/images/uploads/avrupa-yuzen-gunes-enerji-santrali.webp"
+kapak: "/images/blog/belcika-obourg-daki-yuzer-gunes-enerji.webp"
 kapakAlt: "Belçika Obourg'daki yüzer güneş enerji santrali — HDD ile karaya bağlanan kablo hattı"
 ---
 

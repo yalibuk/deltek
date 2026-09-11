@@ -1,5 +1,6 @@
 ---
 baslik: "Contact"
+adres: "contact"
 seoBaslik: "Contact: HDD Offices in Istanbul and Izmir"
 ozet: "Reach Deltek's HDD project department in Istanbul and Izmir. Free feasibility study and quotation for directional drilling, pipe jacking and pipe bursting."
 anahtarKelimeler: "contact Deltek, HDD quote, horizontal directional drilling quotation, HDD contractor Istanbul, HDD contractor Izmir, trenchless contractor phone"

@@ -77,7 +77,7 @@ export const CEVIRI = {
     ustSerit: { ara: 'Bizi arayın:' },
     mobil: { ara: 'Hemen ara', wa: 'WhatsApp' },
     waMesaj: 'Merhaba, Deltek hakkında bilgi almak istiyorum.',
-    aria: { home: 'Deltek Ana Sayfa', menu: 'Menüyü aç/kapat', wa: 'WhatsApp ile yazın', dil: 'Change language' },
+    aria: { home: 'Deltek Ana Sayfa', menu: 'Menüyü aç/kapat', gez: 'Ana menü', atla: 'İçeriğe atla', wa: 'WhatsApp ile yazın', dil: 'Change language' },
     logoAlt: 'Deltek — Yatay Sondaj ve Kazısız Geçiş Teknolojileri',
   },
   en: {
@@ -153,7 +153,7 @@ export const CEVIRI = {
     ustSerit: { ara: 'Call us:' },
     mobil: { ara: 'Call now', wa: 'WhatsApp' },
     waMesaj: "Hello, I'd like information about Deltek.",
-    aria: { home: 'Deltek Home', menu: 'Open/close menu', wa: 'Message on WhatsApp', dil: 'Dili değiştir' },
+    aria: { home: 'Deltek Home', menu: 'Open/close menu', gez: 'Main menu', atla: 'Skip to content', wa: 'Message on WhatsApp', dil: 'Dili değiştir' },
     logoAlt: 'Deltek — Horizontal Directional Drilling and Trenchless Technologies',
   },
 } as const;

@@ -15,15 +15,15 @@ bloklar:
   - metin: |-
       Tarihteki ilk yönlendirilebilir yatay sondaj uygulaması 1972 yılında Amerika Birleşik Devletleri’nin California eyaletinin Wotsonville yakınlarındaki Pajero nehrinin altından yapılmıştır. Yüksek basınçlı gaz taşıyacak olan 180 metre uzunluğundaki bu geçiş Martin Cherrington’ın liderliğinde Titan Contractor (1965) firması tarafından gerçekleştirilmiştir.
       Bu proje aynı zamanda “Yönlendirilebilir Yatay Sondaj Sistemi”nin de doğuşu olmuştur.
-    gorsel: "/images/uploads/2015/08/001-1.webp"
+    gorsel: "/images/icerik/tarihteki-ilk-yonlendirilebilir-yatay-sondaj.webp"
     alt: "Tarihteki ilk yönlendirilebilir yatay sondaj uygulaması: 1972, Pajaro Nehri altı gaz boru hattı geçişi"
   - metin: |-
       YYS yeraltında üç boyutlu delgi yapabilen bir sistemdir. Delici uç (bit) her an yukarı, aşağı, sağa ve sola yönlendirilerek istenilen yeraltı profil oluşturulabilir. Giriş noktasından belli bir açıyla girip, yeterli derinliğe ulaştıktan sonra 0 derece ile (yatay) ilerlemek ve tekrar yüzeye çıkmak klasik yapım prosedürüdür. Delgi yapılacak yeraltı hattı üzerinde herhangi bir engel (mevcut altyapı tesisleri, temeller…vb.) olması durumunda yeraltı profili, bu engeli bertaraf edecek şekilde altından, üstünden veya yanından geçecek şekilde değiştirilebilir.
-    gorsel: "/images/uploads/2015/08/002.webp"
+    gorsel: "/images/icerik/yonlendirilebilir-yatay-sondajda-yer-altinda-uc.webp"
     alt: "Yönlendirilebilir yatay sondajda yer altında üç boyutlu delgi — engelin altından geçen pilot delik profili"
   - metin: |-
       Pilot delik açma işlemi bittikten ve delici uç (drillhead) yüzeye çıktıktan sonra bu aparat sökülür ve yerine kılavuz deliği genişletecek olan daha büyük çaplı, üzeri kesici elmaslarla donatılmış genişletme başlıkları (back reamer) takılır ve makina tarafından giriş noktasına kadar pilot deliğin ekseninde döndürülerek çekilir.
-    gorsel: "/images/uploads/2015/08/003.webp"
+    gorsel: "/images/icerik/pilot-deligi-buyuten-genisletme-basligi.webp"
     alt: "Pilot deliği büyüten genişletme başlığı (back reamer) — HDD genişletme aşaması"
   - metin: |-
       Genişletme işlemi tamamlandıktan sonra **yatay sondaj** operasyonunun son ve en kritik aşamasına geçilir: boru veya kablo çekme. Bu aşamada genişletme başlığının arkasına bağlanan boru hattı, bentonit çamurunun sağladığı kayganlık sayesinde sürtünmesiz bir şekilde çıkış noktasından giriş noktasına doğru çekilir. Boru çapı ve zemin direnci arttıkça çekme kuvveti de buna paralel olarak hesaplanır; bu nedenle **yatay sondaj** makinelerinin çekme kapasitesi, proje planlama aşamasında belirlenen en önemli teknik kriterlerden biridir.

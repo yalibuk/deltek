@@ -21,7 +21,7 @@ bloklar:
       Bentonit ve su karışının özkütlesi 1,2 – 1,5 g/cm³ arasındadır. Bu sayede içeride elmaslar tarafından öğütülen zemin parçacıkları çamur içerisinde suspanse edilir (yüzdürülür) ve akıcı kıvamı sayesinde deliğin giriş ve çıkış noktalarından dışarı atılır. Bu toprakla karışmış çamur ayrıştırma ünitelerinde (recycling system) elenir ve arındırılan çamur tekrar kullanılmak üzere sisteme dahil edilir. Eleğin üstünde kalan parçacıklar ise zeminin yapısı hakkında son derecede önemli bilgiler taşır. Hazırlanacak çamur ve uygulanacak işlemler bu numunelerden edinilen tecrübeler sonucu şekillenir.
 
       Zeminde varolan çatlaklar ya da kaçaklar bir süre sonra bentonit ile dolar ve geçirimsiz bir tabaka elde edilir. Bu durum, kesintisiz bir çamur sirkülasyonu açısından son derece önemlidir. Diğer taraftan bu işlem, zemindeki çatlakları doldurarak zemini sıkılaştırır; bir nevi zemin rehabilitasyonu sağlamış olur.
-    gorsel: "/images/uploads/2015/08/025.webp"
+    gorsel: "/images/icerik/sondaj-camurunun-hafriyati-disari-tasimasi.webp"
     alt: "Sondaj çamurunun hafriyatı dışarı taşıması ve çamur ayrıştırma (recycling) ünitesi"
   - metin: |-
       **2 – Açılan deliğin stabil kalmasını sağlar**
@@ -31,20 +31,20 @@ bloklar:
       **3 – Hidrolik delme sağlar**
 
       Zemine basınçla püskürtülen sondaj çamuru zemini örseler ve yumuşatır. Bu da mekanik delmeyi sağlayan elmas uçlar için kolaylık sağlar.
-    gorsel: "/images/uploads/2015/08/026.webp"
+    gorsel: "/images/icerik/sondaj-camurunun-deligi-stabil-tutmasi.webp"
     alt: "Sondaj çamurunun deliği stabil tutması ve hidrolik delmeye katkısı"
   - metin: |-
       **4 – Ekipmanların fazla ısınmasını önler**
 
       Delgiyi yapan delici uçların zeminle sürtünmesi sonucu ortaya çıkan ısı bitlerin ve bunların içerisindeki elektronik lokasyon cihazlarının aşırı ısınmasına sebep olur. Bu istenmeyen bir durumdur. Özellikle daha hassas olan elektronik aksam 50 °C ‘nin üzerinde işlevini yitirir.
       Sondaj çamuru sürtünmeden kaynaklanan ve istenmeyen bu ısıyı absorbe ederek istenilen sıcaklık aralıklarında çalışmayı sağlar.
-    gorsel: "/images/uploads/2015/08/027.webp"
+    gorsel: "/images/icerik/sondaj-camurunun-delici-uclari-ve-elektronik.webp"
     alt: "Sondaj çamurunun delici uçları ve elektronik sondayı soğutması"
   - metin: |-
       **5 – Borunun hasarsız olarak yeraltına çekilmesini sağlar.**
 
       Tamamen zeminin özellikleri analiz edilerek özel olarak üretilmiş sondaj çamuru ile dolu olan delik, yeraltına döşenecek olan boru için bir çamur havuzu vazifesi görür ve yüzdürülerek çekilmesini sağlar. Bu sayede boru ve zemin arasındaki sürtünme azaltılır, borunun zarar görmesi önlenir.
-    gorsel: "/images/uploads/2015/08/028.webp"
+    gorsel: "/images/icerik/camurla-dolu-delikte-borunun-yuzdurulerek-hasarsiz.webp"
     alt: "Çamurla dolu delikte borunun yüzdürülerek hasarsız çekilmesi"
   - metin: |-
       **6 – İşletme güvenliği sağlar.**

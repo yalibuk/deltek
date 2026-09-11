@@ -15,19 +15,19 @@ bannerSembol: "yonlendirilebilir-yatay-sondaj-metodu"
 bloklar:
   - metin: |-
       YYS Makinası boru çekilecek güzergahın sonunda ya da başında konumlandırılır. Delici uç zeminin yapısına ve öngörülen yeraltı profiline göre yer yer iterek ve döndererek karşı tarafta yüzeye çıkarılır.
-    gorsel: "/images/uploads/2015/08/004.webp"
+    gorsel: "/images/icerik/hdd-makinesinin-guzergah-basinda-konumlandirilmasi.webp"
     alt: "HDD makinesinin güzergâh başında konumlandırılması ve pilot delginin karşı tarafta yüzeye çıkışı"
   - metin: |-
       Her aşamada olduğu gibi bu işlemler esnasında da sondaj çamuru basınçla deliğe enjekte edilir.
-    gorsel: "/images/uploads/2015/08/005.webp"
+    gorsel: "/images/icerik/yatay-sondaj-sirasinda-sondaj-camurunun-basincla.webp"
     alt: "Yatay sondaj sırasında sondaj çamurunun basınçla deliğe enjekte edilmesi"
   - metin: |-
       Yönlendirme ucu karşı taraftan çıktığında sökülür ve yerine deliğin çapını büyütecek olan genişletme başlığı (reamer) takılır. Bu işlem boru çapının büyüklüğüne göre bir kaç kademede bitirilebilir.
-    gorsel: "/images/uploads/2015/08/006.webp"
+    gorsel: "/images/icerik/yonlendirme-ucunun-sokulup-genisletme-basliginin.webp"
     alt: "Yönlendirme ucunun sökülüp genişletme başlığının (reamer) takılması — kademeli delik büyütme"
   - metin: |-
       En son aşamada ise yeraltına döşenecek olan boru, fırdöndü (bir tarafı mil üzerinde dönen çifte halka, swivel) vasıtasıyla genişletme başlığının arkasına bağlanır ve boru yeraltına çekilir.
-    gorsel: "/images/uploads/2015/08/007.webp"
+    gorsel: "/images/icerik/firdondu-swivel-genisletme-basligi.webp"
     alt: "Fırdöndü (swivel) ile genişletme başlığının arkasına bağlanan borunun yer altına çekilmesi"
   - metin: |-
       Bu şekilde yapılmış şuana kadar ki en uzun mesafeli geçiş Almanya’nın Kuzey Denizi’ndeki Mittelplate petrol kuyusu ile Dieksand’ın birbirine bağlanması projesidir. 406 mm çapındaki çelik petrol boru hattı 7500 metre mesafede yeraltına döşenmiştir. Toplam proje süresi 2 aydır. 1600 mm ise YYS ile döşenmiş en büyük çaplı borudur.

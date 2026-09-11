@@ -1,5 +1,6 @@
 ---
 baslik: "References"
+adres: "references"
 seoBaslik: "References: Our HDD Projects and Partners"
 duzen: referanslar
 menuSira: 4
@@ -40,7 +41,7 @@ may need two different methods if the ground and the water table differ; the
 wrong choice of method comes back as delay and cost overrun. So at the tender
 stage we explain not only what we will do, but **why we chose that method**.
 
-To sit at the same table on a new project, [contact us](/en/iletisim/) — our
+To sit at the same table on a new project, [contact us](/en/contact/) — our
 feasibility study and site survey are free of charge.
 
 ## Which sectors do we work in?
@@ -60,6 +61,6 @@ feasibility study and site survey are free of charge.
 - **International projects** — onshore/offshore pipeline landfall crossings on
   Saipem and Aramco projects.
 
-For examples of our work see the gallery on the [Services](/en/hizmetlerimiz/)
+For examples of our work see the gallery on the [Services](/en/services/)
 page; for the technical details of the methods we apply, see the
-[Technology](/en/yatay-sondaj-teknoloji/) section.
+[Technology](/en/trenchless-technologies/) section.

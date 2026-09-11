@@ -50,7 +50,7 @@ const sema = {
           </div>
           <div class="pkart__b">
             {entry.data.tarih && <span class="pkart__tarih">{tarihFmt(entry.data.tarih)}</span>}
-            <h3>{entry.data.baslik}</h3>
+            <h2>{entry.data.baslik}</h2>
             {entry.data.ozet && <p>{entry.data.ozet}</p>}
           </div>
         </a>
@@ -72,7 +72,7 @@ const sema = {
 .pkart__vid { position: absolute; inset: 0; margin: auto; width: 54px; height: 54px; display: grid; place-items: center; background: rgb(var(--blue-800-rgb) / .72); color: var(--beyaz); border-radius: 50%; font-size: 1.1rem; padding-left: 4px; }
 .pkart__b { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
 .pkart__tarih { font-family: var(--f-veri); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mavi); }
-.pkart__b h3 { font-family: var(--f-dis); font-weight: 800; font-size: 1.15rem; color: var(--mavi-900); letter-spacing: -.01em; }
+.pkart__b h2 { font-family: var(--f-dis); font-weight: 800; font-size: 1.15rem; color: var(--mavi-900); letter-spacing: -.01em; }
 .pkart__b p { color: var(--mute); font-size: .9rem; }
 .pboş { margin-top: 2.5rem; padding: 3rem 1.5rem; text-align: center; background: var(--kagit); border: 1px dashed var(--cizgi-2); border-radius: 6px; }
 .pboş p { color: var(--mute); margin-bottom: 1.2rem; }

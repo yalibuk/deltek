@@ -8,7 +8,7 @@ ilgili:
   - "yonlendirilebilir-yatay-sondaj-makinesi"
 anahtarKelimeler: "kesişim HDD, intersect HDD, Athabasca Nehri HDD, uzun mesafe yatay delgi, kılıf borusu casing, The Crossing Group, maxi HDD rig"
 tarih: 2026-05-21
-kapak: "/images/uploads/the-crossing-group-dondurucu-soguklarda-rekor-kiran-hdd-kesisimi.webp"
+kapak: "/images/blog/athabasca-nehri-altinda-2-955-metrelik-kesisim.webp"
 kapakAlt: "Athabasca Nehri altında 2.955 metrelik kesişim HDD geçişi — The Crossing Group sahası"
 ---
 

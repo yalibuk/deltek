@@ -1,5 +1,6 @@
 ---
 baslik: "Trenchless Drilling Technologies"
+adres: "trenchless-technologies"
 seoBaslik: "Trenchless Technologies: HDD, Pipe Jacking, Bursting"
 menuSira: 2
 menuAd: "Technology"
@@ -8,7 +9,7 @@ anahtarKelimeler: "trenchless drilling technologies, HDD technology, trenchless 
 duzen: urun
 bolumHaritasi: true
 yanMenu: true
-banner: "/images/uploads/2015/08/kazisiz-yatay-sondaj-teknolojileri.webp"
+banner: "/images/icerik/kazisiz-yatay-sondaj-teknolojileri.webp"
 bannerAlt: "Trenchless drilling technologies — horizontal directional drilling, pipe jacking and pipe bursting methods banner"
 ---
 

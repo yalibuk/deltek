@@ -1,10 +1,11 @@
 ---
 baslik: "About Directional Boring"
+adres: "directional-boring-stages-advantages"
 seoBaslik: "Directional Boring: Stages and Advantages"
 ozet: "How directional boring works: pilot hole, reaming and pullback; the cost, time and environmental advantages of trenchless crossings; fields of application."
 anahtarKelimeler: "directional boring, HDD stages, pilot hole, reaming, pullback, trenchless crossing advantages"
 tarih: 2017-11-17
-kapak: "/images/uploads/2015/09/haberler2.webp"
+kapak: "/images/blog/miami-de-yonlendirilebilir-yatay-delgi.webp"
 kapakAlt: "Directional boring in progress — trenchless urban infrastructure crossing"
 ilgili:
   - "yonlendirilebilir-yatay-delgi"

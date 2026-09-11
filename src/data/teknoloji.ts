@@ -38,10 +38,10 @@ export const TEKNOLOJI: TekDugum[] = [
       { slug: 'yonlendirilebilir-yatay-sondaj-nedir', ad: 'Yönlendirilebilir Yatay Sondaj Nedir?',
         tamAd: 'HDD Nedir?', en: { ad: 'What is HDD?' } },
       { slug: 'yonlendirilebilir-yatay-sondaj-yapim-metodu', ad: 'Yapım Metodu',
-        tamAd: 'HDD Yapım Metodu', en: { ad: 'HDD Method', tamAd: 'HDD Construction Method' } },
+        tamAd: 'HDD Yapım Metodu', en: { ad: 'HDD Method Statement', tamAd: 'HDD Method Statement' } },
       { slug: 'yonlendirilebilir-yatay-sondaj-makinesi', ad: 'Sondaj Makinesi',
-        tamAd: 'HDD Makinesi', en: { ad: 'HDD Rig', tamAd: 'HDD Drilling Rig' } },
-      { slug: 'delgi-tijleri', ad: 'Delgi Tijleri', en: { ad: 'Drill Rods' } },
+        tamAd: 'HDD Makinesi', en: { ad: 'HDD Rig', tamAd: 'HDD Rig' } },
+      { slug: 'delgi-tijleri', ad: 'Yatay Sondaj Tiji', en: { ad: 'Drill Pipes' } },
       { slug: 'yonlendirme-basligi', ad: 'Yönlendirme Başlığı', en: { ad: 'Steering Head' } },
       { slug: 'genisletme-basligi', ad: 'Genişletme Başlığı', en: { ad: 'Reamer' } },
       {
@@ -56,7 +56,7 @@ export const TEKNOLOJI: TekDugum[] = [
       { slug: 'yatay-sondaj-camuru', ad: 'Yatay Sondaj Çamuru', en: { ad: 'Drilling Fluid' } },
     ],
   },
-  { slug: 'boru-surmecakma', ad: 'Boru Sürme/Çakma', en: { ad: 'Pipe Jacking / Auger Boring' } },
+  { slug: 'boru-surmecakma', ad: 'Boru Sürme/Çakma', en: { ad: 'Pipe Jacking' } },
   { slug: 'boru-yenileme', ad: 'Boru Yenileme', en: { ad: 'Pipe Bursting' } },
   { slug: 'akilli-altyapi', ad: 'Akıllı Altyapı', en: { ad: 'Smart Undergrounding' } },
 ];

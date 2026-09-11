@@ -1,10 +1,11 @@
 ---
 baslik: "National Grid Launches 271-Tonne Giant Machine Beneath the River Thames"
+adres: "national-grid-thames-tunnel-tbm"
 seoBaslik: "National Grid Thames Tunnel: 271-Tonne TBM"
 ozet: "On National Grid's Grain to Tilbury project, the 271.5-tonne TBM Caroline has set off to build a 2.2 km power cable tunnel beneath the River Thames."
 anahtarKelimeler: "Thames tunnel, National Grid Grain to Tilbury, tunnel boring machine TBM, cable tunnel, grid modernisation, river crossing"
 tarih: 2026-05-07
-kapak: "/images/uploads/national-grid-temze-alti-271-tonluk-dev-makine.webp"
+kapak: "/images/blog/thames-nehri-altinda-2-2-km-kablo.webp"
 kapakAlt: "The 271.5-tonne tunnel boring machine Caroline that will bore a 2.2 km cable tunnel beneath the River Thames"
 ilgili:
   - "boru-surmecakma"

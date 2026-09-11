@@ -8,7 +8,7 @@ ilgili:
   - "yonlendirilebilir-yatay-sondaj"
 anahtarKelimeler: "deniz kablosu karaya çıkış HDD, landfall HDD, Arelion, Nørre Nebel, veri merkezi altyapı, yönlendirilebilir yatay delgi, fiber optik HDD"
 tarih: 2026-05-21
-kapak: "/images/uploads/iskandinavya-ai-super-otoyolu-yonlendirilebilir-yatay-delgi.webp"
+kapak: "/images/blog/danimarka-nrre-nebel-kablo-karaya-cikis.webp"
 kapakAlt: "Danimarka Nørre Nebel kablo karaya çıkış istasyonu — deniz kablosu için yönlendirilebilir yatay delgi"
 ---
 

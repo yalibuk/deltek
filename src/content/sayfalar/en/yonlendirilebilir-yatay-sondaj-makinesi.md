@@ -1,5 +1,6 @@
 ---
 baslik: "HDD Rig"
+adres: "hdd-rig"
 seoBaslik: "Horizontal Directional Drilling Rig (HDD Rig)"
 ozet: "HDD rigs: thrust, pullback and torque; set-up and logistics of small, medium and large horizontal directional drilling rigs, and choosing the right machine."
 anahtarKelimeler: "HDD rig, horizontal directional drilling rig, directional drill, HDD machine, torque capacity, pullback capacity, thrust, drilling fleet"
@@ -18,15 +19,15 @@ bloklar:
       – Pullback
       – Rotation
       Although the industry classifies these machines by their pullback force, what really matters is torque, i.e. rotation capacity. In most successful projects the pull force required is no more than 30% of the rig's capacity; the same cannot be said of the torque required.
-    gorsel: "/images/uploads/2015/08/008.webp"
+    gorsel: "/images/icerik/yonlendirilebilir-yatay-sondaj-makinesinin-uc.webp"
     alt: "The three basic functions of a horizontal directional drilling rig: thrust, pullback and rotation (torque)"
   - metin: |-
       Small and medium rigs are very practical in terms of logistics, set-up and operation. They carry their engine, hydraulic pumps and drill rods on board, load and unload the rods automatically from a magazine, run on tracks and can travel over a wide range of terrain. The pump that feeds drilling fluid into the bore is usually mounted on the rig as well. That is why the most commonly chosen rigs are in this class.
-    gorsel: "/images/uploads/2015/08/009.webp"
+    gorsel: "/images/icerik/kucuk-ve-orta-olcekli-paletli-hdd.webp"
     alt: "Small and medium tracked HDD rig — automatic rod loader and on-board mud pump"
   - metin: |-
       Large rigs require a much more serious organisation. Their logistics alone need at least 3 trucks, and depending on the scope of the project this can rise to 7–8. The hydraulic pumps that provide thrust, pullback and rotation and the diesel engines that drive them are too large to be carried on the rig; these units travel in separate containers and are connected to the rig with hydraulic hoses. The rod loading mechanism used on small and medium rigs is replaced by cranes on large rigs. Although tracked models exist, most are designed as truck trailers for ease of use. The high-pressure pump that feeds the drilling fluid into the bore also travels independently in its own container.
-    gorsel: "/images/uploads/2015/08/010.webp"
+    gorsel: "/images/icerik/buyuk-olcekli-yatay-sondaj-makinesi-tir.webp"
     alt: "Large horizontal directional drilling rig — trailer-mounted set-up with a separate power unit in a container"
   - metin: |-
       Choosing the right **HDD** rig is one of the most critical decisions that directly determines the success of a project. When planning a project, not only the crossing length and pipe diameter but also the soil type, groundwater level and potential obstacles along the route are taken into account to determine a **horizontal directional drilling** rig of suitable capacity. Small and medium rigs are preferred for urban, short and medium-distance projects mainly because of their logistical simplicity and manoeuvrability in confined spaces. Large rigs with high torque and pullback capacity, on the other hand, come into play on long-distance, large-diameter **HDD** crossings under rivers and motorways.

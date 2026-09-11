@@ -1,10 +1,11 @@
 ---
 baslik: "Horizontal Directional Drilling to Power the Nordic AI Superhighway"
+adres: "nordic-ai-superhighway-hdd-subsea-cable"
 seoBaslik: "Nordic AI Superhighway: HDD for Subsea Cable Landings"
 ozet: "Arelion is using horizontal directional drilling (HDD) to bring subsea cables ashore at Nørre Nebel, Denmark — trenchless landfalls for AI data-centre traffic."
 anahtarKelimeler: "subsea cable landfall HDD, landfall directional drilling, Arelion, Nørre Nebel, data centre infrastructure, horizontal directional drilling, fibre optic HDD"
 tarih: 2026-05-21
-kapak: "/images/uploads/iskandinavya-ai-super-otoyolu-yonlendirilebilir-yatay-delgi.webp"
+kapak: "/images/blog/danimarka-nrre-nebel-kablo-karaya-cikis.webp"
 kapakAlt: "Nørre Nebel cable landing station in Denmark — horizontal directional drilling for subsea cables"
 ilgili:
   - "avrupada-devasa-bir-yuzen-gunes-enerji-santrali-hizmete-girdi"

@@ -1,8 +1,11 @@
 ---
 baslik: "Deltek Horizontal Directional Drilling — Rock Drilling"
+adres: "hdd-rock-drilling-video"
 seoBaslik: "HDD Rock Drilling Video — Deltek"
 ozet: "Site video of Deltek's horizontal directional drilling in rock: fluid-driven drilling with a mud motor, rock reamers and HDD in hard formations."
 anahtarKelimeler: "rock drilling, HDD in rock, mud motor, rock reamer, hard ground HDD, Deltek video"
+# Vimeo yükleme tarihi (oEmbed upload_date) — yazının aslı tarihsiz "Medyalar" sayfasıydı
+tarih: 2015-12-17
 video: "https://vimeo.com/149268675"
 ilgili:
   - "yonlendirme-basligi"
@@ -27,7 +30,7 @@ not, and direction is given by the angled motor body (bend sub).
   the compressive strength of the rock, and a cone-cutter **rock reamer** for
   enlargement. The number of reaming stages is higher than in soft ground.
 - **Locating:** Signal transmission is weaker in rock formations; on deep and
-  long crossings a wireline [magnetic guidance](/en/manyetik-alan/) system is
+  long crossings a wireline [magnetic guidance](/en/magnetic-guidance/) system is
   preferred.
 - **Time and cost:** The rate of advance in rock is lower than in soft ground
   and bit and reamer wear is higher. The right choice of rig and equipment keeps
@@ -49,5 +52,5 @@ fall into the same category.
 Deltek keeps mud motors, rock reamers and high-capacity fluid systems for rock
 drilling in its Istanbul and Izmir fleet, and has completed river and motorway
 crossings in limestone, andesite and weathered rock formations. If you have an
-HDD project in rock, [contact us](/en/iletisim/) with your geotechnical survey
+HDD project in rock, [contact us](/en/contact/) with your geotechnical survey
 and let us determine the method and equipment together.

@@ -1,5 +1,6 @@
 ---
 baslik: "Magnetic Guidance"
+adres: "magnetic-guidance"
 seoBaslik: "Magnetic Guidance: Wireline HDD Steering Systems"
 ozet: "Magnetic guidance: a wireline-powered sonde referenced to an artificial magnetic field at the surface for precise tracking on deep, long HDD crossings."
 anahtarKelimeler: "magnetic guidance HDD, wireline steering, Paratrack, Trutracker, long distance HDD, river crossing HDD, deep directional drilling"
@@ -18,11 +19,11 @@ bloklar:
       Artificial magnetic fields set up at the entry and exit points provide a reference plane for the sonde travelling underground: the sonde reports its position by taking a bearing on this surface field of known coordinates. In this way, how deep the bit is below the surface and at what angle it is advancing are tracked.
 
       These continuous signals are interpreted by a computer and displayed on screen as a profile.
-    gorsel: "/images/uploads/2015/08/023.webp"
+    gorsel: "/images/icerik/manyetik-alan-yonteminde-tij-icinden-gecen.webp"
     alt: "Magnetic guidance: sonde powered through a wire in the rods and the artificial magnetic field reference at the surface"
   - metin: |-
       Magnetic tracking is far more accurate than walk-over tracking, which makes it the only option on very long or deep HDD bores. Its only drawbacks are cost and the need for trained personnel. With the world-class Trutracker® and Paratrack® systems, DELTEK® has the experience and equipment to surface beneath a cola can 2,000 metres away.
-    gorsel: "/images/uploads/2015/08/024.webp"
+    gorsel: "/images/icerik/bilgisayarda-yorumlanan-manyetik-takip-sinyalleri.webp"
     alt: "Magnetic tracking signals interpreted by computer — the bore profile on screen"
   - baslik: "Components and fields of application"
     metin: |-
