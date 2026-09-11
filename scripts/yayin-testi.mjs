@@ -58,10 +58,14 @@ const YONLENDIRME = [
 const BASLIKLAR = ['strict-transport-security', 'x-content-type-options', 'x-frame-options',
   'referrer-policy', 'permissions-policy'];
 
-let gecti = 0, kaldi = 0;
+let gecti = 0, kaldi = 0, ulasilamadi = 0;
 const sorunlar = [];
 const ok = (ad) => { gecti++; };
-const hata = (ad, ayrinti) => { kaldi++; sorunlar.push(`${ad}${ayrinti ? ' — ' + ayrinti : ''}`); };
+const hata = (ad, ayrinti) => {
+  kaldi++;
+  if (ayrinti === 'ulaşılamadı') ulasilamadi++;
+  sorunlar.push(`${ad}${ayrinti ? ' — ' + ayrinti : ''}`);
+};
 
 /**
  * Kararsız ağlara karşı: 3 deneme, artan bekleme.
@@ -215,6 +219,27 @@ try {
 
 // ── Özet ──────────────────────────────────────────────────────────────────
 console.log(`\n\x1b[1mÖZET\x1b[0m  geçen: ${gecti}  ·  kalan: ${kaldi}`);
+
+/*
+ * Her şey "ulaşılamadı" ise bu bir site hatası değil, AĞ hatasıdır.
+ * Türkiye'den `*.pages.dev` ve `*.workers.dev` adreslerinin tamamı TCP
+ * seviyesinde sıfırlanıyor (2026-09-12'de ölçüldü; var olmayan bir pages.dev
+ * adresi de aynı hatayı veriyor, normal Cloudflare siteleri 200 dönüyor).
+ * Engelleme aralıklı olduğu için bir koşu geçip sonraki tamamen çökebiliyor.
+ */
+if (ulasilamadi >= 5 && ulasilamadi >= kaldi * 0.8) {
+  const engelli = /\.(pages|workers)\.dev$/.test(new URL(temel).hostname);
+  console.log(`\n\x1b[33m${ulasilamadi} denetim sunucuya HİÇ ulaşamadı.\x1b[0m`);
+  console.log('Bu bir sayfa hatası değil, bağlantı hatası — site muhtemelen sağlam.');
+  if (engelli) {
+    console.log('\n\x1b[1mSebebi büyük olasılıkla şu:\x1b[0m Türkiye\'den *.pages.dev ve');
+    console.log('*.workers.dev adreslerinin tamamı engelli. Test için Pages projesine');
+    console.log('geçici bir alt alan adı bağlayın (Custom domains → yeni.deltek.com.tr),');
+    console.log('sonra:  npm run yayin -- https://yeni.deltek.com.tr');
+    console.log('Ayrıntı: YAYIN.md → ADIM 3.');
+  }
+}
+
 if (kaldi) {
   console.log('\nSorunlar:');
   for (const s of sorunlar) console.log('  • ' + s);

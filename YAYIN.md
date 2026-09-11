@@ -139,6 +139,37 @@ llms.txt yazıldı
 Pages size `deltek.pages.dev` adresini verdi. **Hata bulmanın ucuz olduğu son
 an burasıdır.**
 
+> ## ⚠ `pages.dev` TÜRKİYE'DEN ENGELLİ — test için geçici alt alan adı açın
+>
+> Bu ağdan `*.pages.dev` ve `*.workers.dev` adreslerinin **tamamı** TCP
+> seviyesinde sıfırlanıyor (`Connection was reset`). Siteyle ilgisi yok:
+> var olmayan bir `pages.dev` adresi de aynı hatayı veriyor, buna karşılık
+> normal Cloudflare siteleri (`developers.cloudflare.com`) 200 dönüyor.
+> Engelleme aralıklı — bir koşu tamamen geçip bir sonraki baştan sona
+> çökebiliyor, yani "bir kere çalıştı" güvenilir değil. 2026-09-12'de ölçüldü.
+>
+> Belirtisi: betik her sayfaya `✗ ulaşılamadı` diyor, sayfa hatası
+> göstermiyor. Bu bir dağıtım hatası DEĞİLDİR.
+>
+> **Çözüm — `yeni.deltek.com.tr` alt alan adını Pages projesine bağlayın:**
+>
+> 1. Pages projesi → **Custom domains** → **Set up a custom domain**
+> 2. `yeni.deltek.com.tr` yazın → **Continue** → **Activate domain**
+> 3. Cloudflare DNS kaydını kendi ekler; sertifika birkaç dakikada hazır olur
+> 4. Testleri bu adrese karşı çalıştırın:
+>
+> ```bash
+> npm run yayin -- https://yeni.deltek.com.tr
+> ```
+>
+> **`www` ve kök kayda dokunulmuyor, canlı site etkilenmiyor.** Betik
+> canonical'ı sabit `https://www.deltek.com.tr` ile karşılaştırdığı için
+> hangi adresten test ettiğiniz sonucu değiştirmez.
+>
+> Yayın sonrası bu alt alan adını **Custom domains**'ten kaldırın. Arama
+> motorlarına karşı riski düşük (tüm canonical'lar `www`yi gösteriyor) ama
+> gereksiz bir ikiz kopya bırakmanın anlamı yok.
+
 **3.0 — Önce otomatik denetim.** Tek komut 60'tan fazla şeyi kontrol eder:
 sayfa durum kodları (TR + EN), 301 yönlendirmeleri ve hedefleri, teknik
 dosyalar, güvenlik ve önbellek başlıkları, 404 sayfaları, canonical + hreflang
