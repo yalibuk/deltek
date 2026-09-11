@@ -88,6 +88,13 @@ yakalar.
 | `/auger-boring-nedir-modern-yatay-delgi-teknolojisi/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
 | `/mikrotunel-nedir/` | `/boru-surmecakma/` | Ayrı sayfa olmaktan çıktı; Boru Sürme/Çakma'da başlıklı bölüm |
 | `/medyalar/` | `/deltek-yatay-sondaj-kaya-delgi-rock-drilling/` | Sayfa kaldırıldı; içindeki tek video blog yazısı oldu |
+| `/sitemap.xml`, `/sitemap.xml.gz`, `/wp-sitemap.xml` | `/sitemap-index.xml` | **Search Console'a kayıtlı adres `/sitemap.xml`** — yeni site `sitemap-index.xml` üretiyor |
+| `/kategori/*` | `/blog/` | WordPress kategori arşivleri (genel, general, yonlendirilebilir-yatay-sondaj-hdd); 200 dönüyor, noindex değil |
+| `/author/*` | `/blog/` | WordPress yazar arşivi |
+| `/home1/` | `/` | Eski ana sayfa taslağı; 301'i Plesk sunucusu veriyordu |
+| `/comments/feed/` | `/blog/` | WordPress yorum akışı |
+| `/:sayfa/feed/` | `/:sayfa/` | Sayfa başına WP yorum akışı (`/hakkimizda/feed/` gibi); `/comments/feed/`ten SONRA gelmeli |
+| `/xmlrpc.php` | `/` | WordPress artığı |
 
 ## Taşınan içerik
 

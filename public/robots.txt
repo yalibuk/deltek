@@ -1,3 +1,24 @@
+# Yapay zekâ tarayıcılarına açık erişim. Bu izinler canlı deltek.com.tr'nin
+# robots.txt'sinden korundu: aşağıdaki "User-agent: *" bloğu zaten hepsini
+# kapsıyor, ama izin açıkça yazıldığında niyet de kayıt altında kalıyor.
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Anthropic-Bot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 User-agent: *
 Allow: /
 Disallow: /admin/

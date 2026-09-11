@@ -44,6 +44,16 @@ const YONLENDIRME = [
   ['/wp-login.php', '/'],
   ['/2017/11/eski-yazi/', '/blog/'],
   ['/wp-content/uploads/2015/08/018.jpg', '/images/uploads/2015/08/018.jpg'],
+  // 2026-09-12: canlı site taranarak bulundu. Hepsi bugün deltek.com.tr'de
+  // 200 dönüyor, yani Google dizininde olabilirler.
+  ['/sitemap.xml', '/sitemap-index.xml'],          // Search Console'a KAYITLI adres
+  ['/wp-sitemap.xml', '/sitemap-index.xml'],
+  ['/kategori/genel/', '/blog/'],                  // WP kategori arşivleri
+  ['/kategori/yonlendirilebilir-yatay-sondaj-hdd/', '/blog/'],
+  ['/author/admin/', '/blog/'],                    // WP yazar arşivi
+  ['/home1/', '/'],
+  ['/comments/feed/', '/blog/'],
+  ['/hakkimizda/feed/', '/hakkimizda/'],           // sayfa başına WP yorum akışı
 ];
 const BASLIKLAR = ['strict-transport-security', 'x-content-type-options', 'x-frame-options',
   'referrer-policy', 'permissions-policy'];

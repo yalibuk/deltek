@@ -34,3 +34,36 @@
 # yönlendirme olmadan 404 veriyordu. Kaynak JPEG/PNG'ler bu yüzden WebP'ye
 # çevrildikten sonra da yerinde bırakıldı; hedef dosya var.
 /wp-content/uploads/*   /images/uploads/:splat   301
+
+# ---------------------------------------------------------------------------
+# 2026-09-12: canlı site taranarak bulunanlar. Hepsi bugün deltek.com.tr'de
+# 200 dönüyor; DNS geçtiğinde karşılıksız kalacaklardı.
+# ---------------------------------------------------------------------------
+
+# Search Console'a KAYITLI sitemap adresi /sitemap.xml. Yeni site
+# /sitemap-index.xml üretiyor; yönlendirme olmazsa geçiş anında kayıtlı
+# sitemap 404'e düşerdi. WordPress'in kendi sitemap'leri de buraya.
+/sitemap.xml      /sitemap-index.xml   301
+/sitemap.xml.gz   /sitemap-index.xml   301
+/wp-sitemap.xml   /sitemap-index.xml   301
+
+# WordPress kategori arşivleri. Üçü de (genel, general,
+# yonlendirilebilir-yatay-sondaj-hdd) 200 dönüyor, noindex DEĞİL ve her blog
+# yazısından bağlantı alıyor — yani Google dizininde olabilirler.
+/kategori/*   /blog/   301
+
+# Yazar arşivi (/author/admin/) — 200 dönüyor.
+/author/*   /blog/   301
+
+# Eski ana sayfa taslağı; bugünkü 301'i Plesk sunucusu veriyor.
+/home1/   /   301
+
+# WordPress yorum akışları. Sayfa başına akış (/hakkimizda/feed/ gibi) da
+# 200 dönüyor; yer tutucu kural onları kendi sayfalarına gönderir.
+# SIRA ÖNEMLİ: /comments/feed/ yer tutucudan ÖNCE gelmeli, yoksa var olmayan
+# /comments/ adresine giderdi.
+/comments/feed/   /blog/   301
+/:sayfa/feed/     /:sayfa/   301
+
+# XML-RPC uç noktası (canlıda 403).
+/xmlrpc.php   /   301
