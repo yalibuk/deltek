@@ -155,12 +155,34 @@ an burasıdır.**
 >
 > 1. Pages projesi → **Custom domains** → **Set up a custom domain**
 > 2. `yeni.deltek.com.tr` yazın → **Continue** → **Activate domain**
-> 3. Cloudflare DNS kaydını kendi ekler; sertifika birkaç dakikada hazır olur
-> 4. Testleri bu adrese karşı çalıştırın:
+> 3. Listede göründüğünde durumunun **Active** olmasını bekleyin (birkaç dakika)
+> 4. **DNS kaydını DOĞRULAYIN.** Pages normalde kaydı kendi ekler ama
+>    eklemediği oluyor. `deltek.com.tr` → **DNS** → **Records**'ta şu kayıt
+>    olmalı:
+>
+>    | Type | Name | Target | Proxy |
+>    | --- | --- | --- | --- |
+>    | `CNAME` | `yeni` | `deltek.pages.dev` | **Proxied** (turuncu bulut) |
+>
+>    Yoksa **Add record** ile elle ekleyin. Hedefin `pages.dev` olması sorun
+>    değil: çözümleme Cloudflare kenarında yapılıyor, tarayıcı `pages.dev`
+>    adresine hiç bağlanmıyor, dolayısıyla engel devreye girmiyor.
+>
+> 5. Kaydın yayıldığını teyit edin — çıktı bir adres vermeli:
+>
+> ```bash
+> nslookup yeni.deltek.com.tr
+> ```
+>
+> 6. Testleri bu adrese karşı çalıştırın:
 >
 > ```bash
 > npm run yayin -- https://yeni.deltek.com.tr
 > ```
+>
+> Betik başarısız olursa özetin altında sebebi yazar: `ENOTFOUND` DNS kaydı
+> yok demek, `ECONNRESET` ağ engeli demek. İkisi ekranda aynı görünüyordu
+> (`ulaşılamadı`), artık ayrılıyor.
 >
 > **`www` ve kök kayda dokunulmuyor, canlı site etkilenmiyor.** Betik
 > canonical'ı sabit `https://www.deltek.com.tr` ile karşılaştırdığı için

@@ -68,6 +68,17 @@ const hata = (ad, ayrinti) => {
 };
 
 /**
+ * Ulasilamayan isteklerin ALTTAKI sebebini sayar. "ulaşılamadı" tek basina
+ * yaniltici: DNS kaydinin hic olmamasi (ENOTFOUND) ile baglantinin
+ * sifirlanmasi (ECONNRESET) bambaska iki sorun, ikisi de ayni satiri basiyordu.
+ */
+const nedenler = new Map();
+function nedenKodu(e) {
+  for (let h = e; h; h = h.cause) if (h.code) return h.code;
+  return e?.name === 'TimeoutError' ? 'TIMEOUT' : 'BILINMEYEN';
+}
+
+/**
  * Kararsız ağlara karşı: 3 deneme, artan bekleme.
  * Gövde HER ZAMAN okunur — okunmadan bırakılan yanıt soketi açık tutuyor ve
  * Node'un HTTP istemcisi bazı sunucularda `assert(!this.paused)` ile çöküyor.
@@ -79,7 +90,11 @@ async function iste(yol, opts = {}) {
       const govde = await r.text().catch(() => '');
       return { status: r.status, headers: r.headers, govde };
     } catch (e) {
-      if (i === 2) throw e;
+      if (i === 2) {
+        const k = nedenKodu(e);
+        nedenler.set(k, (nedenler.get(k) || 0) + 1);
+        throw e;
+      }
       await new Promise(r => setTimeout(r, 1500 * (i + 1)));
     }
   }
@@ -228,15 +243,35 @@ console.log(`\n\x1b[1mÖZET\x1b[0m  geçen: ${gecti}  ·  kalan: ${kaldi}`);
  * Engelleme aralıklı olduğu için bir koşu geçip sonraki tamamen çökebiliyor.
  */
 if (ulasilamadi >= 5 && ulasilamadi >= kaldi * 0.8) {
-  const engelli = /\.(pages|workers)\.dev$/.test(new URL(temel).hostname);
+  const sunucu = new URL(temel).hostname;
+  const engelliAlan = /\.(pages|workers)\.dev$/.test(sunucu);
+  const kodlar = [...nedenler.entries()].sort((a, b) => b[1] - a[1]);
+  const bas = kodlar[0]?.[0];
+
   console.log(`\n\x1b[33m${ulasilamadi} denetim sunucuya HİÇ ulaşamadı.\x1b[0m`);
-  console.log('Bu bir sayfa hatası değil, bağlantı hatası — site muhtemelen sağlam.');
-  if (engelli) {
+  console.log('Bu bir sayfa hatası değil, ağ hatası — sitenin kendisi sağlam olabilir.');
+  console.log('Sebep: ' + kodlar.map(([k, n]) => `${k} × ${n}`).join(', '));
+
+  if (bas === 'ENOTFOUND' || bas === 'EAI_AGAIN') {
+    console.log(`\n\x1b[1m${sunucu} DNS'te YOK.\x1b[0m Adres hiç çözümlenmiyor, yani`);
+    console.log('sunucuya bağlanma denemesi bile yapılmıyor. Cloudflare tarafında:');
+    console.log('  1. Pages projesi → Custom domains → alan adı listede ve "Active" mi?');
+    console.log('  2. Değilse: Set up a custom domain ile ekleyin, Activate domain deyin.');
+    console.log(`  3. DNS → Records'ta CNAME kaydı var mı: Name "${sunucu.split('.')[0]}",`);
+    console.log('     Target "deltek.pages.dev", Proxy AÇIK (turuncu bulut).');
+    console.log('     Yoksa elle ekleyin — Pages normalde kendi ekler, eklememiş demektir.');
+    console.log('\nCNAME hedefi pages.dev olsa da sorun değil: çözümleme Cloudflare');
+    console.log('kenarında yapılıyor, tarayıcı pages.dev adresine hiç bağlanmıyor.');
+  } else if (engelliAlan) {
     console.log('\n\x1b[1mSebebi büyük olasılıkla şu:\x1b[0m Türkiye\'den *.pages.dev ve');
     console.log('*.workers.dev adreslerinin tamamı engelli. Test için Pages projesine');
     console.log('geçici bir alt alan adı bağlayın (Custom domains → yeni.deltek.com.tr),');
     console.log('sonra:  npm run yayin -- https://yeni.deltek.com.tr');
     console.log('Ayrıntı: YAYIN.md → ADIM 3.');
+  } else {
+    console.log('\nAdres DNS\'te var ama bağlantı kurulamıyor. Sertifika henüz');
+    console.log('hazırlanıyor olabilir (Custom domains\'te durum "Active" mi?),');
+    console.log('ya da ağ engelliyor olabilir.');
   }
 }
 
