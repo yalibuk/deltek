@@ -383,15 +383,50 @@ karşılaştırın. Bu adımda acele etmeyin.
 
 ## 4B.4 — Siteyi bağlayın
 
-Pages projesi (`deltek`) → **Custom domains** → **Set up a custom domain**:
+> **Bölge "Pending" olduğu sürece Pages onu Cloudflare bölgesi saymıyor.**
+> Alan adı hesaba eklenmiş olsa bile nameserver değişene kadar aktif
+> olmuyor, Pages de "Setup Method" ekranını gösteriyor. Ölçüldü 2026-09-12.
 
-1. `www.deltek.com.tr` ekleyin
-2. `deltek.com.tr` ekleyin
+### `www` — CNAME yolundan eklenir
 
-Bölge artık **aynı hesapta** olduğu için Cloudflare gerekli CNAME kayıtlarını
-kendisi oluşturur ve turuncu bulutu açar — `yeni.deltek.com.tr` denemesindeki
-elle CNAME ekranı çıkmaz. Çıkarsa kaydı elle ekleyin: `CNAME`, hedef
-`deltek.pages.dev`, **Proxied**.
+Pages → **Custom domains** → **Set up a custom domain** → `www.deltek.com.tr`
+→ **My DNS provider** kartındaki **Begin CNAME setup**. (Soldaki
+**Begin DNS transfer** sizi zaten tamamladığınız alan adı ekleme akışına
+geri götürür, ona basmayın.)
+
+Adlandırma yanıltıcı ama seçim doğru: biz Cloudflare DNS kullanıyoruz, yalnız
+bölge henüz aktif değil. Bu yol alan adını **projeye kaydeder**; kaydı biz
+kendi bölgemizde oluştururuz:
+
+| Alan | Değer |
+| --- | --- |
+| Type | `CNAME` |
+| Name | `www` |
+| Target | `deltek.pages.dev` |
+| Proxy status | **Proxied** (turuncu) |
+
+Pages "kayıtlarınız yeniden kontrol ediliyor" der ve **Pending** kalır;
+doğrulama nameserver değişikliğinden sonra tamamlanır.
+
+### Kök adres — Pages'e HİÇ eklenmez
+
+Kök için Pages CNAME seçeneği sunmuyor, yalnız "Transfer DNS management"
+diyor: kök adreste CNAME düzleştirmesi gerekiyor ve bunu ancak **aktif** bir
+Cloudflare bölgesi yapabiliyor. Yani bu ekran nameserver değişmeden geçilemez.
+
+**Gerek de yok.** Kök adres zaten `www`'ye 301 ile gidecek; yönlendirme
+Cloudflare'in proxy katmanında, siteye hiç ulaşmadan oluyor. Kök için tek
+gereken proxy'li bir kara delik kaydı — ayrıntısı 4B.5 / ADIM 7.1'de
+(`AAAA @ 100::`, Proxied).
+
+> Kökü `CNAME @ → deltek.pages.dev` yapmak da çalışır ama daha kötü: kök
+> Pages projesine kayıtlı olmadığı için yönlendirme kuralı bir an devre dışı
+> kalırsa ziyaretçi Pages'in 404 sayfasını görür. `100::` kaydında böyle bir
+> yanlış sayfa ihtimali yok.
+>
+> İsterseniz nameserver değişip bölge **Active** olduktan sonra kökü Pages'e
+> ikinci bir güvence olarak ekleyebilirsiniz; o noktada Cloudflare DNS yolu
+> açılır. Zorunlu değil.
 
 ## 4B.5 — apex → www yönlendirme kuralı (ADIM 7 buraya çekildi)
 
