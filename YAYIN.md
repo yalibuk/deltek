@@ -61,11 +61,38 @@ git push origin main
 
 # ADIM 2 — Cloudflare Pages projesini oluşturun (5 dakika)
 
+> ## ⚠ EN SIK YAPILAN HATA: WORKERS PROJESİ OLUŞTURMAK
+>
+> "Create application" ekranı **Workers sekmesi açık** gelir. Orada devam
+> ederseniz Cloudflare bunu bir **Worker** sanır, Astro'yu algılayıp
+> `@astrojs/cloudflare` adapter'ını kendi kurar ve `wrangler deploy`
+> çalıştırır. Bizim site **statik** — adapter'a ihtiyacı yok ve kurulan sürüm
+> Astro 7 ile uyumsuz. Derleme şu hatayla düşer:
+>
+> ```
+> [MISSING_EXPORT] "renderForPrerender" is not exported by
+>   "node_modules/astro/dist/core/app/entrypoints/index.js"
+>   ┌─[ node_modules/@astrojs/cloudflare/dist/utils/prerender.js:1:10 ]
+> ...
+> Failed: error occurred while running deploy command
+> ```
+>
+> **Nasıl anlarsınız:** tarayıcı adresinde `/workers/services/view/...` yazar
+> (Pages'te `/pages/view/...` olur) ve proje sekmeleri arasında **Bindings**,
+> **Observability**, **Access** bulunur. Pages projesinde bunlar yoktur;
+> orada **Custom domains** ve **Deployments** vardır.
+>
+> **Düzeltme:** o projeyi silin (**Settings** → en altta **Delete project**)
+> ve aşağıdaki adımları **Pages sekmesinden** tekrarlayın. Depoda hiçbir
+> değişiklik gerekmez — `package.json`da adapter yok, `astro.config.mjs`de
+> `adapter`/`output` ayarı yok, `wrangler` dosyası yok. Doğrusu bu.
+
 **2.1** [dash.cloudflare.com](https://dash.cloudflare.com) adresine girin.
 
 **2.2** Sol menüden **Workers & Pages** → **Create application** düğmesi.
 
-**2.3** **Pages** sekmesine geçin → **Connect to Git**.
+**2.3** Açılan ekranda **Pages** sekmesine geçin (varsayılan Workers'tır) →
+**Connect to Git**.
 
 **2.4** GitHub hesabınızla oturum açın. İlk kez bağlıyorsanız
 **Install & Authorize** deyin; depo listesinde `yalibuk/deltek` görünmüyorsa

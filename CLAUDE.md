@@ -1796,6 +1796,14 @@ Bir sayfa düşük çıkarsa `--ayrinti` bulguları listeler. Harici servislere
 - Depo: `github.com/yalibuk/deltek`, dal `main`.
 - **Canlıya alma adımları: `YAYIN.md`** (10 adım, geri dönüş planı dahil).
 
+> **Pages projesi olmalı, Worker DEĞİL.** Cloudflare'in "Create application"
+> ekranı Workers sekmesiyle açılıyor; orada devam edilirse Astro algılanıp
+> `@astrojs/cloudflare` adapter'ı otomatik kuruluyor ve `wrangler deploy`
+> çalışıyor. Bu site statik (adapter yok, `output` ayarı yok) ve kurulan
+> adapter Astro 7 ile uyumsuz — derleme
+> `[MISSING_EXPORT] "renderForPrerender" is not exported` ile düşüyor.
+> 2026-09-12'de yaşandı. Ayrıntı ve düzeltme: `YAYIN.md` → ADIM 2.
+
 ### Cloudflare Pages'in SHALLOW KLONU (2026-09-11)
 
 Pages depoyu **shallow** klonluyor (`git rev-parse --is-shallow-repository` →
