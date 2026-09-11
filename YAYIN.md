@@ -594,6 +594,30 @@ olmalı. Yoksa ekleyin:
 
 **7.4** **Deploy** deyin.
 
+> ### "This rule may not apply to your traffic" uyarısı
+>
+> Deploy'a basınca Cloudflare şöyle bir pencere açabilir:
+> *"Your DNS configuration may not be proxying traffic for http…"*
+>
+> **Bölge hâlâ "Pending" ise bu YANLIŞ ALARM.** Ölçüldü (2026-09-12):
+> bekleyen bir bölge, proxy'li kayıtları DNS cevabında proxy adreslerine
+> çevirmiyor — kendi nameserver'ına sorulduğunda ham `100::` değerini
+> döndürüyor. Aynı hesaptaki **aktif** bölgeler (`boremak.com`) proxy
+> adreslerini döndürüyor. Cloudflare'in kural denetleyicisi de proxy'yi bu
+> yüzden göremiyor.
+>
+> * **"Ignore and deploy rule anyway"** seçili kalsın.
+> * **"Create a new proxied DNS record" SEÇMEYİN** — kök için ikinci, içeriği
+>   bilinmeyen bir kayıt ekler ve 7.1'deki `100::` kaydıyla çakışır.
+>
+> Tek gerçek kontrol panelde: **DNS → Records**'ta `@` (AAAA `100::`) ve
+> `www` satırlarının **turuncu bulutlu** olması. Bölge aktif olmadan bu
+> dışarıdan doğrulanamaz, göz kontrolü şart.
+>
+> Deploy'dan önce **Preserve query string** kutusunun işaretli olduğundan da
+> emin olun; pencere açıldığında form arkada kalıyor ve bu kutu kolayca
+> gözden kaçıyor.
+
 **7.5** Doğrulayın — yalnız ana sayfa değil, **yol da korunmalı**:
 
 ```bash
