@@ -459,6 +459,48 @@ varsa **burada düzeltin** — canlıya geçtikten sonra düzeltmek çok daha pa
 
 ## 4B.8 — Registrar'da nameserver'ları değiştirin
 
+> ### Kayıt kuruluşu NATRO DEĞİL — METUnic (2026-09-12'de tespit edildi)
+>
+> Natro'da **Aktif Alan Adları** listesinde `deltek.com.tr` yok; orada yalnız
+> `ferkom.net`, `şengül.com`, `boremak.com`, `boremak.com.tr` var. Natro
+> **yalnızca eski siteyi barındırıyor**, alan adını kaydetmiyor.
+>
+> `whois.trabis.gov.tr` sorgusundan:
+>
+> | | |
+> | --- | --- |
+> | Kayıt kuruluşu | **ODTÜ GELİŞTİRME VAKFI BİLGİ TEKNOLOJİLERİ A.Ş. (METUnic)** |
+> | NIC handle | `ogv40` |
+> | Telefon | `+90 312 988 11 06` |
+> | Panel | `https://app.metunic.com.tr/client/login/` |
+> | Kayıt sahibi | DELTEK KAZISIZ GEÇİŞ TEKNOLOJİLERİ İNŞAAT SAN. VE TİC. LTD ŞTİ |
+> | Oluşturma / bitiş | 2008-04-10 / **2028-04-09** |
+> | Durum | Active, `LOCKED to transfer` |
+>
+> **`LOCKED to transfer` nameserver değişikliğini engellemez** — o kilit
+> alan adının *başka bir kayıt kuruluşuna* taşınmasına karşıdır. İsim
+> sunucusu güncellemesi ayrı bir işlem.
+>
+> Kayıt sahibi doğrudan Deltek şirketi, yani panel erişimi de onlarda.
+> Erişim yoksa METUnic'ten şifre sıfırlama istenir.
+>
+> Sorgu şöyle tekrarlanabilir (Windows'ta `whois` komutu yok, bash soketiyle):
+>
+> ```bash
+> exec 3<>/dev/tcp/whois.trabis.gov.tr/43 && printf 'deltek.com.tr\r\n' >&3 && cat <&3
+> ```
+
+> ### Natro'daki "DNS Yönetimi" bir GÖLGE bölgedir, dokunmayın
+>
+> Natro panelinde **Hosting Yönetimi → DNS Yönetimi (deltek.com.tr)** diye bir
+> ekran var ve gerçek kayıtlar gibi görünüyor. **Yetkili değil**: alan adının
+> nameserver'ları Cloudflare'i gösteriyor, dolayısıyla oradaki kayıtların
+> internete hiçbir etkisi yok. Orada yapılan değişiklik hiçbir şeyi
+> düzeltmez, bozmaz da.
+>
+> Ama **silmeyin**: eski yapılandırmanın kaydı orada duruyor ve kaynak sunucu
+> IP'si oradan bulundu (`DNS-ENVANTER.md`).
+
 Alan adının kayıt kuruluşunda nameserver çiftini Cloudflare'in verdiği yeni
 çiftle değiştirin.
 
@@ -489,8 +531,13 @@ Registrar'da nameserver'ları `harley` / `rosalyn.ns.cloudflare.com` olarak
 geri alın. Eski bölge diğer hesapta **olduğu gibi duruyor**, tüm kayıtlarıyla
 birlikte devreye geri girer.
 
-> **Eski bölgeyi kimseye SİLDİRMEYİN.** Geri dönüş planınız o. Hem eski
-> sitenin gerçek sunucu IP'si yalnız orada görünüyor — dışarıdan okunamıyor.
+> **Eski bölgeyi kimseye SİLDİRMEYİN.** Geri dönüş planınız o.
+>
+> **İkinci bir geri dönüş yolu da var (2026-09-12'de bulundu):** eski Plesk
+> sunucusunun IP'si **`94.73.146.152`**. Doğrulandı — doğrudan bağlanıldığında
+> canlı WordPress sitesini döndürüyor. Yeni bölgede `www` ve kök kaydı bu
+> adrese çevrilirse eski site nameserver'a dokunmadan geri gelir; bu yol
+> registrar'da NS geri almaktan çok daha hızlıdır. Ayrıntı: `DNS-ENVANTER.md`.
 
 ---
 

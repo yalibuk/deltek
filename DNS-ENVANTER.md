@@ -66,13 +66,42 @@ açık ve gerçek sunucu IP'si gizli.
 
 Bunlar genel DNS'e yansımıyor; yalnız bölgenin sahibi görebilir:
 
-- Vekil kayıtların arkasındaki **gerçek kaynak sunucu IP'si** (Plesk sunucusu)
+- ~~Vekil kayıtların arkasındaki gerçek kaynak sunucu IP'si~~ — **bulundu, aşağı bakın**
 - Turuncu bulut durumları ve TTL değerleri
 - Tahmin listemizde olmayan alt alan adları
 - Page Rules / Redirect Rules (apex→www bunlardan biri **değil**, aşağı bakın)
 - SSL/TLS modu, Always Use HTTPS, önbellek ayarları
 
-## Kaynak sunucu
+## Kaynak sunucu — IP BULUNDU (2026-09-12)
+
+**`94.73.146.152`** — eski Plesk sunucusu. Natro musteri panelinde
+**Hosting Yonetimi -> DNS Yonetimi (deltek.com.tr)** altindaki golge DNS
+bolgesinde duruyordu; o bolge yetkili degil (nameserver'lar Cloudflare) ama
+hosting tarafinin kendi kayitlarini tutuyor.
+
+Dogrulandi: `--resolve` ile dogrudan baglanildiginda canli WordPress sitesini
+donduruyor (`HTTP 200`, `X-Powered-By: PHP/5.6.40`, `PleskLin`,
+`Server: mcelebi.net`, dogru `<title>`).
+
+```bash
+curl -sSI -k --resolve "www.deltek.com.tr:443:94.73.146.152" https://www.deltek.com.tr/
+```
+
+Natro golge bolgesindeki diger kayitlar:
+
+| Ad | Tur | Deger | Not |
+| --- | --- | --- | --- |
+| `deltek.com.tr` | A | `94.73.146.152` | **kaynak sunucu** |
+| `mail.deltek.com.tr` | A | `173.194.78.121` | Google araligi |
+| `ns1.deltek.com.tr` | A | `85.159.64.2` | Natro nameserver |
+| `ns2.deltek.com.tr` | A | `85.159.67.2` | Natro nameserver |
+| `www.deltek.com.tr` | CNAME | `deltek.com.tr.` | |
+| `ftp.deltek.com.tr` | CNAME | `deltek.com.tr.` | |
+
+> Bu IP **geri donus icin kritik**. Cloudflare bolgesi bozulursa ya da eski
+> siteye donmek gerekirse `www` ve kok kaydi bu adrese cevirmek yeterli.
+
+## Kaynak sunucu (davranis)
 
 Kök adres bugün `https://www.deltek.com.tr/`'ye 301 veriyor ve yanıt
 başlıklarında `x-powered-by: PHP/5.6.40` ile `PleskLin` var. Yani **apex→www
