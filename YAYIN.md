@@ -315,6 +315,150 @@ Bu geçiş e-postayı etkilemez, ama yanlışlıkla silinmesin.
 
 ---
 
+# ADIM 4B — Bölgeyi kendi hesabınıza kurun (B yolu, seçilen)
+
+Kullanıcı 2026-09-12'de B yolunu seçti: bölge `Yalibuk@gmail.com` hesabına
+sıfırdan kurulacak, sonra alan adı kayıt kuruluşunda (registrar) nameserver
+çifti değiştirilecek.
+
+**Sıra önemli. Nameserver'ı EN SONA bırakın** — yeni bölge eksikken NS
+değiştirilirse site de e-posta da aynı anda düşer.
+
+## 4B.0 — Önce şunu deneyin: Cloudflare eklemeyi reddedebilir
+
+`deltek.com.tr` şu anda **başka bir Cloudflare hesabında aktif**. Cloudflare
+aynı alan adını ikinci bir hesaba eklemeyi reddedebiliyor ("already
+associated with another account" benzeri bir hata).
+
+**Add domain** deyip ne olduğuna bakın:
+
+* Kabul ederse (bölge `Pending Nameserver Update` durumunda açılır) → devam.
+* Reddederse B yolu tek başına yürümez: eski hesabın bölgeyi bırakması ya da
+  devretmesi gerekir, yani yine o tarafla iletişim şart. Bu durumda A yoluna
+  dönün (bkz. ADIM 4 kutusu).
+
+## 4B.1 — Alan adını ekleyin
+
+**Account home** → **Add domain** → `deltek.com.tr` → **Free** planı seçin.
+
+## 4B.2 — İÇE AKTARILAN A/AAAA KAYITLARINI SİLİN (tuzak)
+
+Cloudflare ekledikten sonra genel DNS'i tarayıp bulduklarını kayıt olarak
+içe aktarır. **Burada bulacağı adresler Cloudflare'in kendi vekil IP'leri**
+(`104.21.34.11`, `172.67.194.176` ve IPv6 karşılıkları) — çünkü bölge zaten
+vekilleniyor. Bunlar A kaydı olarak bırakılırsa site açılmaz; Cloudflare
+kendi adresine yönlenmiş bir kayda `Error 1000` verir.
+
+**Silin:** kök (`@`) ve `www` için içe aktarılmış tüm `A` ve `AAAA` kayıtları.
+Doğrusunu 4B.4'te Pages kendisi oluşturacak.
+
+`mail`, `ftp`, `ns1`, `ns2` içe aktarıldıysa **onları da silin.** Ölçüldü
+(2026-09-12): `mail` → 525, `ns1`/`ns2` → 522, yani üçü zaten bozuk; `ftp`
+yalnızca Plesk'in varsayılan sayfasını döndürüyor ve FTP protokolü (port 21)
+bağlantı zaman aşımına uğruyor. Sertifika şeffaflık kayıtlarında da yalnız
+`deltek.com.tr` ve `www.deltek.com.tr` var. Yani bu dördünü taşımamak
+hiçbir şey kaybettirmiyor.
+
+## 4B.3 — E-POSTA KAYITLARINI KURUN (en kritik adım)
+
+**Şirketin e-postası Google Workspace üzerinde.** Bu yedi kayıt eksik
+kalırsa e-posta durur. Elle ekleyin:
+
+| Tür | Ad | İçerik | Öncelik |
+| --- | --- | --- | --- |
+| `MX` | `@` | `aspmx.l.google.com` | 1 |
+| `MX` | `@` | `alt1.aspmx.l.google.com` | 5 |
+| `MX` | `@` | `alt2.aspmx.l.google.com` | 5 |
+| `MX` | `@` | `aspmx2.googlemail.com` | 10 |
+| `MX` | `@` | `aspmx3.googlemail.com` | 10 |
+| `TXT` | `@` | `v=spf1 include:_spf.google.com ~all` | — |
+| `TXT` | `@` | `google-site-verification=cTc6VPGGFA5yMqE-xZ0DGr1hHeYCXBIsAKG_wS_Xf_M` | — |
+
+Son TXT kaydı bir Google mülk doğrulaması; silinirse birinin Search Console
+ya da Workspace doğrulaması düşebilir. Ne işe yaradığı belirsiz olduğu için
+**aynen taşınıyor.**
+
+Kaydettikten sonra listeyi bir kez daha okuyup yukarıdaki tabloyla
+karşılaştırın. Bu adımda acele etmeyin.
+
+## 4B.4 — Siteyi bağlayın
+
+Pages projesi (`deltek`) → **Custom domains** → **Set up a custom domain**:
+
+1. `www.deltek.com.tr` ekleyin
+2. `deltek.com.tr` ekleyin
+
+Bölge artık **aynı hesapta** olduğu için Cloudflare gerekli CNAME kayıtlarını
+kendisi oluşturur ve turuncu bulutu açar — `yeni.deltek.com.tr` denemesindeki
+elle CNAME ekranı çıkmaz. Çıkarsa kaydı elle ekleyin: `CNAME`, hedef
+`deltek.pages.dev`, **Proxied**.
+
+## 4B.5 — apex → www yönlendirme kuralı (ADIM 7 buraya çekildi)
+
+`deltek.com.tr` → `www.deltek.com.tr` 301'ini bugün **eski Plesk sunucusu**
+yapıyor (ölçüldü: 301 yanıtında `x-powered-by: PleskLin`). Nameserver
+değişince o sunucu devreden çıkar ve **yönlendirme kaybolur.** Kuralı
+NS değişikliğinden ÖNCE kurun; ayrıntılı adımlar ADIM 7'de.
+
+## 4B.6 — SSL/TLS modu
+
+Bölge → **SSL/TLS** → **Overview** → **Full (strict)**. Pages geçerli
+sertifika sunuyor, daha gevşek bir mod gereksiz.
+
+## 4B.7 — NS'İ DEĞİŞTİRMEDEN ÖNCE YENİ BÖLGEYİ DOĞRUDAN TEST EDİN
+
+**Bu adım B yolunun tüm riskini alır.** Cloudflare size iki yeni nameserver
+verdi. Bölge henüz canlı değil ama o sunucuları **doğrudan** sorgulayarak
+yeni yapılandırmayı tam olarak görebilirsiniz:
+
+```bash
+NS=size-verilen-ad.ns.cloudflare.com
+nslookup -type=MX  deltek.com.tr $NS
+nslookup -type=TXT deltek.com.tr $NS
+nslookup www.deltek.com.tr $NS
+nslookup deltek.com.tr $NS
+```
+
+Beklenen: beş MX kaydı, iki TXT kaydı, `www` ve kök için cevap. Eksik bir şey
+varsa **burada düzeltin** — canlıya geçtikten sonra düzeltmek çok daha pahalı.
+
+## 4B.8 — Registrar'da nameserver'ları değiştirin
+
+Alan adının kayıt kuruluşunda nameserver çiftini Cloudflare'in verdiği yeni
+çiftle değiştirin.
+
+> **ESKİ DEĞERLERİ ŞİMDİ NOT ALIN — geri dönüş planınız bu:**
+>
+> ```
+> harley.ns.cloudflare.com
+> rosalyn.ns.cloudflare.com
+> ```
+
+`.tr` tarafında yayılma birkaç saat sürebilir. Bu süre boyunca bazı
+ziyaretçiler eski, bazıları yeni siteyi görür; ikisi de çalıştığı için sorun
+değil.
+
+## 4B.9 — Doğrulama
+
+```bash
+npm run yayin -- https://www.deltek.com.tr
+```
+
+Ayrıca **e-postayı mutlaka test edin**: dışarıdaki bir adresten şirket
+adresine bir e-posta gönderin ve ulaştığını görün. DNS geçişlerinde en sık
+gözden kaçan şey budur.
+
+## Geri dönüş
+
+Registrar'da nameserver'ları `harley` / `rosalyn.ns.cloudflare.com` olarak
+geri alın. Eski bölge diğer hesapta **olduğu gibi duruyor**, tüm kayıtlarıyla
+birlikte devreye geri girer.
+
+> **Eski bölgeyi kimseye SİLDİRMEYİN.** Geri dönüş planınız o. Hem eski
+> sitenin gerçek sunucu IP'si yalnız orada görünüyor — dışarıdan okunamıyor.
+
+---
+
 # ADIM 5 — Google Search Console'u hazırlayın (10 dakika)
 
 Henüz kurulu değilse **şimdi** kurun: geçişin etkisini ölçebilmek için
@@ -340,6 +484,11 @@ bir yere yazın — geçişten sonra bu sayının korunması gerekiyor.
 ---
 
 # ADIM 6 — Özel alan adını bağlayın (5 dakika) — **SİTE BU ADIMDA DEĞİŞİR**
+
+> **B yolunu izliyorsanız bu adım 4B.4'te yapıldı.** Orada alan adı bölgeye
+> nameserver değişikliğinden ÖNCE bağlanıyor; sitenin değiştiği an bu adım
+> değil, **4B.8'deki nameserver değişikliği** oluyor. Aşağısı A yolu (bölge
+> zaten erişilebilir hesapta) için duruyor.
 
 **6.1** Cloudflare → **Workers & Pages** → `deltek` projesine girin.
 
@@ -371,6 +520,10 @@ gidiyorsunuz, birkaç dakika daha bekleyin.
 
 Bu yapılmazsa `deltek.com.tr` (www'suz) ya çalışmaz ya da www ile **ikiz
 içerik** üretir. İkisi de SEO kaybı.
+
+> **B yolunda bu kural nameserver değişikliğinden ÖNCE kurulur** (4B.5).
+> Sebebi: apex→www 301'ini bugün eski Plesk sunucusu veriyor ve nameserver
+> değişince kaybolur. Sonraya bırakılırsa arada bir boşluk oluşur.
 
 **7.1** Önce apex için proxy'li bir DNS kaydı olduğundan emin olun.
 Cloudflare → `deltek.com.tr` → **DNS** → **Records**.
