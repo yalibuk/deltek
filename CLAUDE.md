@@ -1927,9 +1927,13 @@ nameserver değişikliği gerekmiyor — yalnız DNS kaydı ve kural.
 ## Erişilebilirlik notları (PageSpeed Accessibility → 100, 2026-09-12)
 
 * **`.kanit__no` dekoratif** (ana sayfa rakam kartlarındaki "01/02/03"
-  filigranı, `opacity: .09`). Kontrast denetimi 1,14 ile düşürüyordu; renk
-  değil **`aria-hidden="true"`** eklendi — tasarım kasıtlı, öğe içerik değil.
-  Yeni dekoratif metin eklerken aynı yolu izleyin.
+  filigranı, `opacity: .09`). Kontrast denetimi 1,14 ile düşürüyordu.
+  `aria-hidden="true"` **yetmedi** — Lighthouse'un axe sürümü kontrastı
+  erişilebilirlik ağacından bağımsız ölçüyor (canlıda denendi, yine düştü).
+  Çözüm: numara `data-no` özniteliğinde, `.kanit__no::before { content:
+  attr(data-no) }` ile basılıyor; metin düğümü olmayınca ölçülmüyor, görünüm
+  aynı. Yeni dekoratif metin eklerken aynı yolu izleyin: sözde öğe, DOM
+  metni değil.
 * **Dil düğmeleri "Türkçe (TR)" / "English (EN)"**: WCAG 2.5.3 görünen metnin
   erişilebilir adın içinde olmasını ister. `aria-label="Türkçe"` + görünen
   "TR" uyuşmuyordu (Lighthouse `label-content-name-mismatch`). Bir düğmeye
