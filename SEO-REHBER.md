@@ -97,7 +97,7 @@ güçlendir**, yenisini açma.
 
 ### Sizin görevleriniz (öncelik sırasıyla)
 
-**1. Fiyat sayfasını onaylayın (10 dk).** `src/content/sayfalar/tr/yatay-sondaj-fiyatlari.md`
+**1. ~~Fiyat sayfasını onaylayın~~ — ONAYLANDI (2026-09-12).** `src/content/sayfalar/tr/yatay-sondaj-fiyatlari.md`
 ve `en/…` — sekiz faktörün açıklaması ve üç SSS cevabı Deltek'in
 uygulamasıyla uyuşuyor mu? Özellikle "iki hafta içinde mobilize", "keşif
 ücretsiz", "kaya delgisinde ayrı ekipman" cümleleri. Yanlış olanı düzeltin ya
