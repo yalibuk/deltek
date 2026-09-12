@@ -123,26 +123,6 @@ With more than 15 years of experience in the sector, DELTEK is one of the pionee
 
 Based in Istanbul and Izmir, we provide directional boring services across the country. With a customer-focused approach we develop solutions specific to project requirements.
 
-## Technological Developments and Future Trends
-
-### Artificial Intelligence Integration
-
-Directional boring rigs will be supported by AI technology in the future. Machine-learning algorithms will plan the optimum route automatically.
-
-Predictive analytics will identify potential problems in advance, raising project efficiency and success rates even further.
-
-### Automation and Robotics
-
-Remote control systems continue to be developed. Directional boring rigs capable of operator-less work will reduce safety risk.
-
-Robotic technologies will allow uninterrupted 24/7 operation, shortening project times further.
-
-### Green Innovations
-
-Electric directional boring rigs continue to be developed. Hybrid technologies will be used to reduce the carbon footprint.
-
-Solar-assisted systems will reduce energy costs. A sustainable technology approach will shape the future of the sector.
-
 ## Quality Assurance and Certification
 
 International quality standards are applied in directional boring projects. All processes are documented within the ISO 9001 quality management system.

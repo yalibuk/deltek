@@ -99,20 +99,6 @@ Horizontal boring technology has developed rapidly in Türkiye in recent years. 
 
 DELTEK is one of the pioneering companies in this field. With our experienced team and modern rigs we provide quality service, serving the whole country from our Izmir and Istanbul offices.
 
-## Horizontal Boring Technologies of the Future
-
-### Automation and Robotics
-
-Horizontal boring rigs will become even smarter in the future. AI-supported systems will plan the optimum route. Robotic technologies will make unmanned operations possible.
-
-### Green Innovations
-
-Electric horizontal boring rigs continue to be developed. The use of renewable energy sources will increase to reduce the carbon footprint.
-
-### Digital Monitoring Systems
-
-IoT technology will allow real-time monitoring of horizontal boring projects. Project progress will be followed through mobile applications.
-
 ## Conclusion
 
 Horizontal boring technology has become an indispensable part of the modern construction sector. Thanks to this environmentally friendly, economical and effective method, infrastructure projects are delivered with higher quality.

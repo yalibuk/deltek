@@ -149,31 +149,6 @@ Sektörde 15 yılı aşkın deneyime sahip DELTEK, yönlendirilebilir yatay delg
 
 İstanbul ve İzmir merkezli olmakla birlikte ülke geneline yönlendirilebilir yatay delgi hizmeti veriyoruz. Müşteri odaklı yaklaşımımızla proje gereksinimlerine özel çözümler geliştiriyoruz.
 
-## Teknolojik Gelişmeler ve Geleceğin Trendi
-
-
-
-### Yapay Zeka Entegrasyonu
-
-
-Gelecekte yönlendirilebilir yatay delgi makineleri yapay zeka teknolojisiyle desteklenecek. Makine öğrenmesi algoritmaları sayesinde optimal rota planlaması otomatik olarak yapılacak.
-
-Predictive analytics ile olası sorunlar önceden tespit edilecek. Bu teknoloji sayesinde proje verimliliği ve başarı oranı daha da artacak.
-
-### Otomasyon ve Robotik
-
-
-Uzaktan kontrol sistemleri geliştirilmeye devam ediyor. Operatörsüz çalışma kabiliyeti olan yönlendirilebilir yatay delgi makineleri sayesinde güvenlik riski azalacak.
-
-Robotik teknolojiler sayesinde 7/24 kesintisiz çalışma imkanı sağlanacak. Bu durum proje sürelerini daha da kısaltacak.
-
-### Çevreci İnovasyonlar
-
-
-Elektrikli yönlendirilebilir yatay delgi makineleri geliştirilmeye devam ediyor. Karbon ayak izinin azaltılması için hibrit teknolojiler kullanılacak.
-
-Güneş enerjisi destekli sistemler sayesinde enerji maliyetleri düşürülecek. Sürdürülebilir teknoloji anlayışı sektörün geleceğini şekillendirecek.
-
 ## Kalite Güvencesi ve Sertifikasyonlar
 
 

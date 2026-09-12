@@ -115,7 +115,7 @@ sayıların doğru olduğu Deltek tarafından teyit edildi:
 | `sayfalar/tr/genisletme-basligi.md` satır 36 | 1600 mm |
 | `sayfalar/tr/yonlendirilebilir-yatay-sondaj-yapim-metodu.md` satır 33 | 7500 m, 1600 mm |
 
-**3. İki "delgi" sayfasındaki "gelecek" bölümleri — karar bekliyor.** Bu iki
+**3. ~~İki "delgi" sayfasındaki "gelecek" bölümleri~~ — SİLİNDİ (2026-09-12, kullanıcı kararı; TR + EN).** Bu iki
 sayfada Deltek'i değil "geleceği" anlatan, her firmanın sitesine konabilecek
 genel paragraflar var (yapay zekâ rota planlayacak, IoT ile izlenecek,
 elektrikli makineler gelecek…): `yatay-delgi-nedir.md` → "## Geleceğin Yatay

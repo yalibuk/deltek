@@ -125,25 +125,6 @@ Yatay delgi makineleri düzenli bakım gerektiriyor. Periyodik kontroller, yedek
 
 DELTEK olarak bu alanda öncü firmalardan biriyiz. Deneyimli ekibimiz ve modern makinelerimizle kaliteli hizmet sunuyoruz. İzmir ve İstanbul ofislerimizden ülke geneline hizmet veriyoruz.
 
-## Geleceğin Yatay Delgi Teknolojileri
-
-
-
-### Otomasyon ve Robotik
-
-
-Gelecekte yatay delgi makineleri daha da akıllı hale gelecek. Yapay zeka destekli sistemler, optimal rota planlaması yapacak. Robotik teknolojiler sayesinde insansız operasyonlar mümkün olacak.
-
-### Çevreci İnovasyonlar
-
-
-Elektrikli yatay delgi makineleri geliştirilmeye devam ediyor. Karbon ayak izinin azaltılması için yenilenebilir enerji kaynaklarının kullanımı artacak.
-
-### Dijital İzleme Sistemleri
-
-
-IoT teknolojisi sayesinde yatay delgi projelerinin gerçek zamanlı takibi yapılacak. Mobil uygulamalar üzerinden proje ilerlemesi izlenebilecek.
-
 ## Sonuç
 
 
