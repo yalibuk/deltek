@@ -1,17 +1,22 @@
 ---
-baslik: "Horizontal Drilling"
+baslik: "Horizontal Drilling Services"
 adres: "horizontal-drilling"
-seoBaslik: "Horizontal Drilling: Technology, Rigs, Applications"
-ozet: "What is horizontal drilling and how is it applied? Rig anatomy, fields of application, planning, advantages, challenges and Deltek's 20 years of experience."
-anahtarKelimeler: "horizontal drilling, what is horizontal drilling, horizontal drilling rig, horizontal drilling contractor, horizontal drilling cost, trenchless horizontal drilling, Istanbul, Izmir"
+seoBaslik: "Horizontal Drilling Contractor in Türkiye: HDD Services"
+ozet: "Horizontal drilling contractor in Türkiye: Deltek delivers HDD nationwide from Istanbul and Izmir. 20+ years, free site survey, project-specific quotes."
+anahtarKelimeler: "horizontal drilling contractor, HDD contractor Turkey, horizontal directional drilling services, trenchless contractor Istanbul, HDD Izmir"
 yanMenu: true
 ilgili:
+  - "yatay-sondaj-fiyatlari"
   - "yonlendirilebilir-yatay-sondaj"
   - "yatay-delgi-nedir"
   - "yonlendirilebilir-yatay-delgi"
   - "yonlendirilebilir-yatay-sondaj-makinesi"
   - "yatay-sondaj-camuru"
 ---
+
+Deltek provides **horizontal drilling** (horizontal directional drilling / HDD) across every region of Türkiye from its Istanbul and Izmir offices: trenchless crossings from 2 to 2000 mm for natural gas, water, sewer, power and fibre-optic lines under rivers, motorways, railways and city streets. The feasibility study and site survey are free of charge; instead of a flat rate per metre we prepare a project-specific quotation.
+
+[Request a quote](/en/contact/) · [What determines the cost](/en/horizontal-drilling-cost/)
 
 ## Horizontal Drilling
 
@@ -116,20 +121,6 @@ Electromagnetic detection systems are used to locate existing lines. Work is car
 One of the pioneering companies in the sector, DELTEK has more than 20 years of broad experience in **horizontal drilling**. With our modern rigs and expert team we provide quality service at every scale.
 
 We deliver **horizontal drilling** services across the country from our Istanbul and Izmir offices. With a customer-focused approach we develop solutions specific to different ground conditions and project sizes.
-
-## The Future of the Horizontal Drilling Sector
-
-### Technological Developments
-
-AI-supported **horizontal drilling** systems continue to be developed. Rigs capable of autonomous operation aim to minimise human error.
-
-Electric horizontal drilling rigs form the environmentally friendly alternative. Advances in battery technology allow longer working periods.
-
-### Industry 4.0 Integration
-
-IoT sensors monitor the performance of **horizontal drilling** rigs in real time. Predictive maintenance systems minimise the risk of breakdown.
-
-Project tracking is possible through mobile applications. Customers receive real-time status and experience a transparent service during the horizontal drilling operation.
 
 ## Quality Assurance and Standards
 

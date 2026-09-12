@@ -1,8 +1,8 @@
 ---
 baslik: "Directional Boring"
 adres: "directional-boring"
-seoBaslik: "Directional Boring: Technology and Applications"
-ozet: "How does directional boring (HDD) work? Navigation and power systems, fields of application, planning, advantages, challenges and future technologies."
+seoBaslik: "Directional Boring: Navigation and Power Systems"
+ozet: "Navigation and power systems on directional boring (HDD) rigs: sonde, magnetic field and locating; fields of application, planning and advantages."
 anahtarKelimeler: "directional boring, directional drilling, directional boring rig, HDD, trenchless boring, directional boring navigation, fibre optic directional boring"
 yanMenu: true
 ilgili:

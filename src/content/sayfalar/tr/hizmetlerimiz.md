@@ -17,7 +17,7 @@ hizmetler:
   - baslik: "Yönlendirilebilir Yatay Sondaj"
     kisaltma: "HDD"
     ikon: sondaj
-    href: "/yonlendirilebilir-yatay-sondaj-nedir/"
+    href: "/yatay-sondaj/"
     metin: "Yer altında üç boyutlu yön verilebilen mekanizması sayesinde artık altyapı projelerinizi daha kolay ve zahmetsiz döşüyoruz. Varolan hatlara zarar vermeden, yeryüzü aktivitelerini ve trafiği aksatmadan kablo ve boru hatlarınızı yer altına alıyoruz. Daha az kazı, daha çok teknoloji. Giriş/Çıkış noktasını verin, gerisini düşünmeyin!"
   - baslik: "Boru Sürme, Boru Çakma / İtme"
     kisaltma: "Auger Boring"

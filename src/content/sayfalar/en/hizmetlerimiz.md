@@ -18,7 +18,7 @@ hizmetler:
   - baslik: "Horizontal Directional Drilling"
     kisaltma: "HDD"
     ikon: sondaj
-    href: "/en/what-is-hdd/"
+    href: "/en/horizontal-drilling/"
     metin: "Thanks to a mechanism that can be steered in three dimensions underground, we now install your infrastructure more easily and with less effort. We take cable and pipe lines underground without damaging existing lines and without disrupting surface activity or traffic. Less excavation, more technology. Give us the entry and exit points and leave the rest to us!"
   - baslik: "Pipe Jacking, Pipe Ramming / Pushing"
     kisaltma: "Auger Boring"

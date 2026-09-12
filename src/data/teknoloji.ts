@@ -67,7 +67,6 @@ export const TEKNOLOJI: TekDugum[] = [
  * bölüm haritasında ve ana sayfada "rehber" olarak listelenirler.
  */
 export const TEK_REHBERLER = [
-  'yatay-sondaj',
   'yatay-delgi-nedir',
   'yonlendirilebilir-yatay-delgi',
 ];

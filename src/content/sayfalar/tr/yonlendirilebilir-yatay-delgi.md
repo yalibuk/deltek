@@ -1,7 +1,7 @@
 ---
 baslik: "Yönlendirilebilir Yatay Delgi"
-seoBaslik: "Yönlendirilebilir Yatay Delgi: Teknoloji ve Uygulama"
-ozet: "Yönlendirilebilir yatay delgi (YYD) nasıl çalışır? Navigasyon ve güç sistemleri, uygulama alanları, planlama, avantajları ve geleceğin teknolojileri."
+seoBaslik: "Yönlendirilebilir Yatay Delgi (YYD): Navigasyon ve Güç"
+ozet: "Yönlendirilebilir yatay delgi (YYD) makinelerinde navigasyon ve güç sistemleri: sonda, manyetik alan ve yer belirleme; uygulama alanları, planlama, avantajlar."
 ilgili:
   - "yonlendirilebilir-yatay-sondaj"
   - "yonlendirilebilir-yatay-sondaj-nedir"

@@ -36,7 +36,7 @@ ve boru sürme projeleri bulunmaktadır; uluslararası projelerde de deneyimliyi
 
 **Yatay sondaj fiyatı nasıl belirlenir?** Geçiş uzunluğu, boru çapı ve
 malzemesi, zemin cinsi, derinlik ve yer belirleme sisteminin türü fiyatı
-belirler. Metre başına sabit bir fiyat yerine projeye özel teklif hazırlarız.
+belirler. Metre başına sabit bir fiyat yerine projeye özel teklif hazırlarız. Ayrıntılı açıklama: [yatay sondaj fiyatlarını belirleyen faktörler](/yatay-sondaj-fiyatlari/).
 
 **Ne kadar sürede başlayabilirsiniz?** Fizibilite ve keşiften sonra, izinler
 hazırsa çoğu şehir içi HDD projesine iki hafta içinde mobilize olabiliyoruz.

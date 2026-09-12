@@ -1,16 +1,21 @@
 ---
-baslik: "Yatay Sondaj"
-seoBaslik: "Yatay Sondaj Nedir? Teknoloji, Makineler ve Uygulama"
-ozet: "Yatay sondaj nedir, nasıl uygulanır? Yatay sondaj makinelerinin anatomisi, uygulama alanları, planlama, avantajları, zorlukları ve Deltek'in tecrübesi."
+baslik: "Yatay Sondaj Hizmeti"
+seoBaslik: "Yatay Sondaj Firması: Türkiye Geneli HDD Hizmeti"
+ozet: "Yatay sondaj firması arıyorsanız: Deltek İstanbul ve İzmir'den Türkiye geneline HDD hizmeti verir. 20 yılı aşkın deneyim, ücretsiz keşif, projeye özel teklif."
 ilgili:
+  - "yatay-sondaj-fiyatlari"
   - "yonlendirilebilir-yatay-sondaj"
   - "yatay-delgi-nedir"
   - "yonlendirilebilir-yatay-delgi"
   - "yonlendirilebilir-yatay-sondaj-makinesi"
   - "yatay-sondaj-camuru"
 yanMenu: true
-anahtarKelimeler: "yatay sondaj, yatay sondaj nedir, yatay sondaj makinesi, yatay sondaj firması, yatay sondaj fiyatları, yatay sondaj İstanbul, yatay sondaj İzmir, kazısız yatay sondaj"
+anahtarKelimeler: "yatay sondaj firması, yatay sondaj hizmeti, yatay sondaj şirketi, yatay sondaj, HDD firması, yatay sondaj İstanbul, yatay sondaj İzmir, kazısız geçiş firması"
 ---
+
+Deltek, **yatay sondaj** (yönlendirilebilir yatay sondaj / HDD) hizmetini İstanbul ve İzmir ofislerinden Türkiye'nin her bölgesine verir: nehir, otoyol, demiryolu ve şehir içi geçişlerde doğalgaz, su, kanalizasyon, enerji ve fiber optik hatları için 2–2000 mm çap aralığında kazısız geçiş. Fizibilite ve keşif ücretsizdir; metre başına sabit fiyat yerine projeye özel teklif hazırlarız.
+
+[Projeniz için teklif alın](/iletisim/) · [Fiyatı belirleyen faktörler](/yatay-sondaj-fiyatlari/)
 
 ## Yatay Sondaj
 
@@ -141,24 +146,6 @@ Elektromanyetik algılama sistemleri kullanılarak mevcut hatların konumu belir
 Sektörde öncü firmalardan biri olan DELTEK, **yatay sondaj** alanında 20 yılı aşkın geniş deneyime sahiptir. Modern makinelerimiz ve uzman ekibimizle her ölçekte kaliteli hizmet sunuyoruz.
 
 İstanbul ve İzmir ofislerimizden ülke geneline **yatay sondaj** hizmeti veriyoruz. Müşteri odaklı yaklaşımımızla, farklı zemin koşulları ve proje büyüklüklerine özel çözümler geliştiriyoruz.
-
-## Yatay Sondaj Sektörünün Geleceği
-
-
-
-### Teknolojik Gelişmeler
-
-
-Yapay zeka destekli **yatay sondaj** sistemleri geliştirilmeye devam ediyor. Otonom çalışma kabiliyeti olan makineler sayesinde insan hatasının en aza indirilmesi hedefleniyor.
-
-Elektrikli yatay sondaj makineleri çevre dostu alternatifleri oluşturuyor. Batarya teknolojisindeki gelişmeler sayesinde daha uzun çalışma süreleri mümkün oluyor.
-
-### Endüstri 4.0 Entegrasyonu
-
-
-IoT sensörleri sayesinde **yatay sondaj** makinelerinin performansı gerçek zamanlı izleniyor. Predictive maintenance sistemleri arıza riskini minimize ediyor.
-
-Mobil uygulamalar üzerinden proje takibi yapılabiliyor. Müşteriler anlık durum bilgisi alarak, sürdürülen yatay sondaj operasyonu hakkında şeffaf bir hizmet deneyimi yaşıyor.
 
 ## Kalite Güvencesi ve Standartlar
 

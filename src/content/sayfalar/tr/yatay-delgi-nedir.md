@@ -1,7 +1,7 @@
 ---
-baslik: "Yatay Delgi Nedir?"
-seoBaslik: "Yatay Delgi Nedir? Yöntemler, Makineler, Avantajlar"
-ozet: "Yatay delgi nedir, nasıl çalışır? Kazısız yatay delgi çeşitleri, uygulama alanları, makine özellikleri, planlama, avantajları ve Türkiye'de yatay delgi."
+baslik: "Yatay Delgi"
+seoBaslik: "Yatay Delgi: Uygulama Alanları, Makineler ve Planlama"
+ozet: "Yatay delgi uygulama alanları: su ve kanalizasyon, doğalgaz ve elektrik, fiber optik hatlar. Makine özellikleri, planlama ve Türkiye'de yatay delgi sektörü."
 ilgili:
   - "yatay-sondaj"
   - "yonlendirilebilir-yatay-delgi"

@@ -1,8 +1,8 @@
 ---
-baslik: "What Is Trenchless Boring?"
+baslik: "Trenchless Boring"
 adres: "trenchless-boring"
-seoBaslik: "What Is Trenchless Boring? Methods, Rigs, Benefits"
-ozet: "What is trenchless horizontal boring and how does it work? Types of boring, fields of application, rig features, planning, advantages and the sector in Türkiye."
+seoBaslik: "Trenchless Boring: Applications, Rigs and Planning"
+ozet: "Trenchless boring applications: water and sewer, gas and power, fibre-optic lines. Rig characteristics, planning and the trenchless boring sector in Türkiye."
 anahtarKelimeler: "trenchless boring, horizontal boring, what is horizontal boring, directional boring, horizontal boring contractor, horizontal boring cost, Istanbul, Izmir"
 yanMenu: true
 ilgili:

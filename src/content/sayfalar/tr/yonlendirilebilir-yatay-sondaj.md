@@ -1,8 +1,9 @@
 ---
-baslik: "Yönlendirilebilir Yatay Sondaj"
-seoBaslik: "Yönlendirilebilir Yatay Sondaj (HDD) Rehberi"
-ozet: "Yönlendirilebilir yatay sondaj (YYS/HDD) nedir, nasıl uygulanır: pilot delgi, genişletme, boru çekme; makine sınıfları, uygulama alanları, yöntem seçimi."
+baslik: "Yönlendirilebilir Yatay Sondaj Rehberi"
+seoBaslik: "HDD Rehberi: Aşamalar, Makine Sınıfları, Yöntem Seçimi"
+ozet: "Yönlendirilebilir yatay sondaj (HDD) rehberi: pilot delgi, genişletme ve boru çekme aşamaları; makine sınıfları, uygulama alanları, projeye göre yöntem seçimi."
 ilgili:
+  - "yatay-sondaj-fiyatlari"
   - "yonlendirilebilir-yatay-sondaj-nedir"
   - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
   - "yonlendirilebilir-yatay-sondaj-makinesi"

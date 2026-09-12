@@ -33,6 +33,123 @@ Yayın **sonrası** doğrulama (canlıda çalışan araçlar):
 4. `https://www.deltek.com.tr/rss.xml` ve `/en/rss.xml` açılıyor mu.
 5. Search Console → Sayfalar raporu: "noindex ile hariç tutuldu" yalnız 404 ve admin olmalı.
 
+## 0b. 2026-09-12 — Dış SEO raporunun değerlendirmesi ve sizin görevleriniz
+
+Bir yapay zekâ aracıyla üretilmiş "DELTEK SEO Master Report" incelendi.
+Kaynakçasında hem eski WordPress sitesi hem yeni site var; bulguları buna göre
+ayrıştırıldı.
+
+### Rapordan doğru çıkan ve UYGULANAN
+
+| Rapor | Ne yapıldı |
+| --- | --- |
+| §3 Kanibalizasyon (5 sayfa) | Beş sayfanın niyeti ayrıldı — başlık, H1, açıklama; TR + EN. Tablo: CLAUDE.md → "Niyet ayrımı" |
+| §4/§6 Ticari niyet | `/yatay-sondaj/` ticari sayfa oldu: "Yatay Sondaj Firması" başlığı, giriş + CTA, Service şeması, `/hizmetlerimiz/` HDD kartı buraya |
+| §7 Fiyat sayfası | `/yatay-sondaj-fiyatlari/` + `/en/horizontal-drilling-cost/` yazıldı — 8 faktör, teklif için gerekli bilgiler, SSS (FAQPage şeması). Rakam yok |
+| §10 Jenerik "AI/IoT/Endüstri 4.0" | Ticari sayfadan çıkarıldı. İki "delgi" sayfasında duruyor → görev 3 |
+| §19 P0-1 Keyword→URL haritası | Aşağıda |
+
+### Rapordan ZATEN YAPILMIŞ olanlar (rapor bilmiyordu)
+
+§17 yapısal veri (Organization, WebSite, Breadcrumb, Service, Article, LocalBusiness,
+FAQPage, VideoObject — hepsi var), §18 CWV temelleri (WebP, width/height, kendi
+sunucudan font, immutable önbellek, CDN), §27 geliştirici sprinti (canonical,
+sitemap, robots, 301/404, mükerrer title/H1, alt, iç bağlantı taraması, şema
+doğrulama — `npm run seo` 100/100, `npm run yayin` 80/80, canlı tarama 0 kırık).
+
+### Rapordaki BAYAT bulgular
+
+Kanibalizasyon listesindeki `/yatay-sondaj-kazisiz-yatay-delgi/` zaten
+kaldırılıp 301'lenmişti; alıntıladığı "– DELTEK" biçimli başlıklar eski
+sitenin. Rakip listesindeki Armut gibi platformlar gerçek rakip değil, SERP
+gürültüsü.
+
+### KATILMADIĞIM öneriler
+
+- Başlığa "2026" koymak: fiyat sayfası kalıcı, yıl bayatlar.
+- `/boru-surme/`, `/mikrotunel/` gibi yeni adresler açmak: mevcut
+  `/boru-surmecakma/` yıllardır sıralanıyor, 301 karmaşası kazanç getirmez.
+  Mikrotünel zaten o sayfada başlıklı bölüm.
+- Onlarca şehir sayfası: raporun kendisi de uyarıyor — gerçek proje olmadan
+  doorway sayfası olur.
+
+### Anahtar kelime → URL haritası (tek niyet, tek sayfa)
+
+| Sorgu kümesi | Niyet | Sayfa |
+| --- | --- | --- |
+| yatay sondaj, yatay sondaj firması / hizmeti / şirketi, HDD firması | ticari | `/yatay-sondaj/` |
+| yatay sondaj fiyatları / metre fiyatı / maliyeti, HDD fiyat | ticari-bilgi | `/yatay-sondaj-fiyatlari/` |
+| yönlendirilebilir yatay sondaj, HDD rehberi, aşamalar, makine sınıfları | teknik rehber | `/yonlendirilebilir-yatay-sondaj/` |
+| HDD nedir, yönlendirilebilir yatay sondaj nedir, tarihçe | tanım | `/yonlendirilebilir-yatay-sondaj-nedir/` |
+| HDD yapım metodu, pilot delgi, reaming, boru çekme | yöntem | `/yonlendirilebilir-yatay-sondaj-yapim-metodu/` |
+| yatay sondaj makinesi, HDD makinesi, kapasite | ekipman | `/yonlendirilebilir-yatay-sondaj-makinesi/` |
+| yatay delgi, yatay delgi uygulama alanları | uygulama | `/yatay-delgi-nedir/` |
+| yönlendirilebilir yatay delgi, YYD, navigasyon | teknoloji | `/yonlendirilebilir-yatay-delgi/` |
+| boru sürme, boru çakma, auger boring, mikrotünel | ticari + teknik | `/boru-surmecakma/` |
+| boru yenileme, pipe bursting, kazısız boru yenileme | ticari + teknik | `/boru-yenileme/` |
+| kazısız altyapı, akıllı altyapı | hizmet | `/akilli-altyapi/` |
+| hizmetlerimiz, HDD hizmeti, kazısız geçiş hizmetleri | hizmet listesi | `/hizmetlerimiz/` |
+| teklif, iletişim, İstanbul / İzmir yatay sondaj | dönüşüm | `/iletisim/` |
+| delgi tiji, genişletme başlığı, sondaj çamuru, yer belirleme… | teknik bileşen | ilgili teknoloji sayfası |
+
+Yeni bir sayfa açmadan önce: hedef sorgu bu tabloda varsa **o sayfayı
+güçlendir**, yenisini açma.
+
+### Sizin görevleriniz (öncelik sırasıyla)
+
+**1. Fiyat sayfasını onaylayın (10 dk).** `src/content/sayfalar/tr/yatay-sondaj-fiyatlari.md`
+ve `en/…` — sekiz faktörün açıklaması ve üç SSS cevabı Deltek'in
+uygulamasıyla uyuşuyor mu? Özellikle "iki hafta içinde mobilize", "keşif
+ücretsiz", "kaya delgisinde ayrı ekipman" cümleleri. Yanlış olanı düzeltin ya
+da bana yazın. Sayfa yayında; onay beklemeden yayına alındı çünkü her cümle
+sitede zaten var olan bir ifadeye dayanıyor.
+
+**2. Teknik iddiaları doğrulayın (30 dk, mühendis).** Rapor §11 haklı: bu
+sayılar sitede ama kaynağı belirsiz. Her biri için "Deltek kapasitesi /
+sektör bilgisi / örnek proje" diye karar verin, yanlışsa düzeltin:
+
+| Dosya | İfade |
+| --- | --- |
+| `sayfalar/tr/boru-surmecakma.md` satır 35 | 1200 mm |
+| `sayfalar/tr/boru-surmecakma.md` satır 58 | 840 ton |
+| `sayfalar/tr/boru-yenileme.md` satır 31 | %10–45 çap büyütme |
+| `sayfalar/tr/genisletme-basligi.md` satır 36 | 1600 mm |
+| `sayfalar/tr/yonlendirilebilir-yatay-sondaj-yapim-metodu.md` satır 33 | 7500 m, 1600 mm |
+
+**3. İki "delgi" sayfasındaki dolgu bölümleri (1 saat).** Gerçek proje
+verisiyle değiştirin ya da "sil" deyin, silerim:
+`yatay-delgi-nedir.md` → "## Geleceğin Yatay Delgi Teknolojileri";
+`yonlendirilebilir-yatay-delgi.md` → "## Teknolojik Gelişmeler ve Geleceğin Trendi".
+
+**4. İlk vaka çalışması (2 saat, en değerli iş).** Rapor §8 haklı: referans
+logoları tek başına yetmiyor. **Bir** tamamlanmış proje için şunları toplayın:
+işveren (yazılabiliyorsa), yer, geçiş tipi (nehir/otoyol/şehir içi), zemin,
+boru çapı ve malzemesi, uzunluk, kullanılan makine, süre, karşılaşılan zorluk
+ve çözüm, 3–5 saha fotoğrafı. Gönderin; `projeler` koleksiyonunu, şablonu ve
+referans sayfasından bağlantıyı ben kurarım. İlk sayfa çıkınca gerisi CMS'ten.
+
+**5. Teklif formu kararı.** Site bilerek formsuz (statik). Rapor §16 haklı ama
+seçenek sizin:
+(a) formsuz kal — telefon/e-posta CTA'ları var;
+(b) Cloudflare Pages Functions + e-posta servisi — ücretsiz, dosya yükleme
+sınırlı;
+(c) Tally/Formspree gömme — dosya yükleme kolay, ücretli katman gerekebilir.
+Önerim (b). "b" ya da "c" derseniz kurarım.
+
+**6. PageSpeed ölçümü (2 dk).** `pagespeed.web.dev` → `https://www.deltek.com.tr/`
+ve `/yatay-sondaj/`, mobil. Ekran görüntüsünü gönderin; buradan ölçemedim
+(anonim API kotası dolu).
+
+**7. Dört hafta sonra Search Console.** Performans → Sorgular → "yatay sondaj"
+sorgusuna hangi sayfalar giriyor? `/yatay-sondaj/` tek başına olmalı.
+`/yatay-delgi-nedir/` de giriyorsa iki "delgi" sayfasını birleştirme kararını
+o veriyle veririz (bkz. §6).
+
+**8. Blog karışımı.** Sonraki yazılar §7'deki listeden; uluslararası haber
+çevirisi artık öncelik değil (rapor §12 haklı: 11 yazının 7'si haber).
+
+Google Business Profile (§3) ve sosyal profiller (§4) hâlâ açık.
+
 ## 1. Yayına alırken (ilk gün)
 
 1. **Cloudflare Pages'te alan adları:** `www.deltek.com.tr` ana alan adı; apex
@@ -103,28 +220,31 @@ Yayın **sonrası** doğrulama (canlıda çalışan araçlar):
    aldıktan sonra bir tanesini tarayıcıda deneyin; Google Görseller'de duran
    eski adresler bu sayede 404 vermeyecek.
 
-## 6. İçerik: kanibalizasyonu bitirin (ilk 3 ay)
+## 6. İçerik: kanibalizasyon (durum 2026-09-12)
 
-Sitede aynı konuyu farklı terimlerle anlatan üç uzun sayfa var:
-`/yatay-sondaj/`, `/yatay-delgi-nedir/`, `/yonlendirilebilir-yatay-delgi/`.
-Bugün her biri kendi anahtar kelimesine odaklı; ama metinleri birbirine çok
-benziyor. Yapılacak:
+**Yapıldı:** beş örtüşen sayfanın niyeti başlık/H1/açıklamayla ayrıldı
+(0b'deki harita). Artık yalnız `/yatay-sondaj/` ticari, diğerleri birer teknik
+açıdan tek.
 
-1. Search Console **Performans** raporunda 3 ay sonra hangi sayfanın hangi
-   sorguda göründüğüne bakın.
-2. İki sayfa aynı sorguda yarışıyorsa zayıf olanı güçlüye **301** ile
-   yönlendirin (`public/_redirects` + CLAUDE.md tablosu) ya da metnini
-   farklılaştırın (biri "fiyat/maliyet", biri "makine/teknik", biri "yöntem
-   karşılaştırma" gibi).
+**Kalan tek karar:** `/yatay-delgi-nedir/` ve `/yonlendirilebilir-yatay-delgi/`
+hâlâ uzun ve `/yatay-sondaj/` ile aynı konu evreninde ("delgi" yalnız "sondaj"ın
+eş anlamlısı). Bugün ayrı tutuldular çünkü "yatay delgi" ayrı bir arama
+terimi ve sayfaların kendi geçmişi var. Dört hafta Search Console verisi
+biriktikten sonra:
+
+1. Performans → Sorgular → "yatay sondaj" ve "yatay delgi" için hangi sayfalar
+   görünüyor?
+2. İki sayfa aynı sorguda yarışıyorsa zayıfı güçlüye **301** (`public/_redirects`
+   + CLAUDE.md tablosu). Aday: `/yatay-delgi-nedir/` → `/yatay-sondaj/`.
 3. Diğer sitelerinizle (`yataydelgi.com`, `yataysondaj.org`, Boremak) **aynı
-   cümleleri paylaşmayın**; oradan buraya iç bağlantı verin, metin kopyalamayın.
+   cümleleri paylaşmayın**; oradan buraya bağlantı verin, metin kopyalamayın.
 
 ## 7. İçerik takvimi (sürekli)
 
 Blogda 11 yazı var; Google düzenli güncellenen siteyi tercih eder.
 Ayda 1–2 yazı yeterli. Türkçe aramada boşluk olan konular:
 
-- "yatay sondaj fiyatları / metre fiyatı nasıl hesaplanır" (sayısal örnekle)
+- ~~yatay sondaj fiyatları~~ — **yapıldı** (`/yatay-sondaj-fiyatlari/`, 2026-09-12). Deltek gerçek proje senaryoları ekleyebilir
 - "yatay sondaj mı açık kazı mı: maliyet karşılaştırması"
 - "nehir altı boru geçişi nasıl yapılır" (bir Deltek projesi anlatımı)
 - "fiber optik yatay sondaj: belediye izin süreci"

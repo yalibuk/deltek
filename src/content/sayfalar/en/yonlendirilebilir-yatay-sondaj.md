@@ -1,10 +1,11 @@
 ---
-baslik: "Horizontal Directional Drilling"
+baslik: "Horizontal Directional Drilling Guide"
 adres: "horizontal-directional-drilling"
-seoBaslik: "Horizontal Directional Drilling (HDD) Guide"
-ozet: "What is horizontal directional drilling (HDD) and how is it done: pilot bore, reaming and pullback; rig classes, applications and choosing the right method."
+seoBaslik: "HDD Guide: Stages, Rig Classes, Method Selection"
+ozet: "Horizontal directional drilling (HDD) guide: pilot bore, reaming and pullback stages; rig classes, applications and choosing the method for your project."
 anahtarKelimeler: "horizontal directional drilling, HDD, directional boring, pilot bore, reaming, pullback, HDD rig, trenchless crossing, HDD contractor"
 ilgili:
+  - "yatay-sondaj-fiyatlari"
   - "yonlendirilebilir-yatay-sondaj-nedir"
   - "yonlendirilebilir-yatay-sondaj-yapim-metodu"
   - "yonlendirilebilir-yatay-sondaj-makinesi"

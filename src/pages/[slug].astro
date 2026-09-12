@@ -163,7 +163,7 @@ const videoSema = embed ? {
  * Dört ana hizmet + hizmetlerimiz; teknik açıklama sayfaları (tij, çamur,
  * yer belirleme…) hizmet DEĞİL, onlara basılmaz.
  */
-const HIZMET_SAYFALARI = ['yonlendirilebilir-yatay-sondaj', 'boru-surmecakma', 'boru-yenileme', 'akilli-altyapi', 'hizmetlerimiz'];   // anahtar (dosya adı)
+const HIZMET_SAYFALARI = ['yatay-sondaj', 'boru-surmecakma', 'boru-yenileme', 'akilli-altyapi', 'hizmetlerimiz'];   // anahtar (dosya adı)
 const hizmetSema = tur === 'sayfa' && HIZMET_SAYFALARI.includes(anahtar) ? {
   '@context': 'https://schema.org',
   '@type': 'Service',

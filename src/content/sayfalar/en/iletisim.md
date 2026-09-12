@@ -39,7 +39,7 @@ are experienced in international projects as well.
 **How is the price of an HDD crossing determined?** Crossing length, pipe
 diameter and material, ground conditions, depth and the type of locating system
 determine the price. Rather than a flat rate per metre, we prepare a
-project-specific quotation.
+project-specific quotation. Details: [what determines the cost](/en/horizontal-drilling-cost/).
 
 **How soon can you start?** After the feasibility study and site survey, and
 provided permits are in place, we can mobilise to most urban HDD projects within

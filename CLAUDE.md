@@ -428,8 +428,9 @@ grep -L "^duzen:" src/content/sayfalar/tr/*.md           # normal akış (12)
 `medyalar` kurumsal sayfalar; `yatay-delgi-nedir`, `yatay-sondaj`,
 `yonlendirilebilir-yatay-delgi`, `yonlendirilebilir-yatay-sondaj` ise **hiç
 görseli olmayan**, başlık/liste yapılı uzun makaleler — ürün şablonuna
-sokulursa boş görsel kutuları çıkardı. Bu üç "rehber" sayfası
-(`TEK_REHBERLER`, `teknoloji.ts`) eskiden **yetimdi**; artık `yanMenu: true`
+sokulursa boş görsel kutuları çıkardı. Bu "rehber" sayfaları
+(`TEK_REHBERLER`, `teknoloji.ts` — 2026-09-12'den beri **iki**: `yatay-sondaj`
+ticari sayfa oldu ve listeden çıktı, aşağıda "Niyet ayrımı") eskiden **yetimdi**; artık `yanMenu: true`
 ile bölümün yan menüsünü alır, bölüm haritasında "Konu rehberleri" grubunda ve
 ana sayfadaki "Rehber" bölümünde listelenir.
 (`yatay-sondaj-kazisiz-yatay-delgi`, `kazisiz-altyapi-ve-kazisiz-teknolojiler`,
@@ -1610,7 +1611,7 @@ katman. Hepsi `npm run build` ile kendiliğinden üretilir, elle bakım gerekmez
 
 **Yapısal veri eklenenler** (`[slug].astro`, TR ve EN aynı):
 
-* **Service** — dört ana hizmet sayfası + `/hizmetlerimiz/` (`HIZMET_SAYFALARI`). Teknik açıklama sayfaları (tij, çamur, yer belirleme…) hizmet değil, onlara basılmaz.
+* **Service** — dört ana hizmet sayfası (`yatay-sondaj`, `boru-surmecakma`, `boru-yenileme`, `akilli-altyapi`) + `/hizmetlerimiz/` (`HIZMET_SAYFALARI`). HDD'nin hizmet sayfası 2026-09-12'den beri **ticari** `/yatay-sondaj/`; önceden `yonlendirilebilir-yatay-sondaj` (rehber) idi. Teknik açıklama sayfaları (tij, çamur, yer belirleme…) hizmet değil, onlara basılmaz.
 * **LocalBusiness** (+`GeneralContractor`) — `/iletisim/`de ofis başına, `parentOrganization` → Organization. Google'ın çok şubeli önerisi: Organization site geneli, şube kendi sayfasında. `OFISLER`de `enlem/boylam` ve `calismaSaatleri` dolarsa `geo` ve `openingHoursSpecification` de basılır (şu an boş — kullanıcı dolduracak).
 * **FAQPage** — gövdede "Sık sorulan sorular" / "Frequently asked questions" başlığı altındaki `**Soru?** Cevap` paragraflarından `sssCikar()` üretir. Başka yerde soru aramaz. Şu an yalnız `/iletisim/`de içerik var; **başka sayfaya SSS eklemek için aynı biçimde yazmak yeter**, şema kendiliğinden gelir. Google FAQ zengin sonucunu 2023'ten beri yalnız resmi/sağlık sitelerine gösteriyor; şema yine de soru-cevap yapısını yapay zekâ özetlerine açıkça anlatıyor.
 * **og:type=article** + `article:published_time/modified_time/section` blog yazılarında (Layout `tur`, `yayin`, `guncelleme` prop'ları). Önceden 24 yazının hepsi `website`ti.
@@ -1630,6 +1631,46 @@ katman. Hepsi `npm run build` ile kendiliğinden üretilir, elle bakım gerekmez
 * **HSTS preload** — alan adı hstspreload.org listesinde değil ("unknown"); listeye girmek geri dönüşü aylar süren bir taahhüt, ayrıca karar verilir.
 * `andersonug.com` bağlantısı **http kaldı**: https 525 (TLS el sıkışması) veriyor. Miami bağlantısı https'e çevrildi (200, ama hedef sayfa genel bir partner sayfasına yönlendiriyor; içerik yok olmuş, bağlantı yine de kırık değil).
 * Kaya delgi video yazısı tarihsizdi (aslı "Medyalar" sayfasıydı); Vimeo oEmbed `upload_date` ile **2015-12-17** verildi — VideoObject `uploadDate` ve RSS için gerekiyordu.
+
+### Niyet ayrımı — aynı konuda beş sayfa, her birinin tek işi var (2026-09-12)
+
+Dışarıdan alınan bir SEO raporu (`SEO-REHBER.md` → "Dış SEO raporu") sitenin
+en büyük sorunu olarak **anahtar kelime kanibalizasyonunu** gösterdi ve
+haklıydı: beş sayfa birden "… Nedir? / Rehberi" başlığıyla aynı kavramı
+(yatay sondaj = yatay delgi = HDD = YYS = YYD) anlatıyordu, üstüne HDD'nin
+"hizmet sayfası" rolü üç ayrı adrese dağılmıştı — Service şeması
+`yonlendirilebilir-yatay-sondaj`'da, hizmet kartı `-nedir`'de, ticari anahtar
+kelimeler `yatay-sondaj`'da.
+
+Çözüm URL değiştirmeden, **başlık / `<h1>` / açıklama / şema** ile yapıldı:
+
+| Sayfa | Tek işi | `seoBaslik` |
+| --- | --- | --- |
+| `/yatay-sondaj/` | **TİCARİ** — "yatay sondaj firması / hizmeti" | Yatay Sondaj Firması: Türkiye Geneli HDD Hizmeti |
+| `/yatay-sondaj-fiyatlari/` | ticari-bilgi — fiyatı belirleyen faktörler (YENİ) | Yatay Sondaj Fiyatları Nasıl Belirlenir? 8 Teknik Faktör |
+| `/yonlendirilebilir-yatay-sondaj/` | teknik rehber — aşamalar, makine sınıfları, yöntem seçimi | HDD Rehberi: Aşamalar, Makine Sınıfları, Yöntem Seçimi |
+| `/yonlendirilebilir-yatay-sondaj-nedir/` | tanım ve tarihçe | (değişmedi) |
+| `/yonlendirilebilir-yatay-sondaj-yapim-metodu/` | yöntem | (değişmedi) |
+| `/yonlendirilebilir-yatay-sondaj-makinesi/` | ekipman | (değişmedi) |
+| `/yatay-delgi-nedir/` | "yatay delgi" terimi — uygulama alanları | Yatay Delgi: Uygulama Alanları, Makineler ve Planlama |
+| `/yonlendirilebilir-yatay-delgi/` | "YYD" terimi — navigasyon ve güç sistemleri | Yönlendirilebilir Yatay Delgi (YYD): Navigasyon ve Güç |
+
+Ticari sayfa için ayrıca: gövdenin başına Deltek'in **sitede zaten yazan**
+iddialarından (İstanbul + İzmir, Türkiye geneli, 2–2000 mm, ücretsiz keşif,
+projeye özel teklif) kurulmuş kısa bir giriş + iki CTA bağlantısı eklendi;
+"Sektörün Geleceği / Endüstri 4.0" dolgu bölümü **çıkarıldı** (ticari sayfada
+işi yok; aynı dolgu iki "delgi" sayfasında duruyor, Deltek gerçek proje
+verisiyle değiştirmeli). `HIZMET_SAYFALARI`, `/hizmetlerimiz/` HDD kartı ve
+`TEK_REHBERLER` bununla uyumlu hale getirildi: HDD'nin hizmet sayfası artık
+tek ve `/yatay-sondaj/`.
+
+**Kural:** yeni sayfa açmadan önce bu tabloya bak — aynı niyeti hedefleyen
+ikinci bir sayfa açılmaz, mevcut sayfa güçlendirilir. Tam anahtar kelime →
+URL haritası `SEO-REHBER.md`'de.
+
+Fiyat sayfasındaki her cümle iletişim sayfası SSS'si, ana sayfa açıklaması ve
+teknoloji sayfalarındaki mevcut metne dayanır; **rakam ve fiyat yok**, bilerek.
+Yine de Deltek onayından geçmedi (`SEO-REHBER.md` → görev 1).
 
 ### Frontmatter alanları (her iki koleksiyon, CMS'te de var)
 
