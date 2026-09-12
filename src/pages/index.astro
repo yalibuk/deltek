@@ -67,7 +67,7 @@ const hizmetSema = {
   <div class="hero__grid"></div>
   <div class="hero__ic">
     <HeroSlider slaytlar={HERO_TR} etiket="Deltek yatay sondaj projeleri"
-                oncekiEtiket="Önceki görsel" sonrakiEtiket="Sonraki görsel" />
+                oncekiEtiket="Önceki görsel" sonrakiEtiket="Sonraki görsel" oynatEtiket="Videoyu oynat" />
   </div>
 </section>
 
@@ -131,6 +131,7 @@ const hizmetSema = {
 <!-- ── TECRÜBE BANDI ──────────────────────────── -->
 <section class="tecrube" aria-label="Saha tecrübesi">
   <img class="tecrube__g" src="/images/icerik/deltek-hdd-sahasi-tecrube.webp"
+       srcset="/images/icerik/deltek-hdd-sahasi-tecrube-960.webp 960w, /images/icerik/deltek-hdd-sahasi-tecrube.webp 1920w" sizes="100vw"
        alt="Deltek yönlendirilebilir yatay sondaj (HDD) sahası — 20 yılı aşkın uluslararası saha tecrübesi"
        width={tecrubeOlcu.width ?? 1920} height={tecrubeOlcu.height ?? 790} loading="lazy" decoding="async" />
   <img class="tecrube__logo" src="/deltek_logo_single_line_white.svg" alt="" aria-hidden="true"
@@ -283,6 +284,12 @@ const hizmetSema = {
     Array.from(ray.children).forEach((s,k) => {
       (s as HTMLElement).setAttribute('data-aktif', k===i?'true':'false');
       (s as HTMLElement).inert = k !== i;
+      // Görseller ertelenmiş (`data-src`, bkz. HeroSlider): aktif ve sonraki
+      // slaydınkileri şimdi yükle — geçiş geldiğinde hazır olsunlar.
+      // Aktif slayt hemen; SONRAKİ slayt 3 sn sonra — ilk boyamayla (LCP)
+      // yarışmasın. Kullanıcı daha erken geçerse aktifleşince zaten yüklenir.
+      const yukle = () => s.querySelectorAll<HTMLImageElement>('img[data-src]').forEach(im => { im.src = im.dataset.src!; im.removeAttribute('data-src'); });
+      if (k === i) yukle(); else if (k === (i+1)%n) setTimeout(yukle, 3000);
     });
   }
   function git(x: number) { i = (x+n)%n; ciz(); }

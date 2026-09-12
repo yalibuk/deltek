@@ -20,8 +20,8 @@
 import { HERO_IZGARA, type HeroSlayt, type HeroYazi, type HeroKatman } from '../data/hero';
 import { gorselOznitelik } from '../data/gorselOlcu';
 
-interface Props { slaytlar: HeroSlayt[]; etiket: string; oncekiEtiket: string; sonrakiEtiket: string; }
-const { slaytlar, etiket, oncekiEtiket, sonrakiEtiket } = Astro.props;
+interface Props { slaytlar: HeroSlayt[]; etiket: string; oncekiEtiket: string; sonrakiEtiket: string; oynatEtiket: string; }
+const { slaytlar, etiket, oncekiEtiket, sonrakiEtiket, oynatEtiket } = Astro.props;
 const { g: IG, y: IY } = HERO_IZGARA;
 
 /**
@@ -195,16 +195,32 @@ const satirlaraBol = (m: string) => m.split('\n');
         {/* Arka plan KATMANLARLA AYNI ızgaranın içinde: ikisi tek ölçekle
             büyüyüp küçülüyor. Masaüstünde sarmallar `display: contents`
             olduğu için bu resim eskisi gibi doğrudan `.slide`i kaplıyor. */}
-        <img class="slide__arka" src={s.arka} alt={s.alt} {...olcu(s.arka)}
+        {/* 1. slayt dışındakiler `data-src`: `loading="lazy"` slider içinde
+            işe yaramıyor (yana kaydırılmış slaytlar tembel yükleme eşiğinin
+            içinde kalıyor, 2-4. slaytlar ilk saniyede iniyordu). `ciz()`
+            aktif ve sonraki slaydın görsellerini yükler — index.astro. */}
+        <img class="slide__arka" src={i === 0 ? s.arka : undefined} data-src={i === 0 ? undefined : s.arka}
+             alt={s.alt} {...olcu(s.arka)}
              loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
+        {/* Video katmanı FASAD: iframe yalnız tıklanınca gelir (aşağıdaki <script>).
+            Sayfa açılışında YouTube 14 istek / 1 MB indiriyordu — toplam yükün
+            %43'ü — ve doubleclick çerezleri bırakıyordu. Tablet ekranı koyu zemin +
+            oynat düğmesi; video youtube-nocookie'den. Üçlü operatörün dalına
+            yorum KONULAMAZ (Astro "Expected , or )" der), o yüzden burada. */}
         {s.katmanlar.map(k => (
           k.tur === 'gorsel' ? (
-            <img class={`kat kat--${k.gecis}${k.darGizle ? ' kat--darGizle' : ''}`} src={k.src} alt="" aria-hidden="true"
+            <img class={`kat kat--${k.gecis}${k.darGizle ? ' kat--darGizle' : ''}`} src={i === 0 ? k.src : undefined}
+                 data-src={i === 0 ? undefined : k.src} alt="" aria-hidden="true"
                  {...olcu(k.src)} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" style={katmanStil(k)} />
           ) : (
             <div class={`kat kat--${k.gecis} kat__video`} style={katmanStil(k)}>
-              <iframe src={k.video} title={etiket} loading="lazy" allowfullscreen
-                allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+              <button type="button" class="kat__oynat" data-video={k.video} aria-label={oynatEtiket}>
+                <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true">
+                  <circle cx="32" cy="32" r="30" fill="rgb(var(--beyaz-rgb) / .92)"/>
+                  <path d="M26 20l18 12-18 12z" fill="var(--mavi)"/>
+                </svg>
+                <span>{oynatEtiket}</span>
+              </button>
             </div>
           )
         ))}
@@ -281,6 +297,14 @@ const satirlaraBol = (m: string) => m.split('\n');
    seçildi (bkz. hero.ts HeroKatman.darGizle). */
 @container (max-width: 1450px) { .kat--darGizle { display: none; } }
 .kat__video iframe { width: 100%; height: 100%; border: 0; }
+.kat__oynat { position: absolute; inset: 0; width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: .4em; padding: 0; border: 0; cursor: pointer;
+  background: var(--blue-950); color: var(--beyaz); font: 600 calc(13 * var(--olcek)) / 1.2 var(--f-dis); }
+.kat__oynat svg { width: calc(56 * var(--olcek)); height: auto; transition: transform .2s; }
+.kat__oynat:hover svg, .kat__oynat:focus-visible svg { transform: scale(1.08); }
+.kat__oynat:focus-visible { outline: 3px solid var(--sari); outline-offset: -3px; }
+@media (max-width: 820px) { .kat__oynat { font-size: calc(13 * var(--olcekM, var(--olcek))); }
+  .kat__oynat svg { width: calc(56 * var(--olcekM, var(--olcek))); } }
 
 .slide[data-aktif="true"] .kat { animation-duration: var(--sure); animation-delay: var(--basla);
   animation-fill-mode: both; animation-timing-function: cubic-bezier(.25,.46,.45,.94); }
@@ -540,3 +564,19 @@ const satirlaraBol = (m: string) => m.split('\n');
   .ok { width: 36px; height: 36px; }
 }
 </style>
+
+<script>
+  // Video fasadı: düğmeye basılınca iframe oluşturulur. Tıklanmadıkça YouTube'a
+  // tek istek gitmez. `youtube-nocookie.com`: izleme çerezi bırakmayan gömü alanı.
+  document.querySelector('.slider')?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('.kat__oynat');
+    if (!b || !b.dataset.video) return;
+    const src = b.dataset.video.replace('www.youtube.com/embed', 'www.youtube-nocookie.com/embed');
+    const f = document.createElement('iframe');
+    f.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+    f.title = b.getAttribute('aria-label') || '';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+    f.setAttribute('allowfullscreen', '');
+    b.replaceWith(f);
+  });
+</script>

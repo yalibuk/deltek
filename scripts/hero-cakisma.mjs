@@ -59,9 +59,13 @@ const kabulMu = b => KABUL.some(k =>
 const tarayici = await chromium.launch({ executablePath: CHROME, headless: true });
 const sayfa = await tarayici.newPage({ viewport: { width: EN_COK, height: 900 } });
 await sayfa.goto(URL_, { waitUntil: 'networkidle' });
-// Katmanlar `loading="lazy"`: ekranda olmayan slaytların görselleri hiç
-// yüklenmez, canvas'a çizilecek piksel de olmaz. Hepsini zorluyoruz.
-await sayfa.evaluate(() => document.querySelectorAll('.slider img').forEach(i => (i.loading = 'eager')));
+// 1. slayt dışındaki görseller `data-src` ile ertelenmiş (HeroSlider): ekranda
+// olmayan slaytların görselleri hiç yüklenmez, canvas'a çizilecek piksel de
+// olmaz. Hepsini zorluyoruz — src'yi veriyoruz ve tembel yüklemeyi kapatıyoruz.
+await sayfa.evaluate(() => document.querySelectorAll('.slider img').forEach(i => {
+  if (i.dataset.src) { i.src = i.dataset.src; i.removeAttribute('data-src'); }
+  i.loading = 'eager';
+}));
 await sayfa.waitForFunction(
   () => [...document.querySelectorAll('.slider img')].every(i => i.complete && i.naturalWidth),
   null, { timeout: 30_000 });

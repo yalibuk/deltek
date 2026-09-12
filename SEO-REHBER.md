@@ -104,9 +104,8 @@ uygulamasıyla uyuşuyor mu? Özellikle "iki hafta içinde mobilize", "keşif
 da bana yazın. Sayfa yayında; onay beklemeden yayına alındı çünkü her cümle
 sitede zaten var olan bir ifadeye dayanıyor.
 
-**2. Teknik iddiaları doğrulayın (30 dk, mühendis).** Rapor §11 haklı: bu
-sayılar sitede ama kaynağı belirsiz. Her biri için "Deltek kapasitesi /
-sektör bilgisi / örnek proje" diye karar verin, yanlışsa düzeltin:
+**2. ~~Teknik iddiaları doğrulayın~~ — ONAYLANDI (2026-09-12).** Aşağıdaki
+sayıların doğru olduğu Deltek tarafından teyit edildi:
 
 | Dosya | İfade |
 | --- | --- |
@@ -116,29 +115,47 @@ sektör bilgisi / örnek proje" diye karar verin, yanlışsa düzeltin:
 | `sayfalar/tr/genisletme-basligi.md` satır 36 | 1600 mm |
 | `sayfalar/tr/yonlendirilebilir-yatay-sondaj-yapim-metodu.md` satır 33 | 7500 m, 1600 mm |
 
-**3. İki "delgi" sayfasındaki dolgu bölümleri (1 saat).** Gerçek proje
-verisiyle değiştirin ya da "sil" deyin, silerim:
-`yatay-delgi-nedir.md` → "## Geleceğin Yatay Delgi Teknolojileri";
-`yonlendirilebilir-yatay-delgi.md` → "## Teknolojik Gelişmeler ve Geleceğin Trendi".
+**3. İki "delgi" sayfasındaki "gelecek" bölümleri — karar bekliyor.** Bu iki
+sayfada Deltek'i değil "geleceği" anlatan, her firmanın sitesine konabilecek
+genel paragraflar var (yapay zekâ rota planlayacak, IoT ile izlenecek,
+elektrikli makineler gelecek…): `yatay-delgi-nedir.md` → "## Geleceğin Yatay
+Delgi Teknolojileri" (73 kelime), `yonlendirilebilir-yatay-delgi.md` →
+"## Teknolojik Gelişmeler ve Geleceğin Trendi" (118 kelime). SEO raporu §10
+bunları "jenerik" diye işaretledi; Google da Deltek'in kendi tecrübesini
+anlatan metni buna tercih eder. Seçenekler: (a) silin — sayfalar 785 ve 1121
+kelime, kayıp yok; (b) yerine Deltek'in gerçekten kullandığı bir teknolojiden
+2-3 cümle yazın (hangi yer belirleme sistemi, hangi makine sınıfı). "sil" ya da
+metin gönderin, uygularım. Ticari sayfadaki aynı bölüm zaten silindi.
 
-**4. İlk vaka çalışması (2 saat, en değerli iş).** Rapor §8 haklı: referans
+**4. İlk vaka çalışması — şimdilik ERTELENDİ (2026-09-12, kullanıcı kararı).** Rapor §8 haklı: referans
 logoları tek başına yetmiyor. **Bir** tamamlanmış proje için şunları toplayın:
 işveren (yazılabiliyorsa), yer, geçiş tipi (nehir/otoyol/şehir içi), zemin,
 boru çapı ve malzemesi, uzunluk, kullanılan makine, süre, karşılaşılan zorluk
 ve çözüm, 3–5 saha fotoğrafı. Gönderin; `projeler` koleksiyonunu, şablonu ve
 referans sayfasından bağlantıyı ben kurarım. İlk sayfa çıkınca gerisi CMS'ten.
 
-**5. Teklif formu kararı.** Site bilerek formsuz (statik). Rapor §16 haklı ama
-seçenek sizin:
-(a) formsuz kal — telefon/e-posta CTA'ları var;
-(b) Cloudflare Pages Functions + e-posta servisi — ücretsiz, dosya yükleme
-sınırlı;
-(c) Tally/Formspree gömme — dosya yükleme kolay, ücretli katman gerekebilir.
-Önerim (b). "b" ya da "c" derseniz kurarım.
+**5. ~~Teklif formu~~ — KARAR: formsuz kalıyor (2026-09-12).** Telefon ve
+e-posta CTA'ları yeterli görüldü; rapor §16 uygulanmadı.
 
-**6. PageSpeed ölçümü (2 dk).** `pagespeed.web.dev` → `https://www.deltek.com.tr/`
-ve `/yatay-sondaj/`, mobil. Ekran görüntüsünü gönderin; buradan ölçemedim
-(anonim API kotası dolu).
+**6. ~~PageSpeed ölçümü~~ — YAPILDI ve sorun DÜZELTİLDİ (2026-09-12).**
+Mobil sonuç: `/yatay-sondaj/` **98**; ana sayfa **59** (FCP 6,4 s, LCP
+12,5 s, CLS 0), Best Practices 77 (4 üçüncü taraf çerez), SEO 100,
+Accessibility 97. Lighthouse ağ şelalesiyle iki sebep bulundu ve giderildi:
+
+| Sebep | Ölçüm | Düzeltme |
+| --- | --- | --- |
+| YouTube gömüsü sayfa açılışında iniyordu | 14 istek, 1011 KB, yükün %43'ü + doubleclick çerezleri | Fasad: oynat düğmesi, iframe tıklayınca ve `youtube-nocookie` |
+| 2-4. slaytların görselleri "lazy" olsa da iniyordu | ~750 KB görünmeyen görsel | `data-src`; aktif slayt hemen, sonraki 3 sn sonra |
+| Tecrübe bandı görseli telefonda tam boy | 236 KB | 960 px varyant + `srcset` → 83 KB |
+
+Sonuç (Playwright, mobil): açılışta üçüncü taraf isteği 0, hero görseli 3 /
+97 KB; slider ve video işlevi 20/20 test; `npm run hero` iki dilde temiz.
+**Canlıya çıktıktan sonra PageSpeed'i bir daha çalıştırın** — beklenti
+ana sayfa mobilde 85+, Best Practices 100. Sonucu bana gönderin.
+
+Accessibility 97'deki tek bulgu ("kontrast yetersiz") hangi öğede olduğu
+ekran görüntüsünden görülmüyor; PageSpeed'de o satırı açıp öğeyi bana
+yazarsanız bakarım.
 
 **7. Dört hafta sonra Search Console.** Performans → Sorgular → "yatay sondaj"
 sorgusuna hangi sayfalar giriyor? `/yatay-sondaj/` tek başına olmalı.

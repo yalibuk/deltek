@@ -313,6 +313,11 @@ değerler `1.290` / `1.1149` / `1` — sapma %0.10.
 Bandın yüksekliği fotoğrafın kendi oranından (`1920×790` → `41.1vw`) —
 görselin tamamı görünsün, yatay dilim gibi kırpılmasın diye.
 
+Görselin **960 px varyantı** var (`deltek-hdd-sahasi-tecrube-960.webp`, 83 KB;
+aslı 236 KB) ve `srcset`/`sizes="100vw"` ile telefona o gider (2026-09-12,
+PageSpeed "image delivery 204 KB" bulgusu). Aslı değişirse varyantı yeniden
+üretin: `sharp(src).resize({width:960}).webp({quality:76})`.
+
 Logo ve yazı `.kap`'a SIĞDIRILMAZ (max 1280px): örnekte logo sayfanın sağ
 kenarında ve ikinci satır 1920px'te ~1380px, yani konteynerden geniş.
 İkisi de bandın kendi genişliğinde, sayfa payı kadar içeride.
@@ -1045,8 +1050,21 @@ aynı sırayı alır (metin artık slaydın içinde).
 
 Dikkat edilecek tek şey **1. slaydın LCP olması**: arka planı
 `loading="eager"` + `fetchpriority="high"` ile, katmanları da `eager` ile
-yüklenir; kalan slaytlar tembel. Yani başa aldığınız slaydın ağırlığı doğrudan
-ilk açılış hızına yazılır.
+yüklenir. Yani başa aldığınız slaydın ağırlığı doğrudan ilk açılış hızına
+yazılır.
+
+> **Kalan slaytların görselleri `src` değil `data-src` taşır (2026-09-12).**
+> `loading="lazy"` slider içinde işe yaramıyordu: yana kaydırılmış slaytlar
+> tarayıcının tembel yükleme eşiğinin (~1250 px) içinde kaldığı için 2-4.
+> slaytların ~750 KB'ı ilk saniyede iniyordu. Şimdi `ciz()` (index.astro)
+> aktif slaydın görsellerini hemen, **sonraki** slaydınkini 3 sn sonra
+> (`setTimeout`) yükler — ilk boyamayla yarışmasın diye; kullanıcı daha erken
+> geçerse aktifleşince zaten yüklenir. `width`/`height` duruyor, CLS yok.
+> Ölçüldü (mobil, Playwright): açılışta 3 hero görseli / 97 KB, YouTube 0.
+>
+> `npm run hero` bunu bilir: `hero-cakisma.mjs` ölçmeden önce `data-src`'yi
+> `src`ye çevirip tembel yüklemeyi kapatır. Slider görsellerini ölçen yeni bir
+> betik yazarsanız aynı adımı atlamayın — yoksa `naturalWidth` 0 gelir.
 
 | Slayt | Arka plan | Katman | İlk ekranda inen |
 | --- | --- | --- | --- |
@@ -1554,10 +1572,15 @@ metnin arkasında olmasıydı.
 gizleme, sabit genişlikteki yazı kuşağının katmanlara binmesine karşıydı;
 akış düzeninde yazı ayrı bir alanda olduğu için gerekçesi kalmıyor.
 
-**Video mobilde de açık.** Geometri birebir olduğu için iframe tam tabletin
-ekranına oturuyor. Kapatılırsa tabletin ekranı boş koyu bir dikdörtgen kalır.
-**Bedeli:** hero'ya her telefon ziyaretinde YouTube oynatıcısı iner; kapatmak
-gerekirse mobil bloktaki `.kat__video`ya `display: none` yeter.
+**Video her ekranda FASAD (2026-09-12).** Tabletin ekranında koyu zemin +
+oynat düğmesi (`.kat__oynat`); iframe yalnız tıklanınca, `youtube-nocookie.com`
+alanından ve `autoplay=1` ile oluşturulur (HeroSlider'ın kendi `<script>`i).
+Sebebi ölçüldü: iframe sayfa açılışında iniyordu — `loading="lazy"` slider
+içinde işe yaramıyor — ve tek başına **14 üçüncü taraf isteği / 1011 KB**,
+toplam yükün %43'ü, üstüne doubleclick çağrıları ve 4 üçüncü taraf çerezi
+(PageSpeed mobil 59, LCP 12,5 s; Best Practices 77). Fasadla açılışta
+YouTube'a sıfır istek gidiyor. Düğme etiketi `oynatEtiket` prop'uyla sayfadan
+gelir ("Videoyu oynat" / "Play video").
 
 > **Sarmallar masaüstünde kutu üretmez.** `.mkat` ve `.mkat__ic` orada
 > `display: contents`; arka plan ve katmanlar eskisi gibi doğrudan `.slide`e
