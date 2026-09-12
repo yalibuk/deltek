@@ -635,9 +635,36 @@ olmalı. Yoksa ekleyin:
 | When incoming requests match | **Wildcard pattern** |
 | Request URL | `http*://deltek.com.tr/*` |
 | Then / Type | **Dynamic** ya da **Wildcard** |
-| Target URL | `https://www.deltek.com.tr/${1}` |
+| Target URL | `https://www.deltek.com.tr/${2}` |
 | Status code | **301** |
 | Preserve query string | ✅ açık |
+
+> ## ⚠ `${1}` DEĞİL `${2}` — 2026-09-12'de canlıda yaşandı
+>
+> Desendeki joker karakterler **soldan sağa numaralanır** ve `http*://`
+> içindeki `*` de bir jokerdir:
+>
+> ```
+> http*://deltek.com.tr/*
+>     ^                 ^
+>    ${1}              ${2}
+> ```
+>
+> Yani `${1}` **yolu değil, şemadaki `s` harfini** taşır. Hedefe `${1}`
+> yazıldığında bütün apex adresleri tek bir yere düştü:
+>
+> ```
+> https://deltek.com.tr/iletisim/  →  https://www.deltek.com.tr/s
+> https://deltek.com.tr/blog/      →  https://www.deltek.com.tr/s
+> http://deltek.com.tr/iletisim/   →  https://www.deltek.com.tr/
+> ```
+>
+> `/s` diye bir sayfa yok; yani www'suz gelen **her** ziyaretçi ve her eski
+> bağlantı 404'e gidiyordu. Doğrusu `${2}`.
+>
+> Bu hata sessizdir: ana sayfa (`https://deltek.com.tr/`) da `/s`'ye gittiği
+> için yalnız ana sayfayı denemek yetmez. **Mutlaka bir iç sayfayla test
+> edin** (7.5).
 
 **7.4** **Deploy** deyin.
 
@@ -678,7 +705,7 @@ HTTP/2 301
 location: https://www.deltek.com.tr/iletisim/
 ```
 
-`location: https://www.deltek.com.tr/` (yolsuz) gelirse kuralda `${1}`
+`location: https://www.deltek.com.tr/s` ya da yolsuz bir adres gelirse kuralda `${2}` yerine `${1}`
 eksiktir — 7.3'e dönün.
 
 ---
