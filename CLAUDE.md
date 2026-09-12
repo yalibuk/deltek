@@ -1924,6 +1924,20 @@ ya çalışmaz ya da www ile ikiz içerik üretir.
 Alan adı zaten Cloudflare'de (NS: `harley`/`rosalyn.ns.cloudflare.com`), yani
 nameserver değişikliği gerekmiyor — yalnız DNS kaydı ve kural.
 
+## Erişilebilirlik notları (PageSpeed Accessibility → 100, 2026-09-12)
+
+* **`.kanit__no` dekoratif** (ana sayfa rakam kartlarındaki "01/02/03"
+  filigranı, `opacity: .09`). Kontrast denetimi 1,14 ile düşürüyordu; renk
+  değil **`aria-hidden="true"`** eklendi — tasarım kasıtlı, öğe içerik değil.
+  Yeni dekoratif metin eklerken aynı yolu izleyin.
+* **Dil düğmeleri "Türkçe (TR)" / "English (EN)"**: WCAG 2.5.3 görünen metnin
+  erişilebilir adın içinde olmasını ister. `aria-label="Türkçe"` + görünen
+  "TR" uyuşmuyordu (Lighthouse `label-content-name-mismatch`). Bir düğmeye
+  `aria-label` yazarken görünen metni içine alın.
+* **CSS HTML'e gömülü** (`build.inlineStylesheets: 'always'`,
+  astro.config.mjs): iki stylesheet yavaş 4G'de 868 + 340 ms boyamayı
+  engelliyordu. `dist/` altında artık `.css` bağlantısı yok, `<style>` var.
+
 ## Bilinen tuzak
 
 İçerik koleksiyonu **`<proje>/.astro/data-store.json`**'da önbelleklenir

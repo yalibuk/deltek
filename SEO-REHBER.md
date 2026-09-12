@@ -148,14 +148,21 @@ Accessibility 97. Lighthouse ağ şelalesiyle iki sebep bulundu ve giderildi:
 | 2-4. slaytların görselleri "lazy" olsa da iniyordu | ~750 KB görünmeyen görsel | `data-src`; aktif slayt hemen, sonraki 3 sn sonra |
 | Tecrübe bandı görseli telefonda tam boy | 236 KB | 960 px varyant + `srcset` → 83 KB |
 
-Sonuç (Playwright, mobil): açılışta üçüncü taraf isteği 0, hero görseli 3 /
-97 KB; slider ve video işlevi 20/20 test; `npm run hero` iki dilde temiz.
-**Canlıya çıktıktan sonra PageSpeed'i bir daha çalıştırın** — beklenti
-ana sayfa mobilde 85+, Best Practices 100. Sonucu bana gönderin.
+**Canlı PageSpeed, düzeltme sonrası (2026-09-12):** ana sayfa mobil
+**Performance 97** (59'dan), FCP 1,5 s, LCP 2,4 s, CLS 0, Best Practices
+**100** (77'den), SEO 100; `/yatay-sondaj/` dört kategoride 100.
 
-Accessibility 97'deki tek bulgu ("kontrast yetersiz") hangi öğede olduğu
-ekran görüntüsünden görülmüyor; PageSpeed'de o satırı açıp öğeyi bana
-yazarsanız bakarım.
+Kalan iki bulgu da giderildi: Accessibility 97'nin sebebi rakam kartlarındaki
+dekoratif "01/02/03" filigranıydı (`aria-hidden`), ayrıca dil düğmesinin
+erişilebilir adı görünen "TR" metnini içermiyordu; ve iki CSS dosyası
+boyamayı 868 + 340 ms engelliyordu (CSS artık HTML'e gömülü). Beklenen:
+Accessibility 100, LCP biraz daha düşük.
+
+İsteğe bağlı, yapılmadı: hero katman görselleri (`deltek-saha-iscisi`,
+`yonlendirilebilir-yatay-sondaj-makinesi`) telefonda gerekenden büyük, ~75 KB
+tasarruf mümkün. Saydam kesim görseller olduğu için kalite bilerek yüksek
+(CLAUDE.md → "Görseller WebP"); `srcset` ile küçük varyant verilebilir ama
+97'de öncelik değil.
 
 **7. Dört hafta sonra Search Console.** Performans → Sorgular → "yatay sondaj"
 sorgusuna hangi sayfalar giriyor? `/yatay-sondaj/` tek başına olmalı.

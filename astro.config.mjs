@@ -11,6 +11,12 @@ export default defineConfig({
   // Mevcut deltek.com.tr'deki tüm URL'ler sondaki eğik çizgiyle çalışıyor.
   // Slug'ları birebir korumak için bu ayar 'always' olmalı (bkz. CLAUDE.md).
   trailingSlash: 'always',
+  // CSS HTML'e gömülür (2026-09-12). İki stylesheet toplam ~10 KB ama ayrı
+  // istek olarak yavaş 4G'de boyamayı 868 + 340 ms engelliyordu (PageSpeed
+  // "render blocking requests"). Gömülünce istek sıfır; bedeli sayfa başına
+  // ~10 KB tekrar ve CSS'in sayfalar arası önbellekten gelmemesi — statik
+  // sitede ihmal edilebilir. Varsayılan 'auto' yalnız 4 KB altını gömüyordu.
+  build: { inlineStylesheets: 'always' },
   integrations: [
     // Build sonrası dist HTML'lerinde width/height'sız <img>'lere ölçü ekler (CLS)
     gorselOlcu(),
