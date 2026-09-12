@@ -733,6 +733,71 @@ telefondan ana sayfa.
 
 ---
 
+# ADIM 8B — Cloudflare'in robots.txt'ye MÜDAHALESİNİ kapatın
+
+> ## ⚠ Yeni bölge, robots.txt'yi sessizce değiştiriyor (2026-09-12'de yaşandı)
+>
+> Bölge bu hesapta oluşturulunca Cloudflare'in **AI Crawl Control → managed
+> robots.txt** özelliği kendiliğinden devreye girdi ve `/robots.txt`
+> çıktısının **başına** kendi bloğunu ekledi. Bizim dosyamız olduğu gibi
+> altta duruyor ama üstteki blok şunları **engelliyor**:
+>
+> ```
+> User-agent: *
+> Content-Signal: search=yes,ai-train=no,use=reference
+>
+> User-agent: GPTBot            Disallow: /
+> User-agent: ClaudeBot         Disallow: /
+> User-agent: CCBot             Disallow: /
+> User-agent: Google-Extended   Disallow: /
+> User-agent: Amazonbot         Disallow: /
+> User-agent: Applebot-Extended Disallow: /
+> User-agent: Bytespider        Disallow: /
+> User-agent: meta-externalagent Disallow: /
+> ```
+>
+> **Bu, sitenin kendi politikasıyla çelişiyor.** Eski deltek.com.tr'nin
+> robots.txt'si GPTBot, Google-Extended, Anthropic-Bot ve CCBot'a **açıkça
+> izin veriyordu**; biz de o izni koruyup `public/robots.txt`'ye taşıdık.
+> Şimdi aynı tarayıcı için biri `Disallow: /`, diğeri `Allow: /` diyen iki
+> ayrı grup var.
+>
+> Çelişkinin nasıl çözüleceği tarayıcıya göre değişir. Google aynı adlı
+> grupları birleştirip en az kısıtlayıcı kuralı uygular (yani `Allow`
+> kazanır), ama her tarayıcı böyle davranmaz. **Belirsizliği bırakmayın.**
+>
+> Ayrıca `ai-train=no` sinyali, bu projede bilerek yapılan işin tersini
+> söylüyor: `llms.txt` ve IndexNow tam da yapay zekâ tarayıcıları ve
+> ChatGPT/Copilot siteyi bulsun diye eklendi (bkz. `CLAUDE.md` → SEO).
+>
+> ### Kapatma
+>
+> Cloudflare → `deltek.com.tr` → **Overview** → **Control AI Crawlers**
+> (ya da **Security** → **Settings**) altında iki ayrı anahtar var:
+>
+> | Ayar | Ne yapar | Olması gereken |
+> | --- | --- | --- |
+> | Managed `robots.txt` | AI tarayıcılara `Disallow` ekler | **Kapalı** |
+> | Display Content Signals Policy | `Content-Signal` önsözünü ekler | **Kapalı** |
+>
+> İkisi de kapatıldığında `/robots.txt` yalnız bizim dosyamızı döndürür.
+>
+> ### Doğrulama
+>
+> ```bash
+> curl -s https://www.deltek.com.tr/robots.txt | head -5
+> ```
+>
+> İlk satır `# Yapay zekâ tarayıcılarına açık erişim.` olmalı. `Content-Signal`
+> ya da `Cloudflare Managed content` görüyorsanız ayar hâlâ açıktır.
+>
+> > **Bu bir politika kararıdır.** AI tarayıcılarının siteyi kullanmasını
+> > İSTEMİYORSANIZ tersini yapın: Cloudflare'in bloğunu açık bırakın ve
+> > `public/robots.txt`'deki izin gruplarını **silin** ki çelişki kalmasın.
+> > Yapılmaması gereken tek şey, ikisini birden bırakmaktır.
+
+---
+
 # ADIM 9 — Arama motorlarına haber verin (10 dakika)
 
 **9.1** Search Console → **Site haritaları** → `sitemap-index.xml` yazıp
