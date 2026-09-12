@@ -12,10 +12,22 @@
  * Veri `teknolojiKomsulari()`; slug ağaçta yoksa bileşen hiç çağrılmaz.
  */
 import type { TekKomsu } from '../data/icerik';
-import { TEKNOLOJI_KOK } from '../data/teknoloji';
 import { CEVIRI, type Dil } from '../data/i18n';
-interface Props { komsu: TekKomsu; dil?: Dil; }
-const { komsu, dil = 'tr' } = Astro.props;
+
+/**
+ * `kokSlug`: bölüm kökünün BU DİLDEKİ adresi — dosya adı DEĞİL.
+ *
+ * Burada eskiden `TEKNOLOJI_KOK` sabiti doğrudan URL'ye yazılıyordu. O sabit
+ * dosya adı (anahtar), yani İngilizce sayfalarda `/en/yatay-sondaj-teknoloji/`
+ * üretiyordu ve o adres yok — doğrusu `/en/trenchless-technologies/`.
+ * Bağlantı 2026-09-12'de canlıda 404 verirken yakalandı.
+ *
+ * Kural (CLAUDE.md → "URL / slug kuralı"): bir kaydı BULMAK için anahtar,
+ * ona BAĞLANMAK için slug. Çağıran sayfa slug'ı `sayfaSlugu(dil, ...)` ile
+ * zaten hesaplıyor (kırıntı için), o değer buraya geçiriliyor.
+ */
+interface Props { komsu: TekKomsu; dil?: Dil; kokSlug: string; }
+const { komsu, dil = 'tr', kokSlug } = Astro.props;
 const t = CEVIRI[dil].tek;
 const yol = (p: string) => dil === 'en' ? '/en' + p : p;
 const { onceki, sonraki, kardesler, ust, kendi } = komsu;
@@ -58,7 +70,7 @@ const listeBasligi = grupMu
     </div>
   )}
 
-  <a class="tgez__kok" href={yol(`/${TEKNOLOJI_KOK}/`)}>
+  <a class="tgez__kok" href={yol(`/${kokSlug}/`)}>
     <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
       <path d="M2 4.5h12M2 8h12M2 11.5h8" stroke-linecap="round"/>
     </svg>

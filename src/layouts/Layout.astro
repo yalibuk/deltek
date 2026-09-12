@@ -29,6 +29,7 @@ interface Props {
    * sayfaları vermek ZORUNDA: EN URL'leri İngilizce, TR'den türetilemez.
    */
   karsiYol?: string;
+  kendiYol?: string;
   /** og:type — blog yazılarında 'article' (article:published_time ile birlikte). */
   tur?: 'website' | 'article';
   /** ISO tarih; yalnız tur='article' iken basılır. */
@@ -36,7 +37,7 @@ interface Props {
   guncelleme?: string;
 }
 const { title = SITE.isim, description = '', image, imageAlt, keywords, sema, noindex = false, cevirisiVar = true,
-        tur = 'website', yayin, guncelleme, karsiYol } = Astro.props;
+        tur = 'website', yayin, guncelleme, karsiYol, kendiYol } = Astro.props;
 // trailingSlash: 'always' — tüm iç yollar eğik çizgiyle biter.
 const pathname = Astro.url.pathname;
 const dil = pathname.startsWith('/en/') ? 'en' : 'tr';
@@ -54,8 +55,24 @@ const enYol = dil === 'en' ? pathname : karsi;
 // Çevirisi olmayan sayfada karşı dilin hreflang'i basılmaz; düğme o dilin köküne gider.
 const trAlt = trYol ? SITE.kanonikal + trYol : null;
 const enAlt = enYol ? SITE.kanonikal + enYol : null;
-const trDugme = trYol ?? '/';
-const enDugme = enYol ?? '/en/';
+/**
+ * Dil düğmelerinin adresleri. AKTİF dilin düğmesi normalde sayfanın kendisine
+ * bağlanır; `kendiYol` bunu ezer.
+ *
+ * Gereken tek yer 404 sayfaları: Astro onları `/404/` adresinde üretiyor, ama
+ * derleme sonrası `404.html` / `en/404.html` dosyasına taşınıyorlar
+ * (Cloudflare Pages böyle bekliyor). Yani `/404/` diye bir adres YOK ve aktif
+ * dil düğmesi var olmayan bir yere bağlanıyordu. 2026-09-12'de denetim
+ * betiğinin yeni "kırık iç bağlantı" ölçütü yakaladı.
+ *
+ * 404'te doğru davranış zaten düğmeyi o dilin köküne göndermek: hata
+ * sayfasından dil değiştiren biri var olan bir sayfaya gitmeli.
+ *
+ * hreflang alternatiflerine (`trAlt`/`enAlt`) dokunulmuyor; onlar sayfanın
+ * gerçek yolundan türemeye devam ediyor.
+ */
+const trDugme = (dil === 'tr' ? (kendiYol ?? trYol) : trYol) ?? '/';
+const enDugme = (dil === 'en' ? (kendiYol ?? enYol) : enYol) ?? '/en/';
 
 // Header menüsü içerikten sürülür: menuSira alanı dolu olan sayfalar.
 // EN tarafında çevirisi girilmemiş sayfa menüde çıkmaz.

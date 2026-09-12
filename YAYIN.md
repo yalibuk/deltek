@@ -798,6 +798,58 @@ telefondan ana sayfa.
 
 ---
 
+# ADIM 8C — Cloudflare'in E-POSTA GİZLEMESİNİ kapatın
+
+> ## ⚠ `mailto:` bağlantıları kenarda değiştiriliyor (2026-09-12'de ölçüldü)
+>
+> Yeni bölgede **Email Address Obfuscation** (Scrape Shield) varsayılan olarak
+> AÇIK geliyor ve HTML'i sunarken `mailto:` bağlantılarını
+> `/cdn-cgi/l/email-protection#<hex>` adresine çeviriyor, ayrıca bir çözücü
+> script enjekte ediyor.
+>
+> Ölçüm — `/iletisim/` sayfası:
+>
+> | | Bizim `dist/` çıktımız | Canlı |
+> | --- | --- | --- |
+> | `mailto:` bağlantısı | var | **0** |
+> | `cdn-cgi/l/email-protection` | 0 | **5** |
+> | enjekte script | yok | `email-decode.min.js` |
+>
+> Canlı sitenin tamamı tarandığında 116 kırık iç bağlantının **115'i** buydu.
+>
+> **Neden istemiyoruz:** `/iletisim/` sayfasının birincil eylemi e-posta
+> bağlantısı. JavaScript çalışırsa script adresi geri çözüyor, ama JS'siz
+> ziyaretçide ve tarayıcı botlarında bağlantı var olmayan bir adrese gidiyor.
+> Ayrıca bu, taşımada **bilerek verilmiş bir kararın geri alınması**:
+> `CLAUDE.md` → "Taşımada bilinçli olarak değişenler" maddesinde
+> *"Cloudflare e-posta gizlemesi çözüldü, adresler gerçek `mailto:` bağlantısı
+> oldu"* yazıyor.
+>
+> **İyi haber:** JSON-LD içindeki `"email"` alanlarına dokunulmuyor
+> (ölçüldü — canlıda `info@deltek.com.tr` olduğu gibi duruyor, iki JSON-LD
+> bloğu da geçerli).
+>
+> ### Kapatma
+>
+> Cloudflare → `deltek.com.tr` → **Security** → **Settings** →
+> **Email Address Obfuscation** → kapatın.
+>
+> ### Doğrulama
+>
+> ```bash
+> curl -s https://www.deltek.com.tr/iletisim/ | grep -c "mailto:"
+> curl -s https://www.deltek.com.tr/iletisim/ | grep -c "cdn-cgi/l/email-protection"
+> ```
+>
+> Sırasıyla **sıfırdan büyük** ve **0** olmalı.
+>
+> > Spam kaygısı varsa alternatif, adresi hiç yazmayıp bir iletişim formu
+> > kullanmaktır — ama bu site bilerek formsuz tasarlandı (`CLAUDE.md` →
+> > `duzen: iletisim`). Gizlemeyi açık bırakmak, bağlantıyı JavaScript'e
+> > bağımlı kılar.
+
+---
+
 # ADIM 9 — Arama motorlarına haber verin (10 dakika)
 
 **9.1** Search Console → **Site haritaları** → `sitemap-index.xml` yazıp

@@ -297,7 +297,7 @@ const sema = [sayfaSema, { ...kirintiSema, '@id': sayfaUrl + '#breadcrumb' }, ..
   )}
 
   {tekAgac && <TeknolojiHaritasi agac={tekAgac} dil={dil} />}
-  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} dil={dil} />}
+  {tekKomsu && <TeknolojiGezinme komsu={tekKomsu} dil={dil} kokSlug={tekKok} />}
   {ilgili.length > 0 && <IlgiliSayfalar sayfalar={ilgili} dil={dil} />}
 
   {/* CTA `.yazi__ana`nın İÇİNDE olmak zorunda. Dışarıda bırakılırsa yan

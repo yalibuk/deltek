@@ -61,6 +61,15 @@ eşliyordu (`/x/` ↔ `/en/x/`); hreflang çiftleri artık
 * Denetim betiği her sayfadaki hreflang hedefinin **gerçekten derlendiğini**
   kontrol eder (yanlış eşleşme 100/100'ü düşürür).
 
+> **Aynı kuralın ikinci kurbanı — `TeknolojiGezinme` (2026-09-12).**
+> Bölüm kökünün bağlantısı `TEKNOLOJI_KOK` sabitinden kuruluyordu; o sabit
+> **dosya adı** (`yatay-sondaj-teknoloji`), URL değil. Türkçede tesadüfen
+> doğru çalışıyordu, İngilizcede `/en/yatay-sondaj-teknoloji/` üretiyordu —
+> doğrusu `/en/trenchless-technologies/`. Derleme hata vermedi, hreflang
+> denetimi de görmedi; **canlı site taranınca 404 olarak çıktı.** Bileşen artık
+> kök adresini `kokSlug` prop'uyla alıyor (çağıran sayfa `sayfaSlugu(dil, …)`
+> ile zaten hesaplıyor) ve denetim betiği kırık iç bağlantıyı puanlıyor.
+
 > **Alan adı `slug` OLAMAZ.** İlk denemede öyleydi ve EN sayfaların tamamı
 > sessizce kayboldu (73 → 40 sayfa, hata yok): Astro'nun `glob` yükleyicisi
 > frontmatter'daki `slug`ı **kayıt kimliği** yapıyor, `en/iletisim` yerine
@@ -1790,7 +1799,8 @@ Yazı tipleri 2026-09-11'den beri **kendi sunucudan** (`/fonts/`, gövde fontu
 `scripts/seo-denetim.mjs` `dist/` HTML'lerini tarar; title (30–65),
 description (70–160), tek h1, canonical, hreflang, lang, alt, width/height,
 kelime (≥300), JSON-LD, OG, iç bağlantı (≥3), mükerrer title/description,
-**yetim sayfa** (hiçbir sayfadan bağlantı yok) ve sitemap'te bulunmayı puanlar.
+**yetim sayfa** (hiçbir sayfadan bağlantı yok), **kırık iç bağlantı**
+(hedefi derlenmemiş `<a href="/...">`) ve sitemap'te bulunmayı puanlar.
 Bir sayfa düşük çıkarsa `--ayrinti` bulguları listeler. Harici servislere
 (PageSpeed, Search Console) bakmaz; onlar SEO-REHBER.md'de.
 

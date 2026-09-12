@@ -12,9 +12,11 @@
  *   kelime sayısı (≥300), JSON-LD, Open Graph, iç bağlantı sayısı (≥3),
  *   site genelinde mükerrer title/description, yetim sayfa (iç bağlantısı yok),
  *   sitemap'te bulunma, başlık hiyerarşisi (h2→h4 gibi seviye atlaması yok),
- *   blog yazısında og:type=article, sitemap'te lastmod.
+ *   blog yazısında og:type=article, sitemap'te lastmod,
+ *   KIRIK İÇ BAĞLANTI (hedefi derlenmemiş <a href="/...">).
  */
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
 
 const KOK = path.resolve(process.cwd(), 'dist');
@@ -123,6 +125,29 @@ const gelen = new Map();
 for (const s of sayfalar) for (const h of s.icBag) gelen.set(h, (gelen.get(h) || 0) + (h === s.url ? 0 : 1));
 
 const derlenen = new Set(sayfalar.map(s => s.url));
+
+/**
+ * Kırık iç bağlantı: gövdedeki `<a href="/...">` hedefi ne derlenmiş bir
+ * sayfa ne de `dist/` altında duran bir dosya.
+ *
+ * Bu denetim 2026-09-12'de eklendi. O gün canlıda `/en/hdd-construction-method/`
+ * sayfası `/en/yatay-sondaj-teknoloji/` adresine bağlanıyordu — `TeknolojiGezinme`
+ * bölüm kökünün URL'sini dosya adından (anahtar) kuruyordu, oysa İngilizce
+ * adresi `trenchless-technologies`. Derleme hata vermedi, hreflang denetimi de
+ * görmedi; ancak canlı site taranınca 404 olarak çıktı.
+ *
+ * Sayfa olmayan hedefler (rss.xml, llms.txt, görseller) dosya olarak var
+ * oldukları için geçerli sayılır. `_redirects` ile karşılanan adresler burada
+ * geçersiz görünür — iç bağlantı zaten doğrudan hedefe verilmeli.
+ */
+const bagDurum = new Map();
+const bagGecerli = (h) => {
+  if (bagDurum.has(h)) return bagDurum.get(h);
+  const ok = derlenen.has(h) || existsSync(path.join(KOK, h.replace(/^\//, '')));
+  bagDurum.set(h, ok);
+  return ok;
+};
+
 let toplam = 0, azami = 0;
 for (const s of sayfalar) {
   const ek = (agirlik, ok, mesaj) => { s.azami += agirlik; if (ok) s.puan += agirlik; else s.bulgular.push(mesaj); };
@@ -135,6 +160,8 @@ for (const s of sayfalar) {
     const kirik = s.hreflangHedef.filter(h => !derlenen.has(h));
     ek(5, kirik.length === 0, `hreflang hedefi derlenmemiş: ${kirik.join(', ')}`);
   }
+  const kirikIc = [...s.icBag].filter(h => !bagGecerli(h));
+  ek(8, kirikIc.length === 0, `KIRIK İÇ BAĞLANTI: ${kirikIc.join(', ')}`);
   toplam += s.puan; azami += s.azami;
 }
 
