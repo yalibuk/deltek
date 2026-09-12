@@ -424,9 +424,19 @@ gereken proxy'li bir kara delik kaydı — ayrıntısı 4B.5 / ADIM 7.1'de
 > kalırsa ziyaretçi Pages'in 404 sayfasını görür. `100::` kaydında böyle bir
 > yanlış sayfa ihtimali yok.
 >
-> İsterseniz nameserver değişip bölge **Active** olduktan sonra kökü Pages'e
-> ikinci bir güvence olarak ekleyebilirsiniz; o noktada Cloudflare DNS yolu
-> açılır. Zorunlu değil.
+> **2026-09-12'de yapıldı:** bölge Active olduktan sonra kök de Pages'e
+> custom domain olarak eklendi. Pages kaydı kendisi oluşturmadı, elle
+> `CNAME @ → deltek.pages.dev` (Proxied) eklendi; Cloudflare bunu eklerken
+> `AAAA 100::` kaydını kendisi kaldırdı (kök adreste CNAME ile AAAA bir arada
+> duramaz).
+>
+> Yönlendirme kuralı etkilenmedi — kurallar proxy katmanında, istek Pages'e
+> ulaşmadan çalışıyor. Takas sonrası ölçüldü: dört adreste yol korunuyor,
+> sorgu dizesi taşınıyor, şifresiz `http` çalışıyor, zincirin sonu 200.
+>
+> Kazanç: yönlendirme kuralı bir gün kaldırılırsa kök adres hata vermek
+> yerine siteyi sunar. Bedeli: o durumda `www` ile ikiz içerik oluşur, ama
+> her sayfanın canonical'ı `www`'yi gösterdiği için zarar sınırlı kalır.
 
 ## 4B.5 — apex → www yönlendirme kuralı (ADIM 7 buraya çekildi)
 
